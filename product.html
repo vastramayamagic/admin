@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Product Editor - Vastramaya</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        :root {
+            --body-bg: #F8FAFC;
+            --widget-bg: #FFFFFF;
+            --border-color: #F1F5F9;
+            --text-primary: #0F172A;
+            --text-secondary: #64748B;
+            --brand-primary: #3B82F6;
+            --brand-gradient: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
+            --hover-bg: #F8FAFC;
+            --danger-color: #EF4444;
+            --success-color: #10B981;
+            --star-color: #EF4444;
+            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 24px;
+            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--body-bg); color: var(--text-primary); font-size: 14px; line-height: 1.5; }
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+        input, button, select, textarea { font-family: inherit; font-size: inherit; outline: none; }
+        button:focus, a:focus { outline: none; }
+
+        .dashboard-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; position: relative; }
+        .main-area { display: flex; flex-direction: column; overflow-y: auto; height: 100vh; background-color: var(--body-bg); position: relative; }
+        
+        .main-header { 
+            padding: 12px 2.5rem; 
+            border-bottom: 1px solid var(--border-color); 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            background-color: var(--widget-bg); 
+            position: sticky; 
+            top: 0; 
+            z-index: 100; 
+            box-shadow: var(--shadow-sm); 
+            min-height: 70px;
+        }
+        .nav-logo { height: 42px; width: auto; object-fit: contain; display: none; }
+        
+        .sidebar { 
+            background-color: var(--widget-bg); 
+            border-right: 1px solid var(--border-color); 
+            padding: 2rem 1.5rem; 
+            display: flex; 
+            flex-direction: column; 
+            position: relative; 
+            transition: transform 0.3s ease-in-out;
+            box-shadow: var(--shadow-sm);
+            z-index: 1001;
+        }
+        .sidebar-header { display: flex; align-items: center; margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); } 
+        .logo-container { display: flex; align-items: center; width: 100%; }
+        .logo-image { height: 40px; width: auto; object-fit: contain; }
+        .main-nav ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+        .main-nav a { 
+            display: flex; align-items: center; gap: 1rem; text-decoration: none; color: var(--text-secondary); 
+            font-weight: 500; padding: 0.875rem 1rem; border-radius: var(--radius-md); transition: var(--transition); position: relative;
+        }
+        .main-nav a i { font-size: 1.375rem; color: var(--text-secondary); transition: var(--transition); width: 24px; text-align: center; }
+        .main-nav a:hover { background-color: var(--hover-bg); color: var(--text-primary); transform: translateY(-1px); } 
+        .main-nav a:hover i { color: var(--brand-primary); }
+        .main-nav a.active { 
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%); 
+            color: var(--brand-primary); font-weight: 600; box-shadow: var(--shadow-sm);
+        } 
+        .main-nav a.active i { color: var(--brand-primary); }
+        .main-nav a.active::before {
+            content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 4px; height: 60%; background: var(--brand-gradient); border-radius: 0 4px 4px 0;
+        }
+        
+        .profile-section { 
+            margin-top: auto; padding-top: 1.5rem; border-top: 1px solid var(--border-color); 
+            display: flex; align-items: center; gap: 0.75rem; cursor: pointer; 
+            border-radius: var(--radius-md); transition: var(--transition); padding: 1rem;
+        }
+        .profile-section:hover { background-color: var(--hover-bg); }
+        .profile-content-wrapper { display: flex; align-items: center; gap: 0.75rem; width: 100%; }
+        .profile-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 2px solid var(--border-color); transition: var(--transition); }
+        .profile-section:hover .profile-avatar { border-color: var(--brand-primary); }
+        .profile-details { flex-grow: 1; min-width: 0; }
+        .profile-name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; font-size: 0.9rem; }
+        .profile-email { font-size: 0.8rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+        .profile-options i { font-size: 1.25rem; color: var(--text-secondary); transition: var(--transition); }
+        .profile-section.active .profile-options i { transform: rotate(180deg); }
+        
+        .profile-popup { 
+            position: absolute; bottom: 90px; left: 1.5rem; right: 1.5rem; 
+            background-color: var(--widget-bg); border-radius: var(--radius-lg); 
+            box-shadow: var(--shadow-lg); border: 1px solid var(--border-color); 
+            padding: 0.75rem; z-index: 100; opacity: 0; pointer-events: none; 
+            transform: translateY(10px) scale(0.95); transition: var(--transition); 
+        }
+        .profile-popup.active { opacity: 1; pointer-events: all; transform: translateY(0) scale(1); }
+        .popup-header { display: flex; align-items: center; gap: 0.75rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border-color); margin-bottom: 0.5rem; }
+        .popup-list { list-style: none; } 
+        .popup-list a { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem; border-radius: var(--radius-sm); text-decoration: none; color: var(--text-primary); transition: var(--transition); cursor: pointer; }
+        .popup-list a:hover { background-color: var(--hover-bg); } 
+        .popup-list a i { font-size: 1.2rem; color: var(--text-secondary); }
+        .popup-list a.logout i { color: var(--danger-color); } 
+        .popup-list a.logout { color: var(--danger-color); }
+        
+        .menu-toggle, .sidebar-close-btn { display: none; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 999; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+        .overlay.active { opacity: 1; pointer-events: auto; }
+
+        .page-container { max-width: 1200px; margin: 0 auto; padding: 2rem; width: 100%; padding-bottom: 3rem; }
+        .content-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; gap: 1rem; }
+        .page-title { font-size: 1.75rem; font-weight: 700; color: var(--text-primary); }
+        .header-actions { display: flex; gap: 1rem; }
+
+        .form-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; }
+        .form-col { display: flex; flex-direction: column; gap: 2rem; }
+        
+        .editor-card { background: var(--widget-bg); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); padding: 1.5rem; border: 1px solid var(--border-color); }
+        .section-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem; color: var(--text-primary); }
+        
+        .input-group { margin-bottom: 1.25rem; }
+        .input-label { display: block; font-size: 0.875rem; font-weight: 500; color: var(--text-secondary); margin-bottom: 0.5rem; }
+        .form-control { width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: #fff; transition: var(--transition); font-size: 0.95rem; }
+        .form-control:focus { border-color: var(--brand-primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+        
+        .upload-zone { 
+            border: 2px dashed #CBD5E1; 
+            border-radius: var(--radius-md); 
+            padding: 2rem 1rem; 
+            text-align: center; 
+            cursor: pointer; 
+            transition: var(--transition); 
+            background: #F8FAFC;
+        }
+        .upload-zone:hover { border-color: var(--brand-primary); background: #EFF6FF; }
+        
+        .swatch-upload-container {
+            width: 100px;
+            height: 100px;
+            border-radius: var(--radius-md);
+            border: 2px dashed #CBD5E1;
+            background: #F8FAFC;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            cursor: pointer;
+            overflow: hidden;
+            position: relative;
+        }
+        .swatch-upload-container img {
+            width: 100%; height: 100%; object-fit: cover; display: none;
+        }
+        .swatch-upload-container i { font-size: 2rem; color: var(--text-secondary); margin-bottom: 4px; }
+        .swatch-upload-container span { font-size: 0.75rem; color: var(--text-secondary); }
+
+        .cover-preview-wrapper { position: relative; width: 100%; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border-color); }
+        .cover-preview-img { width: 100%; height: auto; display: block; max-height: 400px; object-fit: cover; }
+        .cover-remove-btn { position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.9); color: var(--danger-color); border: none; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: 0.2s; }
+
+        .custom-select-container { position: relative; }
+        .custom-select-trigger { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); cursor: pointer; background: white; }
+        .custom-select-options { position: absolute; top: 105%; left: 0; right: 0; background: white; border: 1px solid var(--border-color); border-radius: var(--radius-md); box-shadow: var(--shadow-lg); z-index: 50; opacity: 0; pointer-events: none; transform: translateY(-10px); transition: var(--transition); max-height: 200px; overflow-y: auto; }
+        .custom-select-options.open { opacity: 1; pointer-events: auto; transform: translateY(0); }
+        .custom-option { padding: 0.75rem 1rem; cursor: pointer; transition: 0.1s; }
+        .custom-option:hover { background: #F8FAFC; color: var(--brand-primary); }
+
+        .variant-card { display: flex; justify-content: space-between; align-items: center; padding: 1rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); margin-bottom: 0.75rem; background: #fff; transition: 0.2s; }
+        .variant-swatch { width: 40px; height: 40px; border-radius: 8px; border: 1px solid var(--border-color); object-fit: cover; }
+
+        .review-card { padding: 1rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); margin-bottom: 0.75rem; background: #fff; }
+        .review-header { display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.9rem; font-weight: 600; }
+        .star-display { color: var(--star-color); display: flex; gap: 2px; font-size: 1rem; }
+        .review-text { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.4; }
+
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.75rem 1.5rem; font-weight: 600; border-radius: var(--radius-md); cursor: pointer; transition: var(--transition); border: none; font-size: 0.95rem; }
+        .btn-primary { background: var(--brand-gradient); color: white; box-shadow: var(--shadow-md); }
+        .btn-secondary { background: white; border: 1px solid var(--border-color); color: var(--text-primary); }
+        .btn-sm { padding: 0.5rem 1rem; font-size: 0.875rem; }
+        .btn-icon { padding: 0.5rem; background: transparent; border: none; color: var(--text-secondary); cursor: pointer; border-radius: 6px; font-size: 1.2rem; }
+        .btn-danger-icon { color: var(--danger-color); }
+        
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 1rem; }
+        .modal-content { background: white; width: 100%; max-width: 600px; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes modalPop { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .modal-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: #fff; }
+        .modal-body { padding: 1.5rem; overflow-y: auto; background: #F8FAFC; flex: 1; }
+        .modal-footer { padding: 1.25rem 1.5rem; background: white; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 1rem; }
+
+        .star-rating-input { display: flex; gap: 0.5rem; font-size: 2rem; color: #CBD5E1; cursor: pointer; justify-content: center; margin: 1rem 0; }
+        .star-rating-input i.active { color: var(--star-color); }
+        
+        #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 3000; pointer-events: none; display: flex; flex-direction: column; gap: 10px; }
+        .toast { padding: 1rem 1.5rem; background: white; border-radius: var(--radius-md); box-shadow: var(--shadow-lg); animation: slideUp 0.3s ease; display: flex; align-items: center; gap: 1rem; border-left: 4px solid var(--brand-primary); min-width: 300px; pointer-events: auto; }
+        .toast.success { border-left-color: var(--success-color); }
+        .toast.error { border-left-color: var(--danger-color); }
+        .toast.info { border-left-color: var(--brand-primary); }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        #progress-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(8px);
+            z-index: 9999; display: none; flex-direction: column;
+            justify-content: center; align-items: center; text-align: center;
+        }
+        .progress-content {
+            background: white; padding: 2rem; border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg); border: 1px solid var(--border-color);
+            min-width: 300px;
+        }
+        .spinner {
+            width: 40px; height: 40px; border: 4px solid #E2E8F0;
+            border-top: 4px solid var(--brand-primary); border-radius: 50%;
+            animation: spin 1s linear infinite; margin: 0 auto 1rem;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        .existing-gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 0.75rem; margin-bottom: 1rem; }
+        .gallery-item { position: relative; width: 100%; aspect-ratio: 1; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border-color); }
+        .gallery-img { width: 100%; height: 100%; object-fit: cover; }
+        .gallery-remove { position: absolute; top: 4px; right: 4px; background: rgba(255,255,255,0.9); color: var(--danger-color); width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 50%; cursor: pointer; box-shadow: var(--shadow-sm); font-size: 1rem; }
+        
+        .mobile-save-bar {
+            display: none; position: fixed; bottom: 0; left: 0; width: 100%;
+            background: white; padding: 1rem; border-top: 1px solid var(--border-color);
+            z-index: 90; box-shadow: 0 -4px 6px -1px rgba(0,0,0,0.05);
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-container { grid-template-columns: 1fr; }
+            .sidebar { position: fixed; top: 0; left: 0; height: 100%; width: 85%; max-width: 320px; z-index: 1000; transform: translateX(-100%); box-shadow: var(--shadow-lg); padding: 2rem 1.25rem; }
+            .sidebar.active { transform: translateX(0); }
+            .main-header { padding: 12px 1.5rem; justify-content: space-between; }
+            .nav-logo { display: block; height: 36px; }
+            .menu-toggle { display: flex; align-items: center; justify-content: center; width: 46px; height: 46px; font-size: 1.6rem; color: var(--text-primary); cursor: pointer; border: 1px solid var(--border-color); border-radius: var(--radius-md); background-color: white; }
+            .sidebar-close-btn { display: flex; align-items: center; justify-content: center; position: absolute; top: 1.5rem; right: 1.25rem; font-size: 1.75rem; color: var(--text-secondary); cursor: pointer; border: none; background: none; width: 36px; height: 36px; }
+            
+            .page-container { padding: 1rem; padding-bottom: 100px; }
+            .content-header { flex-direction: column; align-items: flex-start; }
+            
+            /* Hide Desktop Header Actions on Mobile */
+            .header-actions { display: none; }
+
+            .form-grid { display: flex; flex-direction: column; }
+            .form-col { display: contents; }
+            #card-cover { order: 1; }
+            #card-details { order: 2; }
+            #card-variants { order: 3; }
+            #card-pricing { order: 4; }
+            #card-reviews { order: 10; }
+
+            .modal-overlay { align-items: flex-end; padding: 0; }
+            .modal-content { width: 100%; max-width: 100%; border-radius: var(--radius-xl) var(--radius-xl) 0 0 !important; max-height: 85vh; animation: slideUpModal 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+            .modal-body { padding-bottom: 3rem; }
+            .modal-footer { padding-bottom: 2rem; border-top: 1px solid var(--border-color); }
+            @keyframes slideUpModal { from { transform: translateY(100%); } to { transform: translateY(0); } }
+            
+            .mobile-save-bar { display: flex; gap: 0.5rem; }
+            .mobile-save-bar button { flex: 1; }
+        }
+        @media (min-width: 1025px) { .nav-logo { display: none; } }
+    </style>
+</head>
+<body>
+    <div class="overlay" id="overlay"></div>
+    <div id="progress-overlay">
+        <div class="progress-content">
+            <div class="spinner"></div>
+            <h3 style="margin:0 0 0.5rem 0; font-size:1.1rem;" id="progress-title">Processing</h3>
+            <p style="margin:0; color:var(--text-secondary); font-size:0.9rem;" id="progress-desc">Please wait...</p>
+        </div>
+    </div>
+
+    <div class="dashboard-container">
+        <aside class="sidebar" id="sidebar">
+            <button class="sidebar-close-btn" id="sidebar-close-btn"><i class='bx bx-x'></i></button>
+            <div class="sidebar-header">
+                <div class="logo-container">
+                    <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Vastramaya Logo" class="logo-image">
+                </div>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html"><i class='bx bx-home-alt'></i> Dashboard</a></li>
+                    <li><a href="#" class="active"><i class='bx bx-package'></i> Inventory</a></li>
+                    <li><a href="#"><i class='bx bx-palette'></i> Customize Site</a></li>
+                    <li><a href="#"><i class='bx bx-clipboard'></i> All Orders</a></li>
+                </ul>
+            </nav>
+            <div class="profile-section" id="profile-section">
+                <div class="profile-content-wrapper">
+                    <img id="sidebar-avatar" src="" class="profile-avatar">
+                    <div class="profile-details">
+                        <span class="profile-name" id="sidebar-name">Loading...</span>
+                        <span class="profile-email" id="sidebar-email">Admin</span>
+                    </div>
+                    <div class="profile-options"><i class='bx bx-chevron-down'></i></div>
+                </div>
+            </div>
+            <div class="profile-popup" id="profile-popup">
+                <div class="popup-header">
+                    <img id="popup-avatar" src="" class="profile-avatar">
+                    <div class="profile-details">
+                        <span class="profile-name" id="popup-name">Loading...</span>
+                        <span class="profile-email" id="popup-email">Admin</span>
+                    </div>
+                </div>
+                <ul class="popup-list">
+                    <li><a href="#"><i class='bx bx-user'></i> Profile</a></li>
+                    <li><a href="#"><i class='bx bx-cog'></i> Settings</a></li>
+                    <li><a href="#" onclick="auth.signOut()" class="logout"><i class='bx bx-log-out'></i> Logout</a></li>
+                </ul>
+            </div>
+        </aside>
+        
+        <main class="main-area">
+            <header class="main-header">
+                <button class="menu-toggle" id="menu-toggle"><i class='bx bx-menu'></i></button>
+                <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Vastramaya Logo" class="nav-logo">
+            </header>
+            
+            <div class="page-container">
+                <div class="content-header">
+                    <h1 class="page-title" id="editor-title">Product Editor</h1>
+                    <div class="header-actions">
+                        <button type="button" class="btn btn-secondary" onclick="window.history.back()">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="save-btn">Save Product</button>
+                    </div>
+                </div>
+
+                <div id="loading-state" style="text-align:center; padding:4rem;">
+                    <i class='bx bx-loader-alt bx-spin' style='font-size:2.5rem; color:var(--brand-primary);'></i>
+                </div>
+
+                <form id="product-form" style="display:none;">
+                    <div class="form-grid">
+                        <div class="form-col">
+                            <div class="editor-card" id="card-cover">
+                                <h3 class="section-title"><i class='bx bx-image'></i> Cover Image</h3>
+                                <div id="cover-upload-zone" class="upload-zone" onclick="document.getElementById('cover-input').click()">
+                                    <i class='bx bx-cloud-upload' style="font-size:2.5rem; color:var(--brand-primary); margin-bottom:0.5rem;"></i>
+                                    <div style="color:var(--text-secondary); font-weight:500;">Click to upload cover image</div>
+                                    <div style="font-size:0.8rem; color:var(--text-secondary); margin-top:0.25rem;">Single image only</div>
+                                </div>
+                                <input type="file" id="cover-input" accept="image/*" style="display:none;">
+                                <div id="cover-preview-wrapper" class="cover-preview-wrapper" style="display:none;">
+                                    <img id="cover-preview" class="cover-preview-img">
+                                    <button type="button" class="cover-remove-btn" onclick="removeCoverImage()"><i class='bx bx-trash'></i></button>
+                                </div>
+                            </div>
+
+                            <div class="editor-card" id="card-details">
+                                <h3 class="section-title"><i class='bx bx-info-circle'></i> Product Details</h3>
+                                <div class="input-group">
+                                    <label class="input-label">Product Name</label>
+                                    <input type="text" class="form-control" id="name" required placeholder="e.g. Classic Cotton Shirt">
+                                </div>
+                                <div class="input-group">
+                                    <label class="input-label">Category</label>
+                                    <div id="category-select" class="custom-select-container"></div>
+                                    <input type="hidden" id="selected-category">
+                                </div>
+                                <div class="input-group">
+                                    <label class="input-label">Description</label>
+                                    <textarea class="form-control" id="description" rows="4" placeholder="Detailed product description..."></textarea>
+                                </div>
+                            </div>
+
+                            <div class="editor-card" id="card-variants">
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                                    <h3 class="section-title" style="margin:0;"><i class='bx bx-palette'></i> Color Variants</h3>
+                                    <button type="button" class="btn btn-primary btn-sm" onclick="openColorModal()"><i class='bx bx-plus'></i> Add</button>
+                                </div>
+                                <div id="variants-list"></div>
+                            </div>
+
+                            <div class="editor-card" id="card-reviews">
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                                    <h3 class="section-title" style="margin:0;"><i class='bx bx-star'></i> Customer Reviews</h3>
+                                    <button type="button" class="btn btn-primary btn-sm" onclick="openReviewModal()"><i class='bx bx-plus'></i> Add</button>
+                                </div>
+                                <div id="reviews-list"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-col">
+                            <div class="editor-card" id="card-pricing">
+                                <h3 class="section-title"><i class='bx bx-tag-alt'></i> Pricing</h3>
+                                <div class="input-group">
+                                    <label class="input-label">Current Price (₹)</label>
+                                    <input type="number" class="form-control" id="price" step="0.01" required>
+                                </div>
+                                <div class="input-group">
+                                    <label class="input-label">Old Price (₹)</label>
+                                    <input type="number" class="form-control" id="oldPrice" step="0.01" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="mobile-save-bar">
+                <button type="button" class="btn btn-secondary" onclick="window.history.back()">Cancel</button>
+                <button type="button" class="btn btn-primary" id="mobile-save-btn">Save Product</button>
+            </div>
+        </main>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <div class="modal-overlay" id="color-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 style="font-size:1.25rem; font-weight:600;" id="color-modal-title">Add Variant</h3>
+                <button class="btn-icon" onclick="closeColorModal()"><i class='bx bx-x'></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="color-form">
+                    <div class="input-group">
+                        <label class="input-label">Color Name</label>
+                        <input type="text" class="form-control" id="color-name" placeholder="e.g. Midnight Blue" required>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Color Swatch (Image)</label>
+                        <div style="display:flex; gap:1rem; align-items:center;">
+                            <div class="swatch-upload-container" onclick="document.getElementById('color-swatch-input').click()">
+                                <i class='bx bx-image-add' id="swatch-icon"></i>
+                                <span id="swatch-text">Upload</span>
+                                <img id="swatch-preview">
+                            </div>
+                            <div style="flex:1;">
+                                <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:0.5rem;">Click the box to upload a color representation image.</p>
+                                <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('color-swatch-input').click()">Select File</button>
+                            </div>
+                            <input type="file" id="color-swatch-input" accept="image/*" style="display:none;">
+                            <input type="hidden" id="color-hex"> 
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Available Sizes</label>
+                        <div id="size-selection" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap:0.5rem;"></div>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Gallery Images</label>
+                        <div id="existing-gallery" class="existing-gallery-grid"></div>
+                        <div class="upload-zone" style="padding:1.5rem;" onclick="document.getElementById('variant-images-input').click()">
+                            <i class='bx bx-images' style="font-size:1.5rem; color:var(--text-secondary);"></i>
+                            <div style="font-size:0.9rem;">Upload gallery images</div>
+                        </div>
+                        <input type="file" id="variant-images-input" multiple accept="image/*" style="display:none;">
+                        <div id="variant-image-previews" style="display:flex; gap:0.5rem; overflow-x:auto; margin-top:0.75rem; padding-bottom:0.5rem;"></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeColorModal()">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveColorVariant()">Save Variant</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="review-modal">
+        <div class="modal-content" style="max-width:500px;">
+            <div class="modal-header">
+                <h3 style="font-size:1.25rem; font-weight:600;" id="review-modal-title">Add Customer Review</h3>
+                <button class="btn-icon" onclick="closeReviewModal()"><i class='bx bx-x'></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <label class="input-label">Customer Name</label>
+                    <input type="text" class="form-control" id="review-name" placeholder="e.g. John Doe">
+                </div>
+                <div class="input-group" style="text-align:center;">
+                    <label class="input-label">Rating</label>
+                    <div class="star-rating-input" id="star-rating">
+                        <i class='bx bx-star' data-val="1"></i>
+                        <i class='bx bx-star' data-val="2"></i>
+                        <i class='bx bx-star' data-val="3"></i>
+                        <i class='bx bx-star' data-val="4"></i>
+                        <i class='bx bx-star' data-val="5"></i>
+                    </div>
+                    <input type="hidden" id="review-rating" value="0">
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Comment</label>
+                    <textarea class="form-control" id="review-text" rows="4" placeholder="Write the review here..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeReviewModal()">Cancel</button>
+                <button type="button" class="btn btn-primary" id="review-save-btn" onclick="addReview()">Add Review</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.getElementById('menu-toggle');
+            const closeBtn = document.getElementById('sidebar-close-btn');
+            const overlay = document.getElementById('overlay');
+            
+            const toggleMenu = () => {
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            };
+            
+            if (menuToggle) menuToggle.addEventListener('click', toggleMenu);
+            if (closeBtn) closeBtn.addEventListener('click', toggleMenu);
+            if (overlay) overlay.addEventListener('click', toggleMenu);
+
+            const profileSection = document.getElementById('profile-section');
+            const profilePopup = document.getElementById('profile-popup');
+            
+            if (profileSection && profilePopup) {
+                profileSection.addEventListener('click', e => { 
+                    e.stopPropagation(); 
+                    profilePopup.classList.toggle('active'); 
+                    profileSection.classList.toggle('active'); 
+                });
+                
+                document.addEventListener('click', e => { 
+                    if (!profileSection.contains(e.target)) { 
+                        profilePopup.classList.remove('active'); 
+                        profileSection.classList.remove('active'); 
+                    } 
+                });
+            }
+        });
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCdeonH3VytC21F3X6x0rCVCn2xXrGPoug",
+            authDomain: "vastramaya---magic.firebaseapp.com",
+            projectId: "vastramaya---magic",
+            storageBucket: "vastramaya---magic.firebasestorage.app",
+            messagingSenderId: "543460072082",
+            appId: "1:543460072082:web:f3d1140e8f81ad338ae44b",
+            measurementId: "G-E39VNDCFVE"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+        const ADMIN_EMAIL = "harshavardhanjw@gmail.com";
+
+        let allCategories = [];
+        let coverImageFile = null;
+        let colorVariants = [];
+        let productReviews = [];
+        let editingVariantIndex = null;
+        let editingReviewIndex = null;
+        let tempVariantFiles = [];
+        let tempSwatchFile = null;
+        let existingVariantImages = []; 
+
+        auth.onAuthStateChanged(user => {
+            if (!user || user.email !== ADMIN_EMAIL) {
+                window.location.href = 'index.html';
+                return;
+            }
+            initUI(user);
+            loadEditor();
+        });
+
+        function initUI(user) {
+            const name = user.displayName || 'Admin';
+            const avatar = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=3B82F6&color=fff`;
+            document.getElementById('sidebar-name').textContent = name;
+            document.getElementById('sidebar-email').textContent = user.email;
+            document.getElementById('sidebar-avatar').src = avatar;
+            document.getElementById('popup-name').textContent = name;
+            document.getElementById('popup-email').textContent = user.email;
+            document.getElementById('popup-avatar').src = avatar;
+        }
+
+        async function loadEditor() {
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+            try {
+                const catSnap = await db.collection('categories').orderBy('name').get();
+                allCategories = catSnap.docs.map(d => d.data().name);
+                setupCategoryDropdown();
+                if (id) {
+                    document.getElementById('editor-title').textContent = 'Edit Product';
+                    const doc = await db.collection('products').doc(id).get();
+                    if (doc.exists) populateForm({id: doc.id, ...doc.data()});
+                } else {
+                    document.getElementById('editor-title').textContent = 'New Product';
+                    document.getElementById('product-form').style.display = 'block';
+                    document.getElementById('loading-state').style.display = 'none';
+                }
+            } catch (e) { showToast('Error loading data', 'error'); }
+        }
+
+        function setupCategoryDropdown() {
+            const container = document.getElementById('category-select');
+            let html = `
+                <div class="custom-select-trigger" onclick="this.nextElementSibling.classList.toggle('open')">
+                    <span id="cat-display">Select Category</span>
+                    <i class='bx bx-chevron-down'></i>
+                </div>
+                <div class="custom-select-options">
+            `;
+            allCategories.forEach(cat => html += `<div class="custom-option" onclick="selectCategory('${cat}')">${cat}</div>`);
+            html += `</div>`;
+            container.innerHTML = html;
+            document.addEventListener('click', e => {
+                if(!container.contains(e.target)) container.querySelector('.custom-select-options').classList.remove('open');
+            });
+        }
+
+        function selectCategory(cat) {
+            document.getElementById('selected-category').value = cat;
+            document.getElementById('cat-display').textContent = cat;
+            document.querySelector('.custom-select-options').classList.remove('open');
+        }
+
+        function populateForm(data) {
+            document.getElementById('name').value = data.name || '';
+            document.getElementById('description').value = data.description || '';
+            document.getElementById('price').value = data.price || '';
+            document.getElementById('oldPrice').value = data.oldPrice || '';
+            if (data.category) selectCategory(data.category);
+            
+            const coverUrl = data.image || (data.images && data.images.length > 0 ? data.images[0] : null);
+            if (coverUrl) {
+                document.getElementById('cover-preview').src = coverUrl;
+                document.getElementById('cover-preview-wrapper').style.display = 'block';
+                document.getElementById('cover-upload-zone').style.display = 'none';
+                document.getElementById('cover-preview').dataset.url = coverUrl;
+            }
+            colorVariants = data.colorVariants || [];
+            renderVariants();
+            productReviews = data.reviews || [];
+            renderReviewsList();
+            document.getElementById('loading-state').style.display = 'none';
+            document.getElementById('product-form').style.display = 'block';
+        }
+
+        document.getElementById('cover-input').onchange = (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                if (file.size > 5 * 1024 * 1024) return showToast('Image too large (Max 5MB)', 'error');
+                coverImageFile = file;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    document.getElementById('cover-preview').src = e.target.result;
+                    document.getElementById('cover-preview-wrapper').style.display = 'block';
+                    document.getElementById('cover-upload-zone').style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+
+        function removeCoverImage() {
+            coverImageFile = null;
+            document.getElementById('cover-input').value = '';
+            document.getElementById('cover-preview').src = '';
+            delete document.getElementById('cover-preview').dataset.url;
+            document.getElementById('cover-preview-wrapper').style.display = 'none';
+            document.getElementById('cover-upload-zone').style.display = 'block';
+        }
+
+        function openReviewModal(index = null) {
+            editingReviewIndex = index;
+            const isEdit = index !== null;
+            const title = document.getElementById('review-modal-title');
+            const btn = document.getElementById('review-save-btn');
+            
+            if(isEdit) {
+                if (productReviews[index]) {
+                    const rev = productReviews[index];
+                    document.getElementById('review-name').value = rev.name;
+                    document.getElementById('review-text').value = rev.comment;
+                    document.getElementById('review-rating').value = rev.rating;
+                    updateStars(rev.rating);
+                    title.textContent = 'Edit Review';
+                    btn.textContent = 'Update Review';
+                }
+            } else {
+                document.getElementById('review-name').value = '';
+                document.getElementById('review-text').value = '';
+                document.getElementById('review-rating').value = '0';
+                updateStars(0);
+                title.textContent = 'Add Customer Review';
+                btn.textContent = 'Add Review';
+            }
+            document.getElementById('review-modal').style.display = 'flex';
+        }
+
+        function closeReviewModal() {
+            document.getElementById('review-modal').style.display = 'none';
+            editingReviewIndex = null;
+        }
+
+        document.querySelectorAll('#star-rating i').forEach(star => {
+            star.onclick = function() {
+                const val = parseInt(this.dataset.val);
+                document.getElementById('review-rating').value = val;
+                updateStars(val);
+            }
+        });
+
+        function updateStars(val) {
+            document.querySelectorAll('#star-rating i').forEach(s => {
+                s.classList.toggle('active', parseInt(s.dataset.val) <= val);
+                s.className = parseInt(s.dataset.val) <= val ? 'bx bxs-star' : 'bx bx-star';
+            });
+        }
+
+        function addReview() {
+            const name = document.getElementById('review-name').value.trim();
+            const rating = parseInt(document.getElementById('review-rating').value);
+            const comment = document.getElementById('review-text').value.trim();
+            if (!name || rating === 0 || !comment) return showToast('Please fill all fields', 'error');
+            
+            const reviewData = { name, rating, comment, date: new Date().toISOString() };
+            
+            if(editingReviewIndex !== null && productReviews[editingReviewIndex]) {
+                productReviews[editingReviewIndex] = reviewData;
+                showToast('Review updated');
+            } else {
+                productReviews.push(reviewData);
+                showToast('Review added');
+            }
+            renderReviewsList();
+            closeReviewModal();
+        }
+
+        function renderReviewsList() {
+            const container = document.getElementById('reviews-list');
+            if (!productReviews || productReviews.length === 0) {
+                container.innerHTML = `<div style="color:var(--text-secondary); font-style:italic; padding:1rem; text-align:center;">No reviews added yet.</div>`;
+                return;
+            }
+            container.innerHTML = productReviews.map((r, i) => `
+                <div class="review-card">
+                    <div class="review-header">
+                        <span>${r.name}</span>
+                        <div style="display:flex; gap:0.5rem;">
+                            <button type="button" class="btn-icon" onclick="openReviewModal(${i})"><i class='bx bx-edit-alt'></i></button>
+                            <button type="button" class="btn-icon" onclick="removeReview(${i})" style="color:var(--danger-color);"><i class='bx bx-trash'></i></button>
+                        </div>
+                    </div>
+                    <div class="star-display">
+                        ${Array(5).fill(0).map((_, idx) => idx < r.rating ? "<i class='bx bxs-star'></i>" : "<i class='bx bx-star'></i>").join('')}
+                    </div>
+                    <div class="review-text" style="margin-top:0.5rem;">${r.comment}</div>
+                </div>
+            `).join('');
+        }
+
+        function removeReview(index) {
+            if(confirm("Delete this review?")) {
+                productReviews.splice(index, 1);
+                renderReviewsList();
+            }
+        }
+
+        function openColorModal(index = null) {
+            editingVariantIndex = index;
+            const isEdit = index !== null;
+            const data = isEdit ? colorVariants[index] : {};
+            
+            document.getElementById('color-modal-title').textContent = isEdit ? 'Edit Variant' : 'Add Variant';
+            document.getElementById('color-name').value = data.name || '';
+            document.getElementById('color-hex').value = data.hex || '';
+            
+            const swatchImg = document.getElementById('swatch-preview');
+            const swatchIcon = document.getElementById('swatch-icon');
+            const swatchText = document.getElementById('swatch-text');
+            
+            if (data.hex && data.hex.includes('http')) {
+                swatchImg.src = data.hex;
+                swatchImg.style.display = 'block';
+                swatchIcon.style.display = 'none';
+                swatchText.style.display = 'none';
+            } else {
+                swatchImg.style.display = 'none';
+                swatchIcon.style.display = 'block';
+                swatchText.style.display = 'block';
+            }
+            
+            const sizesContainer = document.getElementById('size-selection');
+            const SIZES = ['S', 'M', 'L', 'XL', '2XL'];
+            sizesContainer.innerHTML = SIZES.map(size => {
+                const existing = data.sizes?.find(s => s.name === size);
+                return `
+                    <div style="border:1px solid var(--border-color); border-radius:6px; padding:0.5rem; text-align:center; cursor:pointer; background:${existing ? '#EEF2FF' : 'white'}; border-color:${existing ? 'var(--brand-primary)' : 'var(--border-color)'}" onclick="toggleSize(this)">
+                        <div style="font-weight:600;">${size}</div>
+                        <div style="font-size:0.7rem; color:var(--text-secondary);">${existing && existing.available ? 'In Stock' : 'Select'}</div>
+                        <input type="checkbox" class="size-check" style="display:none;" value="${size}" ${existing ? 'checked' : ''}>
+                        <input type="checkbox" class="stock-check" style="display:none;" ${existing && existing.available ? 'checked' : ''}>
+                    </div>
+                `;
+            }).join('');
+
+            tempSwatchFile = null;
+            tempVariantFiles = [];
+            existingVariantImages = data.images || [];
+            renderExistingGallery();
+            document.getElementById('variant-image-previews').innerHTML = '';
+            document.getElementById('color-modal').style.display = 'flex';
+        }
+
+        function renderExistingGallery() {
+            const container = document.getElementById('existing-gallery');
+            if(existingVariantImages.length === 0) {
+                container.style.display = 'none';
+                return;
+            }
+            container.style.display = 'grid';
+            container.innerHTML = existingVariantImages.map((url, i) => `
+                <div class="gallery-item">
+                    <img src="${url}" class="gallery-img">
+                    <div class="gallery-remove" onclick="removeExistingGalleryImage(${i})">×</div>
+                </div>
+            `).join('');
+        }
+
+        function removeExistingGalleryImage(index) {
+            existingVariantImages.splice(index, 1);
+            renderExistingGallery();
+        }
+
+        function toggleSize(el) {
+            const checkbox = el.querySelector('.size-check');
+            const stock = el.querySelector('.stock-check');
+            const isSelected = !checkbox.checked;
+            checkbox.checked = isSelected;
+            stock.checked = isSelected; 
+            el.style.background = isSelected ? '#EEF2FF' : 'white';
+            el.style.borderColor = isSelected ? 'var(--brand-primary)' : 'var(--border-color)';
+            el.querySelector('div:nth-child(2)').textContent = isSelected ? 'In Stock' : 'Select';
+        }
+
+        function closeColorModal() {
+            document.getElementById('color-modal').style.display = 'none';
+            editingVariantIndex = null;
+        }
+
+        document.getElementById('color-swatch-input').onchange = (e) => {
+            const file = e.target.files[0];
+            if(file) {
+                tempSwatchFile = file;
+                const prev = document.getElementById('swatch-preview');
+                prev.src = URL.createObjectURL(file);
+                prev.style.display = 'block';
+                document.getElementById('swatch-icon').style.display = 'none';
+                document.getElementById('swatch-text').style.display = 'none';
+            }
+        }
+
+        document.getElementById('variant-images-input').onchange = (e) => {
+            Array.from(e.target.files).forEach(file => {
+                tempVariantFiles.push(file);
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+                img.style.cssText = "width:60px; height:60px; border-radius:6px; object-fit:cover; border:1px solid #eee; flex-shrink:0;";
+                document.getElementById('variant-image-previews').appendChild(img);
+            });
+        }
+
+        function showProgress(title, desc) {
+            document.getElementById('progress-title').textContent = title;
+            document.getElementById('progress-desc').textContent = desc;
+            document.getElementById('progress-overlay').style.display = 'flex';
+        }
+
+        function hideProgress() {
+            document.getElementById('progress-overlay').style.display = 'none';
+        }
+
+        async function saveColorVariant() {
+            const name = document.getElementById('color-name').value;
+            if (!name) return showToast('Color name required', 'error');
+            
+            showProgress('Saving Variant', 'Uploading images and details...');
+
+            try {
+                let hex = document.getElementById('color-hex').value;
+                if (tempSwatchFile) {
+                    hex = await uploadFile(tempSwatchFile, 'swatches');
+                }
+
+                let images = [...existingVariantImages];
+                if (tempVariantFiles.length) {
+                    for (let f of tempVariantFiles) {
+                        images.push(await uploadFile(f, 'variants'));
+                    }
+                }
+
+                let sizes = [];
+                document.querySelectorAll('.size-check').forEach(cb => {
+                    if (cb.checked) {
+                        const stock = cb.parentElement.querySelector('.stock-check').checked;
+                        sizes.push({ name: cb.value, available: stock });
+                    }
+                });
+
+                const variant = { name, hex, sizes, images };
+                if (editingVariantIndex !== null) {
+                    colorVariants[editingVariantIndex] = variant;
+                } else {
+                    colorVariants.push(variant);
+                }
+                renderVariants();
+                closeColorModal();
+                showToast('Variant Saved', 'success');
+            } catch(e) {
+                showToast('Failed to save variant', 'error');
+            } finally {
+                hideProgress();
+            }
+        }
+
+        function renderVariants() {
+            const container = document.getElementById('variants-list');
+            if (colorVariants.length === 0) {
+                container.innerHTML = `<div style="text-align:center; color:var(--text-secondary); padding:1rem; font-style:italic;">No variants yet.</div>`;
+                return;
+            }
+            container.innerHTML = colorVariants.map((v, i) => `
+                <div class="variant-card">
+                    <div style="display:flex; align-items:center; gap:1rem;">
+                        <img src="${v.hex && v.hex.includes('http') ? v.hex : 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='}" class="variant-swatch" style="background:${v.hex || '#eee'}">
+                        <div>
+                            <div style="font-weight:600;">${v.name}</div>
+                            <div style="font-size:0.8rem; color:var(--text-secondary);">${v.sizes.length} sizes</div>
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:0.5rem;">
+                        <button type="button" class="btn-icon" onclick="openColorModal(${i})"><i class='bx bx-edit-alt'></i></button>
+                        <button type="button" class="btn-icon" onclick="removeVariant(${i})" style="color:var(--danger-color);"><i class='bx bx-trash'></i></button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function removeVariant(i) {
+            if(confirm('Remove this variant?')) {
+                colorVariants.splice(i, 1);
+                renderVariants();
+            }
+        }
+
+        async function uploadFile(file, path) {
+            const ref = storage.ref().child(`${path}/${Date.now()}-${file.name}`);
+            await ref.put(file);
+            return await ref.getDownloadURL();
+        }
+
+        const handleSave = async () => {
+            const name = document.getElementById('name').value;
+            const price = document.getElementById('price').value;
+            const category = document.getElementById('selected-category').value;
+            const oldPrice = document.getElementById('oldPrice').value;
+            
+            if (!name || !price || !category || !oldPrice) return showToast('Please fill required fields', 'error');
+
+            showProgress('Saving Product', 'Processing details and images...');
+
+            try {
+                let coverUrl = document.getElementById('cover-preview').dataset.url || '';
+                if (coverImageFile) {
+                    coverUrl = await uploadFile(coverImageFile, 'products');
+                }
+                if (!coverUrl) {
+                    hideProgress();
+                    return showToast('Cover image required', 'error');
+                }
+                const productData = {
+                    name,
+                    description: document.getElementById('description').value,
+                    category,
+                    price: parseFloat(price),
+                    oldPrice: parseFloat(oldPrice),
+                    image: coverUrl, 
+                    images: [coverUrl],
+                    colorVariants,
+                    reviews: productReviews,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+                const params = new URLSearchParams(window.location.search);
+                const id = params.get('id');
+                if (id) {
+                    await db.collection('products').doc(id).update(productData);
+                    showToast('Product Updated Successfully!', 'success');
+                } else {
+                    productData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                    await db.collection('products').add(productData);
+                    showToast('Product Created Successfully!', 'success');
+                }
+                setTimeout(() => window.history.back(), 1000);
+            } catch (e) {
+                console.error(e);
+                showToast('Save Failed', 'error');
+            } finally {
+                hideProgress();
+            }
+        };
+
+        document.getElementById('save-btn').onclick = handleSave;
+        document.getElementById('mobile-save-btn').onclick = handleSave;
+
+        function showToast(msg, type='success') {
+            const container = document.getElementById('toast-container');
+            const el = document.createElement('div');
+            el.className = `toast ${type}`;
+            el.innerHTML = `<i class='bx ${type==='success'?'bx-check-circle':'bx-error-circle'}'></i> <span>${msg}</span>`;
+            container.appendChild(el);
+            setTimeout(() => el.remove(), 3000);
+        }
+    </script>
+</body>
+</html>
