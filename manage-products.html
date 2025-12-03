@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Manage Products - Vastramaya</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        :root {
+            --body-bg: #F8FAFC;
+            --widget-bg: #FFFFFF;
+            --border-color: #F1F5F9;
+            --text-primary: #0F172A;
+            --text-secondary: #64748B;
+            --brand-primary: #3B82F6;
+            --brand-gradient: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
+            --hover-bg: #F8FAFC;
+            --danger-color: #EF4444;
+            --success-color: #10B981;
+            --warning-color: #F59E0B;
+            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 24px;
+            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--body-bg); color: var(--text-primary); font-size: 14px; line-height: 1.5; }
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+        input, button, select, textarea { font-family: inherit; font-size: inherit; outline: none; }
+        button:focus, a:focus { outline: none; }
+
+        .dashboard-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; position: relative; }
+        .main-area { display: flex; flex-direction: column; overflow-y: auto; height: 100vh; background-color: var(--body-bg); }
+        
+        .main-header { 
+            padding: 12px 2.5rem; 
+            border-bottom: 1px solid var(--border-color); 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            background-color: var(--widget-bg); 
+            position: sticky; 
+            top: 0; 
+            z-index: 100; 
+            box-shadow: var(--shadow-sm); 
+            min-height: 70px;
+        }
+        .nav-logo { height: 42px; width: auto; object-fit: contain; display: none; }
+        
+        .sidebar { 
+            background-color: var(--widget-bg); 
+            border-right: 1px solid var(--border-color); 
+            padding: 2rem 1.5rem; 
+            display: flex; 
+            flex-direction: column; 
+            position: relative; 
+            transition: transform 0.3s ease-in-out;
+            box-shadow: var(--shadow-sm);
+            z-index: 1001;
+        }
+        .sidebar-header { display: flex; align-items: center; margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); } 
+        .logo-container { display: flex; align-items: center; width: 100%; }
+        .logo-image { height: 40px; width: auto; object-fit: contain; }
+        .main-nav ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+        .main-nav a { 
+            display: flex; align-items: center; gap: 1rem; text-decoration: none; color: var(--text-secondary); 
+            font-weight: 500; padding: 0.875rem 1rem; border-radius: var(--radius-md); transition: var(--transition); position: relative;
+        }
+        .main-nav a i { font-size: 1.375rem; color: var(--text-secondary); transition: var(--transition); width: 24px; text-align: center; }
+        .main-nav a:hover { background-color: var(--hover-bg); color: var(--text-primary); transform: translateY(-1px); } 
+        .main-nav a:hover i { color: var(--brand-primary); }
+        .main-nav a.active { 
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%); 
+            color: var(--brand-primary); font-weight: 600; box-shadow: var(--shadow-sm);
+        } 
+        .main-nav a.active i { color: var(--brand-primary); }
+        .main-nav a.active::before {
+            content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 4px; height: 60%; background: var(--brand-gradient); border-radius: 0 4px 4px 0;
+        }
+        
+        .profile-section { 
+            margin-top: auto; padding-top: 1.5rem; border-top: 1px solid var(--border-color); 
+            display: flex; align-items: center; gap: 0.75rem; cursor: pointer; 
+            border-radius: var(--radius-md); transition: var(--transition); padding: 1rem;
+        }
+        .profile-section:hover { background-color: var(--hover-bg); }
+        .profile-content-wrapper { display: flex; align-items: center; gap: 0.75rem; width: 100%; }
+        .profile-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 2px solid var(--border-color); transition: var(--transition); }
+        .profile-section:hover .profile-avatar { border-color: var(--brand-primary); }
+        .profile-details { flex-grow: 1; min-width: 0; }
+        .profile-name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; font-size: 0.9rem; }
+        .profile-email { font-size: 0.8rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+        .profile-options i { font-size: 1.25rem; color: var(--text-secondary); transition: var(--transition); }
+        .profile-section.active .profile-options i { transform: rotate(180deg); }
+        
+        .profile-popup { 
+            position: absolute; bottom: 90px; left: 1.5rem; right: 1.5rem; 
+            background-color: var(--widget-bg); border-radius: var(--radius-lg); 
+            box-shadow: var(--shadow-lg); border: 1px solid var(--border-color); 
+            padding: 0.75rem; z-index: 100; opacity: 0; pointer-events: none; 
+            transform: translateY(10px) scale(0.95); transition: var(--transition); 
+        }
+        .profile-popup.active { opacity: 1; pointer-events: all; transform: translateY(0) scale(1); }
+        .popup-header { display: flex; align-items: center; gap: 0.75rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border-color); margin-bottom: 0.5rem; }
+        .popup-list { list-style: none; } 
+        .popup-list a { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem; border-radius: var(--radius-sm); text-decoration: none; color: var(--text-primary); transition: var(--transition); cursor: pointer; }
+        .popup-list a:hover { background-color: var(--hover-bg); } 
+        .popup-list a i { font-size: 1.2rem; color: var(--text-secondary); }
+        .popup-list a.logout i { color: var(--danger-color); } 
+        .popup-list a.logout { color: var(--danger-color); }
+        
+        .menu-toggle, .sidebar-close-btn { display: none; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 999; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+        .overlay.active { opacity: 1; pointer-events: auto; }
+
+        .page-container { max-width: 1200px; margin: 0 auto; padding: 2rem; width: 100%; }
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+        .page-title { font-size: 1.75rem; font-weight: 700; color: var(--text-primary); margin: 0; }
+        
+        .category-badge { 
+            background: #EFF6FF; color: var(--brand-primary); 
+            padding: 0.25rem 0.75rem; border-radius: 999px; 
+            font-size: 0.85rem; font-weight: 600; margin-left: 0.5rem;
+        }
+
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.75rem 1.5rem; font-weight: 600; border-radius: var(--radius-md); cursor: pointer; transition: var(--transition); border: none; font-size: 0.95rem; }
+        .btn-primary { background: var(--brand-gradient); color: white; box-shadow: var(--shadow-md); }
+        .btn-primary:hover { box-shadow: var(--shadow-lg); transform: translateY(-1px); }
+        .btn-secondary { background: white; border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.5rem 1rem; font-size: 0.875rem; }
+        .btn-secondary:hover { background: #F8FAFC; border-color: #CBD5E1; }
+        .btn-danger { background: #FEF2F2; color: var(--danger-color); border: 1px solid #FECACA; padding: 0.5rem 1rem; font-size: 0.875rem; }
+        .btn-danger:hover { background: #FEE2E2; }
+
+        /* NEW PREMIUM ACTION BUTTONS */
+        .desktop-actions { display: flex; align-items: center; justify-content: flex-end; gap: 0.5rem; }
+        .action-btn { 
+            display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; 
+            border-radius: 6px; font-size: 0.85rem; font-weight: 500; cursor: pointer; 
+            transition: all 0.2s; border: 1px solid transparent;
+        }
+        .action-btn i { font-size: 1.1rem; }
+        
+        .action-btn.edit { background: #EFF6FF; color: var(--brand-primary); border-color: #DBEAFE; }
+        .action-btn.edit:hover { background: var(--brand-primary); color: white; border-color: var(--brand-primary); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+        
+        .action-btn.delete { background: #FEF2F2; color: var(--danger-color); border-color: #FEE2E2; }
+        .action-btn.delete:hover { background: var(--danger-color); color: white; border-color: var(--danger-color); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+
+        .search-wrapper { position: relative; width: 100%; max-width: 400px; margin-bottom: 1.5rem; }
+        .search-input { 
+            width: 100%; padding: 0.75rem 1rem 0.75rem 2.75rem; 
+            border: 1px solid var(--border-color); border-radius: var(--radius-md);
+            background-color: white; font-size: 0.95rem; transition: var(--transition);
+            box-shadow: var(--shadow-sm);
+        }
+        .search-input:focus { border-color: var(--brand-primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+        .search-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-secondary); font-size: 1.25rem; pointer-events: none; }
+
+        .table-container { 
+            background: white; border-radius: var(--radius-lg); 
+            overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color);
+        }
+        .products-table { width: 100%; border-collapse: collapse; }
+        .products-table th { 
+            background-color: #F8FAFC; padding: 1rem 1.5rem; text-align: left; 
+            font-weight: 600; color: var(--text-secondary); border-bottom: 1px solid #E2E8F0;
+            font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.03em;
+        }
+        .products-table td { padding: 1rem 1.5rem; border-bottom: 1px solid #F1F5F9; vertical-align: middle; }
+        .products-table tr:hover { background-color: #F8FAFC; }
+        .products-table tr:last-child td { border-bottom: none; }
+
+        .product-cell { display: flex; align-items: center; gap: 1rem; }
+        .product-image { 
+            width: 44px; height: 44px; border-radius: var(--radius-md); 
+            object-fit: cover; border: 1px solid var(--border-color); flex-shrink: 0; background: #F1F5F9;
+        }
+        .product-info { flex: 1; min-width: 0; }
+        .product-name { font-weight: 600; color: var(--text-primary); font-size: 0.95rem; margin-bottom: 0.1rem; }
+        .product-category { color: var(--text-secondary); font-size: 0.8rem; }
+
+        .availability-toggle { 
+            appearance: none; width: 36px; height: 20px; background-color: #CBD5E1; 
+            border-radius: 999px; position: relative; cursor: pointer; transition: all 0.2s; flex-shrink: 0;
+        }
+        .availability-toggle::before { 
+            content: ''; position: absolute; width: 16px; height: 16px; border-radius: 50%; 
+            background-color: white; top: 2px; left: 2px; transition: transform 0.2s; box-shadow: var(--shadow-sm);
+        }
+        .availability-toggle:checked { background-color: var(--success-color); }
+        .availability-toggle:checked::before { transform: translateX(16px); }
+
+        .mobile-menu-btn { 
+            display: none; width: 32px; height: 32px; border-radius: 50%; border: none; 
+            background: transparent; color: var(--text-secondary); cursor: pointer; 
+            align-items: center; justify-content: center; transition: var(--transition); font-size: 1.2rem;
+        }
+        .mobile-menu-btn:hover { background: #F1F5F9; color: var(--text-primary); }
+
+        .bottom-sheet-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 2000; display: none; opacity: 0; transition: opacity 0.3s; backdrop-filter: blur(2px); }
+        .bottom-sheet-overlay.active { display: block; opacity: 1; }
+        .bottom-sheet { position: fixed; bottom: 0; left: 0; right: 0; background: white; z-index: 2001; border-radius: var(--radius-xl) var(--radius-xl) 0 0; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); padding: 1.5rem; box-shadow: 0 -4px 20px rgba(0,0,0,0.1); }
+        .bottom-sheet.active { transform: translateY(0); }
+        .sheet-header { display: flex; gap: 1rem; margin-bottom: 1.5rem; border-bottom: 1px solid #F1F5F9; padding-bottom: 1rem; }
+        .sheet-img { width: 64px; height: 64px; border-radius: var(--radius-md); object-fit: cover; border: 1px solid var(--border-color); }
+        .sheet-info h3 { font-weight: 600; color: var(--text-primary); margin-bottom: 0.25rem; font-size: 1.1rem; }
+        .sheet-meta { font-size: 0.9rem; color: var(--text-secondary); display: flex; flex-direction: column; gap: 0.25rem; }
+        .sheet-actions { display: flex; flex-direction: column; gap: 0.75rem; }
+        .sheet-btn { width: 100%; justify-content: center; padding: 0.875rem; font-size: 1rem; border-radius: var(--radius-md); display: flex; align-items: center; gap: 0.75rem; font-weight: 500; cursor: pointer; border: 1px solid transparent; }
+        .sheet-btn.edit { background: #F8FAFC; border-color: #E2E8F0; color: var(--text-primary); }
+        .sheet-btn.delete { background: #FEF2F2; border-color: #FECACA; color: var(--danger-color); }
+
+        #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 3000; pointer-events: none; display: flex; flex-direction: column; gap: 10px; }
+        .toast { padding: 1rem 1.5rem; background: white; border-radius: var(--radius-md); box-shadow: var(--shadow-lg); animation: slideUp 0.3s ease; display: flex; align-items: center; gap: 1rem; border-left: 4px solid var(--brand-primary); min-width: 300px; pointer-events: auto; }
+        .toast.success { border-left-color: var(--success-color); }
+        .toast.error { border-left-color: var(--danger-color); }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .loading-spinner { width: 24px; height: 24px; border: 2px solid #E2E8F0; border-top: 2px solid var(--brand-primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 1rem; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        @media (max-width: 1024px) {
+            .dashboard-container { grid-template-columns: 1fr; }
+            .sidebar { position: fixed; top: 0; left: 0; height: 100%; width: 85%; max-width: 320px; z-index: 1000; transform: translateX(-100%); box-shadow: var(--shadow-lg); padding: 2rem 1.25rem; }
+            .sidebar.active { transform: translateX(0); }
+            .main-header { padding: 12px 1.5rem; justify-content: space-between; }
+            .nav-logo { display: block; height: 36px; }
+            
+            .menu-toggle { display: flex; align-items: center; justify-content: center; width: 46px; height: 46px; font-size: 1.6rem; color: var(--text-primary); cursor: pointer; border: 1px solid var(--border-color); border-radius: var(--radius-md); background-color: white; }
+            .sidebar-close-btn { display: flex; align-items: center; justify-content: center; position: absolute; top: 1.5rem; right: 1.25rem; font-size: 1.75rem; color: var(--text-secondary); cursor: pointer; border: none; background: none; width: 36px; height: 36px; }
+            
+            .page-container { padding: 1.5rem 1rem; }
+            .table-container { border: none; box-shadow: none; background: transparent; overflow: visible; }
+            .products-table { background: white; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); display: block; }
+            .products-table thead { display: none; }
+            .products-table tbody { display: block; }
+            .products-table tr { display: flex; align-items: center; justify-content: space-between; padding: 1rem; border-bottom: 1px solid #F1F5F9; }
+            .products-table td { padding: 0; border: none; display: block; }
+            
+            .mobile-hidden { display: none !important; }
+            .desktop-actions { display: none !important; }
+            .mobile-menu-btn { display: flex; }
+            
+            .product-cell { gap: 0.75rem; }
+            .product-image { width: 40px; height: 40px; }
+            .product-category { display: none; }
+            
+            .products-table td:nth-child(1) { flex: 1; min-width: 0; padding-right: 0.5rem; }
+            .products-table td:nth-child(4) { margin-right: 1rem; } 
+        }
+        @media (min-width: 1025px) { .nav-logo { display: none; } }
+    </style>
+</head>
+<body>
+    <div class="overlay" id="overlay"></div>
+    
+    <!-- DASHBOARD -->
+    <div class="dashboard-container">
+        <aside class="sidebar" id="sidebar">
+            <button class="sidebar-close-btn" id="sidebar-close-btn"><i class='bx bx-x'></i></button>
+            <div class="sidebar-header">
+                <div class="logo-container">
+                    <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Vastramaya" class="logo-image">
+                </div>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html"><i class='bx bx-home-alt'></i> Dashboard</a></li>
+                    <li><a href="#" class="active"><i class='bx bx-package'></i> Inventory</a></li>
+                    <li><a href="#"><i class='bx bx-palette'></i> Customize Site</a></li>
+                    <li><a href="#"><i class='bx bx-clipboard'></i> All Orders</a></li>
+                </ul>
+            </nav>
+            <div class="profile-section" id="profile-section">
+                <div class="profile-content-wrapper">
+                    <img id="sidebar-avatar" src="" class="profile-avatar">
+                    <div class="profile-details">
+                        <span class="profile-name" id="sidebar-name">Loading...</span>
+                        <span class="profile-email" id="sidebar-email">Admin</span>
+                    </div>
+                    <div class="profile-options"><i class='bx bx-chevron-down'></i></div>
+                </div>
+            </div>
+            <div class="profile-popup" id="profile-popup">
+                <div class="popup-header">
+                    <img id="popup-avatar" src="" class="profile-avatar">
+                    <div class="profile-details">
+                        <span class="profile-name" id="popup-name">Loading...</span>
+                        <span class="profile-email" id="popup-email">Admin</span>
+                    </div>
+                </div>
+                <ul class="popup-list">
+                    <li><a href="#"><i class='bx bx-user'></i> Profile</a></li>
+                    <li><a href="#"><i class='bx bx-cog'></i> Settings</a></li>
+                    <li><a href="#" onclick="auth.signOut()" class="logout"><i class='bx bx-log-out'></i> Logout</a></li>
+                </ul>
+            </div>
+        </aside>
+        
+        <main class="main-area">
+            <header class="main-header">
+                <button class="menu-toggle" id="menu-toggle"><i class='bx bx-menu'></i></button>
+                <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Vastramaya" class="nav-logo">
+            </header>
+            
+            <div class="page-container">
+                <div class="page-header">
+                    <div style="display: flex; align-items: center;">
+                        <h1 class="page-title" id="products-page-title">Products</h1>
+                        <span class="category-badge" id="category-badge" style="display: none;"></span>
+                    </div>
+                    <button class="btn btn-primary" id="add-product-btn"><i class='bx bx-plus'></i> Add Product</button>
+                </div>
+
+                <div class="search-wrapper">
+                    <i class='bx bx-search search-icon'></i>
+                    <input type="text" id="search-products" class="search-input" placeholder="Search products by name...">
+                </div>
+
+                <div class="table-container">
+                    <table class="products-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 40%;">Product</th>
+                                <th class="mobile-hidden" style="width: 15%;">Price</th>
+                                <th class="mobile-hidden" style="width: 10%; text-align: center;">Colors</th>
+                                <th style="width: 15%; text-align: center;">Status</th>
+                                <th style="width: 20%; text-align: right;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-products-table">
+                            <tr>
+                                <td colspan="5" style="text-align: center; padding: 3rem;">
+                                    <div class="loading-spinner"></div>
+                                    <div style="color: var(--text-secondary);">Loading products...</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- MOBILE BOTTOM SHEET -->
+    <div class="bottom-sheet-overlay" id="mobile-overlay" onclick="closeMobileMenu()"></div>
+    <div class="bottom-sheet" id="mobile-sheet">
+        <div id="sheet-content"></div>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+    <script>
+        // --- UI LOGIC ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.getElementById('menu-toggle');
+            const closeBtn = document.getElementById('sidebar-close-btn');
+            const overlay = document.getElementById('overlay');
+            const profileSection = document.getElementById('profile-section');
+            const profilePopup = document.getElementById('profile-popup');
+
+            const toggleMenu = () => {
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            };
+
+            if (menuToggle) menuToggle.addEventListener('click', toggleMenu);
+            if (closeBtn) closeBtn.addEventListener('click', toggleMenu);
+            if (overlay) overlay.addEventListener('click', toggleMenu);
+
+            if (profileSection) {
+                profileSection.addEventListener('click', e => {
+                    e.stopPropagation();
+                    profilePopup.classList.toggle('active');
+                    profileSection.classList.toggle('active');
+                });
+                document.addEventListener('click', e => {
+                    if (!profileSection.contains(e.target)) {
+                        profilePopup.classList.remove('active');
+                        profileSection.classList.remove('active');
+                    }
+                });
+            }
+        });
+
+        // --- FIREBASE ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyCdeonH3VytC21F3X6x0rCVCn2xXrGPoug",
+            authDomain: "vastramaya---magic.firebaseapp.com",
+            projectId: "vastramaya---magic",
+            storageBucket: "vastramaya---magic.firebasestorage.app",
+            messagingSenderId: "543460072082",
+            appId: "1:543460072082:web:f3d1140e8f81ad338ae44b",
+            measurementId: "G-E39VNDCFVE"
+        };
+        const ADMIN_EMAIL = "harshavardhanjw@gmail.com";
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        let allProducts = [];
+        let currentCategory = null;
+
+        auth.onAuthStateChanged(user => {
+            if (!user || user.email !== ADMIN_EMAIL) {
+                window.location.href = 'index.html';
+                return;
+            }
+            initProfile(user);
+            initializePage();
+        });
+
+        function initProfile(user) {
+            const name = user.displayName || 'Admin';
+            const avatar = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=3B82F6&color=fff`;
+            document.getElementById('sidebar-name').textContent = name;
+            document.getElementById('sidebar-email').textContent = user.email;
+            document.getElementById('sidebar-avatar').src = avatar;
+            document.getElementById('popup-name').textContent = name;
+            document.getElementById('popup-email').textContent = user.email;
+            document.getElementById('popup-avatar').src = avatar;
+        }
+
+        function initializePage() {
+            const params = new URLSearchParams(window.location.search);
+            currentCategory = params.get('category');
+            
+            const title = document.getElementById('products-page-title');
+            const badge = document.getElementById('category-badge');
+            const addBtn = document.getElementById('add-product-btn');
+            
+            if (currentCategory) {
+                const catName = decodeURIComponent(currentCategory);
+                title.textContent = "Products";
+                badge.textContent = catName;
+                badge.style.display = 'inline-block';
+                addBtn.onclick = () => window.location.href = `product.html?category=${encodeURIComponent(catName)}`;
+            } else {
+                title.textContent = "All Products";
+                addBtn.onclick = () => window.location.href = 'product.html';
+            }
+
+            loadProducts();
+            
+            document.getElementById('search-products').addEventListener('input', (e) => {
+                filterProducts(e.target.value.toLowerCase().trim());
+            });
+        }
+
+        async function loadProducts() {
+            try {
+                const snapshot = await db.collection('products').orderBy('name').get();
+                allProducts = snapshot.docs.map(doc => ({ 
+                    id: doc.id, 
+                    ...doc.data(),
+                    colorsCount: (doc.data().colorVariants || []).length
+                }));
+                filterProducts('');
+            } catch (error) {
+                console.error(error);
+                showToast("Failed to load products", "error");
+            }
+        }
+
+        function filterProducts(term) {
+            let filtered = allProducts;
+            if (currentCategory) {
+                filtered = filtered.filter(p => p.category === decodeURIComponent(currentCategory));
+            }
+            if (term) {
+                filtered = filtered.filter(p => p.name.toLowerCase().includes(term));
+            }
+            renderTable(filtered);
+        }
+
+        function renderTable(products) {
+            const tbody = document.getElementById('admin-products-table');
+            if (products.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:3rem; color:var(--text-secondary);">No products found.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = products.map(p => {
+                const img = (p.images && p.images.length) ? p.images[0] : 'https://via.placeholder.com/50';
+                const available = p.isAvailable !== false;
+                
+                return `
+                <tr>
+                    <td>
+                        <div class="product-cell">
+                            <img src="${img}" class="product-image">
+                            <div class="product-info">
+                                <div class="product-name">${p.name}</div>
+                                <div class="product-category">${p.category || 'General'}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="mobile-hidden" style="font-weight:600;">₹${(p.price || 0).toFixed(2)}</td>
+                    <td class="mobile-hidden" style="text-align:center;"><span style="background:#F1F5F9; padding:0.2rem 0.6rem; border-radius:99px; font-size:0.75rem; font-weight:600;">${p.colorsCount}</span></td>
+                    <td style="text-align: center;">
+                        <input type="checkbox" class="availability-toggle" data-id="${p.id}" ${available ? 'checked' : ''}>
+                    </td>
+                    <td style="text-align: right;">
+                        <div class="desktop-actions">
+                            <button class="action-btn edit" onclick="editProduct('${p.id}')"><i class='bx bx-edit-alt'></i> Edit</button>
+                            <button class="action-btn delete" onclick="deleteProduct('${p.id}', '${p.name.replace(/'/g, "\\'")}')"><i class='bx bx-trash'></i> Delete</button>
+                        </div>
+                        <button class="mobile-menu-btn" onclick="openMobileMenu('${p.id}')"><i class='bx bx-dots-vertical-rounded'></i></button>
+                    </td>
+                </tr>`;
+            }).join('');
+
+            document.querySelectorAll('.availability-toggle').forEach(t => {
+                t.addEventListener('change', e => toggleAvailability(e.target.dataset.id, e.target.checked));
+            });
+        }
+
+        async function toggleAvailability(id, status) {
+            try {
+                await db.collection('products').doc(id).update({ 
+                    isAvailable: status, 
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp() 
+                });
+                const p = allProducts.find(x => x.id === id);
+                if(p) p.isAvailable = status;
+                showToast(status ? "Product visible" : "Product hidden");
+            } catch(e) {
+                showToast("Update failed", "error");
+            }
+        }
+
+        function editProduct(id) {
+            window.location.href = `product.html?id=${id}`;
+        }
+
+        async function deleteProduct(id, name) {
+            closeMobileMenu();
+            if(confirm(`Delete "${name}"?`)) {
+                try {
+                    await db.collection('products').doc(id).delete();
+                    allProducts = allProducts.filter(p => p.id !== id);
+                    filterProducts(document.getElementById('search-products').value.toLowerCase());
+                    showToast("Product deleted");
+                } catch(e) {
+                    showToast("Delete failed", "error");
+                }
+            }
+        }
+
+        function openMobileMenu(id) {
+            const p = allProducts.find(x => x.id === id);
+            if(!p) return;
+            const img = (p.images && p.images.length) ? p.images[0] : 'https://via.placeholder.com/50';
+            
+            document.getElementById('sheet-content').innerHTML = `
+                <div class="sheet-header">
+                    <img src="${img}" class="sheet-img">
+                    <div class="sheet-info">
+                        <h3>${p.name}</h3>
+                        <div class="sheet-meta">
+                            <span>${p.category}</span>
+                            <span style="font-weight:600; color:var(--text-primary);">₹${(p.price||0).toFixed(2)}</span>
+                            <span>${p.colorsCount} Color Variants</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="sheet-actions">
+                    <button class="sheet-btn edit" onclick="editProduct('${p.id}')"><i class='bx bx-edit'></i> Edit Product</button>
+                    <button class="sheet-btn delete" onclick="deleteProduct('${p.id}', '${p.name.replace(/'/g, "\\'")}')"><i class='bx bx-trash'></i> Delete Product</button>
+                </div>
+            `;
+            document.getElementById('mobile-overlay').classList.add('active');
+            document.getElementById('mobile-sheet').classList.add('active');
+        }
+
+        function closeMobileMenu() {
+            document.getElementById('mobile-overlay').classList.remove('active');
+            document.getElementById('mobile-sheet').classList.remove('active');
+        }
+
+        function showToast(msg, type='success') {
+            const container = document.getElementById('toast-container');
+            const el = document.createElement('div');
+            el.className = `toast ${type}`;
+            el.innerHTML = `<i class='bx ${type==='success'?'bx-check-circle':'bx-error-circle'}'></i> <span>${msg}</span>`;
+            container.appendChild(el);
+            setTimeout(() => el.remove(), 3000);
+        }
+    </script>
+</body>
+</html>

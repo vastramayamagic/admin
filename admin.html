@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Vastramaya</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+
+    <style>
+        :root {
+            --primary: #111827;
+            --accent: #2563eb; 
+            --pure-white: #FFFFFF;
+            --light-gray: #F3F4F6;
+            --text-color: #111827;
+            --text-light: #6B7280;
+            --border-gray: #E5E7EB;
+            --color-danger: #EF4444;
+            --color-success: #10B981;
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { height: 100%; overflow: hidden; }
+        body { 
+            font-family: 'IBM Plex Sans', sans-serif; 
+            background-color: #e9eef2; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            color: var(--text-color); 
+        }
+        
+        .page-container { 
+            width: 100%; height: 100%; max-height: 900px; 
+            background-color: var(--pure-white); border-radius: 0; 
+            overflow: hidden; display: flex; flex-direction: column; 
+        }
+        
+        .form-panel-wrapper { 
+            flex-grow: 1; position: relative; display: flex; 
+            flex-direction: column; overflow-y: auto; padding: 2rem;
+            align-items: center; justify-content: center;
+        }
+        
+        .info-panel { display: none; }
+        
+        .mobile-logo {
+            display: block;
+            height: 60px;
+            width: auto;
+            object-fit: contain;
+            margin-bottom: 2rem;
+        }
+
+        .form-content { width: 100%; max-width: 400px; }
+        .form-header h2 { font-size: 1.8rem; font-weight: 700; text-align: center; margin-bottom: 0.5rem; color: var(--primary); }
+        .form-header p { text-align: center; color: var(--text-light); margin-bottom: 2rem; font-size: 0.9rem; }
+        
+        .admin-badge {
+            background: #dbeafe; color: #1e40af; padding: 0.25rem 0.75rem;
+            border-radius: 99px; font-size: 0.75rem; font-weight: 600;
+            text-transform: uppercase; display: inline-block; margin-bottom: 0.5rem;
+        }
+        
+        .input-group { margin-bottom: 1.25rem; }
+        .input-group label { display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.5rem; color: var(--text-light); }
+        .input-wrapper { position: relative; }
+        .input-wrapper i { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); font-size: 1.25rem; color: var(--text-light); }
+        .input-wrapper .toggle-password { position: absolute; right: 1rem; left: auto; cursor: pointer; }
+        
+        .input-group input { 
+            width: 100%; padding: 0.9rem 1rem 0.9rem 3rem; 
+            border: 1px solid var(--border-gray); background-color: var(--light-gray); 
+            border-radius: 12px; font-size: 1rem; font-family: 'IBM Plex Sans', sans-serif; 
+            transition: all 0.3s ease; 
+        }
+        .input-group input:focus { 
+            outline: none; border-color: var(--accent); 
+            background-color: var(--pure-white); 
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1); 
+        }
+        
+        .btn-submit { 
+            width: 100%; padding: 1rem; font-size: 1rem; font-weight: 600; 
+            color: var(--pure-white); background-color: var(--primary); 
+            border: none; border-radius: 12px; cursor: pointer; margin-top: 0.5rem; 
+            transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 0.5rem; 
+        }
+        .btn-submit:hover { background-color: #000; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .btn-submit:disabled { background-color: #9CA3AF; cursor: not-allowed; transform: none; }
+        
+        .forgot-link {
+            text-align: center; margin-top: 1.25rem;
+        }
+        .forgot-link a {
+            color: var(--accent); font-size: 0.9rem; font-weight: 500; 
+            text-decoration: none; cursor: pointer; transition: color 0.2s;
+        }
+        .forgot-link a:hover { text-decoration: underline; color: var(--primary); }
+
+        .divider { display: flex; align-items: center; text-align: center; color: var(--text-light); margin: 1.75rem 0; font-size: 0.8rem; font-weight: 500; }
+        .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--border-gray); }
+        .divider:not(:empty)::before { margin-right: .75em; }
+        .divider:not(:empty)::after { margin-left: .75em; }
+        
+        .btn-google { 
+            width: 100%; padding: 0.9rem 1rem; font-size: 0.95rem; font-weight: 600; 
+            color: var(--text-color); background-color: var(--pure-white); 
+            border: 1px solid var(--border-gray); border-radius: 12px; 
+            cursor: pointer; display: flex; align-items: center; justify-content: center; 
+            transition: all 0.3s; 
+        }
+        .btn-google:hover { background-color: var(--light-gray); }
+        .google-icon { width: 20px; height: 20px; margin-right: 0.75rem; }
+
+        #loader { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.8); justify-content: center; align-items: center; z-index: 9999; backdrop-filter: blur(4px); }
+        .spinner { width: 48px; height: 48px; border: 5px solid rgba(37, 99, 235, 0.2); border-bottom-color: var(--accent); border-radius: 50%; animation: rotation 1s linear infinite; }
+        .btn-spinner { display: none; width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: rotation 1s linear infinite; }
+        
+        #toast { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); padding: 1rem 1.5rem; border-radius: 12px; color: white; font-weight: 500; box-shadow: var(--shadow-lg); transition: bottom 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55); z-index: 1001; display: flex; align-items: center; gap: 0.75rem; }
+        #toast.show { bottom: 30px; }
+        #toast.success { background-color: var(--color-success); }
+        #toast.error { background-color: var(--color-danger); }
+        #toast.info { background-color: var(--primary); }
+
+        @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        @media (min-width: 992px) {
+            html, body { height: auto; overflow: auto; }
+            body { padding: 2rem; min-height: 100vh; }
+            .page-container { 
+                flex-direction: row; max-width: 1100px; height: 700px; 
+                border-radius: 2rem; box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.1); 
+            }
+            .info-panel { 
+                display: flex; flex-direction: column; justify-content: center; align-items: center;
+                flex-basis: 50%; 
+                background-color: var(--pure-white);
+                border-right: 1px solid var(--border-gray);
+                padding: 4rem; color: var(--primary); 
+                position: relative;
+            }
+            .info-panel img {
+                max-width: 80%;
+                height: auto;
+                object-fit: contain;
+            }
+            .form-panel-wrapper { flex-basis: 50%; padding: 3rem; }
+            .mobile-logo { display: none; }
+        }
+    </style>
+</head>
+<body>
+    
+    <div id="loader"><div class="spinner"></div></div>
+
+    <div class="page-container">
+        <div class="info-panel">
+            <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Vastramaya Logo">
+        </div>
+
+        <div class="form-panel-wrapper">
+            <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Vastramaya Logo" class="mobile-logo">
+            
+            <div class="form-content">
+                <div class="form-header">
+                    <div style="text-align: center;"><span class="admin-badge">Admin Portal</span></div>
+                    <h2>Welcome Back</h2>
+                    <p>Secure authentication required.</p>
+                </div>
+
+                <form id="login-form">
+                    <div class="input-group">
+                        <label for="email">Email Address</label>
+                        <div class="input-wrapper">
+                            <i class='bx bxs-envelope'></i>
+                            <input type="email" id="email" placeholder="admin@vastramaya.com" required>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="password">Password</label>
+                        <div class="input-wrapper">
+                            <i class='bx bxs-lock-alt'></i>
+                            <input type="password" id="password" placeholder="••••••••" required>
+                            <i class='bx bx-hide toggle-password' id="toggle-password"></i>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-submit" id="email-submit-btn">
+                        <span class="btn-text">Sign In</span>
+                        <span class="btn-spinner"></span>
+                    </button>
+
+                    <div class="forgot-link">
+                        <a href="#" id="forgot-password-btn">Forgot Password?</a>
+                    </div>
+                </form>
+
+                <div class="divider">OR CONTINUE WITH</div>
+
+                <button type="button" class="btn-google" id="google-login-btn">
+                    <svg class="google-icon" viewBox="0 0 48 48">
+                        <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"></path>
+                        <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"></path>
+                        <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.222,0-9.519-3.108-11.127-7.481l-6.522,5.025C9.505,39.556,16.227,44,24,44z"></path>
+                        <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571l6.19,5.238C42.022,36.218,44,30.561,44,24C44,22.659,43.862,21.35,43.611,20.083z"></path>
+                    </svg>
+                    Google
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast"></div>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyCdeonH3VytC21F3X6x0rCVCn2xXrGPoug",
+            authDomain: "vastramaya---magic.firebaseapp.com",
+            projectId: "vastramaya---magic",
+            storageBucket: "vastramaya---magic.firebasestorage.app",
+            messagingSenderId: "543460072082",
+            appId: "1:543460072082:web:f3d1140e8f81ad338ae44b",
+            measurementId: "G-E39VNDCFVE"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const ADMIN_EMAIL = "harshavardhanjw@gmail.com";
+
+        const loginForm = document.getElementById('login-form');
+        const googleBtn = document.getElementById('google-login-btn');
+        const togglePassword = document.getElementById('toggle-password');
+        const passwordInput = document.getElementById('password');
+        const loader = document.getElementById('loader');
+        const forgotBtn = document.getElementById('forgot-password-btn');
+
+        togglePassword.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.classList.toggle('bx-hide');
+            this.classList.toggle('bx-show');
+        });
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const btn = document.getElementById('email-submit-btn');
+            const btnText = btn.querySelector('.btn-text');
+            const btnSpinner = btn.querySelector('.btn-spinner');
+
+            btn.disabled = true;
+            btnText.style.display = 'none';
+            btnSpinner.style.display = 'inline-block';
+
+            try {
+                const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
+                await handleAdminAuth(userCredential.user);
+            } catch (error) {
+                console.error(error);
+                showToast(getErrorMsg(error.code), 'error');
+                btn.disabled = false;
+                btnText.style.display = 'block';
+                btnSpinner.style.display = 'none';
+            }
+        });
+
+        googleBtn.addEventListener('click', async () => {
+            loader.style.display = 'flex';
+            try {
+                const provider = new firebase.auth.GoogleAuthProvider();
+                const result = await firebase.auth().signInWithPopup(provider);
+                await handleAdminAuth(result.user);
+            } catch (error) {
+                console.error(error);
+                showToast(getErrorMsg(error.code), 'error');
+                loader.style.display = 'none';
+            }
+        });
+
+        forgotBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            if (!email) {
+                showToast('Please enter your email address first.', 'error');
+                document.getElementById('email').focus();
+                return;
+            }
+            
+            loader.style.display = 'flex';
+            try {
+                await firebase.auth().sendPasswordResetEmail(email);
+                showToast('Password reset link sent to ' + email, 'info');
+            } catch (error) {
+                showToast(getErrorMsg(error.code), 'error');
+            } finally {
+                loader.style.display = 'none';
+            }
+        });
+
+        async function handleAdminAuth(user) {
+            if (user.email === ADMIN_EMAIL) {
+                showToast('Authentication Successful!', 'success');
+                sessionStorage.setItem('adminAuthenticated', 'true');
+                sessionStorage.setItem('adminEmail', user.email);
+                sessionStorage.setItem('adminName', user.displayName || "Admin");
+                setTimeout(() => {
+                    window.location.href = 'manage-category.html';
+                }, 1000);
+            } else {
+                await firebase.auth().signOut();
+                showToast('Access Denied: Unauthorized Email', 'error');
+                const btn = document.getElementById('email-submit-btn');
+                const btnText = btn.querySelector('.btn-text');
+                const btnSpinner = btn.querySelector('.btn-spinner');
+                if(btn.disabled) {
+                    btn.disabled = false;
+                    btnText.style.display = 'block';
+                    btnSpinner.style.display = 'none';
+                }
+                loader.style.display = 'none';
+            }
+        }
+
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user && user.email === ADMIN_EMAIL) {
+                window.location.href = 'manage-category.html';
+            }
+        });
+
+        function showToast(message, type) {
+            const toast = document.getElementById('toast');
+            let icon = type === 'success' ? 'bx-check-circle' : (type === 'info' ? 'bx-info-circle' : 'bx-error-circle');
+            toast.innerHTML = `<i class='bx ${icon}'></i> <span>${message}</span>`;
+            toast.className = `show ${type}`;
+            setTimeout(() => { toast.className = ''; }, 3000);
+        }
+
+        function getErrorMsg(code) {
+            switch (code) {
+                case 'auth/user-not-found': return 'No account found with this email.';
+                case 'auth/wrong-password': return 'Incorrect password.';
+                case 'auth/invalid-email': return 'Invalid email address.';
+                case 'auth/popup-closed-by-user': return 'Sign-in cancelled.';
+                case 'auth/too-many-requests': return 'Too many attempts. Try later.';
+                default: return 'Authentication failed. Try again.';
+            }
+        }
+    </script>
+</body>
+</html>
