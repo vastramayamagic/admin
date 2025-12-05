@@ -6,355 +6,2402 @@
     <title>Manage Products - Vastramaya</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --body-bg: #F8FAFC;
-            --widget-bg: #FFFFFF;
-            --border-color: #F1F5F9;
-            --text-primary: #0F172A;
-            --text-secondary: #64748B;
-            --brand-primary: #3B82F6;
-            --brand-gradient: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
-            --hover-bg: #F8FAFC;
-            --danger-color: #EF4444;
+            --header-height-desktop: 70px;
+            --sidebar-width: 260px;
+            --row-height: 48px;
+            --sidebar-bg: #ffffff;
+            --header-bg: #ffffff;
+            --page-bg: #f4f5f7;
+            --text-color: rgb(24, 24, 26);
+            --icon-color: #6b7280;
+            --icon-active: #5127ba;
+            --active-bg: #f3f4f6;
+            --hover-bg: #f3f4f6;
+            --border-subtle: #e5e7eb;
+            --brand-primary: #5127ba;
+            --brand-gradient: linear-gradient(135deg, #5127ba 0%, #673de6 100%);
+            --danger-color: #ef4444;
             --success-color: #10B981;
-            --warning-color: #F59E0B;
-            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
-            --radius-sm: 6px;
+            --switch-on: #5127ba;
+            --switch-off: #9CA3AF;
+            --shadow-premium: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
             --radius-md: 8px;
             --radius-lg: 12px;
-            --radius-xl: 24px;
-            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --skeleton-color: #f0f0f0;
+            --skeleton-highlight: #f8f8f8;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        html { scroll-behavior: smooth; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--body-bg); color: var(--text-primary); font-size: 14px; line-height: 1.5; }
-        a { text-decoration: none; color: inherit; }
-        ul { list-style: none; }
-        input, button, select, textarea { font-family: inherit; font-size: inherit; outline: none; }
-        button:focus, a:focus { outline: none; }
 
-        .dashboard-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; position: relative; }
-        .main-area { display: flex; flex-direction: column; overflow-y: auto; height: 100vh; background-color: var(--body-bg); }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: var(--page-bg);
+            font-family: "DM Sans", Roboto, sans-serif;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 20px;
+            color: var(--text-color);
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        /* ============= DESKTOP LAYOUT ============= */
+        .page-desktop {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        /* Desktop header */
+        .d-topbar {
+            height: var(--header-height-desktop);
+            background: var(--header-bg);
+            border-bottom: 1px solid var(--border-subtle);
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            padding-left: 40px;
+        }
+
+        .d-topbar-logo {
+            height: 52px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        /* Desktop main area */
+        .d-app {
+            flex: 1;
+            display: flex;
+            width: 100%;
+        }
+
+        /* Desktop sidebar */
+        .d-sidebar {
+            width: var(--sidebar-width);
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border-subtle);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .d-sidebar-inner {
+            padding: 32px 16px 16px 12px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        /* Desktop nav */
+        .d-nav {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .d-nav-group + .d-nav-group {
+            margin-top: 6px;
+        }
+
+        .d-nav-item {
+            display: flex;
+            align-items: center;
+            height: var(--row-height);
+            padding: 0 20px 0 12px;
+            margin: 2px 0;
+            border-radius: 8px;
+            gap: 12px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 14px;
+            color: var(--text-color);
+            line-height: 20px;
+            transition: background 0.15s ease;
+        }
+
+        .d-nav-item .label {
+            flex: 1;
+        }
+
+        .d-nav-item .icon svg {
+            width: 22px;
+            height: 22px;
+            stroke: var(--icon-color);
+        }
+
+        .chevron-icon {
+            width: 18px;
+            height: 18px;
+            stroke: var(--icon-color);
+            transition: transform 0.2s ease;
+        }
+
+        .dropdown-open .chevron-icon {
+            transform: rotate(90deg);
+        }
+
+        /* Desktop active */
+        .d-nav-item--active {
+            background: var(--active-bg);
+        }
+        .d-nav-item--active .icon svg {
+            stroke: var(--icon-active);
+        }
+
+        /* Desktop hover */
+        .d-nav-item:hover {
+            background: var(--hover-bg);
+        }
+
+        /* Desktop submenus */
+        .d-submenu {
+            display: none;
+            margin-left: 28px;
+            padding-left: 16px;
+            border-left: 1px solid var(--border-subtle);
+            margin-top: 4px;
+        }
+        .d-submenu.open {
+            display: block;
+        }
+        .d-submenu-item {
+            height: 44px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            border-radius: 8px;
+            margin: 2px 0;
+            cursor: pointer;
+            gap: 12px;
+            font-size: 15px;
+            font-weight: 500;
+        }
+        .d-submenu-item:hover {
+            background: var(--hover-bg);
+        }
+        .d-submenu-item.active {
+            background: var(--active-bg);
+        }
+
+        .d-submenu-item .submenu-icon {
+            width: 18px;
+            height: 18px;
+            stroke: #6b7280;
+        }
+
+        /* Desktop account section */
+        .d-account-section {
+            margin-top: auto;
+            padding: 16px;
+            border-top: 1px solid var(--border-subtle);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .account-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .account-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .account-text {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .account-name {
+            font-size: 14px;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 150px;
+        }
+
+        .account-email {
+            font-size: 12px;
+            color: #6b7280;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 150px;
+        }
+
+        /* Desktop content */
+        .d-content {
+            flex: 1;
+            background: var(--page-bg);
+            overflow-y: auto;
+            width: 100%;
+        }
+
+        /* ============= BODY CONTENT ============= */
+        .content-inner {
+            max-width: 1110px;
+            margin: 0 auto;
+            padding: 24px 24px 40px;
+            width: 100%;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            width: 100%;
+        }
+
+        .page-title-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 0;
+        }
+
+        .page-title {
+            font-weight: 700;
+            font-size: 20px;
+            line-height: 32px;
+            color: rgb(29, 30, 32);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            line-height: 20px;
+            color: #6b7280;
+            flex-wrap: wrap;
+        }
+
+        .breadcrumb-icon svg {
+            width: 16px;
+            height: 16px;
+            stroke: #9ca3af;
+        }
+
+        .breadcrumb-divider {
+            color: #d1d5db;
+        }
+
+        .primary-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            line-height: 20px;
+            color: #ffffff;
+            background: var(--brand-primary);
+            transition: background 0.15s ease;
+            white-space: nowrap;
+        }
+        .primary-btn svg {
+            width: 18px;
+            height: 18px;
+            stroke: #ffffff;
+        }
+        .primary-btn:hover {
+            background: #471ea7;
+        }
+
+        /* Card */
+        .card {
+            background: #ffffff;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .card-header {
+            padding: 24px 20px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .search-input-wrap {
+            background: #f9fafb;
+            border-radius: 999px;
+            border: 1px solid #e5e7eb;
+            padding: 12px 16px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: border-color 0.15s ease;
+            width: 100%;
+        }
+
+        .search-input-wrap:focus-within {
+            border-color: #673de6;
+        }
+
+        .search-icon {
+            width: 16px;
+            height: 16px;
+            stroke: #9ca3af;
+        }
+
+        .search-input-wrap input {
+            border: none;
+            background: transparent;
+            outline: none;
+            flex: 1;
+            font-family: "DM Sans", Roboto, sans-serif;
+            font-size: 14px;
+            width: 100%;
+        }
+
+        /* Table area - FIXED: All columns left aligned */
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            position: relative;
+            overflow: visible !important;
+        }
+
+        .products-table {
+            width: 100%;
+            border-collapse: collapse;
+            position: relative;
+            z-index: 1;
+        }
+
+        .products-table thead tr {
+            height: 48px;
+        }
+
+        .products-table th,
+        .products-table td {
+            padding: 12px 20px;
+            vertical-align: middle;
+            text-align: left; /* All columns left aligned */
+        }
+
+        .products-table thead th {
+            font-weight: 700;
+            font-size: 14px;
+            line-height: 24px;
+            color: rgb(29, 30, 32);
+            border-bottom: 1px solid #e5e7eb;
+            white-space: nowrap;
+            background-color: #ffffff;
+        }
+
+        /* Fixed column widths and alignments */
+        .th-product {
+            width: 40%;
+        }
+
+        .th-price {
+            width: 15%;
+        }
+
+        .th-colors {
+            width: 10%;
+        }
+
+        .th-status {
+            width: 15%;
+        }
+
+        .th-actions {
+            width: 20%;
+        }
+
+        /* Product cell styling */
+        .product-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .product-image {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: #e5e7eb;
+        }
+
+        .product-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .product-name {
+            font-weight: 600;
+            font-size: 14px;
+            line-height: 20px;
+            color: rgb(29, 30, 32);
+            margin-bottom: 4px;
+        }
+
+        .product-category {
+            font-weight: 400;
+            font-size: 12px;
+            line-height: 16px;
+            color: #6b7280;
+        }
+
+        .product-price {
+            font-weight: 600;
+            font-size: 14px;
+            color: rgb(29, 30, 32);
+        }
+
+        .product-colors {
+            font-weight: 400;
+            font-size: 14px;
+            color: rgb(29, 30, 32);
+        }
+
+        .products-table tbody tr {
+            border-bottom: 1px solid #f3f4f6;
+            background-color: #ffffff; /* White background for rows */
+        }
+
+        .products-table tbody tr:hover {
+            background-color: #f9fafb; /* Light gray on hover */
+        }
+
+        .products-table tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        /* Action buttons - FIXED: Left aligned */
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            justify-content: flex-start; /* Left aligned */
+        }
+
+        .btn-secondary {
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            background: #ffffff;
+            font-size: 13px;
+            line-height: 20px;
+            color: #673de6;
+            cursor: pointer;
+            transition: background 0.15s ease;
+            white-space: nowrap;
+        }
+        .btn-secondary:hover {
+            background: #f2efff;
+        }
+
+        .kebab {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            flex-shrink: 0;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            transition: all 0.2s ease;
+        }
         
-        .main-header { 
-            padding: 12px 2.5rem; 
-            border-bottom: 1px solid var(--border-color); 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            background-color: var(--widget-bg); 
-            position: sticky; 
-            top: 0; 
-            z-index: 100; 
-            box-shadow: var(--shadow-sm); 
-            min-height: 70px;
-        }
-        .nav-logo { height: 42px; width: auto; object-fit: contain; display: none; }
-        
-        .sidebar { 
-            background-color: var(--widget-bg); 
-            border-right: 1px solid var(--border-color); 
-            padding: 2rem 1.5rem; 
-            display: flex; 
-            flex-direction: column; 
-            position: relative; 
-            transition: transform 0.3s ease-in-out;
-            box-shadow: var(--shadow-sm);
-            z-index: 1001;
-        }
-        .sidebar-header { display: flex; align-items: center; margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); } 
-        .logo-container { display: flex; align-items: center; width: 100%; }
-        .logo-image { height: 40px; width: auto; object-fit: contain; }
-        .main-nav ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
-        .main-nav a { 
-            display: flex; align-items: center; gap: 1rem; text-decoration: none; color: var(--text-secondary); 
-            font-weight: 500; padding: 0.875rem 1rem; border-radius: var(--radius-md); transition: var(--transition); position: relative;
-        }
-        .main-nav a i { font-size: 1.375rem; color: var(--text-secondary); transition: var(--transition); width: 24px; text-align: center; }
-        .main-nav a:hover { background-color: var(--hover-bg); color: var(--text-primary); transform: translateY(-1px); } 
-        .main-nav a:hover i { color: var(--brand-primary); }
-        .main-nav a.active { 
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%); 
-            color: var(--brand-primary); font-weight: 600; box-shadow: var(--shadow-sm);
-        } 
-        .main-nav a.active i { color: var(--brand-primary); }
-        .main-nav a.active::before {
-            content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 4px; height: 60%; background: var(--brand-gradient); border-radius: 0 4px 4px 0;
+        .kebab:hover {
+            background: #f9fafb;
+            border-color: #d1d5db;
         }
         
-        .profile-section { 
-            margin-top: auto; padding-top: 1.5rem; border-top: 1px solid var(--border-color); 
-            display: flex; align-items: center; gap: 0.75rem; cursor: pointer; 
-            border-radius: var(--radius-md); transition: var(--transition); padding: 1rem;
+        .kebab-dots {
+            width: 4px;
+            height: 4px;
+            border-radius: 999px;
+            background: #6b7280;
+            position: relative;
         }
-        .profile-section:hover { background-color: var(--hover-bg); }
-        .profile-content-wrapper { display: flex; align-items: center; gap: 0.75rem; width: 100%; }
-        .profile-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 2px solid var(--border-color); transition: var(--transition); }
-        .profile-section:hover .profile-avatar { border-color: var(--brand-primary); }
-        .profile-details { flex-grow: 1; min-width: 0; }
-        .profile-name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; font-size: 0.9rem; }
-        .profile-email { font-size: 0.8rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
-        .profile-options i { font-size: 1.25rem; color: var(--text-secondary); transition: var(--transition); }
-        .profile-section.active .profile-options i { transform: rotate(180deg); }
         
-        .profile-popup { 
-            position: absolute; bottom: 90px; left: 1.5rem; right: 1.5rem; 
-            background-color: var(--widget-bg); border-radius: var(--radius-lg); 
-            box-shadow: var(--shadow-lg); border: 1px solid var(--border-color); 
-            padding: 0.75rem; z-index: 100; opacity: 0; pointer-events: none; 
-            transform: translateY(10px) scale(0.95); transition: var(--transition); 
+        .kebab-dots::before,
+        .kebab-dots::after {
+            content: '';
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 999px;
+            background: #6b7280;
+            left: 0;
         }
-        .profile-popup.active { opacity: 1; pointer-events: all; transform: translateY(0) scale(1); }
-        .popup-header { display: flex; align-items: center; gap: 0.75rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border-color); margin-bottom: 0.5rem; }
-        .popup-list { list-style: none; } 
-        .popup-list a { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem; border-radius: var(--radius-sm); text-decoration: none; color: var(--text-primary); transition: var(--transition); cursor: pointer; }
-        .popup-list a:hover { background-color: var(--hover-bg); } 
-        .popup-list a i { font-size: 1.2rem; color: var(--text-secondary); }
-        .popup-list a.logout i { color: var(--danger-color); } 
-        .popup-list a.logout { color: var(--danger-color); }
         
-        .menu-toggle, .sidebar-close-btn { display: none; }
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 999; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
-        .overlay.active { opacity: 1; pointer-events: auto; }
-
-        .page-container { max-width: 1200px; margin: 0 auto; padding: 2rem; width: 100%; }
-        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
-        .page-title { font-size: 1.75rem; font-weight: 700; color: var(--text-primary); margin: 0; }
+        .kebab-dots::before {
+            top: -6px;
+        }
         
-        .category-badge { 
-            background: #EFF6FF; color: var(--brand-primary); 
-            padding: 0.25rem 0.75rem; border-radius: 999px; 
-            font-size: 0.85rem; font-weight: 600; margin-left: 0.5rem;
+        .kebab-dots::after {
+            bottom: -6px;
         }
 
-        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.75rem 1.5rem; font-weight: 600; border-radius: var(--radius-md); cursor: pointer; transition: var(--transition); border: none; font-size: 0.95rem; }
-        .btn-primary { background: var(--brand-gradient); color: white; box-shadow: var(--shadow-md); }
-        .btn-primary:hover { box-shadow: var(--shadow-lg); transform: translateY(-1px); }
-        .btn-secondary { background: white; border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.5rem 1rem; font-size: 0.875rem; }
-        .btn-secondary:hover { background: #F8FAFC; border-color: #CBD5E1; }
-        .btn-danger { background: #FEF2F2; color: var(--danger-color); border: 1px solid #FECACA; padding: 0.5rem 1rem; font-size: 0.875rem; }
-        .btn-danger:hover { background: #FEE2E2; }
-
-        /* NEW PREMIUM ACTION BUTTONS */
-        .desktop-actions { display: flex; align-items: center; justify-content: flex-end; gap: 0.5rem; }
-        .action-btn { 
-            display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; 
-            border-radius: 6px; font-size: 0.85rem; font-weight: 500; cursor: pointer; 
-            transition: all 0.2s; border: 1px solid transparent;
+        /* Desktop popup */
+        .popup-container {
+            position: relative;
+            display: inline-block;
         }
-        .action-btn i { font-size: 1.1rem; }
+
+        .desktop-popup {
+            position: fixed;
+            background: #ffffff;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            min-width: 180px;
+            z-index: 10002;
+            display: none;
+            overflow: hidden;
+            margin-top: 8px;
+            animation: fadeInUp 0.2s ease-out;
+        }
+
+        .desktop-popup.open {
+            display: block;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(-5px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .desktop-popup-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            width: 100%;
+            border: none;
+            background: none;
+            text-align: left;
+            cursor: pointer;
+            font-size: 14px;
+            line-height: 20px;
+            color: rgb(29, 30, 32);
+            transition: background 0.15s ease;
+            white-space: nowrap;
+            border-bottom: 1px solid #f9fafb;
+        }
+
+        .desktop-popup-item:last-child {
+            border-bottom: none;
+        }
+
+        .desktop-popup-item:hover {
+            background: #f9fafb;
+        }
+
+        .desktop-popup-item svg {
+            width: 18px;
+            height: 18px;
+            stroke: #6b7280;
+        }
+
+        .desktop-popup-item.delete-item {
+            color: var(--danger-color);
+        }
+
+        .desktop-popup-item.delete-item svg {
+            stroke: var(--danger-color);
+        }
+
+        /* Status toggle switch - FIXED: Left aligned */
+        .status-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start; /* Left aligned */
+            width: 100%;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--switch-off);
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: var(--brand-primary);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(20px);
+        }
+
+        /* ============= SKELETON LOADING ============= */
+        .skeleton-loading {
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .skeleton {
+            background: linear-gradient(
+                90deg,
+                var(--skeleton-color) 25%,
+                var(--skeleton-highlight) 50%,
+                var(--skeleton-color) 75%
+            );
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s infinite;
+            border-radius: 4px;
+        }
+
+        @keyframes skeleton-loading {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
+        /* Desktop skeleton */
+        .desktop-skeleton-row {
+            height: 72px;
+        }
+
+        .desktop-skeleton-row td {
+            padding: 12px 20px;
+        }
+
+        .skeleton-image {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+        }
+
+        .skeleton-text {
+            height: 20px;
+            width: 120px;
+        }
+
+        .skeleton-text-small {
+            height: 16px;
+            width: 80px;
+        }
+
+        .skeleton-toggle {
+            width: 44px;
+            height: 24px;
+            border-radius: 24px;
+        }
+
+        .skeleton-button {
+            width: 80px;
+            height: 32px;
+            border-radius: 8px;
+        }
+
+        .skeleton-kebab {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+        }
+
+        /* Mobile skeleton */
+        .mobile-skeleton-card {
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid #e5e7eb;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            height: 88px;
+        }
+
+        .skeleton-mobile-image {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            flex-shrink: 0;
+        }
+
+        .skeleton-mobile-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .skeleton-mobile-title {
+            height: 24px;
+            width: 150px;
+            border-radius: 4px;
+        }
+
+        .skeleton-mobile-subtitle {
+            height: 18px;
+            width: 100px;
+            border-radius: 4px;
+        }
+
+        .skeleton-mobile-toggle {
+            width: 44px;
+            height: 24px;
+            border-radius: 24px;
+            margin-right: 12px;
+        }
+
+        .skeleton-mobile-menu {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+        }
+
+        /* ============= MOBILE LAYOUT ============= */
+        .page-mobile {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            display: none;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* Mobile header - FIXED: Exactly like reference */
+        .m-header {
+            height: 72px;
+            background: var(--header-bg);
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            width: 100%;
+        }
+
+        /* FIXED: Mobile menu button exactly like reference */
+        .m-menu-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+            background: #f9fafb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .m-menu-btn:hover {
+            background: #f3f4f6;
+        }
+
+        .m-menu-lines {
+            width: 18px;
+            height: 14px;
+            position: relative;
+        }
+        .m-menu-lines::before,
+        .m-menu-lines::after,
+        .m-menu-lines span {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 2px;
+            border-radius: 999px;
+            background: #111827;
+        }
+        .m-menu-lines::before {
+            top: 0;
+        }
+        .m-menu-lines span {
+            top: 6px;
+        }
+        .m-menu-lines::after {
+            bottom: 0;
+        }
+
+        .m-logo {
+            height: 48px;
+            width: auto;
+            object-fit: contain;
+            max-width: 200px;
+        }
+
+        /* Mobile main bg */
+        .m-main {
+            flex: 1;
+            background: var(--page-bg);
+            padding-bottom: 20px;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* Overlay & drawer - FIXED: Exactly like reference */
+        .m-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.45);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease-out;
+            z-index: 40;
+        }
+
+        .m-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .m-drawer {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 320px;
+            max-width: 90vw;
+            height: 100%;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            transform: translateX(-100%);
+            transition: transform 0.25s ease-out;
+            overflow-y: auto;
+        }
+
+        .m-overlay.open .m-drawer {
+            transform: translateX(0);
+        }
+
+        /* Drawer header - FIXED: Exactly like reference */
+        .m-drawer-header {
+            height: 72px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+        }
+
+        .m-drawer-logo {
+            height: 48px;
+            width: auto;
+            object-fit: contain;
+            max-width: 200px;
+        }
+
+        /* FIXED: Mobile drawer close button exactly like reference */
+        .m-drawer-close {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+            background: #f9fafb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
         
-        .action-btn.edit { background: #EFF6FF; color: var(--brand-primary); border-color: #DBEAFE; }
-        .action-btn.edit:hover { background: var(--brand-primary); color: white; border-color: var(--brand-primary); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+        .m-drawer-close:hover {
+            background: #f3f4f6;
+        }
         
-        .action-btn.delete { background: #FEF2F2; color: var(--danger-color); border-color: #FEE2E2; }
-        .action-btn.delete:hover { background: var(--danger-color); color: white; border-color: var(--danger-color); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
-
-        .search-wrapper { position: relative; width: 100%; max-width: 400px; margin-bottom: 1.5rem; }
-        .search-input { 
-            width: 100%; padding: 0.75rem 1rem 0.75rem 2.75rem; 
-            border: 1px solid var(--border-color); border-radius: var(--radius-md);
-            background-color: white; font-size: 0.95rem; transition: var(--transition);
-            box-shadow: var(--shadow-sm);
+        .m-drawer-close-icon {
+            width: 14px;
+            height: 14px;
+            position: relative;
         }
-        .search-input:focus { border-color: var(--brand-primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
-        .search-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-secondary); font-size: 1.25rem; pointer-events: none; }
-
-        .table-container { 
-            background: white; border-radius: var(--radius-lg); 
-            overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color);
+        .m-drawer-close-icon::before,
+        .m-drawer-close-icon::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            margin: auto;
+            width: 14px;
+            height: 2px;
+            border-radius: 999px;
+            background: #111827;
         }
-        .products-table { width: 100%; border-collapse: collapse; }
-        .products-table th { 
-            background-color: #F8FAFC; padding: 1rem 1.5rem; text-align: left; 
-            font-weight: 600; color: var(--text-secondary); border-bottom: 1px solid #E2E8F0;
-            font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.03em;
+        .m-drawer-close-icon::before {
+            transform: rotate(45deg);
         }
-        .products-table td { padding: 1rem 1.5rem; border-bottom: 1px solid #F1F5F9; vertical-align: middle; }
-        .products-table tr:hover { background-color: #F8FAFC; }
-        .products-table tr:last-child td { border-bottom: none; }
-
-        .product-cell { display: flex; align-items: center; gap: 1rem; }
-        .product-image { 
-            width: 44px; height: 44px; border-radius: var(--radius-md); 
-            object-fit: cover; border: 1px solid var(--border-color); flex-shrink: 0; background: #F1F5F9;
+        .m-drawer-close-icon::after {
+            transform: rotate(-45deg);
         }
-        .product-info { flex: 1; min-width: 0; }
-        .product-name { font-weight: 600; color: var(--text-primary); font-size: 0.95rem; margin-bottom: 0.1rem; }
-        .product-category { color: var(--text-secondary); font-size: 0.8rem; }
 
-        .availability-toggle { 
-            appearance: none; width: 36px; height: 20px; background-color: #CBD5E1; 
-            border-radius: 999px; position: relative; cursor: pointer; transition: all 0.2s; flex-shrink: 0;
+        /* Drawer nav - FIXED: Exactly like reference */
+        .m-drawer-nav {
+            padding: 32px 8px;
+            display: flex;
+            flex-direction: column;
         }
-        .availability-toggle::before { 
-            content: ''; position: absolute; width: 16px; height: 16px; border-radius: 50%; 
-            background-color: white; top: 2px; left: 2px; transition: transform 0.2s; box-shadow: var(--shadow-sm);
+
+        .m-nav-item {
+            display: flex;
+            align-items: center;
+            height: 52px;
+            padding: 0 16px;
+            margin: 2px 0;
+            border-radius: 8px;
+            gap: 12px;
+            cursor: pointer;
+            color: var(--text-color);
+            transition: background 0.15s ease;
+            font-size: 16px;
+            font-weight: 600;
         }
-        .availability-toggle:checked { background-color: var(--success-color); }
-        .availability-toggle:checked::before { transform: translateX(16px); }
 
-        .mobile-menu-btn { 
-            display: none; width: 32px; height: 32px; border-radius: 50%; border: none; 
-            background: transparent; color: var(--text-secondary); cursor: pointer; 
-            align-items: center; justify-content: center; transition: var(--transition); font-size: 1.2rem;
+        .m-nav-item .label {
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
-        .mobile-menu-btn:hover { background: #F1F5F9; color: var(--text-primary); }
 
-        .bottom-sheet-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 2000; display: none; opacity: 0; transition: opacity 0.3s; backdrop-filter: blur(2px); }
-        .bottom-sheet-overlay.active { display: block; opacity: 1; }
-        .bottom-sheet { position: fixed; bottom: 0; left: 0; right: 0; background: white; z-index: 2001; border-radius: var(--radius-xl) var(--radius-xl) 0 0; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); padding: 1.5rem; box-shadow: 0 -4px 20px rgba(0,0,0,0.1); }
-        .bottom-sheet.active { transform: translateY(0); }
-        .sheet-header { display: flex; gap: 1rem; margin-bottom: 1.5rem; border-bottom: 1px solid #F1F5F9; padding-bottom: 1rem; }
-        .sheet-img { width: 64px; height: 64px; border-radius: var(--radius-md); object-fit: cover; border: 1px solid var(--border-color); }
-        .sheet-info h3 { font-weight: 600; color: var(--text-primary); margin-bottom: 0.25rem; font-size: 1.1rem; }
-        .sheet-meta { font-size: 0.9rem; color: var(--text-secondary); display: flex; flex-direction: column; gap: 0.25rem; }
-        .sheet-actions { display: flex; flex-direction: column; gap: 0.75rem; }
-        .sheet-btn { width: 100%; justify-content: center; padding: 0.875rem; font-size: 1rem; border-radius: var(--radius-md); display: flex; align-items: center; gap: 0.75rem; font-weight: 500; cursor: pointer; border: 1px solid transparent; }
-        .sheet-btn.edit { background: #F8FAFC; border-color: #E2E8F0; color: var(--text-primary); }
-        .sheet-btn.delete { background: #FEF2F2; border-color: #FECACA; color: var(--danger-color); }
+        .m-nav-item .icon svg {
+            width: 22px;
+            height: 22px;
+            stroke: var(--icon-color);
+        }
 
-        #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 3000; pointer-events: none; display: flex; flex-direction: column; gap: 10px; }
-        .toast { padding: 1rem 1.5rem; background: white; border-radius: var(--radius-md); box-shadow: var(--shadow-lg); animation: slideUp 0.3s ease; display: flex; align-items: center; gap: 1rem; border-left: 4px solid var(--brand-primary); min-width: 300px; pointer-events: auto; }
-        .toast.success { border-left-color: var(--success-color); }
-        .toast.error { border-left-color: var(--danger-color); }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        /* active mobile */
+        .m-nav-item.active {
+            background: var(--active-bg);
+        }
+        .m-nav-item.active .icon svg {
+            stroke: var(--icon-active);
+        }
 
-        .loading-spinner { width: 24px; height: 24px; border: 2px solid #E2E8F0; border-top: 2px solid var(--brand-primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 1rem; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        /* Mobile submenu - FIXED: Exactly like reference */
+        .m-submenu {
+            display: none;
+            margin-left: 28px;
+            padding-left: 16px;
+            border-left: 1px solid var(--border-subtle);
+            margin-top: 4px;
+        }
+        .m-submenu.open {
+            display: block;
+        }
+        .m-submenu-item {
+            height: 48px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            border-radius: 8px;
+            margin: 2px 0;
+            cursor: pointer;
+            gap: 12px;
+            font-size: 15px;
+            font-weight: 500;
+        }
+        .m-submenu-item:hover {
+            background: var(--hover-bg);
+        }
+        .m-submenu-item.active {
+            background: var(--active-bg);
+        }
 
-        @media (max-width: 1024px) {
-            .dashboard-container { grid-template-columns: 1fr; }
-            .sidebar { position: fixed; top: 0; left: 0; height: 100%; width: 85%; max-width: 320px; z-index: 1000; transform: translateX(-100%); box-shadow: var(--shadow-lg); padding: 2rem 1.25rem; }
-            .sidebar.active { transform: translateX(0); }
-            .main-header { padding: 12px 1.5rem; justify-content: space-between; }
-            .nav-logo { display: block; height: 36px; }
+        .m-submenu-item .submenu-icon {
+            width: 18px;
+            height: 18px;
+            stroke: #6b7280;
+        }
+
+        /* Drawer footer account - FIXED: Exactly like reference */
+        .m-account-section {
+            margin-top: auto;
+            padding: 16px;
+            border-top: 1px solid var(--border-subtle);
+            cursor: pointer;
+            position: relative;
+        }
+
+        /* Mobile content layout */
+        .mobile-content-inner {
+            padding: 16px;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* Mobile page header - FIXED: Exactly like reference */
+        .mobile-page-header {
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .mobile-page-title-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+            width: 100%;
+        }
+
+        .mobile-page-title {
+            font-weight: 700;
+            font-size: 22px;
+            line-height: 32px;
+            color: rgb(29, 30, 32);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .mobile-breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            line-height: 20px;
+            color: #6b7280;
+            flex-wrap: wrap;
+        }
+
+        .mobile-breadcrumb-icon svg {
+            width: 16px;
+            height: 16px;
+            stroke: #9ca3af;
+        }
+
+        .mobile-breadcrumb-divider {
+            color: #d1d5db;
+        }
+
+        /* Mobile search and add button row - FIXED: Exactly like reference */
+        .mobile-controls-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 100%;
+            overflow: hidden;
+        }
+
+        .mobile-search-wrap {
+            flex: 1;
+            position: relative;
+            min-width: 0;
+        }
+
+        .mobile-search-input-wrap {
+            background: #ffffff;
+            border-radius: 12px;
+            border: 2px solid #e5e7eb;
+            padding: 0 16px 0 44px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            width: 100%;
+        }
+
+        .mobile-search-input-wrap:focus-within {
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 3px rgba(81, 39, 186, 0.1);
+        }
+
+        .mobile-search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            stroke: #6b7280;
+            z-index: 2;
+        }
+
+        .mobile-search-input-wrap input {
+            border: none;
+            background: transparent;
+            outline: none;
+            flex: 1;
+            font-size: 16px;
+            color: #111827;
+            font-weight: 500;
+            width: 100%;
+            min-width: 0;
+        }
+
+        .mobile-search-input-wrap input::placeholder {
+            color: #9ca3af;
+            font-weight: 400;
+        }
+
+        .mobile-add-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 15px;
+            line-height: 20px;
+            color: #ffffff;
+            background: linear-gradient(135deg, #5127ba 0%, #673de6 100%);
+            white-space: nowrap;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(81, 39, 186, 0.2);
+            flex-shrink: 0;
+            max-width: 120px;
+        }
+
+        .mobile-add-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(81, 39, 186, 0.25);
+        }
+
+        .mobile-add-btn svg {
+            width: 20px;
+            height: 20px;
+            stroke: #ffffff;
+        }
+
+        /* Mobile product cards - FIXED: Exactly like reference category cards */
+        .mobile-product-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            width: 100%;
+        }
+
+        .product-card-mobile {
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid #e5e7eb;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            max-width: 100%;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .product-card-mobile:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .product-card-image {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            flex-shrink: 0;
+            padding: 8px;
+        }
+
+        .product-card-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            min-width: 0;
+        }
+
+        .product-card-name {
+            font-weight: 700;
+            font-size: 16px;
+            line-height: 24px;
+            color: rgb(29, 30, 32);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px;
+        }
+
+        .product-card-price {
+            font-weight: 600;
+            font-size: 14px;
+            line-height: 18px;
+            color: #5127ba;
+        }
+
+        .product-card-category {
+            font-weight: 500;
+            font-size: 12px;
+            line-height: 16px;
+            color: #6b7280;
+        }
+
+        /* Mobile card actions - FIXED: Exactly like reference */
+        .product-card-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+
+        .mobile-status-toggle {
+            display: flex;
+            align-items: center;
+            margin: 0;
+        }
+
+        .product-card-menu-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        .product-card-menu-btn:hover {
+            background: #f9fafb;
+            border-color: #d1d5db;
+        }
+
+        .product-card-menu-dots {
+            width: 4px;
+            height: 4px;
+            border-radius: 999px;
+            background: #6b7280;
+            box-shadow: 0 -6px 0 0 #6b7280, 0 6px 0 0 #6b7280;
+        }
+
+        /* Advanced Menu (Bottom Sheet) - FIXED: Exactly like reference */
+        .advanced-menu {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border-radius: 24px 24px 0 0;
+            padding: 24px 0;
+            transform: translateY(100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 2000;
+            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.15);
+            max-height: 80vh;
+            overflow-y: auto;
+            width: 100%;
+        }
+
+        .advanced-menu.open {
+            transform: translateY(0);
+        }
+
+        .advanced-menu-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 1999;
+        }
+
+        .advanced-menu-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .advanced-menu-header {
+            padding: 0 24px 20px 24px;
+            border-bottom: 1px solid #f3f4f6;
+            margin-bottom: 16px;
+            position: relative;
+        }
+
+        .advanced-menu-title {
+            font-weight: 700;
+            font-size: 20px;
+            line-height: 28px;
+            color: rgb(29, 30, 32);
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .advanced-menu-items {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .advanced-menu-item {
+            padding: 18px 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: none;
+            border: none;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+            font-size: 16px;
+            line-height: 24px;
+            color: rgb(29, 30, 32);
+            transition: background 0.15s ease;
+            border-bottom: 1px solid #f9fafb;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .advanced-menu-item:last-child {
+            border-bottom: none;
+            color: var(--danger-color);
+        }
+
+        .advanced-menu-item:last-child svg {
+            stroke: var(--danger-color);
+        }
+
+        .advanced-menu-item:hover {
+            background: #f9fafb;
+        }
+
+        .advanced-menu-item svg {
+            width: 22px;
+            height: 22px;
+            stroke: #6b7280;
+            flex-shrink: 0;
+        }
+
+        .advanced-menu-close {
+            position: absolute;
+            top: 0;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+            background: #f9fafb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .advanced-menu-close:hover {
+            background: #f3f4f6;
+        }
+
+        .advanced-menu-close-icon {
+            width: 16px;
+            height: 16px;
+            position: relative;
+        }
+
+        .advanced-menu-close-icon::before,
+        .advanced-menu-close-icon::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            margin: auto;
+            width: 16px;
+            height: 2px;
+            border-radius: 999px;
+            background: #111827;
+        }
+
+        .advanced-menu-close-icon::before {
+            transform: rotate(45deg);
+        }
+
+        .advanced-menu-close-icon::after {
+            transform: rotate(-45deg);
+        }
+
+        .menu-handle {
+            width: 40px;
+            height: 4px;
+            border-radius: 999px;
+            background: #e5e7eb;
+            margin: 0 auto 20px auto;
+        }
+
+        /* Toast */
+        #toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 3000;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            padding: 1rem 1.5rem;
+            background: white;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-premium);
+            animation: slideUp 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-left: 4px solid var(--brand-primary);
+            min-width: 300px;
+            pointer-events: auto;
+            max-width: 90vw;
+        }
+
+        .toast.success {
+            border-left-color: var(--success-color);
+        }
+
+        .toast.error {
+            border-left-color: var(--danger-color);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* FIXED PROFILE POPUP */
+        .profile-popup {
+            position: fixed;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 1px solid #e5e7eb;
+            padding: 0;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(10px);
+            transition: all 0.2s ease;
+            width: 280px;
+            max-width: 90vw;
+            overflow: hidden;
+        }
+
+        .profile-popup.active {
+            opacity: 1;
+            pointer-events: all;
+            transform: translateY(0);
+        }
+
+        /* Desktop positioning - Show on LEFT side */
+        @media (min-width: 769px) {
+            .profile-popup {
+                left: 30px !important;
+                right: auto !important;
+                bottom: 100px !important;
+                top: auto !important;
+            }
+        }
+
+        /* Mobile positioning */
+        @media (max-width: 768px) {
+            .profile-popup {
+                left: 50% !important;
+                right: auto !important;
+                bottom: 100px !important;
+                top: auto !important;
+                transform: translateX(-50%) translateY(10px);
+            }
             
-            .menu-toggle { display: flex; align-items: center; justify-content: center; width: 46px; height: 46px; font-size: 1.6rem; color: var(--text-primary); cursor: pointer; border: 1px solid var(--border-color); border-radius: var(--radius-md); background-color: white; }
-            .sidebar-close-btn { display: flex; align-items: center; justify-content: center; position: absolute; top: 1.5rem; right: 1.25rem; font-size: 1.75rem; color: var(--text-secondary); cursor: pointer; border: none; background: none; width: 36px; height: 36px; }
-            
-            .page-container { padding: 1.5rem 1rem; }
-            .table-container { border: none; box-shadow: none; background: transparent; overflow: visible; }
-            .products-table { background: white; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); display: block; }
-            .products-table thead { display: none; }
-            .products-table tbody { display: block; }
-            .products-table tr { display: flex; align-items: center; justify-content: space-between; padding: 1rem; border-bottom: 1px solid #F1F5F9; }
-            .products-table td { padding: 0; border: none; display: block; }
-            
-            .mobile-hidden { display: none !important; }
-            .desktop-actions { display: none !important; }
-            .mobile-menu-btn { display: flex; }
-            
-            .product-cell { gap: 0.75rem; }
-            .product-image { width: 40px; height: 40px; }
-            .product-category { display: none; }
-            
-            .products-table td:nth-child(1) { flex: 1; min-width: 0; padding-right: 0.5rem; }
-            .products-table td:nth-child(4) { margin-right: 1rem; } 
+            .profile-popup.active {
+                transform: translateX(-50%) translateY(0);
+            }
         }
-        @media (min-width: 1025px) { .nav-logo { display: none; } }
+
+        .popup-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            background: #f9fafb;
+        }
+
+        .popup-list {
+            list-style: none;
+            padding: 0.5rem;
+        }
+
+        .popup-list li {
+            margin: 0;
+            padding: 0;
+        }
+
+        .popup-list a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--text-color);
+            transition: background 0.15s ease;
+            cursor: pointer;
+            font-size: 14px;
+            white-space: nowrap;
+            width: 100%;
+            background: none;
+            border: none;
+            text-align: left;
+        }
+
+        .popup-list a:hover {
+            background: #f3f4f6;
+        }
+
+        .popup-list a i {
+            font-size: 1.2rem;
+            color: #6b7280;
+            min-width: 20px;
+        }
+
+        .popup-list a.logout {
+            color: var(--danger-color);
+        }
+
+        .popup-list a.logout i {
+            color: var(--danger-color);
+        }
+
+        .popup-icon {
+            width: 18px;
+            height: 18px;
+            stroke: #6b7280;
+            flex-shrink: 0;
+        }
+
+        .logout-icon {
+            stroke: var(--danger-color) !important;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 1rem;
+            color: #6b7280;
+            width: 100%;
+        }
+
+        .empty-state h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: rgb(29, 30, 32);
+        }
+
+        /* Category badge */
+        .category-badge {
+            background: #EFF6FF;
+            color: var(--brand-primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        /* Responsive switch */
+        @media (max-width: 768px) {
+            .page-desktop { display: none; }
+            .page-mobile  { display: flex; }
+            
+            .card {
+                display: none;
+            }
+            
+            .content-inner {
+                padding: 0;
+            }
+            
+            .page-header {
+                display: none;
+            }
+            
+            /* Prevent horizontal scrolling */
+            body, html {
+                overflow-x: hidden;
+                position: relative;
+                width: 100%;
+            }
+            
+            .mobile-content-inner {
+                padding: 16px;
+                max-width: 100%;
+                overflow-x: hidden;
+            }
+            
+            .mobile-controls-row {
+                padding-right: 4px;
+            }
+            
+            .mobile-add-btn {
+                padding: 12px 14px;
+                font-size: 14px;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .page-desktop { display: flex; }
+            .page-mobile { display: none; }
+            
+            /* Fix desktop popup z-index */
+            .td-actions {
+                position: relative;
+            }
+            
+            .desktop-popup {
+                z-index: 10002;
+            }
+        }
+
+        /* Text truncation fixes */
+        .text-truncate {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
     </style>
 </head>
 <body>
-    <div class="overlay" id="overlay"></div>
-    
-    <!-- DASHBOARD -->
-    <div class="dashboard-container">
-        <aside class="sidebar" id="sidebar">
-            <button class="sidebar-close-btn" id="sidebar-close-btn"><i class='bx bx-x'></i></button>
-            <div class="sidebar-header">
-                <div class="logo-container">
-                    <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Vastramaya" class="logo-image">
-                </div>
-            </div>
-            <nav class="main-nav">
-                <ul>
-                    <li><a href="index.html"><i class='bx bx-home-alt'></i> Dashboard</a></li>
-                    <li><a href="#" class="active"><i class='bx bx-package'></i> Inventory</a></li>
-                    <li><a href="#"><i class='bx bx-palette'></i> Customize Site</a></li>
-                    <li><a href="#"><i class='bx bx-clipboard'></i> All Orders</a></li>
-                </ul>
-            </nav>
-            <div class="profile-section" id="profile-section">
-                <div class="profile-content-wrapper">
-                    <img id="sidebar-avatar" src="" class="profile-avatar">
-                    <div class="profile-details">
-                        <span class="profile-name" id="sidebar-name">Loading...</span>
-                        <span class="profile-email" id="sidebar-email">Admin</span>
+    <!-- ================= DESKTOP VIEW ================= -->
+    <div class="page-desktop">
+        <header class="d-topbar">
+            <img class="d-topbar-logo"
+                 src="https://product-ecommerces.netlify.app/vastramaya.png"
+                 alt="Vastramaya Logo" />
+        </header>
+
+        <div class="d-app">
+            <aside class="d-sidebar">
+                <div class="d-sidebar-inner">
+                    <nav class="d-nav">
+                        <div class="d-nav-group">
+                            <!-- Dashboard -->
+                            <div class="d-nav-item" onclick="window.location.href='index.html'">
+                                <span class="icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="7" height="7" x="3" y="3" rx="1"/>
+                                        <rect width="7" height="7" x="14" y="3" rx="1"/>
+                                        <rect width="7" height="7" x="14" y="14" rx="1"/>
+                                        <rect width="7" height="7" x="3" y="14" rx="1"/>
+                                    </svg>
+                                </span>
+                                <span class="label">Dashboard</span>
+                            </div>
+
+                            <!-- Inventory (Active) -->
+                            <div class="d-nav-item d-nav-item--active">
+                                <span class="icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M2 7v10"/>
+                                        <path d="M6 5v14"/>
+                                        <rect width="12" height="18" x="10" y="3" rx="2"/>
+                                    </svg>
+                                </span>
+                                <span class="label">Inventory</span>
+                            </div>
+
+                            <!-- Customize Site -->
+                            <div class="d-nav-item" id="d-customize-toggle">
+                                <span class="icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12.034 12.681a.498.498 0 0 1 .647-.647l9 3.5a.5.5 0 0 1-.033.943l-3.444 1.068a1 1 0 0 0-.66.66l-1.067 3.443a.5.5 0 0 1-.943.033z"/>
+                                        <path d="M21 11V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6"/>
+                                    </svg>
+                                </span>
+                                <span class="label">Customize Site</span>
+                                <span class="chevron">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2"
+                                         stroke-linecap="round" stroke-linejoin="round"
+                                         class="chevron-icon">
+                                        <path d="m9 18 6-6-6-6"/>
+                                    </svg>
+                                </span>
+                            </div>
+
+                            <!-- Desktop Customize Site submenu -->
+                            <div class="d-submenu" id="d-customize-submenu">
+                                <div class="d-submenu-item">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
+                                        <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
+                                        <path d="M4 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/>
+                                        <path d="M9.5 12.5 11 14"/>
+                                        <path d="M14 10l-3.5 4"/>
+                                        <path d="m5 15 4.5-4"/>
+                                    </svg>
+                                    <span>Theme & layout</span>
+                                </div>
+                                <div class="d-submenu-item">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="18" height="18" x="3" y="3" rx="2"/>
+                                        <path d="M3 9h18"/>
+                                        <path d="M9 21V9"/>
+                                    </svg>
+                                    <span>Sections</span>
+                                </div>
+                                <div class="d-submenu-item">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="18" cy="5" r="3"/>
+                                        <circle cx="6" cy="12" r="3"/>
+                                        <circle cx="18" cy="19" r="3"/>
+                                        <line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/>
+                                        <line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/>
+                                    </svg>
+                                    <span>Navigation</span>
+                                </div>
+                            </div>
+
+                            <!-- MANAGE ORDERS -->
+                            <div class="d-nav-item" id="d-orders-toggle">
+                                <span class="icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
+                                        <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
+                                        <path d="M8 14v2.2l1.6 1"/>
+                                        <circle cx="8" cy="16" r="6"/>
+                                    </svg>
+                                </span>
+                                <span class="label">MANAGE ORDERS</span>
+                                <span class="chevron">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2"
+                                         stroke-linecap="round" stroke-linejoin="round"
+                                         class="chevron-icon">
+                                        <path d="m9 18 6-6-6-6"/>
+                                    </svg>
+                                </span>
+                            </div>
+
+                            <!-- Desktop MANAGE ORDERS submenu -->
+                            <div class="d-submenu" id="d-orders-submenu">
+                                <div class="d-submenu-item">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 6v6l4 2"/>
+                                        <path d="M22 12a10 10 0 1 0-11 9.95"/>
+                                        <path d="m22 16-5.5 5.5L14 19"/>
+                                    </svg>
+                                    <span>Today</span>
+                                </div>
+                                <div class="d-submenu-item">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M8 2v4"/>
+                                        <path d="M16 2v4"/>
+                                        <rect width="18" height="18" x="3" y="4" rx="2"/>
+                                        <path d="M3 10h18"/>
+                                        <path d="M8 14h.01"/>
+                                        <path d="M12 14h.01"/>
+                                        <path d="M16 14h.01"/>
+                                        <path d="M8 18h.01"/>
+                                        <path d="M12 18h.01"/>
+                                        <path d="M16 18h.01"/>
+                                    </svg>
+                                    <span>This Month</span>
+                                </div>
+                                <div class="d-submenu-item">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 2v2"/>
+                                        <path d="M15.726 21.01A2 2 0 0 1 14 22H4a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2"/>
+                                        <path d="M18 2v2"/>
+                                        <path d="M2 13h2"/>
+                                        <path d="M8 8h14"/>
+                                        <rect x="8" y="3" width="14" height="14" rx="2"/>
+                                    </svg>
+                                    <span>All Orders</span>
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
+
+                    <!-- Desktop Account section -->
+                    <div class="d-account-section" id="profile-section">
+                        <div class="account-card">
+                            <img id="sidebar-avatar" class="account-avatar"
+                                 src="https://bpb-us-w2.wpmucdn.com/wp.wpi.edu/dist/e/505/files/2024/06/unknown-person-icon-3.png"
+                                 alt="Profile" />
+                            <div class="account-text">
+                                <div class="account-name" id="sidebar-name">Loading...</div>
+                                <div class="account-email" id="sidebar-email">Admin</div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="profile-options"><i class='bx bx-chevron-down'></i></div>
                 </div>
-            </div>
-            <div class="profile-popup" id="profile-popup">
-                <div class="popup-header">
-                    <img id="popup-avatar" src="" class="profile-avatar">
-                    <div class="profile-details">
-                        <span class="profile-name" id="popup-name">Loading...</span>
-                        <span class="profile-email" id="popup-email">Admin</span>
+            </aside>
+
+            <main class="d-content">
+                <div class="content-inner">
+                    <!-- PAGE HEADER -->
+                    <div class="page-header">
+                        <div class="page-title-wrap">
+                            <div class="page-title" id="products-page-title">Products</div>
+                            <div class="breadcrumb">
+                                <span class="breadcrumb-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2"
+                                         stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/>
+                                        <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                                    </svg>
+                                </span>
+                                <span>Home</span>
+                                <span class="breadcrumb-divider">/</span>
+                                <span>Products</span>
+                            </div>
+                        </div>
+
+                        <button class="primary-btn" id="add-product-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M5 12h14"/>
+                                <path d="M12 5v14"/>
+                            </svg>
+                            <span>Add Product</span>
+                        </button>
+                    </div>
+
+                    <!-- CARD -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="search-input-wrap">
+                                <svg class="search-icon" xmlns="http://www.w3.org/2000/svg"
+                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="7"></circle>
+                                    <line x1="16.65" y1="16.65" x2="21" y2="21"></line>
+                                </svg>
+                                <input type="text" id="search-products" placeholder="Search products by name..." />
+                            </div>
+                        </div>
+
+                        <div class="table-wrapper">
+                            <table class="products-table">
+                                <thead>
+                                    <tr>
+                                        <th class="th-product">Product</th>
+                                        <th class="th-price">Price</th>
+                                        <th class="th-colors">Colors</th>
+                                        <th class="th-status">Status</th>
+                                        <th class="th-actions">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-products-table">
+                                    <!-- Skeleton loading for desktop -->
+                                    <tr class="desktop-skeleton-row">
+                                        <td class="td-product">
+                                            <div class="product-cell">
+                                                <div class="skeleton skeleton-image"></div>
+                                                <div class="product-info">
+                                                    <div class="skeleton skeleton-text"></div>
+                                                    <div class="skeleton skeleton-text-small"></div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-text-small"></div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-text-small"></div>
+                                        </td>
+                                        <td>
+                                            <div class="status-toggle">
+                                                <div class="skeleton skeleton-toggle"></div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <div class="skeleton skeleton-button"></div>
+                                                <div class="skeleton skeleton-kebab"></div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="desktop-skeleton-row">
+                                        <td class="td-product">
+                                            <div class="product-cell">
+                                                <div class="skeleton skeleton-image"></div>
+                                                <div class="product-info">
+                                                    <div class="skeleton skeleton-text"></div>
+                                                    <div class="skeleton skeleton-text-small"></div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-text-small"></div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-text-small"></div>
+                                        </td>
+                                        <td>
+                                            <div class="status-toggle">
+                                                <div class="skeleton skeleton-toggle"></div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <div class="skeleton skeleton-button"></div>
+                                                <div class="skeleton skeleton-kebab"></div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="desktop-skeleton-row">
+                                        <td class="td-product">
+                                            <div class="product-cell">
+                                                <div class="skeleton skeleton-image"></div>
+                                                <div class="product-info">
+                                                    <div class="skeleton skeleton-text"></div>
+                                                    <div class="skeleton skeleton-text-small"></div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-text-small"></div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-text-small"></div>
+                                        </td>
+                                        <td>
+                                            <div class="status-toggle">
+                                                <div class="skeleton skeleton-toggle"></div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <div class="skeleton skeleton-button"></div>
+                                                <div class="skeleton skeleton-kebab"></div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
-                <ul class="popup-list">
-                    <li><a href="#"><i class='bx bx-user'></i> Profile</a></li>
-                    <li><a href="#"><i class='bx bx-cog'></i> Settings</a></li>
-                    <li><a href="#" onclick="auth.signOut()" class="logout"><i class='bx bx-log-out'></i> Logout</a></li>
-                </ul>
-            </div>
-        </aside>
-        
-        <main class="main-area">
-            <header class="main-header">
-                <button class="menu-toggle" id="menu-toggle"><i class='bx bx-menu'></i></button>
-                <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Vastramaya" class="nav-logo">
-            </header>
-            
-            <div class="page-container">
-                <div class="page-header">
-                    <div style="display: flex; align-items: center;">
-                        <h1 class="page-title" id="products-page-title">Products</h1>
-                        <span class="category-badge" id="category-badge" style="display: none;"></span>
+            </main>
+        </div>
+    </div>
+
+    <!-- ================= MOBILE VIEW ================= -->
+    <div class="page-mobile">
+        <!-- Mobile header: menu left, logo right -->
+        <header class="m-header">
+            <button class="m-menu-btn" id="m-menu-toggle" aria-label="Open menu">
+                <div class="m-menu-lines"><span></span></div>
+            </button>
+
+            <img
+              class="m-logo"
+              src="https://product-ecommerces.netlify.app/vastramaya.png"
+              alt="Vastramaya Logo" />
+        </header>
+
+        <main class="m-main">
+            <div class="mobile-content-inner">
+                <!-- Mobile Page Header -->
+                <div class="mobile-page-header">
+                    <div class="mobile-page-title-wrap">
+                        <div class="mobile-page-title" id="mobile-products-page-title">Products</div>
+                        <div class="mobile-breadcrumb">
+                            <span class="mobile-breadcrumb-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2"
+                                     stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/>
+                                    <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                                </svg>
+                            </span>
+                            <span>Home</span>
+                            <span class="mobile-breadcrumb-divider">/</span>
+                            <span>Products</span>
+                        </div>
                     </div>
-                    <button class="btn btn-primary" id="add-product-btn"><i class='bx bx-plus'></i> Add Product</button>
+                    
+                    <!-- Mobile Search and Add Button Row -->
+                    <div class="mobile-controls-row">
+                        <div class="mobile-search-wrap">
+                            <div class="mobile-search-input-wrap">
+                                <svg class="mobile-search-icon" xmlns="http://www.w3.org/2000/svg"
+                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="7"></circle>
+                                    <line x1="16.65" y1="16.65" x2="21" y2="21"></line>
+                                </svg>
+                                <input type="text" id="mobile-search-products" placeholder="Search products..." />
+                            </div>
+                        </div>
+                        <button class="mobile-add-btn" id="mobile-add-product-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M5 12h14"/>
+                                <path d="M12 5v14"/>
+                            </svg>
+                            <span>Add</span>
+                        </button>
+                    </div>
                 </div>
 
-                <div class="search-wrapper">
-                    <i class='bx bx-search search-icon'></i>
-                    <input type="text" id="search-products" class="search-input" placeholder="Search products by name...">
-                </div>
-
-                <div class="table-container">
-                    <table class="products-table">
-                        <thead>
-                            <tr>
-                                <th style="width: 40%;">Product</th>
-                                <th class="mobile-hidden" style="width: 15%;">Price</th>
-                                <th class="mobile-hidden" style="width: 10%; text-align: center;">Colors</th>
-                                <th style="width: 15%; text-align: center;">Status</th>
-                                <th style="width: 20%; text-align: right;">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="admin-products-table">
-                            <tr>
-                                <td colspan="5" style="text-align: center; padding: 3rem;">
-                                    <div class="loading-spinner"></div>
-                                    <div style="color: var(--text-secondary);">Loading products...</div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <!-- Mobile Product Cards -->
+                <div class="mobile-product-cards" id="mobile-product-cards">
+                    <!-- Skeleton loading for mobile -->
+                    <div class="mobile-skeleton-card">
+                        <div class="skeleton skeleton-mobile-image"></div>
+                        <div class="skeleton-mobile-content">
+                            <div class="skeleton skeleton-mobile-title"></div>
+                            <div class="skeleton skeleton-mobile-subtitle"></div>
+                        </div>
+                        <div class="product-card-actions">
+                            <div class="skeleton skeleton-mobile-toggle"></div>
+                            <div class="skeleton skeleton-mobile-menu"></div>
+                        </div>
+                    </div>
+                    <div class="mobile-skeleton-card">
+                        <div class="skeleton skeleton-mobile-image"></div>
+                        <div class="skeleton-mobile-content">
+                            <div class="skeleton skeleton-mobile-title"></div>
+                            <div class="skeleton skeleton-mobile-subtitle"></div>
+                        </div>
+                        <div class="product-card-actions">
+                            <div class="skeleton skeleton-mobile-toggle"></div>
+                            <div class="skeleton skeleton-mobile-menu"></div>
+                        </div>
+                    </div>
+                    <div class="mobile-skeleton-card">
+                        <div class="skeleton skeleton-mobile-image"></div>
+                        <div class="skeleton-mobile-content">
+                            <div class="skeleton skeleton-mobile-title"></div>
+                            <div class="skeleton skeleton-mobile-subtitle"></div>
+                        </div>
+                        <div class="product-card-actions">
+                            <div class="skeleton skeleton-mobile-toggle"></div>
+                            <div class="skeleton skeleton-mobile-menu"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
+
+        <!-- Overlay & drawer -->
+        <div class="m-overlay" id="m-overlay">
+            <div class="m-drawer">
+                <div class="m-drawer-header">
+                    <img
+                      class="m-drawer-logo"
+                      src="https://product-ecommerces.netlify.app/vastramaya.png"
+                      alt="Vastramaya Logo" />
+                    <button class="m-drawer-close" id="m-drawer-close" aria-label="Close menu">
+                        <div class="m-drawer-close-icon"></div>
+                    </button>
+                </div>
+
+                <nav class="m-drawer-nav">
+                    <!-- Dashboard -->
+                    <div class="m-nav-item" onclick="window.location.href='index.html'">
+                        <span class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect width="7" height="7" x="3" y="3" rx="1"/>
+                                <rect width="7" height="7" x="14" y="3" rx="1"/>
+                                <rect width="7" height="7" x="14" y="14" rx="1"/>
+                                <rect width="7" height="7" x="3" y="14" rx="1"/>
+                            </svg>
+                        </span>
+                        <span class="label">Dashboard</span>
+                    </div>
+
+                    <!-- Inventory (Active) -->
+                    <div class="m-nav-item active">
+                        <span class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M2 7v10"/>
+                                <path d="M6 5v14"/>
+                                <rect width="12" height="18" x="10" y="3" rx="2"/>
+                            </svg>
+                        </span>
+                        <span class="label">Inventory</span>
+                    </div>
+
+                    <!-- Customize Site with dropdown -->
+                    <div class="m-nav-item" id="m-customize-toggle">
+                        <span class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12.034 12.681a.498.498 0 0 1 .647-.647l9 3.5a.5.5 0 0 1-.033.943l-3.444 1.068a1 1 0 0 0-.66.66l-1.067 3.443a.5.5 0 0 1-.943.033z"/>
+                                <path d="M21 11V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6"/>
+                            </svg>
+                        </span>
+                        <span class="label">Customize Site</span>
+                        <span class="chevron">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round"
+                                 class="chevron-icon">
+                                <path d="m9 18 6-6-6-6"/>
+                            </svg>
+                        </span>
+                    </div>
+
+                    <!-- Mobile Customize Site submenu -->
+                    <div class="m-submenu" id="m-customize-submenu">
+                        <div class="m-submenu-item">
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
+                                <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
+                                <path d="M4 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/>
+                                <path d="M9.5 12.5 11 14"/>
+                                <path d="M14 10l-3.5 4"/>
+                                <path d="m5 15 4.5-4"/>
+                            </svg>
+                            <span>Theme & layout</span>
+                        </div>
+                        <div class="m-submenu-item">
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect width="18" height="18" x="3" y="3" rx="2"/>
+                                <path d="M3 9h18"/>
+                                <path d="M9 21V9"/>
+                            </svg>
+                            <span>Sections</span>
+                        </div>
+                        <div class="m-submenu-item">
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="18" cy="5" r="3"/>
+                                <circle cx="6" cy="12" r="3"/>
+                                <circle cx="18" cy="19" r="3"/>
+                                <line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/>
+                                <line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/>
+                            </svg>
+                            <span>Navigation</span>
+                        </div>
+                    </div>
+
+                    <!-- MANAGE ORDERS with dropdown -->
+                    <div class="m-nav-item" id="m-orders-toggle">
+                        <span class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
+                                <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
+                                <path d="M8 14v2.2l1.6 1"/>
+                                <circle cx="8" cy="16" r="6"/>
+                            </svg>
+                        </span>
+                        <span class="label">MANAGE ORDERS</span>
+                        <span class="chevron">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round"
+                                 class="chevron-icon">
+                                <path d="m9 18 6-6-6-6"/>
+                            </svg>
+                        </span>
+                    </div>
+
+                    <!-- Mobile MANAGE ORDERS submenu -->
+                    <div class="m-submenu" id="m-orders-submenu">
+                        <div class="m-submenu-item">
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 6v6l4 2"/>
+                                <path d="M22 12a10 10 0 1 0-11 9.95"/>
+                                <path d="m22 16-5.5 5.5L14 19"/>
+                            </svg>
+                            <span>Today</span>
+                        </div>
+                        <div class="m-submenu-item">
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M8 2v4"/>
+                                <path d="M16 2v4"/>
+                                <rect width="18" height="18" x="3" y="4" rx="2"/>
+                                <path d="M3 10h18"/>
+                                <path d="M8 14h.01"/>
+                                <path d="M12 14h.01"/>
+                                <path d="M16 14h.01"/>
+                                <path d="M8 18h.01"/>
+                                <path d="M12 18h.01"/>
+                                <path d="M16 18h.01"/>
+                            </svg>
+                            <span>This Month</span>
+                        </div>
+                        <div class="m-submenu-item">
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2v2"/>
+                                <path d="M15.726 21.01A2 2 0 0 1 14 22H4a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2"/>
+                                <path d="M18 2v2"/>
+                                <path d="M2 13h2"/>
+                                <path d="M8 8h14"/>
+                                <rect x="8" y="3" width="14" height="14" rx="2"/>
+                            </svg>
+                            <span>All Orders</span>
+                        </div>
+                    </div>
+                </nav>
+
+                <!-- Mobile account sharing -->
+                <div class="m-account-section" id="mobile-profile-section">
+                    <div class="account-card">
+                        <img id="mobile-sidebar-avatar" class="account-avatar"
+                             src="https://bpb-us-w2.wpmucdn.com/wp.wpi.edu/dist/e/505/files/2024/06/unknown-person-icon-3.png"
+                             alt="Profile" />
+                        <div class="account-text">
+                            <div class="account-name" id="mobile-sidebar-name">Loading...</div>
+                            <div class="account-email" id="mobile-sidebar-email">Admin</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Advanced Menu (Bottom Sheet) -->
+        <div class="advanced-menu-overlay" id="advanced-menu-overlay"></div>
+        <div class="advanced-menu" id="advanced-menu">
+            <div class="menu-handle"></div>
+            <div class="advanced-menu-header">
+                <div class="advanced-menu-title">Product Actions</div>
+                <button class="advanced-menu-close" id="advanced-menu-close">
+                    <div class="advanced-menu-close-icon"></div>
+                </button>
+            </div>
+            <div class="advanced-menu-items">
+                <button class="advanced-menu-item" id="mobile-edit-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M13 21h8"/>
+                        <path d="m15 5 4 4"/>
+                        <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
+                    </svg>
+                    <span>Edit</span>
+                </button>
+                <button class="advanced-menu-item" id="mobile-delete-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M10 11v6"/>
+                        <path d="M14 11v6"/>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+                        <path d="M3 6h18"/>
+                        <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                    </svg>
+                    <span>Delete Product</span>
+                </button>
+            </div>
+        </div>
     </div>
 
-    <!-- MOBILE BOTTOM SHEET -->
-    <div class="bottom-sheet-overlay" id="mobile-overlay" onclick="closeMobileMenu()"></div>
-    <div class="bottom-sheet" id="mobile-sheet">
-        <div id="sheet-content"></div>
+    <!-- Profile Popup -->
+    <div class="profile-popup" id="profile-popup">
+        <div class="popup-header">
+            <img id="popup-avatar" src="" class="account-avatar">
+            <div class="account-text">
+                <span class="account-name" id="popup-name">Loading...</span>
+                <span class="account-email" id="popup-email">Admin</span>
+            </div>
+        </div>
+        <ul class="popup-list">
+            <li>
+                <a href="#">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="popup-icon">
+                        <circle cx="12" cy="8" r="5"/>
+                        <path d="M20 21a8 8 0 0 0-16 0"/>
+                    </svg>
+                    <span>Profile</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="popup-icon">
+                        <path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/>
+                        <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                    <span>Settings</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" onclick="auth.signOut()" class="logout">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="popup-icon logout-icon">
+                        <path d="m16 17 5-5-5-5"/>
+                        <path d="M21 12H9"/>
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                    </svg>
+                    <span>Logout</span>
+                </a>
+            </li>
+        </ul>
     </div>
 
     <div id="toast-container"></div>
@@ -364,40 +2411,188 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 
     <script>
-        // --- UI LOGIC ---
+        // --- UI INTERACTIONS ---
         document.addEventListener('DOMContentLoaded', () => {
-            const sidebar = document.getElementById('sidebar');
-            const menuToggle = document.getElementById('menu-toggle');
-            const closeBtn = document.getElementById('sidebar-close-btn');
-            const overlay = document.getElementById('overlay');
-            const profileSection = document.getElementById('profile-section');
-            const profilePopup = document.getElementById('profile-popup');
+            // Mobile drawer behaviour
+            const mOverlay = document.getElementById('m-overlay');
+            const mMenuToggle = document.getElementById('m-menu-toggle');
+            const mDrawerClose = document.getElementById('m-drawer-close');
 
-            const toggleMenu = () => {
-                sidebar.classList.toggle('active');
-                overlay.classList.toggle('active');
-            };
-
-            if (menuToggle) menuToggle.addEventListener('click', toggleMenu);
-            if (closeBtn) closeBtn.addEventListener('click', toggleMenu);
-            if (overlay) overlay.addEventListener('click', toggleMenu);
-
-            if (profileSection) {
-                profileSection.addEventListener('click', e => {
-                    e.stopPropagation();
-                    profilePopup.classList.toggle('active');
-                    profileSection.classList.toggle('active');
+            if (mMenuToggle && mOverlay && mDrawerClose) {
+                mMenuToggle.addEventListener('click', () => {
+                    mOverlay.classList.add('open');
                 });
-                document.addEventListener('click', e => {
-                    if (!profileSection.contains(e.target)) {
-                        profilePopup.classList.remove('active');
-                        profileSection.classList.remove('active');
+
+                mDrawerClose.addEventListener('click', () => {
+                    mOverlay.classList.remove('open');
+                });
+
+                mOverlay.addEventListener('click', (e) => {
+                    if (e.target === mOverlay) {
+                        mOverlay.classList.remove('open');
                     }
                 });
             }
+
+            // Desktop Customize Site dropdown
+            const dCustomizeToggle = document.getElementById('d-customize-toggle');
+            const dCustomizeSubmenu = document.getElementById('d-customize-submenu');
+
+            if (dCustomizeToggle && dCustomizeSubmenu) {
+                dCustomizeToggle.addEventListener('click', () => {
+                    dCustomizeSubmenu.classList.toggle('open');
+                    dCustomizeToggle.classList.toggle('dropdown-open');
+                });
+            }
+
+            // Desktop MANAGE ORDERS dropdown
+            const dOrdersToggle = document.getElementById('d-orders-toggle');
+            const dOrdersSubmenu = document.getElementById('d-orders-submenu');
+
+            if (dOrdersToggle && dOrdersSubmenu) {
+                dOrdersToggle.addEventListener('click', () => {
+                    dOrdersSubmenu.classList.toggle('open');
+                    dOrdersToggle.classList.toggle('dropdown-open');
+                });
+            }
+
+            // Mobile Customize Site dropdown
+            const mCustomizeToggle = document.getElementById('m-customize-toggle');
+            const mCustomizeSubmenu = document.getElementById('m-customize-submenu');
+
+            if (mCustomizeToggle && mCustomizeSubmenu) {
+                mCustomizeToggle.addEventListener('click', () => {
+                    mCustomizeSubmenu.classList.toggle('open');
+                    mCustomizeToggle.classList.toggle('dropdown-open');
+                });
+            }
+
+            // Mobile MANAGE ORDERS dropdown
+            const mOrdersToggle = document.getElementById('m-orders-toggle');
+            const mOrdersSubmenu = document.getElementById('m-orders-submenu');
+
+            if (mOrdersToggle && mOrdersSubmenu) {
+                mOrdersToggle.addEventListener('click', () => {
+                    mOrdersSubmenu.classList.toggle('open');
+                    mOrdersToggle.classList.toggle('dropdown-open');
+                });
+            }
+
+            // Profile section
+            const profileSection = document.getElementById('profile-section');
+            const mobileProfileSection = document.getElementById('mobile-profile-section');
+            const profilePopup = document.getElementById('profile-popup');
+
+            // Fix profile popup positioning for desktop - show on LEFT side
+            if (profileSection) {
+                profileSection.addEventListener('click', e => {
+                    e.stopPropagation();
+                    
+                    // Position the popup at the bottom left of the account section for desktop
+                    if (window.innerWidth >= 769) {
+                        const rect = profileSection.getBoundingClientRect();
+                        profilePopup.style.left = '30px';
+                        profilePopup.style.right = 'auto';
+                        profilePopup.style.bottom = '100px';
+                        profilePopup.style.top = 'auto';
+                    }
+                    
+                    profilePopup.classList.toggle('active');
+                });
+                
+                document.addEventListener('click', e => {
+                    if (!profileSection.contains(e.target) && !profilePopup.contains(e.target)) {
+                        profilePopup.classList.remove('active');
+                    }
+                });
+            }
+
+            if (mobileProfileSection) {
+                mobileProfileSection.addEventListener('click', e => {
+                    e.stopPropagation();
+                    profilePopup.classList.toggle('active');
+                });
+            }
+
+            // Advanced Menu functionality
+            const advancedMenu = document.getElementById('advanced-menu');
+            const advancedMenuOverlay = document.getElementById('advanced-menu-overlay');
+            const advancedMenuClose = document.getElementById('advanced-menu-close');
+
+            // Close advanced menu
+            if (advancedMenuClose && advancedMenuOverlay) {
+                advancedMenuClose.addEventListener('click', () => {
+                    advancedMenu.classList.remove('open');
+                    advancedMenuOverlay.classList.remove('open');
+                });
+
+                advancedMenuOverlay.addEventListener('click', () => {
+                    advancedMenu.classList.remove('open');
+                    advancedMenuOverlay.classList.remove('open');
+                });
+            }
+
+            // Prevent horizontal scrolling on mobile
+            if (window.innerWidth <= 768) {
+                document.body.style.overflowX = 'hidden';
+                document.body.style.maxWidth = '100vw';
+            }
+
+            // Close popups when clicking outside
+            document.addEventListener('click', function(e) {
+                // Close profile popup when clicking outside
+                const profilePopup = document.getElementById('profile-popup');
+                const profileSection = document.getElementById('profile-section');
+                const mobileProfileSection = document.getElementById('mobile-profile-section');
+                
+                if (profilePopup && profilePopup.classList.contains('active')) {
+                    if (!profilePopup.contains(e.target) && 
+                        !profileSection?.contains(e.target) && 
+                        !mobileProfileSection?.contains(e.target)) {
+                        profilePopup.classList.remove('active');
+                    }
+                }
+                
+                // Close desktop popups when clicking outside
+                document.querySelectorAll('.desktop-popup').forEach(popup => {
+                    if (popup.classList.contains('open') && 
+                        !popup.contains(e.target) && 
+                        !e.target.closest('.kebab')) {
+                        popup.classList.remove('open');
+                    }
+                });
+            });
+
+            // Close popups when pressing Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    document.getElementById('profile-popup')?.classList.remove('active');
+                    document.querySelectorAll('.desktop-popup').forEach(popup => {
+                        popup.classList.remove('open');
+                    });
+                    closeAdvancedMenu();
+                }
+            });
         });
 
-        // --- FIREBASE ---
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth <= 768) {
+                document.body.style.overflowX = 'hidden';
+                document.body.style.maxWidth = '100vw';
+            } else {
+                document.body.style.overflowX = '';
+                document.body.style.maxWidth = '';
+            }
+            
+            // Close popups on resize
+            document.getElementById('profile-popup')?.classList.remove('active');
+            document.querySelectorAll('.desktop-popup').forEach(popup => {
+                popup.classList.remove('open');
+            });
+        });
+
+        // --- FIREBASE CONFIG ---
         const firebaseConfig = {
             apiKey: "AIzaSyCdeonH3VytC21F3X6x0rCVCn2xXrGPoug",
             authDomain: "vastramaya---magic.firebaseapp.com",
@@ -412,8 +2607,10 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
+        // --- APP LOGIC ---
         let allProducts = [];
         let currentCategory = null;
+        let currentMenuProductId = null;
 
         auth.onAuthStateChanged(user => {
             if (!user || user.email !== ADMIN_EMAIL) {
@@ -426,10 +2623,19 @@
 
         function initProfile(user) {
             const name = user.displayName || 'Admin';
-            const avatar = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=3B82F6&color=fff`;
+            const avatar = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=5127ba&color=fff`;
+            
+            // Desktop
             document.getElementById('sidebar-name').textContent = name;
             document.getElementById('sidebar-email').textContent = user.email;
             document.getElementById('sidebar-avatar').src = avatar;
+            
+            // Mobile
+            document.getElementById('mobile-sidebar-name').textContent = name;
+            document.getElementById('mobile-sidebar-email').textContent = user.email;
+            document.getElementById('mobile-sidebar-avatar').src = avatar;
+            
+            // Popup
             document.getElementById('popup-name').textContent = name;
             document.getElementById('popup-email').textContent = user.email;
             document.getElementById('popup-avatar').src = avatar;
@@ -440,23 +2646,43 @@
             currentCategory = params.get('category');
             
             const title = document.getElementById('products-page-title');
-            const badge = document.getElementById('category-badge');
+            const mobileTitle = document.getElementById('mobile-products-page-title');
+            const badge = document.createElement('span');
+            badge.className = 'category-badge';
+            badge.id = 'category-badge';
             const addBtn = document.getElementById('add-product-btn');
+            const mobileAddBtn = document.getElementById('mobile-add-product-btn');
             
             if (currentCategory) {
                 const catName = decodeURIComponent(currentCategory);
                 title.textContent = "Products";
+                mobileTitle.textContent = "Products";
                 badge.textContent = catName;
                 badge.style.display = 'inline-block';
+                
+                // Add badge to title
+                if (title && !document.getElementById('category-badge')) {
+                    const badgeClone = badge.cloneNode(true);
+                    title.appendChild(badgeClone);
+                }
+                
                 addBtn.onclick = () => window.location.href = `product.html?category=${encodeURIComponent(catName)}`;
+                mobileAddBtn.onclick = () => window.location.href = `product.html?category=${encodeURIComponent(catName)}`;
             } else {
                 title.textContent = "All Products";
+                mobileTitle.textContent = "All Products";
                 addBtn.onclick = () => window.location.href = 'product.html';
+                mobileAddBtn.onclick = () => window.location.href = 'product.html';
             }
 
             loadProducts();
             
+            // Search functionality
             document.getElementById('search-products').addEventListener('input', (e) => {
+                filterProducts(e.target.value.toLowerCase().trim());
+            });
+            
+            document.getElementById('mobile-search-products').addEventListener('input', (e) => {
                 filterProducts(e.target.value.toLowerCase().trim());
             });
         }
@@ -467,7 +2693,8 @@
                 allProducts = snapshot.docs.map(doc => ({ 
                     id: doc.id, 
                     ...doc.data(),
-                    colorsCount: (doc.data().colorVariants || []).length
+                    colorsCount: (doc.data().colorVariants || []).length,
+                    isAvailable: doc.data().isAvailable !== false
                 }));
                 filterProducts('');
             } catch (error) {
@@ -485,17 +2712,18 @@
                 filtered = filtered.filter(p => p.name.toLowerCase().includes(term));
             }
             renderTable(filtered);
+            renderMobileCards(filtered);
         }
 
         function renderTable(products) {
             const tbody = document.getElementById('admin-products-table');
             if (products.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:3rem; color:var(--text-secondary);">No products found.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" class="empty-state"><h3>No Products Found</h3><p>Create a new product to get started.</p></td></tr>`;
                 return;
             }
 
             tbody.innerHTML = products.map(p => {
-                const img = (p.images && p.images.length) ? p.images[0] : 'https://via.placeholder.com/50';
+                const img = (p.images && p.images.length) ? p.images[0] : 'https://via.placeholder.com/50?text=No+Image';
                 const available = p.isAvailable !== false;
                 
                 return `
@@ -509,24 +2737,184 @@
                             </div>
                         </div>
                     </td>
-                    <td class="mobile-hidden" style="font-weight:600;">₹${(p.price || 0).toFixed(2)}</td>
-                    <td class="mobile-hidden" style="text-align:center;"><span style="background:#F1F5F9; padding:0.2rem 0.6rem; border-radius:99px; font-size:0.75rem; font-weight:600;">${p.colorsCount}</span></td>
-                    <td style="text-align: center;">
-                        <input type="checkbox" class="availability-toggle" data-id="${p.id}" ${available ? 'checked' : ''}>
-                    </td>
-                    <td style="text-align: right;">
-                        <div class="desktop-actions">
-                            <button class="action-btn edit" onclick="editProduct('${p.id}')"><i class='bx bx-edit-alt'></i> Edit</button>
-                            <button class="action-btn delete" onclick="deleteProduct('${p.id}', '${p.name.replace(/'/g, "\\'")}')"><i class='bx bx-trash'></i> Delete</button>
+                    <td class="product-price">₹${(p.price || 0).toFixed(2)}</td>
+                    <td class="product-colors">${p.colorsCount || 0}</td>
+                    <td>
+                        <div class="status-toggle">
+                            <label class="toggle-switch">
+                                <input type="checkbox" ${available ? 'checked' : ''} 
+                                       onchange="toggleAvailability('${p.id}', this.checked)">
+                                <span class="toggle-slider"></span>
+                            </label>
                         </div>
-                        <button class="mobile-menu-btn" onclick="openMobileMenu('${p.id}')"><i class='bx bx-dots-vertical-rounded'></i></button>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-secondary" onclick="manageProduct('${p.id}')">Manage</button>
+                            <div class="popup-container">
+                                <div class="kebab" data-product-id="${p.id}">
+                                    <span class="kebab-dots"></span>
+                                </div>
+                                <div class="desktop-popup" id="desktop-popup-${p.id}">
+                                    <button class="desktop-popup-item" onclick="editProduct('${p.id}')">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M13 21h8"/>
+                                            <path d="m15 5 4 4"/>
+                                            <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
+                                        </svg>
+                                        <span>Edit</span>
+                                    </button>
+                                    <button class="desktop-popup-item delete-item" onclick="deleteProduct('${p.id}', '${p.name.replace(/'/g, "\\'")}')">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M10 11v6"/>
+                                            <path d="M14 11v6"/>
+                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+                                            <path d="M3 6h18"/>
+                                            <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                        </svg>
+                                        <span>Delete</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </td>
                 </tr>`;
             }).join('');
 
-            document.querySelectorAll('.availability-toggle').forEach(t => {
-                t.addEventListener('change', e => toggleAvailability(e.target.dataset.id, e.target.checked));
+            // FIXED: Desktop popup positioning
+            document.querySelectorAll('.kebab').forEach(kebab => {
+                kebab.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    
+                    const productId = kebab.getAttribute('data-product-id');
+                    const popup = document.getElementById(`desktop-popup-${productId}`);
+                    
+                    // Close all other popups
+                    document.querySelectorAll('.desktop-popup').forEach(p => {
+                        if (p !== popup) {
+                            p.classList.remove('open');
+                        }
+                    });
+                    
+                    // Toggle current popup
+                    popup.classList.toggle('open');
+                    
+                    if (popup.classList.contains('open')) {
+                        // Get the position of the kebab button
+                        const rect = kebab.getBoundingClientRect();
+                        
+                        // Position the popup relative to the viewport
+                        popup.style.position = 'fixed';
+                        popup.style.top = `${rect.bottom + window.scrollY + 5}px`;
+                        popup.style.right = `${window.innerWidth - rect.right}px`;
+                        
+                        // Ensure popup stays within viewport
+                        const popupRect = popup.getBoundingClientRect();
+                        if (popupRect.bottom > window.innerHeight) {
+                            popup.style.top = `${rect.top + window.scrollY - popupRect.height - 5}px`;
+                        }
+                        if (popupRect.right > window.innerWidth) {
+                            popup.style.right = '10px';
+                        }
+                    }
+                });
             });
+            
+            // Close popups when clicking elsewhere
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.popup-container') && !e.target.closest('.desktop-popup')) {
+                    document.querySelectorAll('.desktop-popup').forEach(popup => {
+                        popup.classList.remove('open');
+                    });
+                }
+            });
+            
+            // Prevent desktop popups from closing when clicking inside
+            document.querySelectorAll('.desktop-popup').forEach(popup => {
+                popup.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                });
+            });
+        }
+
+        function renderMobileCards(products) {
+            const mobileCards = document.getElementById('mobile-product-cards');
+            if (products.length === 0) {
+                mobileCards.innerHTML = `<div class="empty-state"><h3>No Products Found</h3><p>Create a new product to get started.</p></div>`;
+                return;
+            }
+
+            mobileCards.innerHTML = products.map(p => {
+                const img = (p.images && p.images.length) ? p.images[0] : 'https://via.placeholder.com/50?text=No+Image';
+                const available = p.isAvailable !== false;
+                
+                return `
+                <div class="product-card-mobile" onclick="handleMobileCardClick(event, '${p.id}')">
+                    <img class="product-card-image"
+                         src="${img}"
+                         alt="${p.name}" />
+                    <div class="product-card-content">
+                        <div class="product-card-name">${p.name}</div>
+                        <div class="product-card-price">₹${(p.price || 0).toFixed(2)}</div>
+                        <div class="product-card-category">${p.category || 'General'} • ${p.colorsCount || 0} colors</div>
+                    </div>
+                    <div class="product-card-actions">
+                        <div class="mobile-status-toggle">
+                            <label class="toggle-switch">
+                                <input type="checkbox" ${available ? 'checked' : ''} 
+                                       onchange="toggleAvailability('${p.id}', this.checked)">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <button class="product-card-menu-btn" data-product-id="${p.id}">
+                            <span class="product-card-menu-dots"></span>
+                        </button>
+                    </div>
+                </div>`;
+            }).join('');
+            
+            // Attach event listeners for mobile menu buttons
+            document.querySelectorAll('.product-card-menu-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    currentMenuProductId = btn.getAttribute('data-product-id');
+                    const p = allProducts.find(x => x.id === currentMenuProductId);
+                    
+                    if (!p) return;
+                    
+                    // Set up the mobile menu buttons
+                    document.getElementById('mobile-edit-btn').onclick = () => {
+                        editProduct(currentMenuProductId);
+                        closeAdvancedMenu();
+                    };
+                    
+                    document.getElementById('mobile-delete-btn').onclick = () => {
+                        deleteProduct(p.id, p.name);
+                        closeAdvancedMenu();
+                    };
+                    
+                    openAdvancedMenu();
+                });
+            });
+            
+            // Prevent toggle clicks from triggering card redirect
+            document.querySelectorAll('.product-card-actions .toggle-switch input').forEach(toggle => {
+                toggle.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                });
+            });
+        }
+
+        function handleMobileCardClick(event, productId) {
+            // Only redirect if the click wasn't on the actions area (toggle or menu button)
+            if (!event.target.closest('.product-card-actions') && 
+                !event.target.classList.contains('toggle-switch') &&
+                !event.target.classList.contains('toggle-slider') &&
+                event.target.type !== 'checkbox') {
+                editProduct(productId);
+            }
         }
 
         async function toggleAvailability(id, status) {
@@ -535,68 +2923,75 @@
                     isAvailable: status, 
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp() 
                 });
+                
+                // Update local state
                 const p = allProducts.find(x => x.id === id);
-                if(p) p.isAvailable = status;
-                showToast(status ? "Product visible" : "Product hidden");
-            } catch(e) {
-                showToast("Update failed", "error");
+                if (p) {
+                    p.isAvailable = status;
+                }
+                
+                // Re-render
+                filterProducts(document.getElementById('search-products').value.toLowerCase());
+                
+                showToast(status ? "Product visible" : "Product hidden", 'success');
+                
+                // Close any open desktop popups
+                document.querySelectorAll('.desktop-popup').forEach(popup => {
+                    popup.classList.remove('open');
+                });
+                
+            } catch (e) {
+                console.error(e);
+                showToast('Failed to update product status', 'error');
             }
+        }
+
+        function manageProduct(id) {
+            // Navigate to product management page
+            window.location.href = `product-details.html?id=${id}`;
         }
 
         function editProduct(id) {
             window.location.href = `product.html?id=${id}`;
         }
 
-        async function deleteProduct(id, name) {
-            closeMobileMenu();
-            if(confirm(`Delete "${name}"?`)) {
-                try {
-                    await db.collection('products').doc(id).delete();
-                    allProducts = allProducts.filter(p => p.id !== id);
-                    filterProducts(document.getElementById('search-products').value.toLowerCase());
-                    showToast("Product deleted");
-                } catch(e) {
-                    showToast("Delete failed", "error");
-                }
+        function deleteProduct(id, name) {
+            closeAdvancedMenu();
+            if(confirm(`Delete "${name}"? This action cannot be undone.`)) {
+                // Delete logic here
+                db.collection('products').doc(id).delete()
+                    .then(() => {
+                        allProducts = allProducts.filter(p => p.id !== id);
+                        filterProducts(document.getElementById('search-products').value.toLowerCase());
+                        showToast("Product deleted successfully", "success");
+                    })
+                    .catch((error) => {
+                        showToast("Failed to delete product", "error");
+                    });
             }
         }
 
-        function openMobileMenu(id) {
-            const p = allProducts.find(x => x.id === id);
-            if(!p) return;
-            const img = (p.images && p.images.length) ? p.images[0] : 'https://via.placeholder.com/50';
-            
-            document.getElementById('sheet-content').innerHTML = `
-                <div class="sheet-header">
-                    <img src="${img}" class="sheet-img">
-                    <div class="sheet-info">
-                        <h3>${p.name}</h3>
-                        <div class="sheet-meta">
-                            <span>${p.category}</span>
-                            <span style="font-weight:600; color:var(--text-primary);">₹${(p.price||0).toFixed(2)}</span>
-                            <span>${p.colorsCount} Color Variants</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="sheet-actions">
-                    <button class="sheet-btn edit" onclick="editProduct('${p.id}')"><i class='bx bx-edit'></i> Edit Product</button>
-                    <button class="sheet-btn delete" onclick="deleteProduct('${p.id}', '${p.name.replace(/'/g, "\\'")}')"><i class='bx bx-trash'></i> Delete Product</button>
-                </div>
-            `;
-            document.getElementById('mobile-overlay').classList.add('active');
-            document.getElementById('mobile-sheet').classList.add('active');
+        function openAdvancedMenu() {
+            document.getElementById('advanced-menu').classList.add('open');
+            document.getElementById('advanced-menu-overlay').classList.add('open');
         }
 
-        function closeMobileMenu() {
-            document.getElementById('mobile-overlay').classList.remove('active');
-            document.getElementById('mobile-sheet').classList.remove('active');
+        function closeAdvancedMenu() {
+            document.getElementById('advanced-menu').classList.remove('open');
+            document.getElementById('advanced-menu-overlay').classList.remove('open');
         }
 
         function showToast(msg, type='success') {
             const container = document.getElementById('toast-container');
             const el = document.createElement('div');
             el.className = `toast ${type}`;
-            el.innerHTML = `<i class='bx ${type==='success'?'bx-check-circle':'bx-error-circle'}'></i> <span>${msg}</span>`;
+            el.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    ${type === 'success' ? 
+                        '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>' : 
+                        '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>'}
+                </svg>
+                <span>${msg}</span>`;
             container.appendChild(el);
             setTimeout(() => el.remove(), 3000);
         }
