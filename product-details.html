@@ -263,7 +263,7 @@
 
         /* ============= BODY CONTENT ============= */
         .content-inner {
-            max-width: 1110px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 24px 24px 40px;
             width: 100%;
@@ -324,6 +324,7 @@
         @media (min-width: 992px) {
             .form-grid {
                 grid-template-columns: 2fr 1fr;
+                gap: 32px;
             }
         }
 
@@ -336,18 +337,25 @@
         /* Card styles */
         .form-card {
             background: #ffffff;
-            border-radius: 12px;
+            border-radius: 16px;
             border: 1px solid #e5e7eb;
             overflow: hidden;
             width: 100%;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            transition: box-shadow 0.3s ease, transform 0.2s ease;
+        }
+
+        .form-card:hover {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
         }
 
         .card-header {
-            padding: 24px 24px;
+            padding: 24px;
             border-bottom: 1px solid #e5e7eb;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            background: linear-gradient(to right, #f9fafb, #ffffff);
         }
 
         .card-title {
@@ -372,7 +380,7 @@
 
         /* Form elements */
         .form-group {
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
 
         .form-label {
@@ -612,67 +620,173 @@
             color: #5127ba;
         }
 
-        /* Variants */
-        .variants-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
+        /* VARIANT GRID - UPDATED PREMIUM STYLE */
+        .variants-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 16px;
         }
 
-        .variant-card {
-            display: flex;
-            align-items: center;
+        .variant-chip {
+            position: relative;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
             padding: 16px;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            background: #ffffff;
-            margin-bottom: 12px;
-            transition: all 0.15s ease;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            overflow: hidden;
         }
 
-        .variant-card:hover {
+        .variant-chip::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #5127ba, #673de6);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .variant-chip:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(81, 39, 186, 0.1);
             border-color: #d1d5db;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
 
-        .variant-swatch {
-            width: 48px;
-            height: 48px;
-            border-radius: 8px;
-            border: 1px solid #e5e7eb;
+        .variant-chip:hover::before {
+            opacity: 1;
+        }
+
+        .variant-chip-swatch {
+            width: 64px;
+            height: 64px;
+            border-radius: 10px;
+            border: 2px solid #f3f4f6;
+            overflow: hidden;
+            margin-bottom: 12px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .variant-chip-swatch img {
+            width: 100%;
+            height: 100%;
             object-fit: cover;
-            margin-right: 16px;
         }
 
-        .variant-info {
-            flex: 1;
-        }
-
-        .variant-name {
+        .variant-chip-name {
             font-weight: 600;
             font-size: 14px;
             color: rgb(29, 30, 32);
             margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
         }
 
-        .variant-meta {
+        .variant-chip-meta {
             font-size: 12px;
             color: #6b7280;
-        }
-
-        .variant-actions {
             display: flex;
             gap: 8px;
+            align-items: center;
+        }
+
+        .variant-chip-actions {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            display: flex;
+            gap: 4px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .variant-chip:hover .variant-chip-actions {
+            opacity: 1;
+        }
+
+        .variant-chip-action {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border: 1px solid #e5e7eb;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .variant-chip-action:hover {
+            background: #f9fafb;
+            border-color: #d1d5db;
+        }
+
+        .variant-chip-action.edit:hover {
+            color: #5127ba;
+            border-color: #5127ba;
+        }
+
+        .variant-chip-action.delete:hover {
+            color: #ef4444;
+            border-color: #fecaca;
+        }
+
+        /* Empty state for variants */
+        .variants-empty {
+            text-align: center;
+            padding: 48px 24px;
+            background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+            border-radius: 12px;
+            border: 2px dashed #e5e7eb;
+        }
+
+        .variants-empty svg {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 16px;
+            stroke: #d1d5db;
+        }
+
+        .variants-empty h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #6b7280;
+            margin-bottom: 8px;
+        }
+
+        .variants-empty p {
+            font-size: 14px;
+            color: #9ca3af;
+            margin-bottom: 20px;
         }
 
         /* Reviews */
         .review-card {
-            padding: 16px;
+            padding: 20px;
             border: 1px solid #e5e7eb;
-            border-radius: 8px;
+            border-radius: 12px;
             background: #ffffff;
             margin-bottom: 12px;
+            transition: box-shadow 0.2s ease;
+        }
+
+        .review-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
         }
 
         .review-header {
@@ -707,7 +821,7 @@
             justify-content: center;
             gap: 8px;
             padding: 12px 20px;
-            border-radius: 8px;
+            border-radius: 10px;
             border: none;
             cursor: pointer;
             font-weight: 600;
@@ -715,14 +829,18 @@
             line-height: 20px;
             transition: all 0.15s ease;
             white-space: nowrap;
+            font-family: "DM Sans", sans-serif;
         }
 
         .btn-primary {
             color: #ffffff;
             background: var(--brand-primary);
+            box-shadow: 0 2px 4px rgba(81, 39, 186, 0.2);
         }
         .btn-primary:hover {
             background: #471ea7;
+            box-shadow: 0 4px 8px rgba(81, 39, 186, 0.3);
+            transform: translateY(-1px);
         }
 
         .btn-secondary {
@@ -735,8 +853,21 @@
             border-color: #5127ba;
         }
 
+        .btn-gradient {
+            background: linear-gradient(135deg, #5127ba 0%, #673de6 100%);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 12px rgba(81, 39, 186, 0.25);
+        }
+
+        .btn-gradient:hover {
+            background: linear-gradient(135deg, #471ea7 0%, #5b2bd9 100%);
+            box-shadow: 0 6px 16px rgba(81, 39, 186, 0.35);
+            transform: translateY(-2px);
+        }
+
         .btn-sm {
-            padding: 8px 16px;
+            padding: 10px 16px;
             font-size: 13px;
         }
 
@@ -786,7 +917,7 @@
         .modal-content {
             background: white;
             width: 100%;
-            max-width: 480px;
+            max-width: 520px;
             border-radius: var(--radius-lg);
             box-shadow: var(--shadow-premium);
             display: flex;
@@ -795,6 +926,7 @@
             animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             max-height: 90vh;
             overflow-y: auto;
+            border: 1px solid #e5e7eb;
         }
 
         @keyframes modalPop {
@@ -808,7 +940,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: #fff;
+            background: linear-gradient(to right, #f9fafb, #ffffff);
         }
 
         .modal-title {
@@ -843,6 +975,11 @@
             width: 32px;
             height: 32px;
             cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .star-rating svg:hover {
+            transform: scale(1.1);
         }
 
         .star-rating .filled {
@@ -893,6 +1030,11 @@
             color: var(--danger-color);
             font-size: 18px;
             line-height: 1;
+            transition: background 0.2s ease;
+        }
+
+        .gallery-remove:hover {
+            background: white;
         }
 
         /* Progress overlay */
@@ -964,7 +1106,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Mobile Save Bar */
+        /* Mobile Save Bar - FIXED Z-INDEX */
         .mobile-save-bar {
             display: none;
             position: fixed;
@@ -974,7 +1116,7 @@
             background: white;
             padding: 16px;
             border-top: 1px solid #e5e7eb;
-            z-index: 100;
+            z-index: 35; /* Lower than mobile overlay (40) and drawer */
             box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
             gap: 12px;
         }
@@ -1003,6 +1145,9 @@
             justify-content: space-between;
             padding: 0 16px;
             width: 100%;
+            position: sticky;
+            top: 0;
+            z-index: 30;
         }
 
         .m-menu-btn {
@@ -1101,7 +1246,7 @@
             color: #6b7280;
         }
 
-        /* Overlay & drawer */
+        /* Overlay & drawer - UPDATED Z-INDEX */
         .m-overlay {
             position: fixed;
             inset: 0;
@@ -1109,7 +1254,7 @@
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.25s ease-out;
-            z-index: 40;
+            z-index: 40; /* Higher than mobile save bar (35) */
         }
 
         .m-overlay.open {
@@ -1130,6 +1275,7 @@
             transform: translateX(-100%);
             transition: transform 0.25s ease-out;
             overflow-y: auto;
+            z-index: 41; /* Higher than overlay */
         }
 
         .m-overlay.open .m-drawer {
@@ -1422,6 +1568,21 @@
                 from { transform: translateY(100%); }
                 to { transform: translateY(0); }
             }
+            
+            /* Mobile variants grid */
+            .variants-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 12px;
+            }
+            
+            .variant-chip {
+                padding: 12px;
+            }
+            
+            .variant-chip-swatch {
+                width: 48px;
+                height: 48px;
+            }
         }
 
         @media (min-width: 769px) {
@@ -1455,33 +1616,47 @@
             100% { background-position: -200% 0; }
         }
 
-        /* Size selector */
+        /* Size selector - UPDATED */
         .size-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
-            gap: 8px;
+            grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+            gap: 10px;
             margin: 16px 0;
         }
 
         .size-item {
-            padding: 12px;
+            padding: 14px 8px;
             text-align: center;
             border: 1px solid #e5e7eb;
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
             background: #ffffff;
             transition: all 0.15s ease;
+            position: relative;
+            overflow: hidden;
         }
 
         .size-item:hover {
             border-color: #d1d5db;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
         }
 
         .size-item.selected {
-            background: #f2efff;
+            background: linear-gradient(135deg, #f2efff 0%, #e8e3ff 100%);
             border-color: #5127ba;
             color: #5127ba;
             font-weight: 600;
+        }
+
+        .size-item.selected::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #5127ba;
         }
 
         .size-label {
@@ -1493,6 +1668,63 @@
             font-size: 11px;
             color: #6b7280;
             margin-top: 2px;
+        }
+
+        /* Mobile variant add button */
+        .mobile-add-variant-btn {
+            width: 100%;
+            padding: 16px;
+            border: 2px dashed #e5e7eb;
+            border-radius: 12px;
+            background: #f9fafb;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 16px;
+        }
+
+        .mobile-add-variant-btn:hover {
+            border-color: #5127ba;
+            background: #f2efff;
+            transform: translateY(-2px);
+        }
+
+        .mobile-add-variant-btn svg {
+            width: 24px;
+            height: 24px;
+            stroke: #5127ba;
+        }
+
+        .mobile-add-variant-btn span {
+            font-weight: 600;
+            color: #5127ba;
+            font-size: 14px;
+        }
+
+        /* Status indicators */
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 20px;
+            background: #f3f4f6;
+            color: #6b7280;
+        }
+
+        .status-indicator.active {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-indicator.inactive {
+            background: #fef2f2;
+            color: #991b1b;
         }
     </style>
 </head>
@@ -1692,7 +1924,14 @@
 
                         <div class="header-actions">
                             <button class="btn btn-secondary" onclick="window.history.back()">Cancel</button>
-                            <button class="btn btn-primary" id="save-btn">Save Product</button>
+                            <button class="btn btn-primary btn-gradient" id="save-btn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;">
+                                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                                    <polyline points="17 21 17 13 7 13 7 21"/>
+                                    <polyline points="7 3 7 8 15 8"/>
+                                </svg>
+                                Save Product
+                            </button>
                         </div>
                     </div>
 
@@ -1795,7 +2034,7 @@
                                     </div>
                                 </div>
 
-                                <!-- Color Variants Card -->
+                                <!-- Color Variants Card - UPDATED WITH GRID -->
                                 <div class="form-card" id="card-variants">
                                     <div class="card-header">
                                         <div class="card-title">
@@ -1804,21 +2043,25 @@
                                             </svg>
                                             Color Variants
                                         </div>
-                                        <button type="button" class="btn btn-primary btn-sm" onclick="openVariantModal()">
+                                        <button type="button" class="btn btn-primary btn-sm btn-gradient" onclick="openVariantModal()">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;">
                                                 <path d="M5 12h14"/>
                                                 <path d="M12 5v14"/>
                                             </svg>
-                                            Add
+                                            Add Variant
                                         </button>
                                     </div>
                                     <div class="card-body">
                                         <div id="variants-list">
-                                            <div style="text-align: center; padding: 40px 20px; color: #6b7280;">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 16px; color: #d1d5db;">
+                                            <div class="variants-empty">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                                                     <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
                                                 </svg>
-                                                <div>No variants added yet</div>
+                                                <h4>No variants added yet</h4>
+                                                <p>Add color variants to show different options</p>
+                                                <button type="button" class="btn btn-primary btn-sm" onclick="openVariantModal()">
+                                                    Add Your First Variant
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -1833,12 +2076,12 @@
                                             </svg>
                                             Customer Reviews
                                         </div>
-                                        <button type="button" class="btn btn-primary btn-sm" onclick="openReviewModal()">
+                                        <button type="button" class="btn btn-primary btn-sm btn-gradient" onclick="openReviewModal()">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;">
                                                 <path d="M5 12h14"/>
                                                 <path d="M12 5v14"/>
                                             </svg>
-                                            Add
+                                            Add Review
                                         </button>
                                     </div>
                                     <div class="card-body">
@@ -1874,6 +2117,48 @@
                                         <div class="form-group">
                                             <label class="form-label">Old Price (₹)</label>
                                             <input type="number" class="form-control" id="oldPrice" step="0.01" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Discount</label>
+                                            <div style="background: #f0f9ff; padding: 12px; border-radius: 8px; border: 1px solid #e0f2fe;">
+                                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                                    <span style="font-size: 12px; color: #0c4a6e;">Discount Percentage</span>
+                                                    <span style="font-weight: 600; color: #0369a1;" id="discount-percentage">0%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Inventory Summary Card - NEW ADDED FOR BETTER SPACE UTILIZATION -->
+                                <div class="form-card" id="card-inventory">
+                                    <div class="card-header">
+                                        <div class="card-title">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M2 7v10"/>
+                                                <path d="M6 5v14"/>
+                                                <rect width="12" height="18" x="10" y="3" rx="2"/>
+                                            </svg>
+                                            Inventory Summary
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="form-group">
+                                            <label class="form-label">Total Variants</label>
+                                            <div style="font-size: 24px; font-weight: 700; color: #5127ba;" id="total-variants">0</div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Total Reviews</label>
+                                            <div style="font-size: 24px; font-weight: 700; color: #10B981;" id="total-reviews">0</div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Status</label>
+                                            <div class="status-indicator active" id="product-status">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                                    <circle cx="12" cy="12" r="10"/>
+                                                </svg>
+                                                Active
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -2042,7 +2327,7 @@
                             </div>
                         </div>
 
-                        <!-- Color Variants -->
+                        <!-- Color Variants - UPDATED FOR MOBILE -->
                         <div class="form-card" style="margin-bottom: 16px;">
                             <div class="card-header">
                                 <div class="card-title">
@@ -2051,7 +2336,7 @@
                                     </svg>
                                     Color Variants
                                 </div>
-                                <button type="button" class="btn btn-primary btn-sm" onclick="openVariantModalMobile()">
+                                <button type="button" class="btn btn-primary btn-sm btn-gradient" onclick="openVariantModalMobile()">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;">
                                         <path d="M5 12h14"/>
                                         <path d="M12 5v14"/>
@@ -2065,6 +2350,13 @@
                                         No variants added yet
                                     </div>
                                 </div>
+                                <div class="mobile-add-variant-btn" onclick="openVariantModalMobile()">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M5 12h14"/>
+                                        <path d="M12 5v14"/>
+                                    </svg>
+                                    <span>Add New Variant</span>
+                                </div>
                             </div>
                         </div>
 
@@ -2077,7 +2369,7 @@
                                     </svg>
                                     Customer Reviews
                                 </div>
-                                <button type="button" class="btn btn-primary btn-sm" onclick="openReviewModalMobile()">
+                                <button type="button" class="btn btn-primary btn-sm btn-gradient" onclick="openReviewModalMobile()">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;">
                                         <path d="M5 12h14"/>
                                         <path d="M12 5v14"/>
@@ -2098,10 +2390,17 @@
             </div>
         </main>
 
-        <!-- Mobile Save Bar -->
+        <!-- Mobile Save Bar - FIXED Z-INDEX -->
         <div class="mobile-save-bar">
             <button class="btn btn-secondary" onclick="window.history.back()">Cancel</button>
-            <button class="btn btn-primary" id="mobile-save-btn">Save Product</button>
+            <button class="btn btn-primary btn-gradient" id="mobile-save-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;">
+                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                    <polyline points="17 21 17 13 7 13 7 21"/>
+                    <polyline points="7 3 7 8 15 8"/>
+                </svg>
+                Save
+            </button>
         </div>
 
         <!-- Overlay & drawer -->
@@ -2325,7 +2624,7 @@
     <!-- Toast Container -->
     <div id="toast-container"></div>
 
-    <!-- Variant Modal -->
+    <!-- Variant Modal - UPDATED PREMIUM DESIGN -->
     <div class="modal-overlay" id="variant-modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -2354,7 +2653,7 @@
                             <div class="upload-text" style="font-size: 16px;">Upload Swatch</div>
                             <div class="upload-subtext" style="font-size: 12px;">PNG, JPG up to 5MB</div>
                         </div>
-                        <div id="variant-swatch-preview" style="display: none; width: 120px; height: 120px; border-radius: 12px; overflow: hidden; border: 2px solid #e5e7eb;">
+                        <div id="variant-swatch-preview" style="display: none; width: 120px; height: 120px; border-radius: 12px; overflow: hidden; border: 2px solid #e5e7eb; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);">
                             <img id="variant-swatch-img" style="width: 100%; height: 100%; object-fit: cover;">
                         </div>
                     </div>
@@ -2383,7 +2682,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" onclick="closeVariantModal()">Cancel</button>
-                <button type="button" class="btn btn-primary" onclick="saveVariant()">Save Variant</button>
+                <button type="button" class="btn btn-primary btn-gradient" onclick="saveVariant()">Save Variant</button>
             </div>
         </div>
     </div>
@@ -2433,7 +2732,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" onclick="closeReviewModal()">Cancel</button>
-                <button type="button" class="btn btn-primary" onclick="saveReview()">Save Review</button>
+                <button type="button" class="btn btn-primary btn-gradient" onclick="saveReview()">Save Review</button>
             </div>
         </div>
     </div>
@@ -2454,15 +2753,21 @@
             if (mMenuToggle && mOverlay && mDrawerClose) {
                 mMenuToggle.addEventListener('click', () => {
                     mOverlay.classList.add('open');
+                    // Hide mobile save bar when menu opens
+                    document.querySelector('.mobile-save-bar').style.display = 'none';
                 });
 
                 mDrawerClose.addEventListener('click', () => {
                     mOverlay.classList.remove('open');
+                    // Show mobile save bar when menu closes
+                    document.querySelector('.mobile-save-bar').style.display = 'flex';
                 });
 
                 mOverlay.addEventListener('click', (e) => {
                     if (e.target === mOverlay) {
                         mOverlay.classList.remove('open');
+                        // Show mobile save bar when overlay closes
+                        document.querySelector('.mobile-save-bar').style.display = 'flex';
                     }
                 });
             }
@@ -2537,6 +2842,37 @@
                     closeReviewModal();
                 }
             });
+
+            // Calculate discount on price changes
+            const priceInput = document.getElementById('price');
+            const oldPriceInput = document.getElementById('oldPrice');
+            const mobilePriceInput = document.getElementById('mobile-price');
+            const mobileOldPriceInput = document.getElementById('mobile-oldPrice');
+
+            function calculateDiscount() {
+                const price = parseFloat(priceInput?.value) || parseFloat(mobilePriceInput?.value) || 0;
+                const oldPrice = parseFloat(oldPriceInput?.value) || parseFloat(mobileOldPriceInput?.value) || 0;
+                
+                if (oldPrice > 0 && price < oldPrice) {
+                    const discount = ((oldPrice - price) / oldPrice * 100).toFixed(1);
+                    const discountElement = document.getElementById('discount-percentage');
+                    if (discountElement) {
+                        discountElement.textContent = `${discount}%`;
+                        discountElement.style.color = '#ef4444';
+                    }
+                } else {
+                    const discountElement = document.getElementById('discount-percentage');
+                    if (discountElement) {
+                        discountElement.textContent = '0%';
+                        discountElement.style.color = '#0369a1';
+                    }
+                }
+            }
+
+            if (priceInput) priceInput.addEventListener('input', calculateDiscount);
+            if (oldPriceInput) oldPriceInput.addEventListener('input', calculateDiscount);
+            if (mobilePriceInput) mobilePriceInput.addEventListener('input', calculateDiscount);
+            if (mobileOldPriceInput) mobileOldPriceInput.addEventListener('input', calculateDiscount);
         });
 
         function setupDropdown(toggleId, submenuId) {
@@ -2674,6 +3010,9 @@
                     document.getElementById('product-form').style.display = 'block';
                     document.getElementById('mobile-loading-state').style.display = 'none';
                     document.getElementById('mobile-product-form').style.display = 'block';
+                    
+                    // Update inventory summary
+                    updateInventorySummary();
                 }
             } catch (e) {
                 console.error('Error loading editor:', e);
@@ -2711,7 +3050,8 @@
                 { label: 'M', value: 'M' },
                 { label: 'L', value: 'L' },
                 { label: 'XL', value: 'XL' },
-                { label: '2XL', value: '2XL' }
+                { label: '2XL', value: '2XL' },
+                { label: '3XL', value: '3XL' }
             ];
             
             const container = document.getElementById('size-selector');
@@ -2732,6 +3072,7 @@
             
             const status = element.querySelector('.size-status');
             status.textContent = isSelected ? 'Select' : 'In Stock';
+            status.style.color = isSelected ? '#6b7280' : '#10B981';
         }
 
         function setupStarRating() {
@@ -2792,6 +3133,9 @@
             document.getElementById('oldPrice').value = data.oldPrice || '';
             document.getElementById('mobile-oldPrice').value = data.oldPrice || '';
             
+            // Calculate discount
+            setTimeout(calculateDiscount, 100);
+            
             // Category
             if (data.category) {
                 selectCategory(data.category, 'cat-display', 'selected-category');
@@ -2818,11 +3162,42 @@
             productReviews = data.reviews || [];
             renderReviews();
             
+            // Update inventory summary
+            updateInventorySummary();
+            
             // Hide loading, show forms
             document.getElementById('loading-state').style.display = 'none';
             document.getElementById('product-form').style.display = 'block';
             document.getElementById('mobile-loading-state').style.display = 'none';
             document.getElementById('mobile-product-form').style.display = 'block';
+        }
+
+        function updateInventorySummary() {
+            // Update total variants count
+            document.getElementById('total-variants').textContent = colorVariants.length;
+            
+            // Update total reviews count
+            document.getElementById('total-reviews').textContent = productReviews.length;
+            
+            // Update product status
+            const statusElement = document.getElementById('product-status');
+            if (colorVariants.length > 0) {
+                statusElement.className = 'status-indicator active';
+                statusElement.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/>
+                    </svg>
+                    Active
+                `;
+            } else {
+                statusElement.className = 'status-indicator inactive';
+                statusElement.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/>
+                    </svg>
+                    Draft
+                `;
+            }
         }
 
         // ============= IMAGE HANDLING =============
@@ -2904,6 +3279,7 @@
                         if (sizeInfo) {
                             item.classList.add('selected');
                             item.querySelector('.size-status').textContent = 'In Stock';
+                            item.querySelector('.size-status').style.color = '#10B981';
                         }
                     });
                 }
@@ -2924,6 +3300,7 @@
                 document.querySelectorAll('#size-selector .size-item').forEach(item => {
                     item.classList.remove('selected');
                     item.querySelector('.size-status').textContent = 'Select';
+                    item.querySelector('.size-status').style.color = '#6b7280';
                 });
                 document.getElementById('variant-gallery-preview').innerHTML = '';
             }
@@ -3068,6 +3445,7 @@
                 closeVariantModal();
                 hideProgress();
                 showToast('Variant saved successfully', 'success');
+                updateInventorySummary();
             } catch (error) {
                 console.error('Error saving variant:', error);
                 hideProgress();
@@ -3083,11 +3461,15 @@
             
             if (colorVariants.length === 0) {
                 desktopContainer.innerHTML = `
-                    <div style="text-align: center; padding: 40px 20px; color: #6b7280;">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 16px; color: #d1d5db;">
+                    <div class="variants-empty">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
                         </svg>
-                        <div>No variants added yet</div>
+                        <h4>No variants added yet</h4>
+                        <p>Add color variants to show different options</p>
+                        <button type="button" class="btn btn-primary btn-sm" onclick="openVariantModal()">
+                            Add Your First Variant
+                        </button>
                     </div>
                 `;
                 
@@ -3099,43 +3481,49 @@
                 return;
             }
             
-            desktopContainer.innerHTML = colorVariants.map((variant, index) => `
-                <div class="variant-card">
-                    <div style="display: flex; align-items: center; gap: 16px;">
-                        <img src="${variant.hex || 'https://via.placeholder.com/48?text=No+Image'}" 
-                             class="variant-swatch" 
-                             style="background: ${variant.hex ? 'transparent' : '#f3f4f6'}">
-                        <div class="variant-info">
-                            <div class="variant-name">${variant.name}</div>
-                            <div class="variant-meta">${variant.sizes?.length || 0} sizes • ${variant.images?.length || 0} images</div>
+            // Desktop grid view
+            desktopContainer.innerHTML = `
+                <div class="variants-grid">
+                    ${colorVariants.map((variant, index) => `
+                        <div class="variant-chip" onclick="openVariantModal(${index})">
+                            <div class="variant-chip-swatch">
+                                <img src="${variant.hex || 'https://via.placeholder.com/64?text=Color'}">
+                            </div>
+                            <div class="variant-chip-name">${variant.name}</div>
+                            <div class="variant-chip-meta">
+                                <span>${variant.sizes?.length || 0} sizes</span>
+                                <span>•</span>
+                                <span>${variant.images?.length || 0} images</span>
+                            </div>
+                            <div class="variant-chip-actions">
+                                <button class="variant-chip-action edit" onclick="event.stopPropagation(); openVariantModal(${index})">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                    </svg>
+                                </button>
+                                <button class="variant-chip-action delete" onclick="event.stopPropagation(); deleteVariant(${index})">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M3 6h18"/>
+                                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+                                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="variant-actions">
-                        <button class="btn-icon" onclick="openVariantModal(${index})">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                            </svg>
-                        </button>
-                        <button class="btn-icon delete" onclick="deleteVariant(${index})">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M3 6h18"/>
-                                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
-                                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
-                            </svg>
-                        </button>
-                    </div>
+                    `).join('')}
                 </div>
-            `).join('');
+            `;
             
+            // Mobile list view
             mobileContainer.innerHTML = colorVariants.map((variant, index) => `
                 <div class="variant-card" style="margin-bottom: 12px;">
                     <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
-                        <img src="${variant.hex || 'https://via.placeholder.com/40?text=No+Image'}" 
+                        <img src="${variant.hex || 'https://via.placeholder.com/40?text=Color'}" 
                              style="width: 40px; height: 40px; border-radius: 6px; border: 1px solid #e5e7eb; object-fit: cover;">
                         <div>
                             <div style="font-weight: 600; font-size: 14px;">${variant.name}</div>
-                            <div style="font-size: 12px; color: #6b7280;">${variant.sizes?.length || 0} sizes</div>
+                            <div style="font-size: 12px; color: #6b7280;">${variant.sizes?.length || 0} sizes • ${variant.images?.length || 0} images</div>
                         </div>
                     </div>
                     <div style="display: flex; gap: 8px;">
@@ -3161,6 +3549,7 @@
             if (confirm('Are you sure you want to delete this variant?')) {
                 colorVariants.splice(index, 1);
                 renderVariants();
+                updateInventorySummary();
                 showToast('Variant deleted', 'success');
             }
         }
@@ -3240,6 +3629,7 @@
             }
             
             renderReviews();
+            updateInventorySummary();
             closeReviewModal();
         }
 
@@ -3326,6 +3716,7 @@
             if (confirm('Are you sure you want to delete this review?')) {
                 productReviews.splice(index, 1);
                 renderReviews();
+                updateInventorySummary();
                 showToast('Review deleted', 'success');
             }
         }
@@ -3401,6 +3792,11 @@
                     reviews: productReviews,
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
+                
+                // Calculate discount
+                if (oldPrice > 0 && price < oldPrice) {
+                    productData.discount = ((oldPrice - price) / oldPrice * 100).toFixed(1);
+                }
                 
                 // Save to Firestore
                 if (currentProductId) {
