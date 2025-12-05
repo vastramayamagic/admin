@@ -547,6 +547,15 @@
                     } 
                 });
             }
+            
+            // Initialize star rating click handlers
+            document.querySelectorAll('#star-rating i').forEach(star => {
+                star.onclick = function() {
+                    const val = parseInt(this.dataset.val);
+                    document.getElementById('review-rating').value = val;
+                    updateStars(val);
+                }
+            });
         });
 
         const firebaseConfig = {
@@ -605,19 +614,27 @@
                 if (id) {
                     document.getElementById('editor-title').textContent = 'Edit Product';
                     const doc = await db.collection('products').doc(id).get();
-                    if (doc.exists) populateForm({id: doc.id, ...doc.data()});
+                    if (doc.exists) {
+                        populateForm({id: doc.id, ...doc.data()});
+                    } else {
+                        showToast('Product not found', 'error');
+                        setTimeout(() => window.location.href = 'inventory.html', 1500);
+                    }
                 } else {
                     document.getElementById('editor-title').textContent = 'New Product';
                     document.getElementById('product-form').style.display = 'block';
                     document.getElementById('loading-state').style.display = 'none';
                 }
-            } catch (e) { showToast('Error loading data', 'error'); }
+            } catch (e) { 
+                console.error('Load error:', e);
+                showToast('Error loading data', 'error'); 
+            }
         }
 
         function setupCategoryDropdown() {
             const container = document.getElementById('category-select');
             let html = `
-                <div class="custom-select-trigger" onclick="this.nextElementSibling.classList.toggle('open')">
+                <div class="custom-select-trigger" onclick="toggleCategoryDropdown()">
                     <span id="cat-display">Select Category</span>
                     <i class='bx bx-chevron-down'></i>
                 </div>
@@ -626,9 +643,11 @@
             allCategories.forEach(cat => html += `<div class="custom-option" onclick="selectCategory('${cat}')">${cat}</div>`);
             html += `</div>`;
             container.innerHTML = html;
-            document.addEventListener('click', e => {
-                if(!container.contains(e.target)) container.querySelector('.custom-select-options').classList.remove('open');
-            });
+        }
+
+        function toggleCategoryDropdown() {
+            const options = document.querySelector('.custom-select-options');
+            options.classList.toggle('open');
         }
 
         function selectCategory(cat) {
@@ -638,25 +657,36 @@
         }
 
         function populateForm(data) {
-            document.getElementById('name').value = data.name || '';
-            document.getElementById('description').value = data.description || '';
-            document.getElementById('price').value = data.price || '';
-            document.getElementById('oldPrice').value = data.oldPrice || '';
-            if (data.category) selectCategory(data.category);
-            
-            const coverUrl = data.image || (data.images && data.images.length > 0 ? data.images[0] : null);
-            if (coverUrl) {
-                document.getElementById('cover-preview').src = coverUrl;
-                document.getElementById('cover-preview-wrapper').style.display = 'block';
-                document.getElementById('cover-upload-zone').style.display = 'none';
-                document.getElementById('cover-preview').dataset.url = coverUrl;
+            try {
+                document.getElementById('name').value = data.name || '';
+                document.getElementById('description').value = data.description || '';
+                document.getElementById('price').value = data.price || '';
+                document.getElementById('oldPrice').value = data.oldPrice || '';
+                
+                if (data.category) {
+                    selectCategory(data.category);
+                }
+                
+                const coverUrl = data.image || (data.images && data.images.length > 0 ? data.images[0] : null);
+                if (coverUrl) {
+                    document.getElementById('cover-preview').src = coverUrl;
+                    document.getElementById('cover-preview-wrapper').style.display = 'block';
+                    document.getElementById('cover-upload-zone').style.display = 'none';
+                    document.getElementById('cover-preview').dataset.url = coverUrl;
+                }
+                
+                colorVariants = data.colorVariants || [];
+                renderVariants();
+                
+                productReviews = data.reviews || [];
+                renderReviewsList();
+                
+                document.getElementById('loading-state').style.display = 'none';
+                document.getElementById('product-form').style.display = 'block';
+            } catch (error) {
+                console.error('Populate form error:', error);
+                showToast('Error loading product data', 'error');
             }
-            colorVariants = data.colorVariants || [];
-            renderVariants();
-            productReviews = data.reviews || [];
-            renderReviewsList();
-            document.getElementById('loading-state').style.display = 'none';
-            document.getElementById('product-form').style.display = 'block';
         }
 
         document.getElementById('cover-input').onchange = (e) => {
@@ -689,16 +719,14 @@
             const title = document.getElementById('review-modal-title');
             const btn = document.getElementById('review-save-btn');
             
-            if(isEdit) {
-                if (productReviews[index]) {
-                    const rev = productReviews[index];
-                    document.getElementById('review-name').value = rev.name;
-                    document.getElementById('review-text').value = rev.comment;
-                    document.getElementById('review-rating').value = rev.rating;
-                    updateStars(rev.rating);
-                    title.textContent = 'Edit Review';
-                    btn.textContent = 'Update Review';
-                }
+            if(isEdit && productReviews[index]) {
+                const rev = productReviews[index];
+                document.getElementById('review-name').value = rev.name;
+                document.getElementById('review-text').value = rev.comment;
+                document.getElementById('review-rating').value = rev.rating;
+                updateStars(rev.rating);
+                title.textContent = 'Edit Review';
+                btn.textContent = 'Update Review';
             } else {
                 document.getElementById('review-name').value = '';
                 document.getElementById('review-text').value = '';
@@ -715,18 +743,18 @@
             editingReviewIndex = null;
         }
 
-        document.querySelectorAll('#star-rating i').forEach(star => {
-            star.onclick = function() {
-                const val = parseInt(this.dataset.val);
-                document.getElementById('review-rating').value = val;
-                updateStars(val);
-            }
-        });
-
         function updateStars(val) {
             document.querySelectorAll('#star-rating i').forEach(s => {
-                s.classList.toggle('active', parseInt(s.dataset.val) <= val);
-                s.className = parseInt(s.dataset.val) <= val ? 'bx bxs-star' : 'bx bx-star';
+                const starVal = parseInt(s.dataset.val);
+                if (starVal <= val) {
+                    s.classList.remove('bx-star');
+                    s.classList.add('bxs-star');
+                    s.style.color = 'var(--star-color)';
+                } else {
+                    s.classList.remove('bxs-star');
+                    s.classList.add('bx-star');
+                    s.style.color = '#CBD5E1';
+                }
             });
         }
 
@@ -734,17 +762,24 @@
             const name = document.getElementById('review-name').value.trim();
             const rating = parseInt(document.getElementById('review-rating').value);
             const comment = document.getElementById('review-text').value.trim();
+            
             if (!name || rating === 0 || !comment) return showToast('Please fill all fields', 'error');
             
-            const reviewData = { name, rating, comment, date: new Date().toISOString() };
+            const reviewData = { 
+                name, 
+                rating, 
+                comment, 
+                date: new Date().toISOString().split('T')[0] 
+            };
             
             if(editingReviewIndex !== null && productReviews[editingReviewIndex]) {
                 productReviews[editingReviewIndex] = reviewData;
-                showToast('Review updated');
+                showToast('Review updated', 'success');
             } else {
                 productReviews.push(reviewData);
-                showToast('Review added');
+                showToast('Review added', 'success');
             }
+            
             renderReviewsList();
             closeReviewModal();
         }
@@ -755,6 +790,7 @@
                 container.innerHTML = `<div style="color:var(--text-secondary); font-style:italic; padding:1rem; text-align:center;">No reviews added yet.</div>`;
                 return;
             }
+            
             container.innerHTML = productReviews.map((r, i) => `
                 <div class="review-card">
                     <div class="review-header">
@@ -765,9 +801,12 @@
                         </div>
                     </div>
                     <div class="star-display">
-                        ${Array(5).fill(0).map((_, idx) => idx < r.rating ? "<i class='bx bxs-star'></i>" : "<i class='bx bx-star'></i>").join('')}
+                        ${Array(5).fill(0).map((_, idx) => 
+                            idx < r.rating ? "<i class='bx bxs-star'></i>" : "<i class='bx bx-star'></i>"
+                        ).join('')}
                     </div>
                     <div class="review-text" style="margin-top:0.5rem;">${r.comment}</div>
+                    <div style="font-size:0.8rem; color:var(--text-secondary); margin-top:0.5rem;">${r.date || ''}</div>
                 </div>
             `).join('');
         }
@@ -776,13 +815,14 @@
             if(confirm("Delete this review?")) {
                 productReviews.splice(index, 1);
                 renderReviewsList();
+                showToast('Review removed', 'success');
             }
         }
 
         function openColorModal(index = null) {
             editingVariantIndex = index;
             const isEdit = index !== null;
-            const data = isEdit ? colorVariants[index] : {};
+            const data = isEdit && colorVariants[index] ? colorVariants[index] : {};
             
             document.getElementById('color-modal-title').textContent = isEdit ? 'Edit Variant' : 'Add Variant';
             document.getElementById('color-name').value = data.name || '';
@@ -801,18 +841,27 @@
                 swatchImg.style.display = 'none';
                 swatchIcon.style.display = 'block';
                 swatchText.style.display = 'block';
+                swatchImg.src = '';
             }
             
             const sizesContainer = document.getElementById('size-selection');
             const SIZES = ['S', 'M', 'L', 'XL', '2XL'];
             sizesContainer.innerHTML = SIZES.map(size => {
-                const existing = data.sizes?.find(s => s.name === size);
+                const existing = data.sizes ? data.sizes.find(s => s.name === size) : null;
+                const isSelected = !!existing;
+                const isAvailable = existing ? existing.available : true;
+                
                 return `
-                    <div style="border:1px solid var(--border-color); border-radius:6px; padding:0.5rem; text-align:center; cursor:pointer; background:${existing ? '#EEF2FF' : 'white'}; border-color:${existing ? 'var(--brand-primary)' : 'var(--border-color)'}" onclick="toggleSize(this)">
+                    <div style="border:1px solid var(--border-color); border-radius:6px; padding:0.5rem; text-align:center; cursor:pointer; 
+                           background:${isSelected ? '#EEF2FF' : 'white'}; 
+                           border-color:${isSelected ? 'var(--brand-primary)' : 'var(--border-color)'}" 
+                           onclick="toggleSize(this, '${size}')" data-size="${size}">
                         <div style="font-weight:600;">${size}</div>
-                        <div style="font-size:0.7rem; color:var(--text-secondary);">${existing && existing.available ? 'In Stock' : 'Select'}</div>
-                        <input type="checkbox" class="size-check" style="display:none;" value="${size}" ${existing ? 'checked' : ''}>
-                        <input type="checkbox" class="stock-check" style="display:none;" ${existing && existing.available ? 'checked' : ''}>
+                        <div style="font-size:0.7rem; color:var(--text-secondary);">
+                            ${isSelected && isAvailable ? 'In Stock' : (isSelected ? 'Out of Stock' : 'Select')}
+                        </div>
+                        <input type="checkbox" class="size-check" style="display:none;" value="${size}" ${isSelected ? 'checked' : ''}>
+                        <input type="checkbox" class="stock-check" style="display:none;" ${isSelected && isAvailable ? 'checked' : ''}>
                     </div>
                 `;
             }).join('');
@@ -825,16 +874,31 @@
             document.getElementById('color-modal').style.display = 'flex';
         }
 
+        function toggleSize(el, size) {
+            const checkbox = el.querySelector('.size-check');
+            const stockCheck = el.querySelector('.stock-check');
+            const isSelected = !checkbox.checked;
+            
+            checkbox.checked = isSelected;
+            stockCheck.checked = isSelected;
+            
+            el.style.background = isSelected ? '#EEF2FF' : 'white';
+            el.style.borderColor = isSelected ? 'var(--brand-primary)' : 'var(--border-color)';
+            el.querySelector('div:nth-child(2)').textContent = isSelected ? 'In Stock' : 'Select';
+        }
+
         function renderExistingGallery() {
             const container = document.getElementById('existing-gallery');
-            if(existingVariantImages.length === 0) {
+            if(!existingVariantImages || existingVariantImages.length === 0) {
                 container.style.display = 'none';
+                container.innerHTML = '';
                 return;
             }
+            
             container.style.display = 'grid';
             container.innerHTML = existingVariantImages.map((url, i) => `
                 <div class="gallery-item">
-                    <img src="${url}" class="gallery-img">
+                    <img src="${url}" class="gallery-img" onerror="this.src='https://via.placeholder.com/80'">
                     <div class="gallery-remove" onclick="removeExistingGalleryImage(${i})">×</div>
                 </div>
             `).join('');
@@ -845,25 +909,21 @@
             renderExistingGallery();
         }
 
-        function toggleSize(el) {
-            const checkbox = el.querySelector('.size-check');
-            const stock = el.querySelector('.stock-check');
-            const isSelected = !checkbox.checked;
-            checkbox.checked = isSelected;
-            stock.checked = isSelected; 
-            el.style.background = isSelected ? '#EEF2FF' : 'white';
-            el.style.borderColor = isSelected ? 'var(--brand-primary)' : 'var(--border-color)';
-            el.querySelector('div:nth-child(2)').textContent = isSelected ? 'In Stock' : 'Select';
-        }
-
         function closeColorModal() {
             document.getElementById('color-modal').style.display = 'none';
             editingVariantIndex = null;
+            tempSwatchFile = null;
+            tempVariantFiles = [];
+            document.getElementById('color-form').reset();
         }
 
         document.getElementById('color-swatch-input').onchange = (e) => {
             const file = e.target.files[0];
             if(file) {
+                if (file.size > 2 * 1024 * 1024) {
+                    showToast('Swatch image too large (Max 2MB)', 'error');
+                    return;
+                }
                 tempSwatchFile = file;
                 const prev = document.getElementById('swatch-preview');
                 prev.src = URL.createObjectURL(file);
@@ -871,17 +931,21 @@
                 document.getElementById('swatch-icon').style.display = 'none';
                 document.getElementById('swatch-text').style.display = 'none';
             }
-        }
+        };
 
         document.getElementById('variant-images-input').onchange = (e) => {
             Array.from(e.target.files).forEach(file => {
+                if (file.size > 5 * 1024 * 1024) {
+                    showToast('Image too large (Max 5MB)', 'error');
+                    return;
+                }
                 tempVariantFiles.push(file);
                 const img = document.createElement('img');
                 img.src = URL.createObjectURL(file);
                 img.style.cssText = "width:60px; height:60px; border-radius:6px; object-fit:cover; border:1px solid #eee; flex-shrink:0;";
                 document.getElementById('variant-image-previews').appendChild(img);
             });
-        }
+        };
 
         function showProgress(title, desc) {
             document.getElementById('progress-title').textContent = title;
@@ -894,42 +958,56 @@
         }
 
         async function saveColorVariant() {
-            const name = document.getElementById('color-name').value;
+            const name = document.getElementById('color-name').value.trim();
             if (!name) return showToast('Color name required', 'error');
             
             showProgress('Saving Variant', 'Uploading images and details...');
 
             try {
                 let hex = document.getElementById('color-hex').value;
+                
                 if (tempSwatchFile) {
                     hex = await uploadFile(tempSwatchFile, 'swatches');
+                } else if (!hex && editingVariantIndex !== null && colorVariants[editingVariantIndex]) {
+                    hex = colorVariants[editingVariantIndex].hex;
                 }
+                
+                if (!hex) return showToast('Color swatch image required', 'error');
 
                 let images = [...existingVariantImages];
-                if (tempVariantFiles.length) {
+                if (tempVariantFiles.length > 0) {
                     for (let f of tempVariantFiles) {
-                        images.push(await uploadFile(f, 'variants'));
+                        const url = await uploadFile(f, 'variants');
+                        images.push(url);
                     }
                 }
 
                 let sizes = [];
-                document.querySelectorAll('.size-check').forEach(cb => {
-                    if (cb.checked) {
-                        const stock = cb.parentElement.querySelector('.stock-check').checked;
-                        sizes.push({ name: cb.value, available: stock });
-                    }
+                document.querySelectorAll('.size-check:checked').forEach(cb => {
+                    const sizeName = cb.value;
+                    const stockEl = cb.parentElement.querySelector('.stock-check');
+                    const available = stockEl ? stockEl.checked : true;
+                    sizes.push({ name: sizeName, available: available });
                 });
 
-                const variant = { name, hex, sizes, images };
-                if (editingVariantIndex !== null) {
+                const variant = { 
+                    name, 
+                    hex, 
+                    sizes, 
+                    images: images.filter(img => img) 
+                };
+                
+                if (editingVariantIndex !== null && colorVariants[editingVariantIndex]) {
                     colorVariants[editingVariantIndex] = variant;
                 } else {
                     colorVariants.push(variant);
                 }
+                
                 renderVariants();
                 closeColorModal();
                 showToast('Variant Saved', 'success');
             } catch(e) {
+                console.error('Save variant error:', e);
                 showToast('Failed to save variant', 'error');
             } finally {
                 hideProgress();
@@ -938,101 +1016,176 @@
 
         function renderVariants() {
             const container = document.getElementById('variants-list');
-            if (colorVariants.length === 0) {
+            if (!colorVariants || colorVariants.length === 0) {
                 container.innerHTML = `<div style="text-align:center; color:var(--text-secondary); padding:1rem; font-style:italic;">No variants yet.</div>`;
                 return;
             }
-            container.innerHTML = colorVariants.map((v, i) => `
-                <div class="variant-card">
-                    <div style="display:flex; align-items:center; gap:1rem;">
-                        <img src="${v.hex && v.hex.includes('http') ? v.hex : 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='}" class="variant-swatch" style="background:${v.hex || '#eee'}">
-                        <div>
-                            <div style="font-weight:600;">${v.name}</div>
-                            <div style="font-size:0.8rem; color:var(--text-secondary);">${v.sizes.length} sizes</div>
+            
+            container.innerHTML = colorVariants.map((v, i) => {
+                const sizesCount = v.sizes ? v.sizes.length : 0;
+                const imagesCount = v.images ? v.images.length : 0;
+                
+                return `
+                    <div class="variant-card">
+                        <div style="display:flex; align-items:center; gap:1rem;">
+                            <img src="${v.hex || 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='}" 
+                                 class="variant-swatch" 
+                                 style="background:${v.hex && !v.hex.includes('http') ? v.hex : '#eee'}"
+                                 onerror="this.src='https://via.placeholder.com/40'">
+                            <div>
+                                <div style="font-weight:600;">${v.name || 'Unnamed Variant'}</div>
+                                <div style="font-size:0.8rem; color:var(--text-secondary);">
+                                    ${sizesCount} sizes • ${imagesCount} images
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display:flex; gap:0.5rem;">
+                            <button type="button" class="btn-icon" onclick="openColorModal(${i})"><i class='bx bx-edit-alt'></i></button>
+                            <button type="button" class="btn-icon" onclick="removeVariant(${i})" style="color:var(--danger-color);"><i class='bx bx-trash'></i></button>
                         </div>
                     </div>
-                    <div style="display:flex; gap:0.5rem;">
-                        <button type="button" class="btn-icon" onclick="openColorModal(${i})"><i class='bx bx-edit-alt'></i></button>
-                        <button type="button" class="btn-icon" onclick="removeVariant(${i})" style="color:var(--danger-color);"><i class='bx bx-trash'></i></button>
-                    </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
-        function removeVariant(i) {
-            if(confirm('Remove this variant?')) {
-                colorVariants.splice(i, 1);
+        function removeVariant(index) {
+            if(confirm('Remove this variant? This action cannot be undone.')) {
+                colorVariants.splice(index, 1);
                 renderVariants();
+                showToast('Variant removed', 'success');
             }
         }
 
         async function uploadFile(file, path) {
-            const ref = storage.ref().child(`${path}/${Date.now()}-${file.name}`);
-            await ref.put(file);
-            return await ref.getDownloadURL();
+            const fileName = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
+            const ref = storage.ref().child(`${path}/${fileName}`);
+            const snapshot = await ref.put(file);
+            return await snapshot.ref.getDownloadURL();
         }
 
-        const handleSave = async () => {
-            const name = document.getElementById('name').value;
-            const price = document.getElementById('price').value;
+        async function handleSave() {
+            const name = document.getElementById('name').value.trim();
+            const price = parseFloat(document.getElementById('price').value);
             const category = document.getElementById('selected-category').value;
-            const oldPrice = document.getElementById('oldPrice').value;
+            const oldPrice = parseFloat(document.getElementById('oldPrice').value);
+            const description = document.getElementById('description').value.trim();
             
-            if (!name || !price || !category || !oldPrice) return showToast('Please fill required fields', 'error');
-
+            if (!name) return showToast('Product name required', 'error');
+            if (!price || price <= 0) return showToast('Valid price required', 'error');
+            if (!category) return showToast('Category required', 'error');
+            if (!oldPrice || oldPrice <= 0) return showToast('Valid old price required', 'error');
+            if (oldPrice <= price) return showToast('Old price must be greater than current price', 'error');
+            
             showProgress('Saving Product', 'Processing details and images...');
 
             try {
-                let coverUrl = document.getElementById('cover-preview').dataset.url || '';
+                let coverUrl = document.getElementById('cover-preview').dataset.url;
+                
                 if (coverImageFile) {
                     coverUrl = await uploadFile(coverImageFile, 'products');
                 }
+                
                 if (!coverUrl) {
                     hideProgress();
                     return showToast('Cover image required', 'error');
                 }
+                
                 const productData = {
                     name,
-                    description: document.getElementById('description').value,
+                    description,
                     category,
-                    price: parseFloat(price),
-                    oldPrice: parseFloat(oldPrice),
-                    image: coverUrl, 
+                    price: price,
+                    oldPrice: oldPrice,
+                    image: coverUrl,
                     images: [coverUrl],
-                    colorVariants,
-                    reviews: productReviews,
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    colorVariants: colorVariants.map(variant => ({
+                        ...variant,
+                        sizes: variant.sizes || []
+                    })),
+                    reviews: productReviews.map(review => ({
+                        ...review,
+                        date: review.date || new Date().toISOString().split('T')[0]
+                    })),
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    status: 'active'
                 };
+                
                 const params = new URLSearchParams(window.location.search);
                 const id = params.get('id');
+                
                 if (id) {
                     await db.collection('products').doc(id).update(productData);
                     showToast('Product Updated Successfully!', 'success');
                 } else {
                     productData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                    productData.views = 0;
+                    productData.sales = 0;
                     await db.collection('products').add(productData);
                     showToast('Product Created Successfully!', 'success');
                 }
-                setTimeout(() => window.history.back(), 1000);
+                
+                setTimeout(() => window.location.href = 'inventory.html', 1500);
+                
             } catch (e) {
-                console.error(e);
-                showToast('Save Failed', 'error');
+                console.error('Save error:', e);
+                showToast('Save Failed: ' + e.message, 'error');
             } finally {
                 hideProgress();
             }
-        };
+        }
 
         document.getElementById('save-btn').onclick = handleSave;
         document.getElementById('mobile-save-btn').onclick = handleSave;
 
-        function showToast(msg, type='success') {
+        function showToast(msg, type = 'info') {
             const container = document.getElementById('toast-container');
             const el = document.createElement('div');
             el.className = `toast ${type}`;
-            el.innerHTML = `<i class='bx ${type==='success'?'bx-check-circle':'bx-error-circle'}'></i> <span>${msg}</span>`;
+            
+            let icon = 'bx-info-circle';
+            if (type === 'success') icon = 'bx-check-circle';
+            if (type === 'error') icon = 'bx-error-circle';
+            
+            el.innerHTML = `<i class='bx ${icon}'></i> <span>${msg}</span>`;
             container.appendChild(el);
-            setTimeout(() => el.remove(), 3000);
+            
+            setTimeout(() => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(20px)';
+                setTimeout(() => el.remove(), 300);
+            }, 3000);
         }
+
+        // Close modals when clicking outside
+        document.addEventListener('click', (e) => {
+            const colorModal = document.getElementById('color-modal');
+            const reviewModal = document.getElementById('review-modal');
+            
+            if (colorModal.style.display === 'flex' && e.target === colorModal) {
+                closeColorModal();
+            }
+            
+            if (reviewModal.style.display === 'flex' && e.target === reviewModal) {
+                closeReviewModal();
+            }
+        });
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.custom-select-container')) {
+                document.querySelectorAll('.custom-select-options').forEach(opt => {
+                    opt.classList.remove('open');
+                });
+            }
+        });
+
+        // Handle escape key to close modals
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeColorModal();
+                closeReviewModal();
+            }
+        });
     </script>
 </body>
 </html>
