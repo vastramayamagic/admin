@@ -1116,7 +1116,7 @@
             background: white;
             padding: 16px;
             border-top: 1px solid #e5e7eb;
-            z-index: 35;
+            z-index: 35; /* Lower than mobile overlay (40) and drawer */
             box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
             gap: 12px;
         }
@@ -1254,7 +1254,7 @@
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.25s ease-out;
-            z-index: 40;
+            z-index: 40; /* Higher than mobile save bar (35) */
         }
 
         .m-overlay.open {
@@ -1275,7 +1275,7 @@
             transform: translateX(-100%);
             transition: transform 0.25s ease-out;
             overflow-y: auto;
-            z-index: 41;
+            z-index: 41; /* Higher than overlay */
         }
 
         .m-overlay.open .m-drawer {
@@ -2251,7 +2251,7 @@
                                                 </svg>
                                                 Change
                                             </button>
-                                            <button type="button" class="btn btn-icon delete" onclick="removeCoverImage()">
+                                            <button type="button" class="btn btn-icon delete" onclick="removeCoverImageMobile()">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                     <path d="M3 6h18"/>
                                                     <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
@@ -2336,7 +2336,7 @@
                                     </svg>
                                     Color Variants
                                 </div>
-                                <button type="button" class="btn btn-primary btn-sm btn-gradient" onclick="openVariantModal()">
+                                <button type="button" class="btn btn-primary btn-sm btn-gradient" onclick="openVariantModalMobile()">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;">
                                         <path d="M5 12h14"/>
                                         <path d="M12 5v14"/>
@@ -2350,7 +2350,7 @@
                                         No variants added yet
                                     </div>
                                 </div>
-                                <div class="mobile-add-variant-btn" onclick="openVariantModal()">
+                                <div class="mobile-add-variant-btn" onclick="openVariantModalMobile()">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M5 12h14"/>
                                         <path d="M12 5v14"/>
@@ -2369,7 +2369,7 @@
                                     </svg>
                                     Customer Reviews
                                 </div>
-                                <button type="button" class="btn btn-primary btn-sm btn-gradient" onclick="openReviewModal()">
+                                <button type="button" class="btn btn-primary btn-sm btn-gradient" onclick="openReviewModalMobile()">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;">
                                         <path d="M5 12h14"/>
                                         <path d="M12 5v14"/>
@@ -2753,17 +2753,20 @@
             if (mMenuToggle && mOverlay && mDrawerClose) {
                 mMenuToggle.addEventListener('click', () => {
                     mOverlay.classList.add('open');
+                    // Hide mobile save bar when menu opens
                     document.querySelector('.mobile-save-bar').style.display = 'none';
                 });
 
                 mDrawerClose.addEventListener('click', () => {
                     mOverlay.classList.remove('open');
+                    // Show mobile save bar when menu closes
                     document.querySelector('.mobile-save-bar').style.display = 'flex';
                 });
 
                 mOverlay.addEventListener('click', (e) => {
                     if (e.target === mOverlay) {
                         mOverlay.classList.remove('open');
+                        // Show mobile save bar when overlay closes
                         document.querySelector('.mobile-save-bar').style.display = 'flex';
                     }
                 });
@@ -2930,7 +2933,6 @@
         let coverImageFile = null;
         let variantSwatchFile = null;
         let variantGalleryFiles = [];
-        let existingVariantImages = [];
         let editingMode = false;
 
         // ============= AUTH & INIT =============
@@ -2975,8 +2977,8 @@
                 allCategories = catSnap.docs.map(d => d.data().name);
                 
                 // Setup category dropdowns
-                setupCategoryDropdown();
-                setupMobileCategoryDropdown();
+                setupCategoryDropdown('category-options', 'cat-display', 'selected-category');
+                setupCategoryDropdown('mobile-category-options', 'mobile-cat-display', 'mobile-selected-category');
                 
                 // Setup size selector
                 setupSizeSelector();
@@ -3019,41 +3021,22 @@
             }
         }
 
-        function setupCategoryDropdown() {
-            const optionsContainer = document.getElementById('category-options');
-            if (!optionsContainer) return;
+        function setupCategoryDropdown(optionsId, displayId, hiddenInputId) {
+            const optionsContainer = document.getElementById(optionsId);
+            const displayElement = document.getElementById(displayId);
+            
+            if (!optionsContainer || !displayElement) return;
             
             optionsContainer.innerHTML = allCategories.map(cat => `
-                <div class="select-option" onclick="selectCategory('${cat}')">
+                <div class="select-option" onclick="selectCategory('${cat}', '${displayId}', '${hiddenInputId}')">
                     ${cat}
                 </div>
             `).join('');
         }
 
-        function setupMobileCategoryDropdown() {
-            const optionsContainer = document.getElementById('mobile-category-options');
-            if (!optionsContainer) return;
-            
-            optionsContainer.innerHTML = allCategories.map(cat => `
-                <div class="select-option" onclick="selectMobileCategory('${cat}')">
-                    ${cat}
-                </div>
-            `).join('');
-        }
-
-        function selectCategory(category) {
-            document.getElementById('cat-display').textContent = category;
-            document.getElementById('selected-category').value = category;
-            
-            // Close dropdown
-            document.querySelectorAll('.select-options').forEach(options => {
-                options.classList.remove('open');
-            });
-        }
-
-        function selectMobileCategory(category) {
-            document.getElementById('mobile-cat-display').textContent = category;
-            document.getElementById('mobile-selected-category').value = category;
+        function selectCategory(category, displayId, hiddenInputId) {
+            document.getElementById(displayId).textContent = category;
+            document.getElementById(hiddenInputId).value = category;
             
             // Close dropdown
             document.querySelectorAll('.select-options').forEach(options => {
@@ -3140,8 +3123,6 @@
 
         // ============= FORM POPULATION =============
         function populateForm(data) {
-            console.log('Populating form with data:', data);
-            
             // Basic fields
             document.getElementById('name').value = data.name || '';
             document.getElementById('mobile-name').value = data.name || '';
@@ -3157,8 +3138,8 @@
             
             // Category
             if (data.category) {
-                selectCategory(data.category);
-                selectMobileCategory(data.category);
+                selectCategory(data.category, 'cat-display', 'selected-category');
+                selectCategory(data.category, 'mobile-cat-display', 'mobile-selected-category');
             }
             
             // Cover image
@@ -3266,7 +3247,10 @@
             document.getElementById('cover-input').value = '';
             document.getElementById('cover-preview-container').style.display = 'none';
             document.getElementById('image-upload-box').style.display = 'flex';
-            
+        }
+
+        function removeCoverImageMobile() {
+            coverImageFile = null;
             document.getElementById('mobile-cover-input').value = '';
             document.getElementById('mobile-cover-preview-container').style.display = 'none';
             document.getElementById('mobile-image-upload-box').style.display = 'flex';
@@ -3279,43 +3263,56 @@
             const variant = isEdit ? colorVariants[index] : null;
             
             document.getElementById('variant-modal-title').textContent = isEdit ? 'Edit Variant' : 'Add Variant';
-            document.getElementById('variant-name').value = variant ? variant.name : '';
             
-            // Handle swatch image
-            if (variant && variant.hex) {
-                document.getElementById('variant-swatch-img').src = variant.hex;
-                document.getElementById('variant-swatch-preview').style.display = 'block';
-            } else {
-                document.getElementById('variant-swatch-preview').style.display = 'none';
-            }
-            
-            // Reset size selection
-            document.querySelectorAll('#size-selector .size-item').forEach(item => {
-                item.classList.remove('selected');
-                item.querySelector('.size-status').textContent = 'Select';
-                item.querySelector('.size-status').style.color = '#6b7280';
-            });
-            
-            // Select sizes if editing
-            if (variant && variant.sizes) {
-                variant.sizes.forEach(size => {
+            if (variant) {
+                document.getElementById('variant-name').value = variant.name || '';
+                if (variant.hex) {
+                    document.getElementById('variant-swatch-img').src = variant.hex;
+                    document.getElementById('variant-swatch-preview').style.display = 'block';
+                }
+                
+                // Select sizes
+                if (variant.sizes) {
                     document.querySelectorAll('#size-selector .size-item').forEach(item => {
-                        if (item.querySelector('input').value === size.name) {
+                        const sizeValue = item.querySelector('input').value;
+                        const sizeInfo = variant.sizes.find(s => s.name === sizeValue);
+                        if (sizeInfo) {
                             item.classList.add('selected');
                             item.querySelector('.size-status').textContent = 'In Stock';
                             item.querySelector('.size-status').style.color = '#10B981';
                         }
                     });
+                }
+                
+                // Show existing gallery
+                if (variant.images && variant.images.length > 0) {
+                    const galleryContainer = document.getElementById('variant-gallery-preview');
+                    galleryContainer.innerHTML = variant.images.map((url, i) => `
+                        <div class="gallery-item">
+                            <img src="${url}" class="gallery-img">
+                            <div class="gallery-remove" onclick="removeVariantGalleryImage(${i})">×</div>
+                        </div>
+                    `).join('');
+                }
+            } else {
+                document.getElementById('variant-name').value = '';
+                document.getElementById('variant-swatch-preview').style.display = 'none';
+                document.querySelectorAll('#size-selector .size-item').forEach(item => {
+                    item.classList.remove('selected');
+                    item.querySelector('.size-status').textContent = 'Select';
+                    item.querySelector('.size-status').style.color = '#6b7280';
                 });
+                document.getElementById('variant-gallery-preview').innerHTML = '';
             }
-            
-            // Handle gallery images
-            existingVariantImages = variant && variant.images ? [...variant.images] : [];
-            renderVariantGalleryPreview();
             
             variantSwatchFile = null;
             variantGalleryFiles = [];
             document.getElementById('variant-modal').style.display = 'flex';
+        }
+
+        function openVariantModalMobile(index = null) {
+            // For mobile, use the same modal but ensure it's positioned correctly
+            openVariantModal(index);
         }
 
         function closeVariantModal() {
@@ -3364,26 +3361,36 @@
             });
         });
 
-        function renderVariantGalleryPreview() {
-            const galleryContainer = document.getElementById('variant-gallery-preview');
-            galleryContainer.innerHTML = existingVariantImages.map((url, i) => `
-                <div class="gallery-item">
-                    <img src="${url}" class="gallery-img">
-                    <div class="gallery-remove" onclick="removeExistingVariantGalleryImage(${i})">×</div>
-                </div>
-            `).join('');
-        }
-
-        function removeExistingVariantGalleryImage(index) {
-            existingVariantImages.splice(index, 1);
-            renderVariantGalleryPreview();
+        function removeVariantGalleryImage(index) {
+            // This removes existing gallery images (from database)
+            const variant = colorVariants[editingVariantIndex];
+            if (variant && variant.images) {
+                variant.images.splice(index, 1);
+                renderVariantGalleryPreview();
+            }
         }
 
         function removeNewVariantGalleryImage(element) {
+            // This removes newly uploaded gallery images (not yet saved)
             const galleryItem = element.parentElement;
             const index = Array.from(galleryItem.parentElement.children).indexOf(galleryItem);
             galleryItem.remove();
+            
+            // Remove from files array
             variantGalleryFiles.splice(index, 1);
+        }
+
+        function renderVariantGalleryPreview() {
+            const variant = colorVariants[editingVariantIndex];
+            if (!variant || !variant.images) return;
+            
+            const galleryContainer = document.getElementById('variant-gallery-preview');
+            galleryContainer.innerHTML = variant.images.map((url, i) => `
+                <div class="gallery-item">
+                    <img src="${url}" class="gallery-img">
+                    <div class="gallery-remove" onclick="removeVariantGalleryImage(${i})">×</div>
+                </div>
+            `).join('');
         }
 
         async function saveVariant() {
@@ -3401,10 +3408,6 @@
                     swatchUrl = await uploadFile(variantSwatchFile, 'variants/swatches');
                 } else if (editingVariantIndex !== null && colorVariants[editingVariantIndex]?.hex) {
                     swatchUrl = colorVariants[editingVariantIndex].hex;
-                } else if (!swatchUrl) {
-                    hideProgress();
-                    showToast('Please upload a color swatch image', 'error');
-                    return;
                 }
                 
                 // Get selected sizes
@@ -3414,27 +3417,22 @@
                     sizes.push({ name: sizeValue, available: true });
                 });
                 
-                if (sizes.length === 0) {
-                    hideProgress();
-                    showToast('Please select at least one size', 'error');
-                    return;
+                // Upload gallery images
+                let galleryUrls = [];
+                if (editingVariantIndex !== null && colorVariants[editingVariantIndex]?.images) {
+                    galleryUrls = [...colorVariants[editingVariantIndex].images];
                 }
                 
-                // Upload new gallery images
-                const newGalleryUrls = [];
                 for (const file of variantGalleryFiles) {
                     const url = await uploadFile(file, 'variants/gallery');
-                    newGalleryUrls.push(url);
+                    galleryUrls.push(url);
                 }
-                
-                // Combine existing and new gallery images
-                const allGalleryUrls = [...existingVariantImages, ...newGalleryUrls];
                 
                 const variant = {
                     name,
                     hex: swatchUrl,
                     sizes,
-                    images: allGalleryUrls
+                    images: galleryUrls
                 };
                 
                 if (editingVariantIndex !== null) {
@@ -3529,7 +3527,7 @@
                         </div>
                     </div>
                     <div style="display: flex; gap: 8px;">
-                        <button class="btn-icon" onclick="openVariantModal(${index})" style="width: 36px; height: 36px;">
+                        <button class="btn-icon" onclick="openVariantModalMobile(${index})" style="width: 36px; height: 36px;">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
                                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
@@ -3594,6 +3592,10 @@
             }
             
             document.getElementById('review-modal').style.display = 'flex';
+        }
+
+        function openReviewModalMobile(index = null) {
+            openReviewModal(index);
         }
 
         function closeReviewModal() {
@@ -3687,7 +3689,7 @@
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                         <div style="font-weight: 600; font-size: 14px;">${review.name}</div>
                         <div style="display: flex; gap: 8px;">
-                            <button class="btn-icon" onclick="openReviewModal(${index})" style="width: 32px; height: 32px;">
+                            <button class="btn-icon" onclick="openReviewModalMobile(${index})" style="width: 32px; height: 32px;">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
                                     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
@@ -3755,7 +3757,7 @@
                 return;
             }
             
-            // Check if we have cover image
+            // Check if we have cover image (either existing or new upload)
             const hasExistingCover = document.getElementById('cover-preview')?.src || 
                                     document.getElementById('mobile-cover-preview')?.src;
             if (!hasExistingCover && !coverImageFile) {
