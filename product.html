@@ -2027,22 +2027,10 @@
                                         <input type="hidden" id="selected-category">
                                     </div>
                                     <div class="form-group">
-    <label class="form-label form-label-required">Fabric</label>
-    <select class="form-control" id="fabric" required>
-        <option value="">Select Fabric</option>
-        <option value="100% Cotton">100% Cotton</option>
-        <option value="Cotton Blend">Cotton Blend</option>
-        <option value="Polyester">Polyester</option>
-        <option value="Silk">Silk</option>
-        <option value="Linen">Linen</option>
-        <option value="Wool">Wool</option>
-        <option value="Denim">Denim</option>
-        <option value="Georgette">Georgette</option>
-        <option value="Chiffon">Chiffon</option>
-        <option value="Velvet">Velvet</option>
-        <option value="Other">Other</option>
-    </select>
-</div>
+                                        <label class="form-label form-label-required">Fabric</label>
+                                        <div id="fabric-select" class="custom-select-container"></div>
+                                        <input type="hidden" id="selected-fabric">
+                                    </div>
                                     <div class="form-group">
                                         <label class="form-label">Description</label>
                                         <textarea class="form-control" id="description" rows="6" placeholder="Detailed product description..."></textarea>
@@ -2283,22 +2271,10 @@
                                 <input type="hidden" id="mobile-selected-category">
                             </div>
                             <div class="form-group">
-    <label class="form-label form-label-required">Fabric</label>
-    <select class="form-control" id="fabric" required>
-        <option value="">Select Fabric</option>
-        <option value="100% Cotton">100% Cotton</option>
-        <option value="Cotton Blend">Cotton Blend</option>
-        <option value="Polyester">Polyester</option>
-        <option value="Silk">Silk</option>
-        <option value="Linen">Linen</option>
-        <option value="Wool">Wool</option>
-        <option value="Denim">Denim</option>
-        <option value="Georgette">Georgette</option>
-        <option value="Chiffon">Chiffon</option>
-        <option value="Velvet">Velvet</option>
-        <option value="Other">Other</option>
-    </select>
-</div>
+                                <label class="form-label form-label-required">Fabric</label>
+                                <div id="mobile-fabric-select" class="custom-select-container"></div>
+                                <input type="hidden" id="mobile-selected-fabric">
+                            </div>
                             <div class="form-group">
                                 <label class="form-label">Description</label>
                                 <textarea class="form-control" id="mobile-description" rows="4" placeholder="Detailed product description..."></textarea>
@@ -2939,6 +2915,7 @@
 
         // --- APP LOGIC ---
         let allCategories = [];
+        let allFabrics = []; // Array to store fabrics
         let coverImageFile = null;
         let mobileCoverImageFile = null;
         let colorVariants = [];
@@ -2985,6 +2962,45 @@
                 const catSnap = await db.collection('categories').orderBy('name').get();
                 allCategories = catSnap.docs.map(d => d.data().name);
                 setupCategoryDropdown();
+                
+                // Load fabrics - you can fetch from Firestore or use a static list
+                // For now, using a static list of common fabrics
+                allFabrics = [
+                    'Cotton',
+                    'Silk',
+                    'Wool',
+                    'Polyester',
+                    'Linen',
+                    'Denim',
+                    'Velvet',
+                    'Satin',
+                    'Chiffon',
+                    'Georgette',
+                    'Crepe',
+                    'Jersey',
+                    'Twill',
+                    'Corduroy',
+                    'Fleece',
+                    'Canvas',
+                    'Organza',
+                    'Taffeta',
+                    'Brocade',
+                    'Chambray',
+                    'Flannel',
+                    'Gabardine',
+                    'Muslin',
+                    'Oxford',
+                    'Poplin',
+                    'Seersucker',
+                    'Tulle',
+                    'Voile'
+                ];
+                
+                // You can also fetch from Firestore if you have a fabrics collection:
+                // const fabricSnap = await db.collection('fabrics').orderBy('name').get();
+                // allFabrics = fabricSnap.docs.map(d => d.data().name);
+                
+                setupFabricDropdown();
                 
                 // Check if editing existing product
                 const params = new URLSearchParams(window.location.search);
@@ -3105,6 +3121,91 @@
             });
         }
 
+        function setupFabricDropdown() {
+            // Desktop dropdown
+            const desktopContainer = document.getElementById('fabric-select');
+            let desktopHtml = `
+                <div class="custom-select-trigger" id="desktop-fabric-trigger">
+                    <span id="desktop-fabric-display">Select Fabric</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m6 9 6 6 6-6"/>
+                    </svg>
+                </div>
+                <div class="custom-select-options" id="desktop-fabric-options">
+            `;
+            allFabrics.forEach(fabric => {
+                desktopHtml += `<div class="custom-option" data-value="${fabric}">${fabric}</div>`;
+            });
+            desktopHtml += `</div>`;
+            desktopContainer.innerHTML = desktopHtml;
+
+            // Mobile dropdown
+            const mobileContainer = document.getElementById('mobile-fabric-select');
+            let mobileHtml = `
+                <div class="custom-select-trigger" id="mobile-fabric-trigger">
+                    <span id="mobile-fabric-display">Select Fabric</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m6 9 6 6 6-6"/>
+                    </svg>
+                </div>
+                <div class="custom-select-options" id="mobile-fabric-options">
+            `;
+            allFabrics.forEach(fabric => {
+                mobileHtml += `<div class="custom-option" data-value="${fabric}">${fabric}</div>`;
+            });
+            mobileHtml += `</div>`;
+            mobileContainer.innerHTML = mobileHtml;
+
+            // Desktop event listeners
+            const desktopTrigger = document.getElementById('desktop-fabric-trigger');
+            const desktopOptions = document.getElementById('desktop-fabric-options');
+            
+            desktopTrigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                desktopOptions.classList.toggle('open');
+                desktopTrigger.classList.toggle('open');
+            });
+
+            desktopOptions.querySelectorAll('.custom-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    const value = option.getAttribute('data-value');
+                    selectFabric(value, 'desktop');
+                });
+            });
+
+            // Mobile event listeners
+            const mobileTrigger = document.getElementById('mobile-fabric-trigger');
+            const mobileOptions = document.getElementById('mobile-fabric-options');
+            
+            mobileTrigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                mobileOptions.classList.toggle('open');
+                mobileTrigger.classList.toggle('open');
+            });
+
+            mobileOptions.querySelectorAll('.custom-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    const value = option.getAttribute('data-value');
+                    selectFabric(value, 'mobile');
+                });
+            });
+
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', (e) => {
+                const desktopContainer = document.getElementById('fabric-select');
+                const mobileContainer = document.getElementById('mobile-fabric-select');
+                
+                if (desktopContainer && !desktopContainer.contains(e.target)) {
+                    desktopOptions.classList.remove('open');
+                    desktopTrigger.classList.remove('open');
+                }
+                if (mobileContainer && !mobileContainer.contains(e.target)) {
+                    mobileOptions.classList.remove('open');
+                    mobileTrigger.classList.remove('open');
+                }
+            });
+        }
+
         function selectCategory(category, platform = 'desktop') {
             if (platform === 'desktop') {
                 document.getElementById('selected-category').value = category;
@@ -3135,12 +3236,40 @@
             }
         }
 
+        function selectFabric(fabric, platform = 'desktop') {
+            if (platform === 'desktop') {
+                document.getElementById('selected-fabric').value = fabric;
+                document.getElementById('desktop-fabric-display').textContent = fabric;
+                document.getElementById('desktop-fabric-options').classList.remove('open');
+                document.getElementById('desktop-fabric-trigger').classList.remove('open');
+                
+                // Update all options
+                document.querySelectorAll('#desktop-fabric-options .custom-option').forEach(option => {
+                    option.classList.remove('selected');
+                    if (option.getAttribute('data-value') === fabric) {
+                        option.classList.add('selected');
+                    }
+                });
+            } else {
+                document.getElementById('mobile-selected-fabric').value = fabric;
+                document.getElementById('mobile-fabric-display').textContent = fabric;
+                document.getElementById('mobile-fabric-options').classList.remove('open');
+                document.getElementById('mobile-fabric-trigger').classList.remove('open');
+                
+                // Update all options
+                document.querySelectorAll('#mobile-fabric-options .custom-option').forEach(option => {
+                    option.classList.remove('selected');
+                    if (option.getAttribute('data-value') === fabric) {
+                        option.classList.add('selected');
+                    }
+                });
+            }
+        }
+
         function populateForm(data) {
             // Basic info
             document.getElementById('name').value = data.name || '';
             document.getElementById('mobile-name').value = data.name || '';
-            document.getElementById('fabric').value = data.fabric || '';
-document.getElementById('mobile-fabric').value = data.fabric || '';
             document.getElementById('description').value = data.description || '';
             document.getElementById('mobile-description').value = data.description || '';
             document.getElementById('price').value = data.price || '';
@@ -3152,6 +3281,12 @@ document.getElementById('mobile-fabric').value = data.fabric || '';
             if (data.category) {
                 selectCategory(data.category, 'desktop');
                 selectCategory(data.category, 'mobile');
+            }
+            
+            // Fabric
+            if (data.fabric) {
+                selectFabric(data.fabric, 'desktop');
+                selectFabric(data.fabric, 'mobile');
             }
             
             // Cover image
@@ -3706,7 +3841,7 @@ document.getElementById('mobile-fabric').value = data.fabric || '';
             const oldPrice = document.getElementById('oldPrice').value;
             const category = document.getElementById('selected-category').value;
             
-            if (!name || !price || !oldPrice || !category || !fabric) {
+            if (!name || !price || !oldPrice || !category) {
                 showToast('Please fill all required fields', 'error');
                 return;
             }
@@ -3733,7 +3868,6 @@ document.getElementById('mobile-fabric').value = data.fabric || '';
                     name,
                     description: document.getElementById('description').value.trim(),
                     category,
-                    fabric: document.getElementById('fabric').value.trim(),
                     price: parseFloat(price),
                     oldPrice: parseFloat(oldPrice),
                     image: coverUrl,
