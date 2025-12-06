@@ -2027,23 +2027,6 @@
                                         <input type="hidden" id="selected-category">
                                     </div>
                                     <div class="form-group">
-    <label class="form-label form-label-required">Fabric</label>
-    <select class="form-control" id="fabric" required>
-        <option value="">Select Fabric</option>
-        <option value="100% Cotton">100% Cotton</option>
-        <option value="Cotton Blend">Cotton Blend</option>
-        <option value="Polyester">Polyester</option>
-        <option value="Silk">Silk</option>
-        <option value="Linen">Linen</option>
-        <option value="Wool">Wool</option>
-        <option value="Denim">Denim</option>
-        <option value="Georgette">Georgette</option>
-        <option value="Chiffon">Chiffon</option>
-        <option value="Velvet">Velvet</option>
-        <option value="Other">Other</option>
-    </select>
-</div>
-                                    <div class="form-group">
                                         <label class="form-label">Description</label>
                                         <textarea class="form-control" id="description" rows="6" placeholder="Detailed product description..."></textarea>
                                     </div>
@@ -2282,23 +2265,6 @@
                                 <div id="mobile-category-select" class="custom-select-container"></div>
                                 <input type="hidden" id="mobile-selected-category">
                             </div>
-                            <div class="form-group">
-    <label class="form-label form-label-required">Fabric</label>
-    <select class="form-control" id="fabric" required>
-        <option value="">Select Fabric</option>
-        <option value="100% Cotton">100% Cotton</option>
-        <option value="Cotton Blend">Cotton Blend</option>
-        <option value="Polyester">Polyester</option>
-        <option value="Silk">Silk</option>
-        <option value="Linen">Linen</option>
-        <option value="Wool">Wool</option>
-        <option value="Denim">Denim</option>
-        <option value="Georgette">Georgette</option>
-        <option value="Chiffon">Chiffon</option>
-        <option value="Velvet">Velvet</option>
-        <option value="Other">Other</option>
-    </select>
-</div>
                             <div class="form-group">
                                 <label class="form-label">Description</label>
                                 <textarea class="form-control" id="mobile-description" rows="4" placeholder="Detailed product description..."></textarea>
@@ -3142,8 +3108,6 @@
             document.getElementById('description').value = data.description || '';
             document.getElementById('mobile-description').value = data.description || '';
             document.getElementById('price').value = data.price || '';
-            document.getElementById('fabric').value = data.fabric || '';
-            document.getElementById('mobile-fabric').value = data.fabric || '';
             document.getElementById('mobile-price').value = data.price || '';
             document.getElementById('oldPrice').value = data.oldPrice || '';
             document.getElementById('mobile-oldPrice').value = data.oldPrice || '';
@@ -3706,7 +3670,7 @@
             const oldPrice = document.getElementById('oldPrice').value;
             const category = document.getElementById('selected-category').value;
             
-            if (!name || !price || !oldPrice || !category || !fabric) {
+            if (!name || !price || !oldPrice || !category) {
                 showToast('Please fill all required fields', 'error');
                 return;
             }
@@ -3733,7 +3697,6 @@
                     name,
                     description: document.getElementById('description').value.trim(),
                     category,
-                    fabric: document.getElementById('fabric').value.trim(),
                     price: parseFloat(price),
                     oldPrice: parseFloat(oldPrice),
                     image: coverUrl,
