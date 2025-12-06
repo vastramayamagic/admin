@@ -27,10 +27,11 @@
             --success-color: #10B981;
             --switch-on: #5127ba;
             --switch-off: #9CA3AF;
+            --star-color: #F59E0B;
             --shadow-premium: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
             --radius-md: 8px;
             --radius-lg: 12px;
-            --radius-xl: 16px;
+            --radius-xl: 24px;
             --skeleton-color: #f0f0f0;
             --skeleton-highlight: #f8f8f8;
         }
@@ -39,6 +40,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -87,16 +89,18 @@
             overflow: hidden;
         }
 
-        /* Desktop sidebar */
+        /* Desktop sidebar - FIXED POSITION */
         .d-sidebar {
             width: var(--sidebar-width);
             background: var(--sidebar-bg);
             border-right: 1px solid var(--border-subtle);
             display: flex;
             flex-direction: column;
-            position: sticky;
-            top: 0;
-            height: calc(100vh - var(--header-height-desktop));
+            position: fixed;
+            top: var(--header-height-desktop);
+            left: 0;
+            bottom: 0;
+            z-index: 100;
             overflow-y: auto;
         }
 
@@ -111,7 +115,6 @@
         .d-nav {
             display: flex;
             flex-direction: column;
-            flex: 1;
         }
 
         .d-nav-group + .d-nav-group {
@@ -132,7 +135,6 @@
             color: var(--text-color);
             line-height: 20px;
             transition: background 0.15s ease;
-            text-decoration: none;
         }
 
         .d-nav-item .label {
@@ -191,8 +193,6 @@
             gap: 12px;
             font-size: 15px;
             font-weight: 500;
-            text-decoration: none;
-            color: var(--text-color);
         }
         .d-submenu-item:hover {
             background: var(--hover-bg);
@@ -253,20 +253,20 @@
             max-width: 150px;
         }
 
-        /* Desktop content */
+        /* Desktop content - with sidebar offset */
         .d-content {
             flex: 1;
             background: var(--page-bg);
             overflow-y: auto;
-            width: 100%;
-            padding: 0;
+            margin-left: var(--sidebar-width);
+            width: calc(100% - var(--sidebar-width));
         }
 
-        /* ============= BODY CONTENT ============= */
+        /* ============= EDITOR CONTENT ============= */
         .content-inner {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 24px 24px 40px;
+            padding: 32px 32px 60px;
             width: 100%;
         }
 
@@ -274,7 +274,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 24px;
+            margin-bottom: 32px;
             width: 100%;
         }
 
@@ -287,7 +287,7 @@
 
         .page-title {
             font-weight: 700;
-            font-size: 20px;
+            font-size: 24px;
             line-height: 32px;
             color: rgb(29, 30, 32);
             white-space: nowrap;
@@ -315,137 +315,157 @@
             color: #d1d5db;
         }
 
+        /* Action buttons */
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
         .primary-btn {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 8px 16px;
-            border-radius: 8px;
+            padding: 10px 20px;
+            border-radius: var(--radius-md);
             border: none;
             cursor: pointer;
             font-weight: 600;
             font-size: 14px;
             line-height: 20px;
             color: #ffffff;
-            background: var(--brand-primary);
-            transition: background 0.15s ease;
+            background: var(--brand-gradient);
+            transition: all 0.2s ease;
             white-space: nowrap;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
         }
+        
+        .primary-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #471ea7 0%, #5127ba 100%);
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .primary-btn:hover::before {
+            opacity: 1;
+        }
+        
+        .primary-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(81, 39, 186, 0.25);
+        }
+        
+        .primary-btn:active {
+            transform: translateY(0);
+        }
+
         .primary-btn svg {
             width: 18px;
             height: 18px;
             stroke: #ffffff;
-        }
-        .primary-btn:hover {
-            background: #471ea7;
         }
 
         .secondary-btn {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 8px 16px;
-            border-radius: 8px;
-            border: 1px solid #e5e7eb;
+            padding: 10px 20px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-subtle);
             cursor: pointer;
-            font-weight: 500;
+            font-weight: 600;
             font-size: 14px;
             line-height: 20px;
-            color: #6b7280;
+            color: var(--text-color);
             background: #ffffff;
-            transition: all 0.15s ease;
+            transition: all 0.2s ease;
             white-space: nowrap;
         }
+
         .secondary-btn:hover {
             background: #f9fafb;
             border-color: #d1d5db;
+            transform: translateY(-1px);
         }
 
-        /* Premium Editor Layout */
+        /* Editor grid layout */
         .editor-grid {
             display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 24px;
-            width: 100%;
-        }
-
-        .editor-main {
-            display: flex;
-            flex-direction: column;
+            grid-template-columns: 1fr 1fr;
             gap: 24px;
         }
 
-        .editor-sidebar {
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-        }
-
-        /* Premium Card Styles */
         .editor-card {
             background: #ffffff;
-            border-radius: 12px;
-            border: 1px solid #e5e7eb;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-subtle);
             overflow: hidden;
             width: 100%;
+            box-shadow: var(--shadow-premium);
         }
 
         .card-header {
-            padding: 20px 24px;
-            border-bottom: 1px solid #e5e7eb;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            padding: 24px 24px 20px;
+            border-bottom: 1px solid var(--border-subtle);
+            background: linear-gradient(135deg, #FAFAFA 0%, #F5F5F5 100%);
         }
 
-        .card-title {
+        .section-title {
             font-weight: 700;
-            font-size: 16px;
-            line-height: 24px;
+            font-size: 18px;
+            line-height: 28px;
             color: rgb(29, 30, 32);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
-        .card-title svg {
-            width: 20px;
-            height: 20px;
-            stroke: var(--icon-color);
+        .section-title svg {
+            width: 22px;
+            height: 22px;
+            stroke: var(--brand-primary);
         }
 
         .card-body {
             padding: 24px;
         }
 
-        /* Premium Form Controls */
+        /* Form controls */
         .form-group {
-            margin-bottom: 20px;
-            width: 100%;
-        }
-
-        .form-group:last-child {
-            margin-bottom: 0;
+            margin-bottom: 24px;
         }
 
         .form-label {
             display: block;
-            font-weight: 600;
             font-size: 14px;
-            line-height: 20px;
+            font-weight: 600;
             color: rgb(29, 30, 32);
             margin-bottom: 8px;
         }
 
+        .form-label span {
+            color: var(--danger-color);
+        }
+
         .form-control {
             width: 100%;
-            padding: 10px 14px;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
+            padding: 12px 16px;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
             background: #ffffff;
             transition: all 0.15s ease;
             font-family: "DM Sans", Roboto, sans-serif;
             font-size: 14px;
+            font-weight: 500;
             color: var(--text-color);
         }
 
@@ -461,32 +481,36 @@
         }
 
         textarea.form-control {
-            min-height: 100px;
+            min-height: 120px;
             resize: vertical;
             line-height: 1.5;
         }
 
-        /* Premium Upload Zone */
-        .upload-zone-premium {
-            border: 2px dashed #E5E7EB;
+        /* Premium upload zone - MATCHING CATEGORIES PAGE */
+        .upload-container {
+            width: 100%;
+        }
+
+        .upload-zone {
+            border: 2px dashed var(--border-subtle);
             border-radius: var(--radius-lg);
-            padding: 3rem 2rem;
+            padding: 48px 32px;
             text-align: center;
             cursor: pointer;
             background: linear-gradient(135deg, #FAFAFA 0%, #F5F5F5 100%);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             width: 100%;
-            margin-bottom: 1rem;
+            margin-bottom: 16px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 200px;
+            min-height: 240px;
             overflow: hidden;
         }
 
-        .upload-zone-premium::before {
+        .upload-zone::before {
             content: '';
             position: absolute;
             top: 0;
@@ -503,30 +527,26 @@
             100% { background-position: 200% 0; }
         }
 
-        .upload-zone-premium:hover {
+        .upload-zone:hover {
             border-color: var(--brand-primary);
             background: linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%);
             transform: translateY(-2px);
             box-shadow: 0 20px 40px rgba(81, 39, 186, 0.15);
         }
 
-        .upload-zone-premium:active {
-            transform: translateY(0);
-        }
-
-        .upload-zone-premium svg {
+        .upload-zone svg {
             stroke: var(--brand-primary);
-            margin-bottom: 1rem;
+            margin-bottom: 16px;
             width: 64px;
             height: 64px;
             filter: drop-shadow(0 4px 6px rgba(81, 39, 186, 0.1));
         }
 
         .upload-text {
-            font-size: 1.125rem;
+            font-size: 18px;
             font-weight: 700;
             color: #1F2937;
-            margin-bottom: 0.5rem;
+            margin-bottom: 8px;
             background: linear-gradient(135deg, #5127ba 0%, #673de6 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -534,30 +554,30 @@
         }
 
         .upload-subtext {
-            font-size: 0.875rem;
+            font-size: 14px;
             color: #6B7280;
             max-width: 80%;
             margin: 0 auto;
             line-height: 1.4;
         }
 
-        /* Image Preview Container */
-        .image-preview-container {
+        /* Preview container */
+        .preview-container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 1.5rem;
-            padding: 2rem;
+            gap: 20px;
+            padding: 24px;
             background: white;
-            border-radius: 16px;
-            border: 1px solid #E5E7EB;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-subtle);
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-            margin-bottom: 1rem;
+            margin-bottom: 16px;
             position: relative;
             overflow: hidden;
         }
 
-        .image-preview-container::before {
+        .preview-container::before {
             content: '';
             position: absolute;
             top: 0;
@@ -568,23 +588,15 @@
             background-size: 200% 100%;
         }
 
-        .preview-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1.5rem;
-            width: 100%;
-        }
-
         .preview-img-wrapper {
             display: flex;
             justify-content: center;
             align-items: center;
             width: 100%;
-            padding: 1rem;
+            padding: 16px;
             background: linear-gradient(135deg, #FAFAFA 0%, #F5F5F5 100%);
             border-radius: 12px;
-            border: 1px dashed #E5E7EB;
+            border: 1px dashed var(--border-subtle);
         }
 
         .preview-img {
@@ -592,7 +604,7 @@
             height: 200px;
             object-fit: cover;
             border-radius: 12px;
-            border: 2px solid white;
+            border: 3px solid white;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease;
         }
@@ -601,12 +613,11 @@
             transform: scale(1.02);
         }
 
-        /* Action buttons */
         .preview-actions {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 1rem;
+            gap: 16px;
             width: 100%;
         }
 
@@ -620,7 +631,7 @@
             border: 2px solid var(--brand-primary);
             border-radius: 10px;
             cursor: pointer;
-            font-size: 0.95rem;
+            font-size: 14px;
             font-weight: 600;
             color: var(--brand-primary);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -637,7 +648,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, #5127ba 0%, #673de6 100%);
+            background: var(--brand-gradient);
             z-index: -1;
             opacity: 0;
             transition: opacity 0.3s ease;
@@ -653,47 +664,161 @@
             opacity: 1;
         }
 
-        .change-image-btn:active {
-            transform: translateY(0);
-        }
-
         .change-image-btn svg {
             width: 18px;
             height: 18px;
             stroke: currentColor;
-            transition: stroke 0.3s ease;
+        }
+
+        /* Category Select */
+        .category-select-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .select-trigger {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            background: #ffffff;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-weight: 500;
+        }
+
+        .select-trigger:hover {
+            border-color: var(--brand-primary);
+        }
+
+        .select-trigger svg {
+            width: 20px;
+            height: 20px;
+            stroke: #6b7280;
+            transition: transform 0.2s ease;
+        }
+
+        .select-trigger.open svg {
+            transform: rotate(180deg);
+        }
+
+        .select-options {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-premium);
+            z-index: 50;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-10px);
+            transition: all 0.2s ease;
+            max-height: 240px;
+            overflow-y: auto;
+        }
+
+        .select-options.open {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+
+        .select-option {
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: background 0.15s ease;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .select-option:hover {
+            background: var(--hover-bg);
+            color: var(--brand-primary);
+        }
+
+        .select-option.selected {
+            background: var(--active-bg);
+            color: var(--brand-primary);
+            font-weight: 600;
+        }
+
+        /* Variants and Reviews */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .add-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: var(--radius-md);
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            color: #ffffff;
+            background: var(--brand-gradient);
+            transition: all 0.2s ease;
+        }
+
+        .add-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(81, 39, 186, 0.2);
+        }
+
+        .add-btn svg {
+            width: 18px;
+            height: 18px;
+            stroke: #ffffff;
         }
 
         /* Variant Cards */
+        .variants-list, .reviews-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
         .variant-card {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 16px;
+            background: #ffffff;
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-md);
-            margin-bottom: 12px;
-            background: #fff;
             transition: all 0.2s ease;
         }
 
         .variant-card:hover {
-            border-color: #d1d5db;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border-color: var(--brand-primary);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
 
         .variant-info {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 16px;
         }
 
         .variant-swatch {
             width: 48px;
             height: 48px;
-            border-radius: 8px;
-            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
             object-fit: cover;
+            border: 1px solid var(--border-subtle);
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            padding: 4px;
         }
 
         .variant-details {
@@ -721,29 +846,30 @@
         .action-btn {
             width: 36px;
             height: 36px;
-            border-radius: 8px;
+            border-radius: var(--radius-md);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             border: 1px solid var(--border-subtle);
-            background: white;
+            background: #ffffff;
             transition: all 0.2s ease;
         }
 
         .action-btn:hover {
             background: #f9fafb;
             border-color: #d1d5db;
+            transform: translateY(-1px);
         }
 
         .action-btn.edit:hover {
-            border-color: var(--brand-primary);
-            background: rgba(81, 39, 186, 0.05);
+            background: #f0f9ff;
+            border-color: #7dd3fc;
         }
 
         .action-btn.delete:hover {
-            border-color: var(--danger-color);
-            background: rgba(239, 68, 68, 0.05);
+            background: #fef2f2;
+            border-color: #fecaca;
         }
 
         .action-btn svg {
@@ -751,28 +877,26 @@
             height: 18px;
         }
 
-        .action-btn.edit svg {
-            stroke: var(--brand-primary);
-        }
-
-        .action-btn.delete svg {
-            stroke: var(--danger-color);
-        }
-
         /* Review Cards */
         .review-card {
             padding: 16px;
+            background: #ffffff;
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-md);
-            margin-bottom: 12px;
-            background: #fff;
+            transition: all 0.2s ease;
+        }
+
+        .review-card:hover {
+            border-color: var(--brand-primary);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
 
         .review-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
         }
 
         .reviewer-name {
@@ -781,125 +905,100 @@
             color: var(--text-color);
         }
 
-        .star-rating {
+        .review-rating {
             display: flex;
-            gap: 2px;
-            color: #fbbf24;
+            align-items: center;
+            gap: 4px;
         }
 
-        .star-rating svg {
+        .star {
             width: 16px;
             height: 16px;
-            fill: currentColor;
+            fill: var(--star-color);
         }
 
-        .review-comment {
+        .review-text {
             font-size: 14px;
             line-height: 1.5;
             color: #6b7280;
         }
 
-        /* Category Select */
-        .custom-select {
-            position: relative;
-        }
-
-        .select-trigger {
-            width: 100%;
-            padding: 10px 14px;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            background: #ffffff;
-            cursor: pointer;
+        /* Swatch Upload Container */
+        .swatch-upload-container {
+            width: 120px;
+            height: 120px;
+            border-radius: var(--radius-md);
+            border: 2px dashed var(--border-subtle);
+            background: linear-gradient(135deg, #FAFAFA 0%, #F5F5F5 100%);
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            transition: all 0.15s ease;
-        }
-
-        .select-trigger:hover {
-            border-color: #d1d5db;
-        }
-
-        .select-trigger svg {
-            width: 18px;
-            height: 18px;
-            stroke: #6b7280;
-            transition: transform 0.2s ease;
-        }
-
-        .select-trigger.open svg {
-            transform: rotate(180deg);
-        }
-
-        .select-options {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-            z-index: 100;
-            max-height: 200px;
-            overflow-y: auto;
-            display: none;
-            margin-top: 4px;
-        }
-
-        .select-options.open {
-            display: block;
-        }
-
-        .select-option {
-            padding: 10px 14px;
+            justify-content: center;
+            flex-direction: column;
             cursor: pointer;
-            transition: background 0.15s ease;
-            font-size: 14px;
+            overflow: hidden;
+            position: relative;
+            transition: all 0.2s ease;
         }
 
-        .select-option:hover {
-            background: #f9fafb;
+        .swatch-upload-container:hover {
+            border-color: var(--brand-primary);
+            background: linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%);
+            transform: translateY(-1px);
         }
 
-        .select-option.selected {
-            background: #f3f4f6;
-            color: var(--brand-primary);
-            font-weight: 500;
+        .swatch-preview {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+        .swatch-upload-container svg {
+            width: 32px;
+            height: 32px;
+            stroke: var(--brand-primary);
+            margin-bottom: 8px;
+        }
+
+        .swatch-text {
+            font-size: 12px;
+            color: #6b7280;
+            text-align: center;
+            padding: 0 8px;
         }
 
         /* Size Selection */
         .size-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
             gap: 8px;
+            margin-top: 8px;
         }
 
-        .size-item {
-            padding: 10px;
+        .size-option {
+            padding: 12px;
             border: 1px solid var(--border-subtle);
-            border-radius: 8px;
+            border-radius: var(--radius-md);
             text-align: center;
             cursor: pointer;
-            transition: all 0.15s ease;
-            background: white;
+            transition: all 0.2s ease;
+            background: #ffffff;
         }
 
-        .size-item:hover {
-            border-color: #d1d5db;
-        }
-
-        .size-item.selected {
+        .size-option:hover {
             border-color: var(--brand-primary);
-            background: rgba(81, 39, 186, 0.05);
+            transform: translateY(-1px);
+        }
+
+        .size-option.selected {
+            background: var(--active-bg);
+            border-color: var(--brand-primary);
             color: var(--brand-primary);
             font-weight: 600;
         }
 
-        .size-label {
+        .size-name {
             font-weight: 600;
-            font-size: 14px;
             margin-bottom: 2px;
         }
 
@@ -908,11 +1007,11 @@
             color: #6b7280;
         }
 
-        /* Gallery Grid */
+        /* Gallery Preview */
         .gallery-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-            gap: 8px;
+            gap: 12px;
             margin-top: 12px;
         }
 
@@ -920,7 +1019,7 @@
             position: relative;
             width: 100%;
             aspect-ratio: 1;
-            border-radius: 8px;
+            border-radius: var(--radius-md);
             overflow: hidden;
             border: 1px solid var(--border-subtle);
         }
@@ -957,110 +1056,160 @@
             stroke: var(--danger-color);
         }
 
-        /* Star Rating Input */
-        .star-input {
+        /* Star Rating */
+        .star-rating {
             display: flex;
-            gap: 8px;
+            gap: 4px;
             justify-content: center;
             margin: 16px 0;
         }
 
-        .star-input svg {
-            width: 32px;
-            height: 32px;
+        .star-rating .star {
+            width: 24px;
+            height: 24px;
             cursor: pointer;
-            stroke: #d1d5db;
-            fill: transparent;
-            transition: all 0.2s ease;
+            transition: transform 0.2s ease;
         }
 
-        .star-input svg.active {
-            fill: #fbbf24;
-            stroke: #fbbf24;
-        }
-
-        .star-input svg:hover {
+        .star-rating .star:hover {
             transform: scale(1.2);
         }
 
-        /* Progress Bar */
-        .upload-progress {
-            margin-top: 1rem;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 1.5rem;
-            background: white;
-            border-radius: 16px;
-            border: 1px solid #E5E7EB;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        /* Empty States */
+        .empty-state {
+            text-align: center;
+            padding: 48px 24px;
+            color: #6b7280;
         }
 
-        .progress-bar {
-            height: 10px;
-            background: #F3F4F6;
-            border-radius: 5px;
-            overflow: hidden;
-            width: 100%;
-            max-width: 300px;
-            position: relative;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+        .empty-state svg {
+            width: 48px;
+            height: 48px;
+            stroke: #d1d5db;
+            margin-bottom: 16px;
         }
 
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #5127ba, #673de6);
-            width: 0%;
-            transition: width 0.3s ease;
-            border-radius: 5px;
-            position: relative;
-            overflow: hidden;
+        .empty-state h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-color);
         }
 
-        .progress-fill::after {
-            content: '';
-            position: absolute;
+        .empty-state p {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        /* ============= MODALS ============= */
+        .modal-overlay {
+            position: fixed;
             top: 0;
             left: 0;
-            bottom: 0;
-            right: 0;
-            background-image: linear-gradient(
-                90deg,
-                transparent,
-                rgba(255, 255, 255, 0.3),
-                transparent
-            );
-            animation: shimmer 2s infinite;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
         }
 
-        .progress-text {
-            font-size: 0.875rem;
-            color: #6b7280;
-            text-align: center;
-            font-weight: 500;
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 520px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-premium);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
-        /* Updated button styles */
+        @keyframes modalPop {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-header {
+            padding: 24px 24px 20px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fff;
+            position: relative;
+        }
+
+        .modal-title {
+            font-weight: 700;
+            font-size: 20px;
+            color: rgb(29, 30, 32);
+        }
+
+        .modal-close {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-subtle);
+            background: #f9fafb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            background: #f3f4f6;
+        }
+
+        .modal-close svg {
+            width: 20px;
+            height: 20px;
+            stroke: #111827;
+        }
+
+        .modal-body {
+            padding: 24px;
+            background: #F8FAFC;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .modal-footer {
+            padding: 20px 24px;
+            background: white;
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        /* Form buttons */
         .btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
-            padding: 0.875rem 1.5rem;
+            gap: 8px;
+            padding: 10px 20px;
             font-weight: 600;
             border-radius: var(--radius-md);
             cursor: pointer;
             transition: all 0.15s ease;
             border: none;
-            font-size: 0.95rem;
+            font-size: 14px;
             white-space: nowrap;
             min-width: 100px;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #5127ba 0%, #673de6 100%);
+            background: var(--brand-gradient);
             color: white;
             position: relative;
             overflow: hidden;
@@ -1102,7 +1251,7 @@
 
         .btn-secondary {
             background: white;
-            border: 1px solid #e5e7eb;
+            border: 1px solid var(--border-subtle);
             color: var(--text-color);
         }
 
@@ -1123,81 +1272,6 @@
             transform: translateY(-1px);
         }
 
-        .btn-sm {
-            padding: 8px 12px;
-            font-size: 13px;
-            min-width: auto;
-        }
-
-        .btn-icon {
-            width: 36px;
-            height: 36px;
-            padding: 0;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid var(--border-subtle);
-            background: white;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .btn-icon:hover {
-            background: #f9fafb;
-            border-color: #d1d5db;
-        }
-
-        .btn-icon svg {
-            width: 18px;
-            height: 18px;
-            stroke: #6b7280;
-        }
-
-        /* Loading State */
-        #loading-state {
-            text-align: center;
-            padding: 4rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .loading-spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid #f3f4f6;
-            border-top: 3px solid var(--brand-primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Empty States */
-        .empty-state {
-            text-align: center;
-            padding: 3rem 1rem;
-            color: #6b7280;
-            width: 100%;
-        }
-
-        .empty-state svg {
-            width: 64px;
-            height: 64px;
-            stroke: #e5e7eb;
-            margin-bottom: 1rem;
-        }
-
-        /* Mobile Save Bar */
-        .mobile-save-bar {
-            display: none;
-        }
-
         /* Toast */
         #toast-container {
             position: fixed;
@@ -1211,14 +1285,14 @@
         }
 
         .toast {
-            padding: 1rem 1.5rem;
+            padding: 16px 20px;
             background: white;
             border-radius: var(--radius-md);
             box-shadow: var(--shadow-premium);
             animation: slideUp 0.3s ease;
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 12px;
             border-left: 4px solid var(--brand-primary);
             min-width: 300px;
             pointer-events: auto;
@@ -1233,18 +1307,62 @@
             border-left-color: var(--danger-color);
         }
 
-        .toast.info {
-            border-left-color: var(--brand-primary);
-        }
-
-        .toast svg {
-            width: 20px;
-            height: 20px;
-        }
-
         @keyframes slideUp {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Progress Overlay */
+        #progress-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 9999;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .progress-content {
+            background: white;
+            padding: 32px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-premium);
+            border: 1px solid var(--border-subtle);
+            min-width: 300px;
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid #E2E8F0;
+            border-top: 4px solid var(--brand-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .progress-title {
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--text-color);
+            margin-bottom: 8px;
+        }
+
+        .progress-desc {
+            font-size: 14px;
+            color: #6b7280;
         }
 
         /* ============= FIXED PROFILE POPUP ============= */
@@ -1299,15 +1417,15 @@
         .popup-header {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            padding: 1rem;
+            gap: 12px;
+            padding: 16px;
             border-bottom: 1px solid #e5e7eb;
             background: #f9fafb;
         }
 
         .popup-list {
             list-style: none;
-            padding: 0.5rem;
+            padding: 8px;
         }
 
         .popup-list li {
@@ -1318,8 +1436,8 @@
         .popup-list a {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            padding: 0.75rem;
+            gap: 12px;
+            padding: 12px;
             border-radius: 8px;
             text-decoration: none;
             color: var(--text-color);
@@ -1337,15 +1455,19 @@
             background: #f3f4f6;
         }
 
-        .popup-icon {
+        .popup-list a svg {
             width: 18px;
             height: 18px;
             stroke: #6b7280;
             flex-shrink: 0;
         }
 
-        .logout-icon {
-            stroke: var(--danger-color) !important;
+        .popup-list a.logout {
+            color: var(--danger-color);
+        }
+
+        .popup-list a.logout svg {
+            stroke: var(--danger-color);
         }
 
         /* ============= MOBILE LAYOUT ============= */
@@ -1372,8 +1494,8 @@
 
         /* Mobile menu button */
         .m-menu-btn {
-            width: 40px;
-            height: 40px;
+            width: 44px;
+            height: 44px;
             border-radius: 10px;
             border: 1px solid #e5e7eb;
             background: #f9fafb;
@@ -1390,7 +1512,7 @@
         }
 
         .m-menu-lines {
-            width: 18px;
+            width: 20px;
             height: 14px;
             position: relative;
         }
@@ -1485,8 +1607,8 @@
 
         /* Mobile drawer close button */
         .m-drawer-close {
-            width: 40px;
-            height: 40px;
+            width: 44px;
+            height: 44px;
             border-radius: 10px;
             border: 1px solid #e5e7eb;
             background: #f9fafb;
@@ -1503,8 +1625,8 @@
         }
         
         .m-drawer-close-icon {
-            width: 14px;
-            height: 14px;
+            width: 16px;
+            height: 16px;
             position: relative;
         }
         .m-drawer-close-icon::before,
@@ -1513,7 +1635,7 @@
             position: absolute;
             inset: 0;
             margin: auto;
-            width: 14px;
+            width: 16px;
             height: 2px;
             border-radius: 999px;
             background: #111827;
@@ -1545,7 +1667,6 @@
             transition: background 0.15s ease;
             font-size: 16px;
             font-weight: 600;
-            text-decoration: none;
         }
 
         .m-nav-item .label {
@@ -1665,215 +1786,74 @@
             color: #d1d5db;
         }
 
-        /* Mobile editor content */
-        .mobile-editor-content {
+        /* Mobile content cards */
+        .mobile-editor-cards {
             display: flex;
             flex-direction: column;
             gap: 16px;
             width: 100%;
         }
 
-        .mobile-card {
+        .mobile-editor-card {
             background: #ffffff;
             border-radius: 16px;
             border: 1px solid #e5e7eb;
-            padding: 16px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
             width: 100%;
         }
 
-        .mobile-card-title {
+        .mobile-section-title {
             font-weight: 700;
-            font-size: 16px;
+            font-size: 18px;
+            line-height: 28px;
             color: rgb(29, 30, 32);
             margin-bottom: 16px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
-        .mobile-card-title svg {
-            width: 20px;
-            height: 20px;
-            stroke: var(--icon-color);
+        .mobile-section-title svg {
+            width: 22px;
+            height: 22px;
+            stroke: var(--brand-primary);
         }
 
-        .mobile-form-group {
-            margin-bottom: 16px;
-            width: 100%;
-        }
-
-        .mobile-form-label {
-            display: block;
-            font-weight: 600;
-            font-size: 14px;
-            color: rgb(29, 30, 32);
-            margin-bottom: 8px;
-        }
-
-        .mobile-form-control {
-            width: 100%;
-            padding: 12px 16px;
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            background: #ffffff;
-            font-family: "DM Sans", Roboto, sans-serif;
-            font-size: 16px;
-        }
-
-        /* Mobile upload zone */
-        .mobile-upload-zone {
-            border: 2px dashed #CBD5E1;
-            border-radius: 16px;
-            padding: 3rem 1rem;
-            text-align: center;
-            cursor: pointer;
-            background: linear-gradient(135deg, #FAFAFA 0%, #F5F5F5 100%);
-            width: 100%;
-            margin-bottom: 1rem;
-        }
-
-        /* Mobile variant cards */
-        .mobile-variant-card {
-            padding: 12px;
-            border: 1px solid var(--border-subtle);
-            border-radius: 12px;
-            margin-bottom: 8px;
-            background: #fff;
-        }
-
-        /* Mobile Save Bar */
+        /* Mobile save bar */
         .mobile-save-bar {
-            display: flex;
+            display: none;
             position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
             background: white;
-            padding: 12px 16px;
+            padding: 16px;
             border-top: 1px solid var(--border-subtle);
             z-index: 90;
-            box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.05);
-            gap: 8px;
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.08);
         }
 
-        .mobile-save-bar .btn {
+        .mobile-save-actions {
+            display: flex;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .mobile-save-actions .btn {
             flex: 1;
+            padding: 14px;
+            font-size: 15px;
+            font-weight: 600;
         }
 
-        /* Modals - Updated Premium Style */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(4px);
-            z-index: 2000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-        }
-
-        .modal-content {
-            background: white;
-            width: 100%;
-            max-width: 600px;
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-premium);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        @keyframes modalPop {
-            from { transform: scale(0.95); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        .modal-header {
-            padding: 1.5rem 1.5rem 1rem;
-            border-bottom: 1px solid var(--border-subtle);
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            background: #fff;
-            position: relative;
-        }
-
-        .modal-title {
-            font-weight: 700;
-            font-size: 1.25rem;
-            color: rgb(29, 30, 32);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .modal-body {
-            padding: 1.5rem;
-            background: #F8FAFC;
-            flex: 1;
-            overflow-y: auto;
-        }
-
-        .modal-footer {
-            padding: 1rem 1.5rem 1.5rem;
-            background: white;
-            border-top: 1px solid var(--border-subtle);
-            display: flex;
-            justify-content: flex-end;
-            gap: 0.75rem;
-        }
-
-        /* Progress Overlay */
-        #progress-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(8px);
-            z-index: 9999;
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-        }
-
-        .progress-content {
-            background: white;
-            padding: 2rem;
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-premium);
-            border: 1px solid var(--border-subtle);
-            min-width: 300px;
-        }
-
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid #E2E8F0;
-            border-top: 4px solid var(--brand-primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 1rem;
-        }
-
-        /* Responsive adjustments */
+        /* Responsive switch */
         @media (max-width: 768px) {
             .page-desktop { display: none; }
             .page-mobile  { display: flex; }
             
             .editor-grid {
-                display: flex;
-                flex-direction: column;
+                grid-template-columns: 1fr;
             }
             
             .content-inner {
@@ -1891,7 +1871,7 @@
             
             .modal-content {
                 width: 100%;
-                border-radius: 24px 24px 0 0;
+                border-radius: var(--radius-xl) var(--radius-xl) 0 0;
                 animation: slideUpModal 0.3s cubic-bezier(0.16, 1, 0.3, 1);
                 max-height: 90vh;
                 overflow-y: auto;
@@ -1916,6 +1896,21 @@
                 overflow-x: hidden;
                 padding-bottom: 100px;
             }
+            
+            .mobile-save-bar {
+                display: block;
+            }
+            
+            /* Mobile upload zone */
+            .upload-zone {
+                padding: 32px 16px;
+                min-height: 200px;
+            }
+            
+            .preview-img {
+                width: 160px;
+                height: 160px;
+            }
         }
 
         @media (min-width: 769px) {
@@ -1923,7 +1918,7 @@
             .page-mobile { display: none; }
             
             .mobile-save-bar {
-                display: none;
+                display: none !important;
             }
         }
 
@@ -1932,6 +1927,22 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+        }
+
+        /* Loading state */
+        .loading-state {
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .loading-spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid #E2E8F0;
+            border-top: 4px solid var(--brand-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 24px;
         }
     </style>
 </head>
@@ -1950,7 +1961,7 @@
                     <nav class="d-nav">
                         <div class="d-nav-group">
                             <!-- Dashboard -->
-                            <a href="index.html" class="d-nav-item">
+                            <div class="d-nav-item" onclick="window.location.href='index.html'">
                                 <span class="icon">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                                          fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1961,10 +1972,10 @@
                                     </svg>
                                 </span>
                                 <span class="label">Dashboard</span>
-                            </a>
+                            </div>
 
                             <!-- Inventory (Active) -->
-                            <a href="manage-products.html" class="d-nav-item d-nav-item--active">
+                            <div class="d-nav-item d-nav-item--active">
                                 <span class="icon">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                                          fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1974,7 +1985,7 @@
                                     </svg>
                                 </span>
                                 <span class="label">Inventory</span>
-                            </a>
+                            </div>
 
                             <!-- Customize Site -->
                             <div class="d-nav-item" id="d-customize-toggle">
@@ -1998,7 +2009,7 @@
 
                             <!-- Desktop Customize Site submenu -->
                             <div class="d-submenu" id="d-customize-submenu">
-                                <a href="#" class="d-submenu-item">
+                                <div class="d-submenu-item">
                                     <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
                                         <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
@@ -2008,16 +2019,16 @@
                                         <path d="m5 15 4.5-4"/>
                                     </svg>
                                     <span>Theme & layout</span>
-                                </a>
-                                <a href="#" class="d-submenu-item">
+                                </div>
+                                <div class="d-submenu-item">
                                     <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <rect width="18" height="18" x="3" y="3" rx="2"/>
                                         <path d="M3 9h18"/>
                                         <path d="M9 21V9"/>
                                     </svg>
                                     <span>Sections</span>
-                                </a>
-                                <a href="#" class="d-submenu-item">
+                                </div>
+                                <div class="d-submenu-item">
                                     <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <circle cx="18" cy="5" r="3"/>
                                         <circle cx="6" cy="12" r="3"/>
@@ -2026,7 +2037,7 @@
                                         <line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/>
                                     </svg>
                                     <span>Navigation</span>
-                                </a>
+                                </div>
                             </div>
 
                             <!-- MANAGE ORDERS -->
@@ -2053,15 +2064,15 @@
 
                             <!-- Desktop MANAGE ORDERS submenu -->
                             <div class="d-submenu" id="d-orders-submenu">
-                                <a href="#" class="d-submenu-item">
+                                <div class="d-submenu-item">
                                     <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M12 6v6l4 2"/>
                                         <path d="M22 12a10 10 0 1 0-11 9.95"/>
                                         <path d="m22 16-5.5 5.5L14 19"/>
                                     </svg>
                                     <span>Today</span>
-                                </a>
-                                <a href="#" class="d-submenu-item">
+                                </div>
+                                <div class="d-submenu-item">
                                     <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M8 2v4"/>
                                         <path d="M16 2v4"/>
@@ -2075,8 +2086,8 @@
                                         <path d="M16 18h.01"/>
                                     </svg>
                                     <span>This Month</span>
-                                </a>
-                                <a href="#" class="d-submenu-item">
+                                </div>
+                                <div class="d-submenu-item">
                                     <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M12 2v2"/>
                                         <path d="M15.726 21.01A2 2 0 0 1 14 22H4a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2"/>
@@ -2086,7 +2097,7 @@
                                         <rect x="8" y="3" width="14" height="14" rx="2"/>
                                     </svg>
                                     <span>All Orders</span>
-                                </a>
+                                </div>
                             </div>
                         </div>
                     </nav>
@@ -2125,114 +2136,108 @@
                                 <span class="breadcrumb-divider">/</span>
                                 <span>Inventory</span>
                                 <span class="breadcrumb-divider">/</span>
-                                <span>Product Editor</span>
+                                <span id="breadcrumb-product">Product Editor</span>
                             </div>
                         </div>
 
-                        <div class="header-actions">
+                        <div class="action-buttons">
                             <button class="secondary-btn" onclick="window.history.back()">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2"
+                                     stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M19 12H5"/>
-                                    <path d="m12 19-7-7 7-7"/>
+                                    <path d="M12 19l-7-7 7-7"/>
                                 </svg>
-                                Cancel
+                                <span>Cancel</span>
                             </button>
                             <button class="primary-btn" id="save-btn">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2"
+                                     stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
                                     <polyline points="17 21 17 13 7 13 7 21"/>
                                     <polyline points="7 3 7 8 15 8"/>
                                 </svg>
-                                Save Product
+                                <span id="save-btn-text">Save Product</span>
                             </button>
                         </div>
                     </div>
 
-                    <!-- Loading State -->
-                    <div id="loading-state">
+                    <!-- LOADING STATE -->
+                    <div id="loading-state" class="loading-state">
                         <div class="loading-spinner"></div>
-                        <div style="color: #6b7280; font-size: 14px;">Loading product data...</div>
+                        <h3 style="margin-bottom: 8px; font-size: 18px; color: var(--text-color);">Loading Product Editor</h3>
+                        <p style="color: #6b7280; font-size: 14px;">Please wait while we prepare the editor...</p>
                     </div>
 
-                    <!-- Product Editor Form -->
-                    <form id="product-form" style="display: none;">
+                    <!-- EDITOR FORM -->
+                    <form id="product-form" style="display:none;">
                         <div class="editor-grid">
-                            <div class="editor-main">
+                            <!-- Left Column -->
+                            <div class="editor-col">
                                 <!-- Cover Image Card -->
-                                <div class="editor-card">
+                                <div class="editor-card" id="card-cover">
                                     <div class="card-header">
-                                        <div class="card-title">
+                                        <h3 class="section-title">
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                 <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
                                                 <circle cx="8.5" cy="8.5" r="1.5"/>
                                                 <polyline points="21 15 16 10 5 21"/>
                                             </svg>
                                             Cover Image
-                                        </div>
+                                        </h3>
                                     </div>
                                     <div class="card-body">
-                                        <div id="cover-upload-container">
-                                            <div class="upload-zone-premium" id="cover-upload-zone" onclick="document.getElementById('cover-input').click()">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <div class="upload-container">
+                                            <div class="upload-zone" id="cover-upload-zone" onclick="document.getElementById('cover-input').click()">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                                                     <polyline points="17 8 12 3 7 8"/>
                                                     <line x1="12" y1="3" x2="12" y2="15"/>
                                                 </svg>
                                                 <div class="upload-text">Click to upload cover image</div>
-                                                <div class="upload-subtext">JPG or PNG, max 5MB. Single image only.</div>
+                                                <div class="upload-subtext">Single image only • PNG, JPG up to 5MB</div>
                                             </div>
-                                            <div class="upload-progress" id="cover-progress" style="display: none;">
-                                                <div class="progress-bar">
-                                                    <div class="progress-fill" id="cover-progress-fill"></div>
+                                            <div class="preview-container" id="cover-preview-wrapper" style="display:none;">
+                                                <div class="preview-img-wrapper">
+                                                    <img id="cover-preview" class="preview-img">
                                                 </div>
-                                                <div class="progress-text" id="cover-progress-text">0% uploaded</div>
-                                            </div>
-                                            <div class="image-preview-container" id="cover-preview-container" style="display: none;">
-                                                <div class="preview-content">
-                                                    <div class="preview-img-wrapper">
-                                                        <img id="cover-preview" class="preview-img">
-                                                    </div>
-                                                    <div class="preview-actions">
-                                                        <button type="button" class="change-image-btn" onclick="removeCoverImage()">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                                <path d="M3 6h18"/>
-                                                                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
-                                                                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
-                                                                <line x1="10" y1="11" x2="10" y2="17"/>
-                                                                <line x1="14" y1="11" x2="14" y2="17"/>
-                                                            </svg>
-                                                            Remove Image
-                                                        </button>
-                                                    </div>
+                                                <div class="preview-actions">
+                                                    <button type="button" class="change-image-btn" onclick="document.getElementById('cover-input').click()">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                            <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
+                                                        </svg>
+                                                        Change Image
+                                                    </button>
                                                 </div>
                                             </div>
+                                            <input type="file" id="cover-input" accept="image/*" style="display:none;">
                                         </div>
-                                        <input type="file" id="cover-input" accept="image/*" style="display: none;">
                                     </div>
                                 </div>
 
                                 <!-- Product Details Card -->
-                                <div class="editor-card">
+                                <div class="editor-card" id="card-details">
                                     <div class="card-header">
-                                        <div class="card-title">
+                                        <h3 class="section-title">
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                 <circle cx="12" cy="12" r="10"/>
-                                                <path d="M12 16v-4"/>
-                                                <path d="M12 8h.01"/>
+                                                <line x1="12" y1="16" x2="12" y2="12"/>
+                                                <line x1="12" y1="8" x2="12.01" y2="8"/>
                                             </svg>
                                             Product Details
-                                        </div>
+                                        </h3>
                                     </div>
                                     <div class="card-body">
                                         <div class="form-group">
-                                            <label class="form-label">Product Name *</label>
+                                            <label class="form-label">Product Name <span>*</span></label>
                                             <input type="text" class="form-control" id="name" required placeholder="e.g. Classic Cotton Shirt">
                                         </div>
                                         <div class="form-group">
-                                            <label class="form-label">Category *</label>
-                                            <div class="custom-select" id="category-select-container">
-                                                <div class="select-trigger" id="category-trigger">
-                                                    <span id="selected-category-text">Select Category</span>
+                                            <label class="form-label">Category <span>*</span></label>
+                                            <div class="category-select-container" id="category-select">
+                                                <div class="select-trigger" onclick="toggleCategoryDropdown()">
+                                                    <span id="cat-display">Select Category</span>
                                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                         <path d="m6 9 6 6 6-6"/>
                                                     </svg>
@@ -2243,98 +2248,120 @@
                                         </div>
                                         <div class="form-group">
                                             <label class="form-label">Description</label>
-                                            <textarea class="form-control" id="description" rows="6" placeholder="Detailed product description..."></textarea>
+                                            <textarea class="form-control" id="description" rows="5" placeholder="Detailed product description..."></textarea>
                                         </div>
                                     </div>
                                 </div>
 
                                 <!-- Color Variants Card -->
-                                <div class="editor-card">
+                                <div class="editor-card" id="card-variants">
                                     <div class="card-header">
-                                        <div class="card-title">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                <circle cx="13.5" cy="6.5" r=".5"/>
-                                                <circle cx="17.5" cy="10.5" r=".5"/>
-                                                <circle cx="8.5" cy="7.5" r=".5"/>
-                                                <circle cx="6.5" cy="12.5" r=".5"/>
-                                                <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/>
-                                            </svg>
-                                            Color Variants
+                                        <div class="section-header">
+                                            <h3 class="section-title">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/>
+                                                    <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/>
+                                                    <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/>
+                                                    <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/>
+                                                </svg>
+                                                Color Variants
+                                            </h3>
+                                            <button type="button" class="add-btn" onclick="openColorModal()">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                     fill="none" stroke="currentColor" stroke-width="2"
+                                                     stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M5 12h14"/>
+                                                    <path d="M12 5v14"/>
+                                                </svg>
+                                                Add Variant
+                                            </button>
                                         </div>
-                                        <button type="button" class="btn btn-primary btn-sm" onclick="openVariantModal()">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                <path d="M12 5v14"/>
-                                                <path d="M5 12h14"/>
-                                            </svg>
-                                            Add Variant
-                                        </button>
                                     </div>
                                     <div class="card-body">
-                                        <div id="variants-list">
+                                        <div id="variants-list" class="variants-list">
                                             <div class="empty-state">
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                     <circle cx="13.5" cy="6.5" r=".5"/>
                                                     <circle cx="17.5" cy="10.5" r=".5"/>
                                                     <circle cx="8.5" cy="7.5" r=".5"/>
-                                                    <circle cx="6.5" cy="12.5" r=".5"/>
                                                     <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/>
                                                 </svg>
-                                                <p>No variants added yet</p>
+                                                <h4>No Variants Added</h4>
+                                                <p>Add color variants to show different options</p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <!-- Customer Reviews Card -->
-                                <div class="editor-card">
+                                <!-- Reviews Card -->
+                                <div class="editor-card" id="card-reviews">
                                     <div class="card-header">
-                                        <div class="card-title">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                                            </svg>
-                                            Customer Reviews
+                                        <div class="section-header">
+                                            <h3 class="section-title">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                                                </svg>
+                                                Customer Reviews
+                                            </h3>
+                                            <button type="button" class="add-btn" onclick="openReviewModal()">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                     fill="none" stroke="currentColor" stroke-width="2"
+                                                     stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M5 12h14"/>
+                                                    <path d="M12 5v14"/>
+                                                </svg>
+                                                Add Review
+                                            </button>
                                         </div>
-                                        <button type="button" class="btn btn-primary btn-sm" onclick="openReviewModal()">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                <path d="M12 5v14"/>
-                                                <path d="M5 12h14"/>
-                                            </svg>
-                                            Add Review
-                                        </button>
                                     </div>
                                     <div class="card-body">
-                                        <div id="reviews-list">
+                                        <div id="reviews-list" class="reviews-list">
                                             <div class="empty-state">
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                     <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
                                                 </svg>
-                                                <p>No reviews added yet</p>
+                                                <h4>No Reviews Yet</h4>
+                                                <p>Add customer reviews to build trust</p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="editor-sidebar">
+                            <!-- Right Column -->
+                            <div class="editor-col">
                                 <!-- Pricing Card -->
-                                <div class="editor-card">
+                                <div class="editor-card" id="card-pricing">
                                     <div class="card-header">
-                                        <div class="card-title">
+                                        <h3 class="section-title">
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                 <line x1="12" y1="1" x2="12" y2="23"/>
                                                 <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
                                             </svg>
                                             Pricing
-                                        </div>
+                                        </h3>
                                     </div>
                                     <div class="card-body">
                                         <div class="form-group">
-                                            <label class="form-label">Current Price (₹) *</label>
-                                            <input type="number" class="form-control" id="price" step="0.01" required placeholder="999.00">
+                                            <label class="form-label">Current Price (₹) <span>*</span></label>
+                                            <input type="number" class="form-control" id="price" step="0.01" required placeholder="0.00">
                                         </div>
                                         <div class="form-group">
-                                            <label class="form-label">Old Price (₹)</label>
-                                            <input type="number" class="form-control" id="oldPrice" step="0.01" placeholder="1499.00">
+                                            <label class="form-label">Original Price (₹) <span>*</span></label>
+                                            <input type="number" class="form-control" id="oldPrice" step="0.01" required placeholder="0.00">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Stock Status</label>
+                                            <div style="display: flex; gap: 16px; margin-top: 8px;">
+                                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                                    <input type="radio" name="stock" value="in_stock" checked style="accent-color: var(--brand-primary);">
+                                                    <span>In Stock</span>
+                                                </label>
+                                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                                    <input type="radio" name="stock" value="out_of_stock" style="accent-color: var(--brand-primary);">
+                                                    <span>Out of Stock</span>
+                                                </label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -2379,90 +2406,30 @@
                             <span class="mobile-breadcrumb-divider">/</span>
                             <span>Inventory</span>
                             <span class="mobile-breadcrumb-divider">/</span>
-                            <span>Product Editor</span>
+                            <span id="mobile-breadcrumb-product">Product Editor</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Loading State -->
-                <div id="mobile-loading-state">
+                <!-- Mobile Loading State -->
+                <div id="mobile-loading-state" class="loading-state">
                     <div class="loading-spinner"></div>
-                    <div style="color: #6b7280; font-size: 14px; text-align: center; margin-top: 1rem;">Loading product data...</div>
+                    <h3 style="margin-bottom: 8px; font-size: 18px; color: var(--text-color);">Loading Product Editor</h3>
+                    <p style="color: #6b7280; font-size: 14px;">Please wait while we prepare the editor...</p>
                 </div>
 
-                <!-- Mobile Product Editor Form -->
-                <div id="mobile-product-form" style="display: none;">
-                    <div class="mobile-editor-content">
-                        <!-- Cover Image Card -->
-                        <div class="mobile-card">
-                            <div class="mobile-card-title">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                                    <circle cx="8.5" cy="8.5" r="1.5"/>
-                                    <polyline points="21 15 16 10 5 21"/>
-                                </svg>
-                                Cover Image
-                            </div>
-                            <div class="mobile-upload-zone" onclick="document.getElementById('mobile-cover-input').click()">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                                    <polyline points="17 8 12 3 7 8"/>
-                                    <line x1="12" y1="3" x2="12" y2="15"/>
-                                </svg>
-                                <div style="font-weight: 600; color: #1F2937; margin-top: 0.5rem;">Tap to upload cover image</div>
-                                <div style="font-size: 0.8rem; color: #6B7280; margin-top: 0.25rem;">JPG or PNG, max 5MB</div>
-                            </div>
-                            <input type="file" id="mobile-cover-input" accept="image/*" style="display: none;">
-                        </div>
-
-                        <!-- Product Details Card -->
-                        <div class="mobile-card">
-                            <div class="mobile-card-title">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="12" cy="12" r="10"/>
-                                    <path d="M12 16v-4"/>
-                                    <path d="M12 8h.01"/>
-                                </svg>
-                                Product Details
-                            </div>
-                            <div class="mobile-form-group">
-                                <label class="mobile-form-label">Product Name *</label>
-                                <input type="text" class="mobile-form-control" id="mobile-name" required placeholder="e.g. Classic Cotton Shirt">
-                            </div>
-                            <div class="mobile-form-group">
-                                <label class="mobile-form-label">Category *</label>
-                                <select class="mobile-form-control" id="mobile-category">
-                                    <option value="">Select Category</option>
-                                </select>
-                            </div>
-                            <div class="mobile-form-group">
-                                <label class="mobile-form-label">Description</label>
-                                <textarea class="mobile-form-control" id="mobile-description" rows="4" placeholder="Detailed product description..."></textarea>
-                            </div>
-                        </div>
-
-                        <!-- Pricing Card -->
-                        <div class="mobile-card">
-                            <div class="mobile-card-title">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <line x1="12" y1="1" x2="12" y2="23"/>
-                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-                                </svg>
-                                Pricing
-                            </div>
-                            <div class="mobile-form-group">
-                                <label class="mobile-form-label">Current Price (₹) *</label>
-                                <input type="number" class="mobile-form-control" id="mobile-price" step="0.01" required placeholder="999.00">
-                            </div>
-                            <div class="mobile-form-group">
-                                <label class="mobile-form-label">Old Price (₹)</label>
-                                <input type="number" class="mobile-form-control" id="mobile-oldPrice" step="0.01" placeholder="1499.00">
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <!-- Mobile Editor Cards -->
+                <div class="mobile-editor-cards" id="mobile-product-form" style="display:none;"></div>
             </div>
         </main>
+
+        <!-- Mobile Save Bar -->
+        <div class="mobile-save-bar">
+            <div class="mobile-save-actions">
+                <button class="btn btn-secondary" onclick="window.history.back()">Cancel</button>
+                <button class="btn btn-primary" id="mobile-save-btn">Save Product</button>
+            </div>
+        </div>
 
         <!-- Overlay & drawer -->
         <div class="m-overlay" id="m-overlay">
@@ -2479,7 +2446,7 @@
 
                 <nav class="m-drawer-nav">
                     <!-- Dashboard -->
-                    <a href="index.html" class="m-nav-item">
+                    <div class="m-nav-item" onclick="window.location.href='index.html'">
                         <span class="icon">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                                  fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -2490,10 +2457,10 @@
                             </svg>
                         </span>
                         <span class="label">Dashboard</span>
-                    </a>
+                    </div>
 
                     <!-- Inventory (Active) -->
-                    <a href="manage-products.html" class="m-nav-item active">
+                    <div class="m-nav-item active">
                         <span class="icon">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                                  fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -2503,7 +2470,7 @@
                             </svg>
                         </span>
                         <span class="label">Inventory</span>
-                    </a>
+                    </div>
 
                     <!-- Customize Site with dropdown -->
                     <div class="m-nav-item" id="m-customize-toggle">
@@ -2527,7 +2494,7 @@
 
                     <!-- Mobile Customize Site submenu -->
                     <div class="m-submenu" id="m-customize-submenu">
-                        <a href="#" class="m-submenu-item">
+                        <div class="m-submenu-item">
                             <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
                                 <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
@@ -2537,16 +2504,16 @@
                                 <path d="m5 15 4.5-4"/>
                             </svg>
                             <span>Theme & layout</span>
-                        </a>
-                        <a href="#" class="m-submenu-item">
+                        </div>
+                        <div class="m-submenu-item">
                             <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <rect width="18" height="18" x="3" y="3" rx="2"/>
                                 <path d="M3 9h18"/>
                                 <path d="M9 21V9"/>
                             </svg>
                             <span>Sections</span>
-                        </a>
-                        <a href="#" class="m-submenu-item">
+                        </div>
+                        <div class="m-submenu-item">
                             <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <circle cx="18" cy="5" r="3"/>
                                 <circle cx="6" cy="12" r="3"/>
@@ -2555,7 +2522,7 @@
                                 <line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/>
                             </svg>
                             <span>Navigation</span>
-                        </a>
+                        </div>
                     </div>
 
                     <!-- MANAGE ORDERS with dropdown -->
@@ -2582,15 +2549,15 @@
 
                     <!-- Mobile MANAGE ORDERS submenu -->
                     <div class="m-submenu" id="m-orders-submenu">
-                        <a href="#" class="m-submenu-item">
+                        <div class="m-submenu-item">
                             <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M12 6v6l4 2"/>
                                 <path d="M22 12a10 10 0 1 0-11 9.95"/>
                                 <path d="m22 16-5.5 5.5L14 19"/>
                             </svg>
                             <span>Today</span>
-                        </a>
-                        <a href="#" class="m-submenu-item">
+                        </div>
+                        <div class="m-submenu-item">
                             <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M8 2v4"/>
                                 <path d="M16 2v4"/>
@@ -2604,8 +2571,8 @@
                                 <path d="M16 18h.01"/>
                             </svg>
                             <span>This Month</span>
-                        </a>
-                        <a href="#" class="m-submenu-item">
+                        </div>
+                        <div class="m-submenu-item">
                             <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M12 2v2"/>
                                 <path d="M15.726 21.01A2 2 0 0 1 14 22H4a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2"/>
@@ -2615,7 +2582,7 @@
                                 <rect x="8" y="3" width="14" height="14" rx="2"/>
                             </svg>
                             <span>All Orders</span>
-                        </a>
+                        </div>
                     </div>
                 </nav>
 
@@ -2633,12 +2600,6 @@
                 </div>
             </div>
         </div>
-        
-        <!-- Mobile Save Bar -->
-        <div class="mobile-save-bar">
-            <button class="btn btn-secondary" onclick="window.history.back()">Cancel</button>
-            <button class="btn btn-primary" id="mobile-save-btn">Save Product</button>
-        </div>
     </div>
 
     <!-- Profile Popup -->
@@ -2653,7 +2614,7 @@
         <ul class="popup-list">
             <li>
                 <a href="#">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="popup-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="12" cy="8" r="5"/>
                         <path d="M20 21a8 8 0 0 0-16 0"/>
                     </svg>
@@ -2662,7 +2623,7 @@
             </li>
             <li>
                 <a href="#">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="popup-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/>
                         <circle cx="12" cy="12" r="3"/>
                     </svg>
@@ -2671,7 +2632,7 @@
             </li>
             <li>
                 <a href="#" onclick="auth.signOut()" class="logout">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="popup-icon logout-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="m16 17 5-5-5-5"/>
                         <path d="M21 12H9"/>
                         <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
@@ -2682,12 +2643,13 @@
         </ul>
     </div>
 
-    <!-- Variant Modal -->
-    <div class="modal-overlay" id="variant-modal">
+    <!-- MODALS -->
+    <!-- Color Variant Modal -->
+    <div class="modal-overlay" id="color-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <div class="modal-title" id="variant-modal-title">Add Color Variant</div>
-                <button class="btn-icon" onclick="closeVariantModal()">
+                <div class="modal-title" id="color-modal-title">Add Color Variant</div>
+                <button class="modal-close" onclick="closeColorModal()">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M18 6 6 18"/>
                         <path d="m6 6 12 12"/>
@@ -2695,83 +2657,62 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="variant-form">
-                    <div class="form-group">
-                        <label class="form-label">Color Name *</label>
-                        <input type="text" class="form-control" id="variant-name" placeholder="e.g. Midnight Blue" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Color Swatch</label>
-                        <div style="display: flex; gap: 1rem; align-items: center;">
-                            <div class="upload-zone-premium" style="min-height: 120px; padding: 1.5rem; flex: 1;" onclick="document.getElementById('swatch-input').click()">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                                    <polyline points="17 8 12 3 7 8"/>
-                                    <line x1="12" y1="3" x2="12" y2="15"/>
-                                </svg>
-                                <div class="upload-text">Upload swatch image</div>
-                                <div class="upload-subtext">Optional - Visual color representation</div>
-                            </div>
-                            <div id="swatch-preview-container" style="width: 100px; height: 100px; border-radius: 12px; overflow: hidden; border: 2px solid #E5E7EB; display: none;">
-                                <img id="swatch-preview" style="width: 100%; height: 100%; object-fit: cover;">
-                            </div>
-                        </div>
-                        <input type="file" id="swatch-input" accept="image/*" style="display: none;">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Available Sizes</label>
-                        <div class="size-grid">
-                            <div class="size-item" data-size="S">
-                                <div class="size-label">S</div>
-                                <div class="size-status">Select</div>
-                            </div>
-                            <div class="size-item" data-size="M">
-                                <div class="size-label">M</div>
-                                <div class="size-status">Select</div>
-                            </div>
-                            <div class="size-item" data-size="L">
-                                <div class="size-label">L</div>
-                                <div class="size-status">Select</div>
-                            </div>
-                            <div class="size-item" data-size="XL">
-                                <div class="size-label">XL</div>
-                                <div class="size-status">Select</div>
-                            </div>
-                            <div class="size-item" data-size="2XL">
-                                <div class="size-label">2XL</div>
-                                <div class="size-status">Select</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Gallery Images (Optional)</label>
-                        <div class="upload-zone-premium" onclick="document.getElementById('gallery-input').click()">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                                <circle cx="8.5" cy="8.5" r="1.5"/>
-                                <polyline points="21 15 16 10 5 21"/>
+                <div class="form-group">
+                    <label class="form-label">Color Name <span>*</span></label>
+                    <input type="text" class="form-control" id="color-name" placeholder="e.g. Midnight Blue" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Color Swatch Image <span>*</span></label>
+                    <div style="display: flex; align-items: center; gap: 16px;">
+                        <div class="swatch-upload-container" onclick="document.getElementById('color-swatch-input').click()">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="17 8 12 3 7 8"/>
+                                <line x1="12" y1="3" x2="12" y2="15"/>
                             </svg>
-                            <div class="upload-text">Upload gallery images</div>
-                            <div class="upload-subtext">Multiple images allowed</div>
+                            <div class="swatch-text">Upload Image</div>
+                            <img id="swatch-preview" class="swatch-preview">
                         </div>
-                        <input type="file" id="gallery-input" multiple accept="image/*" style="display: none;">
-                        <div class="gallery-grid" id="gallery-preview"></div>
+                        <div style="flex: 1;">
+                            <p style="font-size: 13px; color: #6b7280; margin-bottom: 8px;">Upload a color representation image (PNG, JPG up to 2MB)</p>
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('color-swatch-input').click()">Select File</button>
+                        </div>
+                        <input type="file" id="color-swatch-input" accept="image/*" style="display:none;">
                     </div>
-                </form>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Available Sizes</label>
+                    <div class="size-grid" id="size-selection"></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Gallery Images</label>
+                    <div id="existing-gallery" class="gallery-grid"></div>
+                    <div class="upload-zone" style="padding: 24px 16px; margin-top: 12px;" onclick="document.getElementById('variant-images-input').click()">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="17 8 12 3 7 8"/>
+                            <line x1="12" y1="3" x2="12" y2="15"/>
+                        </svg>
+                        <div class="upload-text">Add Gallery Images</div>
+                        <div class="upload-subtext">Upload multiple images for this variant</div>
+                    </div>
+                    <input type="file" id="variant-images-input" multiple accept="image/*" style="display:none;">
+                    <div id="variant-image-previews" class="gallery-grid" style="margin-top: 16px;"></div>
+                </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" onclick="closeVariantModal()">Cancel</button>
-                <button type="button" class="btn btn-primary" id="variant-save-btn" onclick="saveVariant()">Save Variant</button>
+                <button class="btn btn-secondary" onclick="closeColorModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveColorVariant()" id="color-save-btn">Save Variant</button>
             </div>
         </div>
     </div>
 
     <!-- Review Modal -->
     <div class="modal-overlay" id="review-modal">
-        <div class="modal-content" style="max-width: 500px;">
+        <div class="modal-content" style="max-width: 480px;">
             <div class="modal-header">
                 <div class="modal-title" id="review-modal-title">Add Customer Review</div>
-                <button class="btn-icon" onclick="closeReviewModal()">
+                <button class="modal-close" onclick="closeReviewModal()">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M18 6 6 18"/>
                         <path d="m6 6 12 12"/>
@@ -2780,38 +2721,38 @@
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label class="form-label">Customer Name *</label>
+                    <label class="form-label">Customer Name <span>*</span></label>
                     <input type="text" class="form-control" id="review-name" placeholder="e.g. John Doe" required>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Rating *</label>
-                    <div class="star-input" id="star-input">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-value="1">
+                    <label class="form-label">Rating <span>*</span></label>
+                    <div class="star-rating" id="star-rating">
+                        <svg class="star" data-val="1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
                         </svg>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-value="2">
+                        <svg class="star" data-val="2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
                         </svg>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-value="3">
+                        <svg class="star" data-val="3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
                         </svg>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-value="4">
+                        <svg class="star" data-val="4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
                         </svg>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-value="5">
+                        <svg class="star" data-val="5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
                         </svg>
                     </div>
                     <input type="hidden" id="review-rating" value="0">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Comment *</label>
-                    <textarea class="form-control" id="review-comment" rows="4" placeholder="Write the review here..." required></textarea>
+                    <label class="form-label">Review Comment <span>*</span></label>
+                    <textarea class="form-control" id="review-text" rows="4" placeholder="Write the review here..." required></textarea>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" onclick="closeReviewModal()">Cancel</button>
-                <button type="button" class="btn btn-primary" id="review-save-btn" onclick="saveReview()">Add Review</button>
+                <button class="btn btn-secondary" onclick="closeReviewModal()">Cancel</button>
+                <button class="btn btn-primary" id="review-save-btn" onclick="addReview()">Add Review</button>
             </div>
         </div>
     </div>
@@ -2820,19 +2761,38 @@
     <div id="progress-overlay">
         <div class="progress-content">
             <div class="spinner"></div>
-            <h3 style="margin:0 0 0.5rem 0; font-size:1.1rem;" id="progress-title">Processing</h3>
-            <p style="margin:0; color:var(--text-secondary); font-size:0.9rem;" id="progress-desc">Please wait...</p>
+            <h3 class="progress-title" id="progress-title">Processing</h3>
+            <p class="progress-desc" id="progress-desc">Please wait...</p>
         </div>
     </div>
 
+    <!-- Toast Container -->
     <div id="toast-container"></div>
 
+    <!-- Firebase Scripts -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
 
     <script>
+        // --- FIREBASE CONFIG ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyCdeonH3VytC21F3X6x0rCVCn2xXrGPoug",
+            authDomain: "vastramaya---magic.firebaseapp.com",
+            projectId: "vastramaya---magic",
+            storageBucket: "vastramaya---magic.firebasestorage.app",
+            messagingSenderId: "543460072082",
+            appId: "1:543460072082:web:f3d1140e8f81ad338ae44b",
+            measurementId: "G-E39VNDCFVE"
+        };
+        
+        const ADMIN_EMAIL = "harshavardhanjw@gmail.com";
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+
         // --- UI INTERACTIONS ---
         document.addEventListener('DOMContentLoaded', () => {
             // Mobile drawer behaviour
@@ -2905,12 +2865,10 @@
             const mobileProfileSection = document.getElementById('mobile-profile-section');
             const profilePopup = document.getElementById('profile-popup');
 
-            // Fix profile popup positioning for desktop - show on LEFT side
             if (profileSection) {
                 profileSection.addEventListener('click', e => {
                     e.stopPropagation();
                     
-                    // Position the popup at the bottom left of the account section for desktop
                     if (window.innerWidth >= 769) {
                         const rect = profileSection.getBoundingClientRect();
                         profilePopup.style.left = '30px';
@@ -2936,97 +2894,43 @@
                 });
             }
 
-            // Close popups when clicking outside
-            document.addEventListener('click', function(e) {
-                // Close profile popup when clicking outside
-                const profilePopup = document.getElementById('profile-popup');
-                const profileSection = document.getElementById('profile-section');
-                const mobileProfileSection = document.getElementById('mobile-profile-section');
-                
-                if (profilePopup && profilePopup.classList.contains('active')) {
-                    if (!profilePopup.contains(e.target) && 
-                        !profileSection?.contains(e.target) && 
-                        !mobileProfileSection?.contains(e.target)) {
-                        profilePopup.classList.remove('active');
-                    }
+            // Close modals on ESC
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeColorModal();
+                    closeReviewModal();
+                    profilePopup.classList.remove('active');
                 }
             });
 
-            // Category select functionality
-            const categoryTrigger = document.getElementById('category-trigger');
-            const categoryOptions = document.getElementById('category-options');
-
-            if (categoryTrigger && categoryOptions) {
-                categoryTrigger.addEventListener('click', () => {
-                    categoryOptions.classList.toggle('open');
-                    categoryTrigger.classList.toggle('open');
-                });
-
-                document.addEventListener('click', (e) => {
-                    if (!categoryTrigger.contains(e.target) && !categoryOptions.contains(e.target)) {
-                        categoryOptions.classList.remove('open');
-                        categoryTrigger.classList.remove('open');
-                    }
-                });
-            }
-
-            // Size selection
-            document.querySelectorAll('.size-item').forEach(item => {
-                item.addEventListener('click', () => {
-                    item.classList.toggle('selected');
-                    const status = item.querySelector('.size-status');
-                    if (item.classList.contains('selected')) {
-                        status.textContent = 'In Stock';
-                    } else {
-                        status.textContent = 'Select';
-                    }
-                });
-            });
-
-            // Star rating
-            document.querySelectorAll('#star-input svg').forEach(star => {
+            // Initialize star rating
+            document.querySelectorAll('#star-rating .star').forEach(star => {
                 star.addEventListener('click', function() {
-                    const rating = parseInt(this.getAttribute('data-value'));
-                    document.getElementById('review-rating').value = rating;
-                    
-                    // Update star display
-                    document.querySelectorAll('#star-input svg').forEach((s, index) => {
-                        if (index < rating) {
-                            s.classList.add('active');
-                        } else {
-                            s.classList.remove('active');
-                        }
-                    });
+                    const val = parseInt(this.getAttribute('data-val'));
+                    document.getElementById('review-rating').value = val;
+                    updateStars(val);
                 });
             });
+
+            // Cover image upload
+            document.getElementById('cover-input').addEventListener('change', handleCoverUpload);
+            
+            // Variant image uploads
+            document.getElementById('color-swatch-input').addEventListener('change', handleSwatchUpload);
+            document.getElementById('variant-images-input').addEventListener('change', handleVariantImagesUpload);
         });
 
-        // --- FIREBASE CONFIG ---
-        const firebaseConfig = {
-            apiKey: "AIzaSyCdeonH3VytC21F3X6x0rCVCn2xXrGPoug",
-            authDomain: "vastramaya---magic.firebaseapp.com",
-            projectId: "vastramaya---magic",
-            storageBucket: "vastramaya---magic.firebasestorage.app",
-            messagingSenderId: "543460072082",
-            appId: "1:543460072082:web:f3d1140e8f81ad338ae44b",
-            measurementId: "G-E39VNDCFVE"
-        };
-        
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-        const storage = firebase.storage();
-        const ADMIN_EMAIL = "harshavardhanjw@gmail.com";
-
         // --- APP STATE ---
-        let productId = null;
         let allCategories = [];
+        let coverImageFile = null;
         let colorVariants = [];
         let productReviews = [];
         let editingVariantIndex = null;
         let editingReviewIndex = null;
-        let currentCoverImage = null;
-        let currentCoverImageUrl = null;
+        let tempVariantFiles = [];
+        let tempSwatchFile = null;
+        let existingVariantImages = [];
+        let currentProductId = null;
 
         // --- AUTH & INIT ---
         auth.onAuthStateChanged(user => {
@@ -3058,86 +2962,97 @@
             document.getElementById('popup-avatar').src = avatar;
         }
 
+        // --- EDITOR FUNCTIONS ---
         async function loadEditor() {
             const params = new URLSearchParams(window.location.search);
-            productId = params.get('id');
+            const id = params.get('id');
+            currentProductId = id;
             
             try {
                 // Load categories
                 const catSnap = await db.collection('categories').orderBy('name').get();
-                allCategories = catSnap.docs.map(doc => doc.data().name);
-                populateCategoryDropdown();
+                allCategories = catSnap.docs.map(d => d.data().name);
+                setupCategoryDropdown();
                 
-                if (productId) {
-                    // Edit mode
+                if (id) {
+                    // Load existing product
                     document.getElementById('editor-title').textContent = 'Edit Product';
                     document.getElementById('mobile-editor-title').textContent = 'Edit Product';
+                    document.getElementById('save-btn-text').textContent = 'Update Product';
                     
-                    const doc = await db.collection('products').doc(productId).get();
+                    const doc = await db.collection('products').doc(id).get();
                     if (doc.exists) {
-                        populateForm(doc.data());
+                        populateForm({id: doc.id, ...doc.data()});
+                    } else {
+                        showToast('Product not found', 'error');
+                        setTimeout(() => window.history.back(), 2000);
                     }
                 } else {
-                    // New product mode
+                    // New product
                     document.getElementById('editor-title').textContent = 'New Product';
                     document.getElementById('mobile-editor-title').textContent = 'New Product';
+                    document.getElementById('breadcrumb-product').textContent = 'New Product';
+                    document.getElementById('mobile-breadcrumb-product').textContent = 'New Product';
+                    
                     showForm();
                 }
-            } catch (error) {
-                console.error('Error loading editor:', error);
-                showToast('Error loading data', 'error');
-                showForm();
+            } catch (e) {
+                console.error(e);
+                showToast('Error loading editor', 'error');
             }
         }
 
-        function populateCategoryDropdown() {
-            // Desktop dropdown
+        function setupCategoryDropdown() {
             const optionsContainer = document.getElementById('category-options');
-            if (optionsContainer) {
-                optionsContainer.innerHTML = allCategories.map(category => `
-                    <div class="select-option" onclick="selectCategory('${category}')">${category}</div>
-                `).join('');
-            }
+            optionsContainer.innerHTML = '';
             
-            // Mobile dropdown
-            const mobileSelect = document.getElementById('mobile-category');
-            if (mobileSelect) {
-                mobileSelect.innerHTML = '<option value="">Select Category</option>' + 
-                    allCategories.map(category => `<option value="${category}">${category}</option>`).join('');
-            }
+            allCategories.forEach(cat => {
+                const option = document.createElement('div');
+                option.className = 'select-option';
+                option.textContent = cat;
+                option.onclick = () => selectCategory(cat);
+                optionsContainer.appendChild(option);
+            });
         }
 
-        function selectCategory(category) {
-            document.getElementById('selected-category').value = category;
-            document.getElementById('selected-category-text').textContent = category;
-            document.getElementById('category-options').classList.remove('open');
-            document.getElementById('category-trigger').classList.remove('open');
+        function toggleCategoryDropdown() {
+            const trigger = document.querySelector('.select-trigger');
+            const options = document.getElementById('category-options');
+            trigger.classList.toggle('open');
+            options.classList.toggle('open');
             
-            // Update mobile select
-            document.getElementById('mobile-category').value = category;
+            // Close when clicking outside
+            document.addEventListener('click', function closeDropdown(e) {
+                if (!e.target.closest('.category-select-container')) {
+                    trigger.classList.remove('open');
+                    options.classList.remove('open');
+                    document.removeEventListener('click', closeDropdown);
+                }
+            });
+        }
+
+        function selectCategory(cat) {
+            document.getElementById('selected-category').value = cat;
+            document.getElementById('cat-display').textContent = cat;
+            toggleCategoryDropdown();
         }
 
         function populateForm(data) {
             // Basic info
             document.getElementById('name').value = data.name || '';
-            document.getElementById('mobile-name').value = data.name || '';
             document.getElementById('description').value = data.description || '';
-            document.getElementById('mobile-description').value = data.description || '';
             document.getElementById('price').value = data.price || '';
-            document.getElementById('mobile-price').value = data.price || '';
             document.getElementById('oldPrice').value = data.oldPrice || '';
-            document.getElementById('mobile-oldPrice').value = data.oldPrice || '';
             
-            // Category
             if (data.category) {
                 selectCategory(data.category);
             }
             
             // Cover image
-            if (data.image) {
-                currentCoverImageUrl = data.image;
-                document.getElementById('cover-preview').src = data.image;
-                document.getElementById('cover-preview-container').style.display = 'flex';
+            const coverUrl = data.image || (data.images && data.images.length > 0 ? data.images[0] : null);
+            if (coverUrl) {
+                document.getElementById('cover-preview').src = coverUrl;
+                document.getElementById('cover-preview-wrapper').style.display = 'flex';
                 document.getElementById('cover-upload-zone').style.display = 'none';
             }
             
@@ -3149,167 +3064,433 @@
             productReviews = data.reviews || [];
             renderReviews();
             
+            // Stock status
+            if (data.stockStatus === 'out_of_stock') {
+                document.querySelector('input[name="stock"][value="out_of_stock"]').checked = true;
+            }
+            
             showForm();
         }
 
         function showForm() {
-            // Desktop
             document.getElementById('loading-state').style.display = 'none';
-            document.getElementById('product-form').style.display = 'block';
-            
-            // Mobile
             document.getElementById('mobile-loading-state').style.display = 'none';
-            document.getElementById('mobile-product-form').style.display = 'block';
+            document.getElementById('product-form').style.display = 'block';
+            renderMobileForm();
         }
 
-        // --- IMAGE UPLOAD ---
-        document.getElementById('cover-input').addEventListener('change', handleCoverUpload);
-        document.getElementById('mobile-cover-input').addEventListener('change', handleCoverUpload);
+        function renderMobileForm() {
+            const mobileForm = document.getElementById('mobile-product-form');
+            mobileForm.innerHTML = `
+                <!-- Cover Image -->
+                <div class="mobile-editor-card">
+                    <h3 class="mobile-section-title">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                            <circle cx="8.5" cy="8.5" r="1.5"/>
+                            <polyline points="21 15 16 10 5 21"/>
+                        </svg>
+                        Cover Image
+                    </h3>
+                    <div class="upload-container">
+                        <div class="upload-zone" onclick="document.getElementById('mobile-cover-input').click()">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="17 8 12 3 7 8"/>
+                                <line x1="12" y1="3" x2="12" y2="15"/>
+                            </svg>
+                            <div class="upload-text">Click to upload cover image</div>
+                            <div class="upload-subtext">Single image only • PNG, JPG up to 5MB</div>
+                        </div>
+                        <div class="preview-container" id="mobile-cover-preview-wrapper" style="display:none;">
+                            <div class="preview-img-wrapper">
+                                <img id="mobile-cover-preview" class="preview-img">
+                            </div>
+                            <div class="preview-actions">
+                                <button type="button" class="change-image-btn" onclick="document.getElementById('mobile-cover-input').click()">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
+                                    </svg>
+                                    Change Image
+                                </button>
+                            </div>
+                        </div>
+                        <input type="file" id="mobile-cover-input" accept="image/*" style="display:none;" onchange="handleMobileCoverUpload(event)">
+                    </div>
+                </div>
 
-        function handleCoverUpload(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-            
-            if (file.size > 5 * 1024 * 1024) {
-                showToast('Image too large (max 5MB)', 'error');
-                return;
-            }
-            
-            currentCoverImage = file;
-            
-            // Show preview
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                document.getElementById('cover-preview').src = e.target.result;
-                document.getElementById('cover-preview-container').style.display = 'flex';
-                document.getElementById('cover-upload-zone').style.display = 'none';
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function removeCoverImage() {
-            currentCoverImage = null;
-            currentCoverImageUrl = null;
-            document.getElementById('cover-input').value = '';
-            document.getElementById('mobile-cover-input').value = '';
-            document.getElementById('cover-preview-container').style.display = 'none';
-            document.getElementById('cover-upload-zone').style.display = 'flex';
-        }
-
-        // --- VARIANT MANAGEMENT ---
-        function openVariantModal(index = null) {
-            editingVariantIndex = index;
-            const isEdit = index !== null;
-            
-            document.getElementById('variant-modal-title').textContent = isEdit ? 'Edit Variant' : 'Add Variant';
-            document.getElementById('variant-save-btn').textContent = isEdit ? 'Update Variant' : 'Save Variant';
-            
-            // Reset form
-            document.getElementById('variant-name').value = '';
-            document.getElementById('swatch-preview-container').style.display = 'none';
-            document.getElementById('swatch-input').value = '';
-            document.getElementById('gallery-input').value = '';
-            document.getElementById('gallery-preview').innerHTML = '';
-            
-            // Clear size selection
-            document.querySelectorAll('.size-item').forEach(item => {
-                item.classList.remove('selected');
-                item.querySelector('.size-status').textContent = 'Select';
-            });
-            
-            // If editing, populate data
-            if (isEdit && colorVariants[index]) {
-                const variant = colorVariants[index];
-                document.getElementById('variant-name').value = variant.name || '';
-                
-                // Swatch image
-                if (variant.swatch) {
-                    document.getElementById('swatch-preview').src = variant.swatch;
-                    document.getElementById('swatch-preview-container').style.display = 'block';
-                }
-                
-                // Sizes
-                if (variant.sizes) {
-                    variant.sizes.forEach(size => {
-                        const sizeItem = document.querySelector(`.size-item[data-size="${size}"]`);
-                        if (sizeItem) {
-                            sizeItem.classList.add('selected');
-                            sizeItem.querySelector('.size-status').textContent = 'In Stock';
-                        }
-                    });
-                }
-                
-                // Gallery images
-                if (variant.gallery && variant.gallery.length > 0) {
-                    variant.gallery.forEach(imageUrl => {
-                        const galleryItem = document.createElement('div');
-                        galleryItem.className = 'gallery-item';
-                        galleryItem.innerHTML = `
-                            <img src="${imageUrl}" class="gallery-img">
-                            <div class="gallery-remove" onclick="removeGalleryImage(this)">
+                <!-- Product Details -->
+                <div class="mobile-editor-card">
+                    <h3 class="mobile-section-title">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="16" x2="12" y2="12"/>
+                            <line x1="12" y1="8" x2="12.01" y2="8"/>
+                        </svg>
+                        Product Details
+                    </h3>
+                    <div class="form-group">
+                        <label class="form-label">Product Name <span>*</span></label>
+                        <input type="text" class="form-control" id="mobile-name" value="${document.getElementById('name').value}" placeholder="e.g. Classic Cotton Shirt" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Category <span>*</span></label>
+                        <div class="category-select-container">
+                            <div class="select-trigger" onclick="toggleMobileCategoryDropdown()">
+                                <span id="mobile-cat-display">${document.getElementById('cat-display').textContent}</span>
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M18 6 6 18"/>
-                                    <path d="m6 6 12 12"/>
+                                    <path d="m6 9 6 6 6-6"/>
                                 </svg>
                             </div>
-                        `;
-                        document.getElementById('gallery-preview').appendChild(galleryItem);
-                    });
-                }
-            }
+                            <div class="select-options" id="mobile-category-options"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-control" id="mobile-description" rows="4" placeholder="Detailed product description...">${document.getElementById('description').value}</textarea>
+                    </div>
+                </div>
+
+                <!-- Pricing -->
+                <div class="mobile-editor-card">
+                    <h3 class="mobile-section-title">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="1" x2="12" y2="23"/>
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                        </svg>
+                        Pricing
+                    </h3>
+                    <div class="form-group">
+                        <label class="form-label">Current Price (₹) <span>*</span></label>
+                        <input type="number" class="form-control" id="mobile-price" value="${document.getElementById('price').value}" step="0.01" required placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Original Price (₹) <span>*</span></label>
+                        <input type="number" class="form-control" id="mobile-oldPrice" value="${document.getElementById('oldPrice').value}" step="0.01" required placeholder="0.00">
+                    </div>
+                </div>
+
+                <!-- Color Variants -->
+                <div class="mobile-editor-card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                        <h3 class="mobile-section-title" style="margin: 0;">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/>
+                                <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/>
+                                <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/>
+                                <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/>
+                            </svg>
+                            Color Variants
+                        </h3>
+                        <button type="button" class="add-btn" onclick="openColorModal()">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M5 12h14"/>
+                                <path d="M12 5v14"/>
+                            </svg>
+                            Add
+                        </button>
+                    </div>
+                    <div id="mobile-variants-list"></div>
+                </div>
+
+                <!-- Reviews -->
+                <div class="mobile-editor-card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                        <h3 class="mobile-section-title" style="margin: 0;">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                            </svg>
+                            Customer Reviews
+                        </h3>
+                        <button type="button" class="add-btn" onclick="openReviewModal()">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M5 12h14"/>
+                                <path d="M12 5v14"/>
+                            </svg>
+                            Add
+                        </button>
+                    </div>
+                    <div id="mobile-reviews-list"></div>
+                </div>
+            `;
             
-            document.getElementById('variant-modal').style.display = 'flex';
+            mobileForm.style.display = 'flex';
+            
+            // Setup mobile category dropdown
+            const mobileOptions = document.getElementById('mobile-category-options');
+            mobileOptions.innerHTML = '';
+            allCategories.forEach(cat => {
+                const option = document.createElement('div');
+                option.className = 'select-option';
+                option.textContent = cat;
+                option.onclick = () => selectMobileCategory(cat);
+                mobileOptions.appendChild(option);
+            });
+            
+            renderMobileVariants();
+            renderMobileReviews();
         }
 
-        function closeVariantModal() {
-            document.getElementById('variant-modal').style.display = 'none';
+        function toggleMobileCategoryDropdown() {
+            const trigger = document.querySelector('#mobile-product-form .select-trigger');
+            const options = document.getElementById('mobile-category-options');
+            trigger.classList.toggle('open');
+            options.classList.toggle('open');
+        }
+
+        function selectMobileCategory(cat) {
+            document.getElementById('mobile-cat-display').textContent = cat;
+            document.getElementById('selected-category').value = cat;
+            toggleMobileCategoryDropdown();
+        }
+
+        // --- IMAGE HANDLING ---
+        function handleCoverUpload(e) {
+            const file = e.target.files[0];
+            if (file) {
+                if (file.size > 5 * 1024 * 1024) {
+                    showToast('Image too large (max 5MB)', 'error');
+                    return;
+                }
+                
+                coverImageFile = file;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    document.getElementById('cover-preview').src = e.target.result;
+                    document.getElementById('cover-preview-wrapper').style.display = 'flex';
+                    document.getElementById('cover-upload-zone').style.display = 'none';
+                    
+                    // Update mobile preview if exists
+                    const mobilePreview = document.getElementById('mobile-cover-preview');
+                    if (mobilePreview) {
+                        mobilePreview.src = e.target.result;
+                        document.getElementById('mobile-cover-preview-wrapper').style.display = 'flex';
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function handleMobileCoverUpload(e) {
+            const file = e.target.files[0];
+            if (file) {
+                if (file.size > 5 * 1024 * 1024) {
+                    showToast('Image too large (max 5MB)', 'error');
+                    return;
+                }
+                
+                coverImageFile = file;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    document.getElementById('mobile-cover-preview').src = e.target.result;
+                    document.getElementById('mobile-cover-preview-wrapper').style.display = 'flex';
+                    
+                    // Update desktop preview
+                    document.getElementById('cover-preview').src = e.target.result;
+                    document.getElementById('cover-preview-wrapper').style.display = 'flex';
+                    document.getElementById('cover-upload-zone').style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function handleSwatchUpload(e) {
+            const file = e.target.files[0];
+            if (file) {
+                if (file.size > 2 * 1024 * 1024) {
+                    showToast('Image too large (max 2MB)', 'error');
+                    return;
+                }
+                
+                tempSwatchFile = file;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    document.getElementById('swatch-preview').src = e.target.result;
+                    document.getElementById('swatch-preview').style.display = 'block';
+                    document.querySelector('.swatch-upload-container svg').style.display = 'none';
+                    document.querySelector('.swatch-text').style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function handleVariantImagesUpload(e) {
+            Array.from(e.target.files).forEach(file => {
+                if (file.size > 2 * 1024 * 1024) {
+                    showToast(`Image ${file.name} is too large (max 2MB)`, 'error');
+                    return;
+                }
+                
+                tempVariantFiles.push(file);
+                const previews = document.getElementById('variant-image-previews');
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+                img.className = 'gallery-img';
+                img.style.cssText = "width: 100%; height: 100%; object-fit: cover;";
+                
+                const item = document.createElement('div');
+                item.className = 'gallery-item';
+                item.appendChild(img);
+                previews.appendChild(item);
+            });
+        }
+
+        // --- VARIANTS ---
+        function openColorModal(index = null) {
+            editingVariantIndex = index;
+            const isEdit = index !== null;
+            const variant = isEdit ? colorVariants[index] : null;
+            
+            document.getElementById('color-modal-title').textContent = isEdit ? 'Edit Variant' : 'Add Color Variant';
+            document.getElementById('color-save-btn').textContent = isEdit ? 'Update Variant' : 'Save Variant';
+            document.getElementById('color-name').value = variant ? variant.name : '';
+            
+            // Swatch preview
+            const swatchPreview = document.getElementById('swatch-preview');
+            if (variant && variant.hex) {
+                swatchPreview.src = variant.hex;
+                swatchPreview.style.display = 'block';
+                document.querySelector('.swatch-upload-container svg').style.display = 'none';
+                document.querySelector('.swatch-text').style.display = 'none';
+            } else {
+                swatchPreview.style.display = 'none';
+                document.querySelector('.swatch-upload-container svg').style.display = 'block';
+                document.querySelector('.swatch-text').style.display = 'block';
+            }
+            
+            // Size selection
+            const sizeGrid = document.getElementById('size-selection');
+            const SIZES = ['S', 'M', 'L', 'XL', '2XL'];
+            sizeGrid.innerHTML = SIZES.map(size => {
+                const existing = variant && variant.sizes ? variant.sizes.find(s => s.name === size) : null;
+                return `
+                    <div class="size-option ${existing ? 'selected' : ''}" onclick="toggleSizeSelection(this, '${size}')">
+                        <div class="size-name">${size}</div>
+                        <div class="size-status">${existing ? 'Available' : 'Select'}</div>
+                        <input type="hidden" value="${size}" ${existing ? 'data-selected="true"' : ''}>
+                    </div>
+                `;
+            }).join('');
+            
+            // Existing gallery
+            existingVariantImages = variant ? variant.images || [] : [];
+            renderExistingGallery();
+            
+            // Clear temp files
+            tempVariantFiles = [];
+            tempSwatchFile = null;
+            document.getElementById('variant-image-previews').innerHTML = '';
+            
+            document.getElementById('color-modal').style.display = 'flex';
+        }
+
+        function toggleSizeSelection(element, size) {
+            element.classList.toggle('selected');
+            const isSelected = element.classList.contains('selected');
+            element.querySelector('.size-status').textContent = isSelected ? 'Available' : 'Select';
+            element.querySelector('input[type="hidden"]').setAttribute('data-selected', isSelected);
+        }
+
+        function renderExistingGallery() {
+            const container = document.getElementById('existing-gallery');
+            container.innerHTML = existingVariantImages.map((url, index) => `
+                <div class="gallery-item">
+                    <img src="${url}" class="gallery-img">
+                    <div class="gallery-remove" onclick="removeGalleryImage(${index})">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 6 6 18"/>
+                            <path d="m6 6 12 12"/>
+                        </svg>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function removeGalleryImage(index) {
+            existingVariantImages.splice(index, 1);
+            renderExistingGallery();
+        }
+
+        function closeColorModal() {
+            document.getElementById('color-modal').style.display = 'none';
             editingVariantIndex = null;
         }
 
-        function saveVariant() {
-            const name = document.getElementById('variant-name').value.trim();
+        async function saveColorVariant() {
+            const name = document.getElementById('color-name').value.trim();
             if (!name) {
-                showToast('Color name is required', 'error');
+                showToast('Please enter a color name', 'error');
                 return;
             }
             
-            // Get selected sizes
-            const selectedSizes = Array.from(document.querySelectorAll('.size-item.selected'))
-                .map(item => item.getAttribute('data-size'));
+            showProgress('Saving Variant', 'Uploading images...');
             
-            // For now, create a basic variant object
-            // In a real app, you would also handle image uploads here
-            const variant = {
-                name,
-                sizes: selectedSizes,
-                // Add image handling later
-            };
-            
-            if (editingVariantIndex !== null) {
-                colorVariants[editingVariantIndex] = variant;
-                showToast('Variant updated successfully', 'success');
-            } else {
-                colorVariants.push(variant);
-                showToast('Variant added successfully', 'success');
+            try {
+                // Upload swatch image
+                let hex = '';
+                if (tempSwatchFile) {
+                    hex = await uploadFile(tempSwatchFile, 'swatches');
+                } else if (editingVariantIndex !== null && colorVariants[editingVariantIndex]?.hex) {
+                    hex = colorVariants[editingVariantIndex].hex;
+                }
+                
+                if (!hex) {
+                    showToast('Please upload a color swatch image', 'error');
+                    hideProgress();
+                    return;
+                }
+                
+                // Upload gallery images
+                let images = [...existingVariantImages];
+                if (tempVariantFiles.length > 0) {
+                    for (const file of tempVariantFiles) {
+                        const url = await uploadFile(file, 'variants');
+                        images.push(url);
+                    }
+                }
+                
+                // Get selected sizes
+                const sizes = [];
+                document.querySelectorAll('#size-selection .size-option').forEach(option => {
+                    if (option.classList.contains('selected')) {
+                        const sizeName = option.querySelector('.size-name').textContent;
+                        sizes.push({ name: sizeName, available: true });
+                    }
+                });
+                
+                const variant = { name, hex, sizes, images };
+                
+                if (editingVariantIndex !== null) {
+                    colorVariants[editingVariantIndex] = variant;
+                } else {
+                    colorVariants.push(variant);
+                }
+                
+                renderVariants();
+                renderMobileVariants();
+                closeColorModal();
+                showToast('Variant saved successfully', 'success');
+            } catch (error) {
+                console.error('Error saving variant:', error);
+                showToast('Failed to save variant', 'error');
+            } finally {
+                hideProgress();
             }
-            
-            renderVariants();
-            closeVariantModal();
         }
 
         function renderVariants() {
             const container = document.getElementById('variants-list');
-            if (!colorVariants || colorVariants.length === 0) {
+            if (colorVariants.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="13.5" cy="6.5" r=".5"/>
                             <circle cx="17.5" cy="10.5" r=".5"/>
                             <circle cx="8.5" cy="7.5" r=".5"/>
-                            <circle cx="6.5" cy="12.5" r=".5"/>
                             <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/>
                         </svg>
-                        <p>No variants added yet</p>
+                        <h4>No Variants Added</h4>
+                        <p>Add color variants to show different options</p>
                     </div>
                 `;
                 return;
@@ -3318,32 +3499,27 @@
             container.innerHTML = colorVariants.map((variant, index) => `
                 <div class="variant-card">
                     <div class="variant-info">
-                        <div style="width: 48px; height: 48px; border-radius: 8px; background: #f3f4f6; border: 1px solid #e5e7eb; display: flex; align-items: center; justify-content: center;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="13.5" cy="6.5" r=".5"/>
-                                <circle cx="17.5" cy="10.5" r=".5"/>
-                                <circle cx="8.5" cy="7.5" r=".5"/>
-                                <circle cx="6.5" cy="12.5" r=".5"/>
-                                <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/>
-                            </svg>
-                        </div>
+                        <img src="${variant.hex}" class="variant-swatch">
                         <div class="variant-details">
                             <div class="variant-name">${variant.name}</div>
-                            <div class="variant-sizes">${variant.sizes?.length || 0} sizes</div>
+                            <div class="variant-sizes">${variant.sizes.length} sizes • ${variant.images.length} images</div>
                         </div>
                     </div>
                     <div class="variant-actions">
-                        <button class="action-btn edit" onclick="openVariantModal(${index})">
+                        <button class="action-btn edit" onclick="openColorModal(${index})">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                <path d="M13 21h8"/>
+                                <path d="m15 5 4 4"/>
+                                <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
                             </svg>
                         </button>
-                        <button class="action-btn delete" onclick="deleteVariant(${index})">
+                        <button class="action-btn delete" onclick="removeVariant(${index})">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M10 11v6"/>
+                                <path d="M14 11v6"/>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
                                 <path d="M3 6h18"/>
-                                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
-                                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+                                <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
                             </svg>
                         </button>
                     </div>
@@ -3351,49 +3527,83 @@
             `).join('');
         }
 
-        function deleteVariant(index) {
-            if (confirm('Are you sure you want to delete this variant?')) {
+        function renderMobileVariants() {
+            const container = document.getElementById('mobile-variants-list');
+            if (!container) return;
+            
+            if (colorVariants.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 24px; color: #6b7280;">
+                        <p>No variants added yet</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = colorVariants.map((variant, index) => `
+                <div style="padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 8px; background: white;">
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <img src="${variant.hex}" style="width: 40px; height: 40px; border-radius: 6px; object-fit: cover;">
+                            <div>
+                                <div style="font-weight: 600; font-size: 14px;">${variant.name}</div>
+                                <div style="font-size: 12px; color: #6b7280;">${variant.sizes.length} sizes</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 8px;">
+                            <button style="width: 32px; height: 32px; border: 1px solid #e5e7eb; border-radius: 6px; background: white; display: flex; align-items: center; justify-content: center;" onclick="openColorModal(${index})">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M13 21h8"/>
+                                    <path d="m15 5 4 4"/>
+                                    <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
+                                </svg>
+                            </button>
+                            <button style="width: 32px; height: 32px; border: 1px solid #fecaca; border-radius: 6px; background: #fef2f2; display: flex; align-items: center; justify-content: center;" onclick="removeVariant(${index})">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M10 11v6"/>
+                                    <path d="M14 11v6"/>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+                                    <path d="M3 6h18"/>
+                                    <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function removeVariant(index) {
+            if (confirm('Are you sure you want to remove this variant?')) {
                 colorVariants.splice(index, 1);
                 renderVariants();
-                showToast('Variant deleted successfully', 'success');
+                renderMobileVariants();
+                showToast('Variant removed', 'success');
             }
         }
 
-        // --- REVIEW MANAGEMENT ---
+        // --- REVIEWS ---
         function openReviewModal(index = null) {
             editingReviewIndex = index;
             const isEdit = index !== null;
+            const review = isEdit ? productReviews[index] : null;
             
-            document.getElementById('review-modal-title').textContent = isEdit ? 'Edit Review' : 'Add Review';
+            document.getElementById('review-modal-title').textContent = isEdit ? 'Edit Review' : 'Add Customer Review';
             document.getElementById('review-save-btn').textContent = isEdit ? 'Update Review' : 'Add Review';
+            document.getElementById('review-name').value = review ? review.name : '';
+            document.getElementById('review-text').value = review ? review.comment : '';
+            document.getElementById('review-rating').value = review ? review.rating : 0;
             
-            // Reset form
-            document.getElementById('review-name').value = '';
-            document.getElementById('review-comment').value = '';
-            document.getElementById('review-rating').value = '0';
-            
-            // Reset stars
-            document.querySelectorAll('#star-input svg').forEach(star => {
-                star.classList.remove('active');
-            });
-            
-            // If editing, populate data
-            if (isEdit && productReviews[index]) {
-                const review = productReviews[index];
-                document.getElementById('review-name').value = review.name || '';
-                document.getElementById('review-comment').value = review.comment || '';
-                document.getElementById('review-rating').value = review.rating || '0';
-                
-                // Set stars
-                const rating = review.rating || 0;
-                document.querySelectorAll('#star-input svg').forEach((star, i) => {
-                    if (i < rating) {
-                        star.classList.add('active');
-                    }
-                });
-            }
-            
+            updateStars(review ? review.rating : 0);
             document.getElementById('review-modal').style.display = 'flex';
+        }
+
+        function updateStars(rating) {
+            document.querySelectorAll('#star-rating .star').forEach(star => {
+                const starValue = parseInt(star.getAttribute('data-val'));
+                star.style.fill = starValue <= rating ? 'currentColor' : 'none';
+                star.style.stroke = starValue <= rating ? 'var(--star-color)' : 'currentColor';
+            });
         }
 
         function closeReviewModal() {
@@ -3401,44 +3611,46 @@
             editingReviewIndex = null;
         }
 
-        function saveReview() {
+        function addReview() {
             const name = document.getElementById('review-name').value.trim();
-            const comment = document.getElementById('review-comment').value.trim();
             const rating = parseInt(document.getElementById('review-rating').value);
+            const comment = document.getElementById('review-text').value.trim();
             
-            if (!name || !comment || rating === 0) {
+            if (!name || rating === 0 || !comment) {
                 showToast('Please fill all fields and select a rating', 'error');
                 return;
             }
             
-            const review = {
+            const reviewData = {
                 name,
-                comment,
                 rating,
+                comment,
                 date: new Date().toISOString()
             };
             
             if (editingReviewIndex !== null) {
-                productReviews[editingReviewIndex] = review;
+                productReviews[editingReviewIndex] = reviewData;
                 showToast('Review updated successfully', 'success');
             } else {
-                productReviews.push(review);
+                productReviews.push(reviewData);
                 showToast('Review added successfully', 'success');
             }
             
             renderReviews();
+            renderMobileReviews();
             closeReviewModal();
         }
 
         function renderReviews() {
             const container = document.getElementById('reviews-list');
-            if (!productReviews || productReviews.length === 0) {
+            if (productReviews.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
                         </svg>
-                        <p>No reviews added yet</p>
+                        <h4>No Reviews Yet</h4>
+                        <p>Add customer reviews to build trust</p>
                     </div>
                 `;
                 return;
@@ -3451,67 +3663,119 @@
                         <div style="display: flex; gap: 8px;">
                             <button class="action-btn edit" onclick="openReviewModal(${index})">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                    <path d="M13 21h8"/>
+                                    <path d="m15 5 4 4"/>
+                                    <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
                                 </svg>
                             </button>
-                            <button class="action-btn delete" onclick="deleteReview(${index})">
+                            <button class="action-btn delete" onclick="removeReview(${index})">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M10 11v6"/>
+                                    <path d="M14 11v6"/>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
                                     <path d="M3 6h18"/>
-                                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
-                                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+                                    <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
                                 </svg>
                             </button>
                         </div>
                     </div>
-                    <div class="star-rating">
+                    <div class="review-rating">
                         ${Array(5).fill().map((_, i) => `
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="${i < (review.rating || 0) ? '#fbbf24' : 'none'}" stroke="${i < (review.rating || 0) ? '#fbbf24' : '#d1d5db'}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="${i < review.rating ? 'var(--star-color)' : 'none'}" stroke="var(--star-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
                             </svg>
                         `).join('')}
                     </div>
-                    <div class="review-comment">${review.comment}</div>
+                    <div class="review-text">${review.comment}</div>
                 </div>
             `).join('');
         }
 
-        function deleteReview(index) {
-            if (confirm('Are you sure you want to delete this review?')) {
+        function renderMobileReviews() {
+            const container = document.getElementById('mobile-reviews-list');
+            if (!container) return;
+            
+            if (productReviews.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 24px; color: #6b7280;">
+                        <p>No reviews added yet</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = productReviews.map((review, index) => `
+                <div style="padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 8px; background: white;">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+                        <div style="font-weight: 600; font-size: 14px;">${review.name}</div>
+                        <div style="display: flex; gap: 8px;">
+                            <button style="width: 28px; height: 28px; border: 1px solid #e5e7eb; border-radius: 6px; background: white; display: flex; align-items: center; justify-content: center;" onclick="openReviewModal(${index})">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M13 21h8"/>
+                                    <path d="m15 5 4 4"/>
+                                    <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
+                                </svg>
+                            </button>
+                            <button style="width: 28px; height: 28px; border: 1px solid #fecaca; border-radius: 6px; background: #fef2f2; display: flex; align-items: center; justify-content: center;" onclick="removeReview(${index})">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M10 11v6"/>
+                                    <path d="M14 11v6"/>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+                                    <path d="M3 6h18"/>
+                                    <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 2px; margin-bottom: 8px;">
+                        ${Array(5).fill().map((_, i) => `
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="${i < review.rating ? 'var(--star-color)' : 'none'}" stroke="var(--star-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                            </svg>
+                        `).join('')}
+                    </div>
+                    <div style="font-size: 13px; color: #6b7280; line-height: 1.4;">${review.comment}</div>
+                </div>
+            `).join('');
+        }
+
+        function removeReview(index) {
+            if (confirm('Are you sure you want to remove this review?')) {
                 productReviews.splice(index, 1);
                 renderReviews();
-                showToast('Review deleted successfully', 'success');
+                renderMobileReviews();
+                showToast('Review removed', 'success');
             }
         }
 
         // --- SAVE PRODUCT ---
         async function saveProduct() {
-            // Get values from both desktop and mobile forms
-            const name = document.getElementById('name').value || document.getElementById('mobile-name').value;
-            const description = document.getElementById('description').value || document.getElementById('mobile-description').value;
-            const category = document.getElementById('selected-category').value || document.getElementById('mobile-category').value;
-            const price = document.getElementById('price').value || document.getElementById('mobile-price').value;
-            const oldPrice = document.getElementById('oldPrice').value || document.getElementById('mobile-oldPrice').value;
+            // Get form data
+            const name = document.getElementById('name').value.trim();
+            const price = parseFloat(document.getElementById('price').value);
+            const oldPrice = parseFloat(document.getElementById('oldPrice').value);
+            const category = document.getElementById('selected-category').value;
+            const description = document.getElementById('description').value.trim();
+            const stockStatus = document.querySelector('input[name="stock"]:checked').value;
             
             // Validation
-            if (!name || !category || !price) {
+            if (!name || !price || !oldPrice || !category) {
                 showToast('Please fill all required fields', 'error');
                 return;
             }
             
-            if (!currentCoverImage && !currentCoverImageUrl) {
+            if (!coverImageFile && !document.getElementById('cover-preview').src) {
                 showToast('Please upload a cover image', 'error');
                 return;
             }
             
-            showProgress('Saving Product', 'Processing your product...');
+            showProgress('Saving Product', 'Uploading images and saving data...');
             
             try {
-                let coverImageUrl = currentCoverImageUrl;
-                
-                // Upload new cover image if exists
-                if (currentCoverImage) {
-                    coverImageUrl = await uploadImage(currentCoverImage, 'products/cover');
+                // Upload cover image if new
+                let coverUrl = document.getElementById('cover-preview').src;
+                if (coverImageFile) {
+                    coverUrl = await uploadFile(coverImageFile, 'products');
                 }
                 
                 // Prepare product data
@@ -3519,75 +3783,50 @@
                     name,
                     description,
                     category,
-                    price: parseFloat(price),
-                    oldPrice: oldPrice ? parseFloat(oldPrice) : null,
-                    image: coverImageUrl,
+                    price,
+                    oldPrice,
+                    image: coverUrl,
+                    images: [coverUrl],
                     colorVariants,
                     reviews: productReviews,
+                    stockStatus,
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
                 
-                if (productId) {
-                    // Update existing product
-                    await db.collection('products').doc(productId).update(productData);
-                    showToast('Product updated successfully!', 'success');
+                // Save to Firestore
+                if (currentProductId) {
+                    await db.collection('products').doc(currentProductId).update(productData);
+                    showToast('Product updated successfully', 'success');
                 } else {
-                    // Create new product
                     productData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-                    const docRef = await db.collection('products').add(productData);
-                    productId = docRef.id;
-                    showToast('Product created successfully!', 'success');
-                    
-                    // Update URL without reloading
-                    const url = new URL(window.location);
-                    url.searchParams.set('id', productId);
-                    window.history.replaceState({}, '', url);
+                    await db.collection('products').add(productData);
+                    showToast('Product created successfully', 'success');
                 }
                 
+                // Redirect back after a short delay
                 setTimeout(() => {
-                    hideProgress();
-                    // Redirect to products page after successful save
-                    window.location.href = 'manage-products.html';
+                    window.history.back();
                 }, 1500);
                 
             } catch (error) {
                 console.error('Error saving product:', error);
-                hideProgress();
                 showToast('Failed to save product', 'error');
+            } finally {
+                hideProgress();
             }
         }
 
-        // Attach save handlers
-        document.getElementById('save-btn').addEventListener('click', saveProduct);
-        document.getElementById('mobile-save-btn').addEventListener('click', saveProduct);
-
         // --- UTILITY FUNCTIONS ---
-        async function uploadImage(file, path) {
-            return new Promise((resolve, reject) => {
-                const storageRef = storage.ref();
-                const fileRef = storageRef.child(`${path}/${Date.now()}_${file.name}`);
-                const uploadTask = fileRef.put(file);
-                
-                uploadTask.on('state_changed',
-                    (snapshot) => {
-                        // You could update progress here if needed
-                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        console.log('Upload progress:', progress);
-                    },
-                    (error) => {
-                        reject(error);
-                    },
-                    async () => {
-                        const downloadURL = await uploadTask.snapshot.ref.getDownloadURL();
-                        resolve(downloadURL);
-                    }
-                );
-            });
+        async function uploadFile(file, path) {
+            const storageRef = storage.ref();
+            const fileRef = storageRef.child(`${path}/${Date.now()}_${file.name}`);
+            await fileRef.put(file);
+            return await fileRef.getDownloadURL();
         }
 
-        function showProgress(title, description) {
+        function showProgress(title, desc) {
             document.getElementById('progress-title').textContent = title;
-            document.getElementById('progress-desc').textContent = description;
+            document.getElementById('progress-desc').textContent = desc;
             document.getElementById('progress-overlay').style.display = 'flex';
         }
 
@@ -3599,34 +3838,21 @@
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
-            
-            const icon = type === 'success' ? 
-                '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>' :
-                '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>';
-            
             toast.innerHTML = `
-                ${icon}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    ${type === 'success' ? 
+                        '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>' : 
+                        '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>'}
+                </svg>
                 <span>${message}</span>
             `;
-            
             container.appendChild(toast);
-            
-            // Remove toast after 3 seconds
-            setTimeout(() => {
-                toast.remove();
-            }, 3000);
+            setTimeout(() => toast.remove(), 3000);
         }
 
-        // Handle window resize
-        window.addEventListener('resize', function() {
-            if (window.innerWidth <= 768) {
-                document.body.style.overflowX = 'hidden';
-                document.body.style.maxWidth = '100vw';
-            } else {
-                document.body.style.overflowX = '';
-                document.body.style.maxWidth = '';
-            }
-        });
+        // Event listeners
+        document.getElementById('save-btn').addEventListener('click', saveProduct);
+        document.getElementById('mobile-save-btn').addEventListener('click', saveProduct);
     </script>
 </body>
 </html>
