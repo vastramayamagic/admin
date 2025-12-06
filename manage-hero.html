@@ -60,7 +60,7 @@
             overflow: hidden;
         }
 
-        /* Desktop header */
+        /* Desktop header - FIXED AT TOP */
         .d-topbar {
             height: var(--header-height-desktop);
             background: var(--header-bg);
@@ -69,6 +69,11 @@
             display: flex;
             align-items: center;
             padding-left: 40px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
         }
 
         .d-topbar-logo {
@@ -82,15 +87,22 @@
             flex: 1;
             display: flex;
             width: 100%;
+            margin-top: var(--header-height-desktop);
+            height: calc(100vh - var(--header-height-desktop));
         }
 
-        /* Desktop sidebar */
+        /* Desktop sidebar - FIXED */
         .d-sidebar {
             width: var(--sidebar-width);
             background: var(--sidebar-bg);
             border-right: 1px solid var(--border-subtle);
             display: flex;
             flex-direction: column;
+            height: calc(100vh - var(--header-height-desktop));
+            position: fixed;
+            top: var(--header-height-desktop);
+            left: 0;
+            overflow-y: auto;
         }
 
         .d-sidebar-inner {
@@ -253,6 +265,7 @@
             background: var(--page-bg);
             overflow-y: auto;
             width: 100%;
+            margin-left: var(--sidebar-width);
         }
 
         /* ============= BODY CONTENT ============= */
@@ -1138,7 +1151,7 @@
             overflow-x: hidden;
         }
 
-        /* Mobile header */
+        /* Mobile header - FIXED AT TOP */
         .m-header {
             height: 72px;
             background: var(--header-bg);
@@ -1148,6 +1161,11 @@
             justify-content: space-between;
             padding: 0 16px;
             width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
         }
 
         /* FIXED: Mobile menu button with border and styling like advanced-menu-close */
@@ -1202,10 +1220,11 @@
             max-width: 200px;
         }
 
-        /* Mobile main bg */
+        /* Mobile main bg - Adjusted for fixed header */
         .m-main {
             flex: 1;
             background: var(--page-bg);
+            padding-top: 72px; /* Height of fixed header */
             padding-bottom: 20px;
             width: 100%;
             overflow-x: hidden;
@@ -1219,7 +1238,7 @@
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.25s ease-out;
-            z-index: 40;
+            z-index: 2000;
         }
 
         .m-overlay.open {
@@ -1310,6 +1329,7 @@
             padding: 32px 8px;
             display: flex;
             flex-direction: column;
+            flex: 1;
         }
 
         .m-nav-item {
@@ -1391,7 +1411,6 @@
 
         /* Drawer footer account */
         .m-account-section {
-            margin-top: auto;
             padding: 16px;
             border-top: 1px solid var(--border-subtle);
             cursor: pointer;
@@ -1653,6 +1672,7 @@
 <body>
     <!-- ================= DESKTOP VIEW ================= -->
     <div class="page-desktop">
+        <!-- Fixed Top Header -->
         <header class="d-topbar">
             <img class="d-topbar-logo"
                  src="https://product-ecommerces.netlify.app/vastramaya.png"
@@ -1660,6 +1680,7 @@
         </header>
 
         <div class="d-app">
+            <!-- Fixed Sidebar -->
             <aside class="d-sidebar">
                 <div class="d-sidebar-inner">
                     <nav class="d-nav">
@@ -1806,17 +1827,18 @@
                     <div class="d-account-section" id="profile-section">
                         <div class="account-card">
                             <img id="sidebar-avatar" class="account-avatar"
-                                 src="https://bpb-us-w2.wpmucdn.com/wp.wpi.edu/dist/e/505/files/2024/06/unknown-person-icon-3.png"
+                                 src=""
                                  alt="Profile" />
                             <div class="account-text">
-                                <div class="account-name" id="sidebar-name">Admin User</div>
-                                <div class="account-email" id="sidebar-email">admin@vastramaya.com</div>
+                                <div class="account-name" id="sidebar-name">Loading...</div>
+                                <div class="account-email" id="sidebar-email">Loading...</div>
                             </div>
                         </div>
                     </div>
                 </div>
             </aside>
 
+            <!-- Main Content Area -->
             <main class="d-content">
                 <div class="content-inner">
                     <!-- PAGE HEADER -->
@@ -1963,7 +1985,7 @@
 
     <!-- ================= MOBILE VIEW ================= -->
     <div class="page-mobile">
-        <!-- Mobile header: menu left, logo right -->
+        <!-- Mobile header: menu left, logo right - FIXED AT TOP -->
         <header class="m-header">
             <button class="m-menu-btn" id="m-menu-toggle" aria-label="Open menu">
                 <div class="m-menu-lines"><span></span></div>
@@ -1975,6 +1997,7 @@
               alt="Vastramaya Logo" />
         </header>
 
+        <!-- Main Content (with padding for fixed header) -->
         <main class="m-main">
             <div class="mobile-content-inner">
                 <!-- Mobile Page Header -->
@@ -2221,15 +2244,15 @@
                     </div>
                 </nav>
 
-                <!-- Mobile account sharing -->
+                <!-- Mobile account section -->
                 <div class="m-account-section" id="mobile-profile-section">
                     <div class="account-card">
                         <img id="mobile-sidebar-avatar" class="account-avatar"
-                             src="https://bpb-us-w2.wpmucdn.com/wp.wpi.edu/dist/e/505/files/2024/06/unknown-person-icon-3.png"
+                             src=""
                              alt="Profile" />
                         <div class="account-text">
-                            <div class="account-name" id="mobile-sidebar-name">Admin User</div>
-                            <div class="account-email" id="mobile-sidebar-email">admin@vastramaya.com</div>
+                            <div class="account-name" id="mobile-sidebar-name">Loading...</div>
+                            <div class="account-email" id="mobile-sidebar-email">Loading...</div>
                         </div>
                     </div>
                 </div>
@@ -2392,7 +2415,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
 
     <script>
-        // --- CONFIGURATION ---
+        // --- FIREBASE CONFIG ---
         const firebaseConfig = {
             apiKey: "AIzaSyCdeonH3VytC21F3X6x0rCVCn2xXrGPoug",
             authDomain: "vastramaya---magic.firebaseapp.com",
@@ -2404,7 +2427,10 @@
         };
         const ADMIN_EMAIL = "harshavardhanjw@gmail.com";
 
-        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        // Initialize Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
         const auth = firebase.auth();
         const db = firebase.firestore();
         const storage = firebase.storage();
@@ -2427,19 +2453,43 @@
         let desktopImageUrl = null;
         let mobileImageUrl = null;
 
-        // --- AUTH & INIT ---
-        auth.onAuthStateChanged(user => {
-            if (user && user.email === ADMIN_EMAIL) {
-                loadHeroData();
-                initUI();
-            } else {
+        // --- AUTHENTICATION & INITIALIZATION ---
+        auth.onAuthStateChanged(async (user) => {
+            if (!user || user.email !== ADMIN_EMAIL) {
                 window.location.href = 'index.html';
+                return;
             }
+            
+            // Update user profile in account sections
+            updateUserProfile(user);
+            
+            // Load hero section data
+            await loadHeroData();
+            
+            // Initialize UI interactions
+            initUI();
         });
+
+        // --- USER PROFILE MANAGEMENT ---
+        function updateUserProfile(user) {
+            const name = user.displayName || 'Admin User';
+            const email = user.email || 'admin@vastramaya.com';
+            const avatarUrl = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=5127ba&color=fff`;
+            
+            // Update Desktop Account Section
+            document.getElementById('sidebar-name').textContent = name;
+            document.getElementById('sidebar-email').textContent = email;
+            document.getElementById('sidebar-avatar').src = avatarUrl;
+            
+            // Update Mobile Account Section
+            document.getElementById('mobile-sidebar-name').textContent = name;
+            document.getElementById('mobile-sidebar-email').textContent = email;
+            document.getElementById('mobile-sidebar-avatar').src = avatarUrl;
+        }
 
         // --- UI INITIALIZATION ---
         function initUI() {
-            // Mobile drawer
+            // Mobile drawer functionality
             const mOverlay = document.getElementById('m-overlay');
             const mMenuToggle = document.getElementById('m-menu-toggle');
             const mDrawerClose = document.getElementById('m-drawer-close');
@@ -2460,7 +2510,7 @@
                 });
             }
 
-            // Dropdowns
+            // Desktop dropdown functionality
             const dCustomizeToggle = document.getElementById('d-customize-toggle');
             const dCustomizeSubmenu = document.getElementById('d-customize-submenu');
             const dOrdersToggle = document.getElementById('d-orders-toggle');
@@ -2496,26 +2546,6 @@
                 mOrdersToggle.addEventListener('click', () => {
                     mOrdersSubmenu.classList.toggle('open');
                     mOrdersToggle.classList.toggle('dropdown-open');
-                });
-            }
-
-            // Profile section
-            const profileSection = document.getElementById('profile-section');
-            const mobileProfileSection = document.getElementById('mobile-profile-section');
-            const profilePopup = document.getElementById('profile-popup');
-
-            if (profileSection) {
-                profileSection.addEventListener('click', e => {
-                    e.stopPropagation();
-                    // For now, just redirect to profile
-                    window.location.href = 'profile.html';
-                });
-            }
-
-            if (mobileProfileSection) {
-                mobileProfileSection.addEventListener('click', e => {
-                    e.stopPropagation();
-                    window.location.href = 'profile.html';
                 });
             }
         }
@@ -2919,11 +2949,6 @@
             container.appendChild(toast);
             setTimeout(() => toast.remove(), 3000);
         }
-
-        // Initialize when page loads
-        document.addEventListener('DOMContentLoaded', () => {
-            // Additional initialization if needed
-        });
     </script>
 </body>
 </html>
