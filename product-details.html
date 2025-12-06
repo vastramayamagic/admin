@@ -87,46 +87,46 @@
         }
 
         /* Desktop sidebar - FIXED: No scrolling */
-        .d-sidebar {
-            width: var(--sidebar-width);
-            background: var(--sidebar-bg);
-            border-right: 1px solid var(--border-subtle);
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            overflow: hidden;
-        }
+.d-sidebar {
+    width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border-subtle);
+    display: flex;
+    flex-direction: column;
+    position: sticky; /* ADD THIS */
+    top: 0; /* ADD THIS */
+    height: 100vh; /* ADD THIS */
+    overflow-y: auto; /* ADD THIS - makes sidebar scrollable independently */
+}
 
         .d-sidebar-inner {
-            padding: 32px 16px 16px 12px;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            overflow-y: auto;
-        }
+    padding: 32px 16px 16px 12px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    /* Remove position: absolute and overflow-y: auto */
+    /* Add this instead: */
+    position: relative;
+    overflow-y: visible;
+}
 
-        .d-sidebar-inner::-webkit-scrollbar {
-            width: 6px;
-        }
+.d-sidebar::-webkit-scrollbar {
+    width: 6px;
+}
 
-        .d-sidebar-inner::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
-        }
+.d-sidebar::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
 
-        .d-sidebar-inner::-webkit-scrollbar-thumb {
-            background: #c1c1c1;
-            border-radius: 10px;
-        }
+.d-sidebar::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 10px;
+}
 
-        .d-sidebar-inner::-webkit-scrollbar-thumb:hover {
-            background: #a1a1a1;
-        }
+.d-sidebar::-webkit-scrollbar-thumb:hover {
+    background: #a1a1a1;
+}
 
         /* Desktop nav */
         .d-nav {
@@ -1069,16 +1069,21 @@
         }
 
         /* Mobile header */
-        .m-header {
-            height: 72px;
-            background: var(--header-bg);
-            border-bottom: 1px solid var(--border-subtle);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 16px;
-            width: 100%;
-        }
+.m-header {
+    height: 72px;
+    background: var(--header-bg);
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    width: 100%;
+    position: fixed; /* ADD THIS */
+    top: 0; /* ADD THIS */
+    left: 0; /* ADD THIS */
+    right: 0; /* ADD THIS */
+    z-index: 100; /* ADD THIS */
+}
 
         .m-menu-btn {
             width: 40px;
@@ -1132,13 +1137,14 @@
         }
 
         /* Mobile main bg */
-        .m-main {
-            flex: 1;
-            background: var(--page-bg);
-            padding-bottom: 100px;
-            width: 100%;
-            overflow-x: hidden;
-        }
+.m-main {
+    flex: 1;
+    background: var(--page-bg);
+    padding-bottom: 100px;
+    width: 100%;
+    overflow-x: hidden;
+    margin-top: 72px; /* ADD THIS - height of header */
+}
 
         .mobile-content-inner {
             padding: 16px;
@@ -1221,7 +1227,7 @@
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.25s ease-out;
-            z-index: 40;
+            z-index: 100;
         }
 
         .m-overlay.open {
@@ -1229,20 +1235,21 @@
             pointer-events: auto;
         }
 
-        .m-drawer {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 320px;
-            max-width: 90vw;
-            height: 100%;
-            background: #ffffff;
-            display: flex;
-            flex-direction: column;
-            transform: translateX(-100%);
-            transition: transform 0.25s ease-out;
-            overflow-y: auto;
-        }
+.m-drawer {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 320px;
+    max-width: 90vw;
+    height: 100%;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease-out;
+    overflow-y: auto;
+    z-index: 101; /* ADD THIS */
+}
 
         .m-overlay.open .m-drawer {
             transform: translateX(0);
@@ -1682,19 +1689,19 @@
             }
             
             /* Mobile save bar */
-            .mobile-save-bar {
-                display: flex;
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                width: 100%;
-                background: white;
-                padding: 16px;
-                border-top: 1px solid #e5e7eb;
-                z-index: 90;
-                box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
-                gap: 12px;
-            }
+.mobile-save-bar {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: white;
+    padding: 16px;
+    border-top: 1px solid #e5e7eb;
+    z-index: 90; /* Increase from 90 to 110 */
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+    gap: 12px;
+}
             
             .mobile-save-bar .btn {
                 flex: 1;
