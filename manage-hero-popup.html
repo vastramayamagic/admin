@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Popup Manager - Vastramaya</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --header-height-desktop: 70px;
+            --sidebar-width: 260px;
+            --page-bg: #f4f5f7;
+            --text-color: rgb(24, 24, 26);
+            --icon-color: #6b7280;
+            --icon-active: #5127ba;
+            --active-bg: #f3f4f6;
+            --hover-bg: #f3f4f6;
+            --border-subtle: #e5e7eb;
+            --brand-primary: #5127ba;
+            --brand-gradient: linear-gradient(135deg, #5127ba 0%, #673de6 100%);
+            --danger-color: #ef4444;
+            --success-color: #10B981;
+            --switch-on: #5127ba;
+            --switch-off: #9CA3AF;
+            --shadow-premium: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --radius-md: 8px;
+            --radius-lg: 12px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { min-height: 100vh; background: var(--page-bg); font-family: "DM Sans", sans-serif; font-size: 14px; color: var(--text-color); overflow-x: hidden; }
+
+        /* LAYOUT */
+        .page-desktop { display: flex; flex-direction: column; min-height: 100vh; }
+        .d-topbar { height: var(--header-height-desktop); background: white; border-bottom: 1px solid var(--border-subtle); display: flex; align-items: center; padding-left: 40px; position: fixed; top: 0; width: 100%; z-index: 100; }
+        .d-topbar-logo { height: 52px; width: auto; }
+        .d-app { display: flex; margin-top: var(--header-height-desktop); height: calc(100vh - var(--header-height-desktop)); }
+        .d-sidebar { width: var(--sidebar-width); background: white; border-right: 1px solid var(--border-subtle); height: 100%; overflow-y: auto; position: fixed; }
+        .d-content { margin-left: var(--sidebar-width); flex: 1; padding: 24px; overflow-y: auto; }
+        
+        /* NAV */
+        .d-nav-item { display: flex; align-items: center; gap: 12px; padding: 12px; margin: 4px 12px; border-radius: 8px; cursor: pointer; color: var(--text-color); font-weight: 500; }
+        .d-nav-item:hover { background: var(--hover-bg); }
+        .d-nav-item--active { background: var(--active-bg); color: var(--brand-primary); }
+        .d-nav-item--active svg { stroke: var(--icon-active); }
+        .d-submenu { margin-left: 28px; padding-left: 12px; border-left: 1px solid var(--border-subtle); }
+        .d-submenu-item { padding: 10px 12px; display: flex; gap: 10px; align-items: center; cursor: pointer; border-radius: 6px; font-weight: 500; }
+        .d-submenu-item:hover { background: var(--hover-bg); }
+        .d-submenu-item.active { background: var(--active-bg); color: var(--brand-primary); }
+
+        /* POPUP MANAGER CARD */
+        .popup-manager-card { background: white; border-radius: 12px; border: 1px solid var(--border-subtle); padding: 32px; box-shadow: var(--shadow-premium); }
+        .popup-toggle-container { display: flex; align-items: center; gap: 16px; padding: 20px; background: #f9fafb; border-radius: 12px; border: 1px solid var(--border-subtle); margin-bottom: 32px; }
+        .popup-toggle { width: 52px; height: 28px; background: var(--switch-off); border-radius: 20px; position: relative; cursor: pointer; transition: 0.3s; }
+        .popup-toggle.active { background: var(--switch-on); }
+        .popup-toggle::after { content: ''; position: absolute; width: 24px; height: 24px; background: white; border-radius: 50%; top: 2px; left: 2px; transition: 0.3s; }
+        .popup-toggle.active::after { transform: translateX(24px); }
+
+        /* FORMS */
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+        .form-section { background: #f9fafb; padding: 24px; border-radius: 12px; border: 1px solid var(--border-subtle); margin-bottom: 24px; }
+        .form-group { margin-bottom: 20px; }
+        .form-label { display: block; margin-bottom: 8px; font-weight: 600; }
+        .form-label-required::after { content: " *"; color: var(--danger-color); }
+        .form-control { width: 100%; padding: 10px; border: 1px solid var(--border-subtle); border-radius: 8px; font-family: inherit; }
+        .form-hint { font-size: 12px; color: #6b7280; margin-top: 4px; }
+        
+        /* IMAGE UPLOAD */
+        .image-upload-zone { border: 2px dashed #e5e7eb; padding: 30px; text-align: center; border-radius: 12px; cursor: pointer; margin-bottom: 10px; position: relative; }
+        .image-upload-zone:hover { border-color: var(--brand-primary); background: #f9fafb; }
+        .image-upload-zone.has-image { border-style: solid; padding: 10px; }
+        .image-preview-container { display: none; flex-direction: column; align-items: center; gap: 10px; }
+        .image-preview-container.active { display: flex; }
+        .image-preview { max-width: 100%; max-height: 200px; object-fit: contain; border-radius: 8px; }
+        .conditional-fields { background: #eff6ff; border: 1px dashed #3b82f6; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: none; }
+        .conditional-note { display: flex; gap: 10px; align-items: center; color: #1e40af; font-size: 13px; }
+
+        /* BUTTONS */
+        .btn { padding: 10px 20px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; }
+        .btn-primary { background: var(--brand-gradient); color: white; }
+        .btn-secondary { background: white; border: 1px solid var(--border-subtle); color: var(--text-color); }
+        .btn-sm { padding: 6px 12px; font-size: 12px; }
+
+        /* TOAST */
+        #toast { position: fixed; bottom: 20px; right: 20px; z-index: 3000; display: flex; flex-direction: column; gap: 10px; }
+        .toast-msg { background: white; padding: 12px 20px; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); border-left: 4px solid var(--success-color); animation: slideIn 0.3s ease; }
+        .toast-msg.error { border-left-color: var(--danger-color); }
+        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+
+        /* MOBILE */
+        @media (max-width: 768px) {
+            .page-desktop { display: none; }
+            .page-mobile { display: block; }
+            .m-header { height: 70px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; background: white; border-bottom: 1px solid var(--border-subtle); position: fixed; top: 0; width: 100%; z-index: 50; }
+            .m-main { margin-top: 70px; padding: 16px; padding-bottom: 100px; }
+            .form-grid { grid-template-columns: 1fr; }
+            .mobile-form-section { background: white; border-radius: 12px; border: 1px solid var(--border-subtle); padding: 16px; margin-bottom: 20px; }
+            
+            /* Mobile Drawer */
+            .m-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; display: none; }
+            .m-overlay.open { display: block; }
+            .m-drawer { position: fixed; top: 0; left: 0; bottom: 0; width: 280px; background: white; transform: translateX(-100%); transition: 0.3s; z-index: 101; }
+            .m-overlay.open .m-drawer { transform: translateX(0); }
+        }
+        @media (min-width: 769px) { .page-mobile { display: none; } }
+    </style>
+</head>
+<body>
+
+    <!-- ================= DESKTOP VIEW ================= -->
+    <div class="page-desktop">
+        <aside class="d-sidebar">
+            <div style="padding: 20px;">
+                <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Logo" style="height: 40px;">
+            </div>
+            <div style="padding: 0 12px;">
+                <div class="d-nav-item" onclick="window.location.href='index.html'">Dashboard</div>
+                <div class="d-nav-item" onclick="window.location.href='manage-products.html'">Inventory</div>
+                <div class="d-nav-item d-nav-item--active">Customize Site</div>
+                <div class="d-submenu">
+                    <div class="d-submenu-item" onclick="window.location.href='hero-section.html'">Hero Section</div>
+                    <div class="d-submenu-item" onclick="window.location.href='sections-manager.html'">Sections</div>
+                    <div class="d-submenu-item active">Popup Manager</div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="d-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                <h1 style="font-size: 24px; font-weight: 700;">Popup Manager</h1>
+                <div style="display: flex; gap: 12px;">
+                    <button class="btn btn-secondary" onclick="resetForm()">Reset</button>
+                    <button class="btn btn-primary" onclick="savePopupSettings('desktop')">Save Settings</button>
+                </div>
+            </div>
+
+            <div class="popup-manager-card">
+                <!-- Enable Toggle -->
+                <div class="popup-toggle-container">
+                    <div class="popup-toggle" id="popup-toggle" onclick="togglePopup()"></div>
+                    <div>
+                        <div style="font-weight: 600; font-size: 16px;">Enable Popup</div>
+                        <div style="color: #6b7280;">Turn on/off the popup for your store visitors</div>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <!-- Left Col -->
+                    <div>
+                        <div class="form-section">
+                            <h4 style="margin-bottom: 20px; font-weight: 600;">Popup Content</h4>
+                            
+                            <!-- Image Upload -->
+                            <div class="form-group">
+                                <label class="form-label">Popup Image</label>
+                                <div class="image-upload-zone" id="d-upload-zone" onclick="document.getElementById('d-image-input').click()">
+                                    <div class="upload-content">
+                                        <div style="font-weight: 600; margin-bottom: 4px;">Click to upload image</div>
+                                        <div style="font-size: 12px; color: #6b7280;">PNG, JPG up to 5MB</div>
+                                    </div>
+                                    <div class="image-preview-container" id="d-preview-container">
+                                        <img id="d-image-preview" class="image-preview">
+                                        <button type="button" class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); removeImage()">Remove</button>
+                                    </div>
+                                </div>
+                                <input type="file" id="d-image-input" style="display: none;" accept="image/*">
+                            </div>
+
+                            <!-- Conditional Msg -->
+                            <div class="conditional-fields" id="d-conditional-fields">
+                                <div class="conditional-note">
+                                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/></svg>
+                                    Image uploaded! Title and message are now optional.
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" id="d-title-label">Popup Title</label>
+                                <input type="text" class="form-control" id="d-popup-title" placeholder="Special Offer!">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" id="d-message-label">Popup Message</label>
+                                <textarea class="form-control" id="d-popup-message" rows="3" placeholder="Enter message..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Col -->
+                    <div>
+                        <div class="form-section">
+                            <h4 style="margin-bottom: 20px; font-weight: 600;">Button Settings</h4>
+                            <div class="form-group">
+                                <label class="form-label form-label-required">Button Text</label>
+                                <input type="text" class="form-control" id="d-button-text" placeholder="Shop Now">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label form-label-required">Button Link</label>
+                                <input type="text" class="form-control" id="d-button-link" placeholder="/shop">
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h4 style="margin-bottom: 20px; font-weight: 600;">Timing</h4>
+                            <div class="form-group">
+                                <label class="form-label">Delay (Seconds)</label>
+                                <input type="number" class="form-control" id="d-delay-time" value="5" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Frequency</label>
+                                <select class="form-control" id="d-display-frequency">
+                                    <option value="always">Always show</option>
+                                    <option value="once_per_session">Once per session</option>
+                                    <option value="once_per_day">Once per day</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="btn btn-primary" style="min-width: 200px;" onclick="savePopupSettings('desktop')">Save Popup Settings</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- ================= MOBILE VIEW ================= -->
+    <div class="page-mobile">
+        <header class="m-header">
+            <div onclick="document.getElementById('m-overlay').classList.add('open')" style="padding: 10px;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            </div>
+            <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Logo" style="height: 32px;">
+            <div style="width: 44px;"></div>
+        </header>
+
+        <div class="m-overlay" id="m-overlay" onclick="if(event.target===this) this.classList.remove('open')">
+            <div class="m-drawer">
+                <div style="padding: 20px; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between;">
+                    <span style="font-weight: 700;">Menu</span>
+                    <span onclick="document.getElementById('m-overlay').classList.remove('open')">✕</span>
+                </div>
+                <div style="padding: 10px;">
+                    <div class="d-nav-item" onclick="window.location.href='index.html'">Dashboard</div>
+                    <div class="d-nav-item" onclick="window.location.href='manage-products.html'">Inventory</div>
+                    <div class="d-nav-item d-nav-item--active">Popup Manager</div>
+                </div>
+            </div>
+        </div>
+
+        <main class="m-main">
+            <div class="mobile-form-section" style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <div style="font-weight: 600;">Enable Popup</div>
+                    <div style="font-size: 12px; color: #6b7280;">Show/Hide popup</div>
+                </div>
+                <div class="popup-toggle" id="m-popup-toggle" onclick="toggleMobilePopup()"></div>
+            </div>
+
+            <div class="mobile-form-section">
+                <h4 style="margin-bottom: 15px; font-weight: 600;">Content</h4>
+                
+                <!-- Mobile Image Upload -->
+                <div class="image-upload-zone" id="m-upload-zone" onclick="document.getElementById('m-image-input').click()">
+                    <div class="upload-content">
+                        <div>Tap to upload image</div>
+                    </div>
+                    <div class="image-preview-container" id="m-preview-container">
+                        <img id="m-image-preview" class="image-preview">
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); removeMobileImage()">Remove</button>
+                    </div>
+                </div>
+                <input type="file" id="m-image-input" style="display: none;" accept="image/*">
+
+                <div class="form-group">
+                    <label class="form-label" id="m-title-label">Title</label>
+                    <input type="text" class="form-control" id="m-popup-title" placeholder="Special Offer!">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" id="m-message-label">Message</label>
+                    <textarea class="form-control" id="m-popup-message" rows="3"></textarea>
+                </div>
+            </div>
+
+            <div class="mobile-form-section">
+                <h4 style="margin-bottom: 15px; font-weight: 600;">Button & Timing</h4>
+                <div class="form-group">
+                    <label class="form-label form-label-required">Button Text</label>
+                    <input type="text" class="form-control" id="m-button-text">
+                </div>
+                <div class="form-group">
+                    <label class="form-label form-label-required">Button Link</label>
+                    <input type="text" class="form-control" id="m-button-link">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Delay (sec)</label>
+                    <input type="number" class="form-control" id="m-delay-time">
+                </div>
+            </div>
+
+            <button class="btn btn-primary" style="width: 100%; position: fixed; bottom: 0; left: 0; border-radius: 0; padding: 15px; z-index: 90;" onclick="saveMobilePopupSettings()">Save Settings</button>
+        </main>
+    </div>
+
+    <div id="toast"></div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+
+    <script>
+        // --- CONFIGURATION ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyCdeonH3VytC21F3X6x0rCVCn2xXrGPoug",
+            authDomain: "vastramaya---magic.firebaseapp.com",
+            projectId: "vastramaya---magic",
+            storageBucket: "vastramaya---magic.firebasestorage.app",
+            messagingSenderId: "543460072082",
+            appId: "1:543460072082:web:f3d1140e8f81ad338ae44b",
+            measurementId: "G-E39VNDCFVE"
+        };
+        const ADMIN_EMAIL = "harshavardhanjw@gmail.com";
+
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+
+        // --- STATE ---
+        let state = {
+            enabled: false,
+            title: '',
+            message: '',
+            buttonText: 'Shop Now',
+            buttonLink: '/shop',
+            delayTime: 5,
+            displayFrequency: 'once_per_session',
+            imageUrl: ''
+        };
+        
+        let pendingImageFile = null;
+
+        // --- AUTH ---
+        auth.onAuthStateChanged(user => {
+            if (user && user.email === ADMIN_EMAIL) {
+                loadData();
+            } else {
+                window.location.href = 'index.html';
+            }
+        });
+
+        // --- LOAD DATA ---
+        async function loadData() {
+            showToast('Loading settings...');
+            try {
+                const doc = await db.collection('landingPage').doc('HeroPopup').get();
+                if (doc.exists) {
+                    state = { ...state, ...doc.data() };
+                }
+                updateUI();
+            } catch (error) {
+                console.error("Error loading data:", error);
+                showToast("Failed to load settings", true);
+            }
+        }
+
+        // --- UI SYNC ---
+        function updateUI() {
+            // Desktop Inputs
+            document.getElementById('popup-toggle').classList.toggle('active', state.enabled);
+            document.getElementById('d-popup-title').value = state.title;
+            document.getElementById('d-popup-message').value = state.message;
+            document.getElementById('d-button-text').value = state.buttonText;
+            document.getElementById('d-button-link').value = state.buttonLink;
+            document.getElementById('d-delay-time').value = state.delayTime;
+            document.getElementById('d-display-frequency').value = state.displayFrequency;
+
+            // Mobile Inputs
+            document.getElementById('m-popup-toggle').classList.toggle('active', state.enabled);
+            document.getElementById('m-popup-title').value = state.title;
+            document.getElementById('m-popup-message').value = state.message;
+            document.getElementById('m-button-text').value = state.buttonText;
+            document.getElementById('m-button-link').value = state.buttonLink;
+            document.getElementById('m-delay-time').value = state.delayTime;
+
+            // Image Handling
+            if (state.imageUrl) {
+                showImagePreview(state.imageUrl);
+            } else {
+                hideImagePreview();
+            }
+        }
+
+        function showImagePreview(url) {
+            // Update Desktop View
+            document.getElementById('d-image-preview').src = url;
+            document.getElementById('d-preview-container').classList.add('active');
+            document.querySelector('#d-upload-zone .upload-content').style.display = 'none';
+            document.getElementById('d-upload-zone').classList.add('has-image');
+            document.getElementById('d-conditional-fields').style.display = 'block';
+            
+            // Update Mobile View
+            document.getElementById('m-image-preview').src = url;
+            document.getElementById('m-preview-container').classList.add('active');
+            document.querySelector('#m-upload-zone .upload-content').style.display = 'none';
+            
+            // Logic: Title/Msg are optional if image exists
+            updateRequiredFields(false);
+        }
+
+        function hideImagePreview() {
+            // Reset Desktop
+            document.getElementById('d-image-preview').src = '';
+            document.getElementById('d-preview-container').classList.remove('active');
+            document.querySelector('#d-upload-zone .upload-content').style.display = 'block';
+            document.getElementById('d-upload-zone').classList.remove('has-image');
+            document.getElementById('d-conditional-fields').style.display = 'none';
+
+            // Reset Mobile
+            document.getElementById('m-image-preview').src = '';
+            document.getElementById('m-preview-container').classList.remove('active');
+            document.querySelector('#m-upload-zone .upload-content').style.display = 'block';
+
+            // Logic: Title/Msg required again
+            updateRequiredFields(true);
+        }
+
+        function updateRequiredFields(isRequired) {
+            const labels = ['d-title-label', 'd-message-label', 'm-title-label', 'm-message-label'];
+            labels.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    if (isRequired) el.classList.add('form-label-required');
+                    else el.classList.remove('form-label-required');
+                }
+            });
+        }
+
+        // --- INTERACTION HANDLERS ---
+        function togglePopup() {
+            state.enabled = !state.enabled;
+            // Update both UI elements immediately
+            document.getElementById('popup-toggle').classList.toggle('active', state.enabled);
+            document.getElementById('m-popup-toggle').classList.toggle('active', state.enabled);
+        }
+
+        function toggleMobilePopup() {
+            togglePopup(); // Alias to same logic
+        }
+
+        // Image Selection Logic
+        document.getElementById('d-image-input').addEventListener('change', handleFileSelect);
+        document.getElementById('m-image-input').addEventListener('change', handleFileSelect);
+
+        function handleFileSelect(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            if (file.size > 5 * 1024 * 1024) return showToast("Image too large (Max 5MB)", true);
+            
+            pendingImageFile = file;
+            const reader = new FileReader();
+            reader.onload = (event) => showImagePreview(event.target.result);
+            reader.readAsDataURL(file);
+        }
+
+        function removeImage() {
+            pendingImageFile = null;
+            state.imageUrl = ''; 
+            hideImagePreview();
+            
+            // Clear inputs
+            document.getElementById('d-image-input').value = '';
+            document.getElementById('m-image-input').value = '';
+            showToast('Image removed', false);
+        }
+
+        function removeMobileImage() {
+            removeImage(); // Alias
+        }
+
+        function resetForm() {
+            if (confirm("Reset all settings to default?")) {
+                state = {
+                    enabled: false,
+                    title: 'Special Offer!',
+                    message: 'Get 20% off on your first order!',
+                    buttonText: 'Shop Now',
+                    buttonLink: '/shop',
+                    delayTime: 5,
+                    displayFrequency: 'once_per_session',
+                    imageUrl: ''
+                };
+                pendingImageFile = null;
+                updateUI();
+                showToast("Settings reset");
+            }
+        }
+
+        // --- SAVE LOGIC ---
+        async function savePopupSettings(viewPrefix) {
+            // viewPrefix is 'desktop' or 'mobile'
+            const btn = event.target; // The button clicked
+            const originalText = btn.innerText;
+            btn.innerText = "Saving...";
+            btn.disabled = true;
+
+            // Determine which inputs to read from
+            const prefix = viewPrefix === 'desktop' ? 'd-' : 'm-';
+            
+            // Update State from DOM elements of the active view
+            state.title = document.getElementById(`${prefix}popup-title`).value.trim();
+            state.message = document.getElementById(`${prefix}popup-message`).value.trim();
+            state.buttonText = document.getElementById(`${prefix}button-text`).value.trim();
+            state.buttonLink = document.getElementById(`${prefix}button-link`).value.trim();
+            state.delayTime = parseInt(document.getElementById(`${prefix}delay-time`).value);
+            
+            // Frequency is only on desktop form visually in this design, so fall back to existing state if mobile saving, or grab if desktop
+            if (viewPrefix === 'desktop') {
+                state.displayFrequency = document.getElementById('d-display-frequency').value;
+            }
+
+            // Validation
+            if (state.enabled && !pendingImageFile && !state.imageUrl && (!state.title || !state.message)) {
+                btn.innerText = originalText;
+                btn.disabled = false;
+                return showToast("Please provide Title/Message OR an Image", true);
+            }
+
+            if (state.enabled && (!state.buttonText || !state.buttonLink)) {
+                btn.innerText = originalText;
+                btn.disabled = false;
+                return showToast("Button Text and Link are required", true);
+            }
+
+            try {
+                // Upload Image if changed
+                if (pendingImageFile) {
+                    const ref = storage.ref(`hero-popup/${Date.now()}_${pendingImageFile.name}`);
+                    await ref.put(pendingImageFile);
+                    state.imageUrl = await ref.getDownloadURL();
+                    pendingImageFile = null;
+                }
+
+                // Save to Firestore
+                await db.collection('landingPage').doc('HeroPopup').set({
+                    ...state,
+                    lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                // Sync UI across views
+                updateUI();
+                showToast("Popup settings saved successfully!");
+                
+                // If saved from mobile, close drawer
+                if (viewPrefix === 'mobile') {
+                    document.getElementById('m-overlay').classList.remove('open');
+                }
+
+            } catch (error) {
+                console.error("Save Error:", error);
+                showToast("Error saving settings", true);
+            } finally {
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        function saveMobilePopupSettings() {
+            savePopupSettings('mobile');
+        }
+
+        // --- UTILS ---
+        function showToast(msg, isError = false) {
+            const toast = document.createElement('div');
+            toast.className = `toast-msg ${isError ? 'error' : ''}`;
+            toast.innerText = msg;
+            document.getElementById('toast').appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+    </script>
+</body>
+</html>
