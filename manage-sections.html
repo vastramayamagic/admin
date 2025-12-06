@@ -11,6 +11,9 @@
         :root {
             --header-height-desktop: 70px;
             --sidebar-width: 260px;
+            --row-height: 48px;
+            --sidebar-bg: #ffffff;
+            --header-bg: #ffffff;
             --page-bg: #f4f5f7;
             --text-color: rgb(24, 24, 26);
             --icon-color: #6b7280;
@@ -25,210 +28,1619 @@
             --switch-on: #5127ba;
             --switch-off: #9CA3AF;
             --shadow-premium: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --skeleton-color: #f0f0f0;
+            --skeleton-highlight: #f8f8f8;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { min-height: 100vh; background: var(--page-bg); font-family: "DM Sans", sans-serif; font-size: 14px; color: var(--text-color); overflow-x: hidden; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-        /* LAYOUT */
-        .page-desktop { display: flex; flex-direction: column; min-height: 100vh; }
-        .d-topbar { height: var(--header-height-desktop); background: white; border-bottom: 1px solid var(--border-subtle); display: flex; align-items: center; padding-left: 40px; position: fixed; top: 0; width: 100%; z-index: 100; }
-        .d-app { display: flex; margin-top: var(--header-height-desktop); height: calc(100vh - var(--header-height-desktop)); }
-        .d-sidebar { width: var(--sidebar-width); background: white; border-right: 1px solid var(--border-subtle); height: 100%; overflow-y: auto; position: fixed; }
-        .d-content { margin-left: var(--sidebar-width); flex: 1; padding: 24px; overflow-y: auto; }
+        body {
+            min-height: 100vh;
+            background: var(--page-bg);
+            font-family: "DM Sans", Roboto, sans-serif;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 20px;
+            color: var(--text-color);
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        /* ============= DESKTOP LAYOUT ============= */
+        .page-desktop {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        /* Desktop header */
+        .d-topbar {
+            height: var(--header-height-desktop);
+            background: var(--header-bg);
+            border-bottom: 1px solid var(--border-subtle);
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            padding-left: 40px;
+        }
+
+        .d-topbar-logo {
+            height: 52px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        /* Desktop main area */
+        .d-app {
+            flex: 1;
+            display: flex;
+            width: 100%;
+        }
+
+        /* Desktop sidebar */
+        .d-sidebar {
+            width: var(--sidebar-width);
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border-subtle);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .d-sidebar-inner {
+            padding: 32px 16px 16px 12px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        /* Desktop nav */
+        .d-nav {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .d-nav-group + .d-nav-group {
+            margin-top: 6px;
+        }
+
+        .d-nav-item {
+            display: flex;
+            align-items: center;
+            height: var(--row-height);
+            padding: 0 20px 0 12px;
+            margin: 2px 0;
+            border-radius: 8px;
+            gap: 12px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 14px;
+            color: var(--text-color);
+            line-height: 20px;
+            transition: background 0.15s ease;
+        }
+
+        .d-nav-item .label {
+            flex: 1;
+        }
+
+        .d-nav-item .icon svg {
+            width: 22px;
+            height: 22px;
+            stroke: var(--icon-color);
+        }
+
+        .chevron-icon {
+            width: 18px;
+            height: 18px;
+            stroke: var(--icon-color);
+            transition: transform 0.2s ease;
+        }
+
+        .dropdown-open .chevron-icon {
+            transform: rotate(90deg);
+        }
+
+        /* Desktop active */
+        .d-nav-item--active {
+            background: var(--active-bg);
+        }
+        .d-nav-item--active .icon svg {
+            stroke: var(--icon-active);
+        }
+
+        /* Desktop hover */
+        .d-nav-item:hover {
+            background: var(--hover-bg);
+        }
+
+        /* Desktop submenus */
+        .d-submenu {
+            display: none;
+            margin-left: 28px;
+            padding-left: 16px;
+            border-left: 1px solid var(--border-subtle);
+            margin-top: 4px;
+        }
+        .d-submenu.open {
+            display: block;
+        }
+        .d-submenu-item {
+            height: 44px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            border-radius: 8px;
+            margin: 2px 0;
+            cursor: pointer;
+            gap: 12px;
+            font-size: 15px;
+            font-weight: 500;
+        }
+        .d-submenu-item:hover {
+            background: var(--hover-bg);
+        }
+        .d-submenu-item.active {
+            background: var(--active-bg);
+        }
+
+        .d-submenu-item .submenu-icon {
+            width: 18px;
+            height: 18px;
+            stroke: #6b7280;
+        }
+
+        /* Desktop account section */
+        .d-account-section {
+            margin-top: auto;
+            padding: 16px;
+            border-top: 1px solid var(--border-subtle);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .account-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .account-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .account-text {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .account-name {
+            font-size: 14px;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 150px;
+        }
+
+        .account-email {
+            font-size: 12px;
+            color: #6b7280;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 150px;
+        }
+
+        /* Desktop content */
+        .d-content {
+            flex: 1;
+            background: var(--page-bg);
+            overflow-y: auto;
+            width: 100%;
+        }
+
+        /* ============= BODY CONTENT ============= */
+        .content-inner {
+            max-width: 1110px;
+            margin: 0 auto;
+            padding: 24px 24px 40px;
+            width: 100%;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            width: 100%;
+        }
+
+        .page-title-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 0;
+        }
+
+        .page-title {
+            font-weight: 700;
+            font-size: 20px;
+            line-height: 32px;
+            color: rgb(29, 30, 32);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            line-height: 20px;
+            color: #6b7280;
+            flex-wrap: wrap;
+        }
+
+        .breadcrumb-icon svg {
+            width: 16px;
+            height: 16px;
+            stroke: #9ca3af;
+        }
+
+        .breadcrumb-divider {
+            color: #d1d5db;
+        }
+
+        .primary-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            line-height: 20px;
+            color: #ffffff;
+            background: var(--brand-primary);
+            transition: background 0.15s ease;
+            white-space: nowrap;
+        }
+        .primary-btn svg {
+            width: 18px;
+            height: 18px;
+            stroke: #ffffff;
+        }
+        .primary-btn:hover {
+            background: #471ea7;
+        }
+
+        /* Premium Card */
+        .premium-card {
+            background: #ffffff;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            overflow: hidden;
+            box-shadow: var(--shadow-premium);
+            margin-bottom: 24px;
+        }
+
+        .card-header {
+            padding: 24px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            font-weight: 700;
+            font-size: 18px;
+            line-height: 28px;
+            color: rgb(29, 30, 32);
+        }
+
+        .card-subtitle {
+            font-size: 13px;
+            color: #6b7280;
+            margin-top: 2px;
+        }
+
+        .card-body {
+            padding: 24px;
+        }
+
+        /* Draggable List Styles */
+        .draggable-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .draggable-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            cursor: grab;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .draggable-item:hover {
+            border-color: #d1d5db;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .draggable-item.dragging {
+            opacity: 0.5;
+            background: #f9fafb;
+            border: 1px dashed var(--brand-primary);
+        }
+
+        .drag-handle {
+            color: #9ca3af;
+            cursor: grab;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+        }
+
+        .item-image {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 1px solid #e5e7eb;
+        }
+
+        .item-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .item-title {
+            font-weight: 600;
+            font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .item-subtitle {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 2px;
+        }
+
+        .item-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            border: 1px solid #e5e7eb;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #6b7280;
+            transition: all 0.15s ease;
+        }
+
+        .btn-icon:hover {
+            background: #f9fafb;
+            color: var(--text-color);
+        }
+
+        .btn-icon.delete:hover {
+            color: var(--danger-color);
+            border-color: #fecaca;
+            background: #fef2f2;
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--switch-off);
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: var(--brand-primary);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(20px);
+        }
+
+        /* Product Selector Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 900px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-premium);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        @keyframes modalPop {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-header {
+            padding: 1.5rem 1.5rem 1rem;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fff;
+            position: relative;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+            background: #F8FAFC;
+        }
+
+        .modal-footer {
+            padding: 1rem 1.5rem 1.5rem;
+            background: white;
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+        }
+
+        .modal-title {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: rgb(29, 30, 32);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Product Grid */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .product-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-color: var(--brand-primary);
+        }
+
+        .product-card.selected {
+            border: 2px solid var(--brand-primary);
+            box-shadow: 0 4px 12px rgba(81, 39, 186, 0.15);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+        }
+
+        .product-content {
+            padding: 12px;
+        }
+
+        .product-title {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .product-price {
+            color: var(--brand-primary);
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .product-select-checkbox {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border: 2px solid var(--border-subtle);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-select-checkbox.checked {
+            background: var(--brand-primary);
+            border-color: var(--brand-primary);
+        }
+
+        .product-select-checkbox.checked::after {
+            content: '✓';
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* Search Input */
+        .search-input-wrap {
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            padding: 8px 16px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: border-color 0.15s ease;
+            width: 100%;
+        }
+
+        .search-input-wrap:focus-within {
+            border-color: #673de6;
+        }
+
+        .search-icon {
+            width: 16px;
+            height: 16px;
+            stroke: #9ca3af;
+        }
+
+        .search-input-wrap input {
+            border: none;
+            background: transparent;
+            outline: none;
+            flex: 1;
+            font-family: "DM Sans", Roboto, sans-serif;
+            font-size: 14px;
+            width: 100%;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            font-weight: 600;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            border: none;
+            font-size: 14px;
+            white-space: nowrap;
+            min-width: 100px;
+        }
+
+        .btn-primary {
+            background: var(--brand-gradient);
+            color: white;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(81, 39, 186, 0.25);
+        }
+
+        .btn-secondary {
+            background: white;
+            border: 1px solid #e5e7eb;
+            color: var(--text-color);
+        }
+
+        .btn-secondary:hover {
+            background: #F8FAFC;
+            border-color: #CBD5E1;
+            transform: translateY(-1px);
+        }
+
+        /* Toast */
+        #toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 3000;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            padding: 1rem 1.5rem;
+            background: white;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-premium);
+            animation: slideUp 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-left: 4px solid var(--brand-primary);
+            min-width: 300px;
+            pointer-events: auto;
+            max-width: 90vw;
+        }
+
+        .toast.success {
+            border-left-color: var(--success-color);
+        }
+
+        .toast.error {
+            border-left-color: var(--danger-color);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ============= MOBILE LAYOUT ============= */
+        .page-mobile {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            display: none;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* Mobile header */
+        .m-header {
+            height: 72px;
+            background: var(--header-bg);
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            width: 100%;
+        }
+
+        /* Mobile menu button */
+        .m-menu-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+            background: #f9fafb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .m-menu-btn:hover {
+            background: #f3f4f6;
+        }
+
+        .m-menu-lines {
+            width: 18px;
+            height: 14px;
+            position: relative;
+        }
+        .m-menu-lines::before,
+        .m-menu-lines::after,
+        .m-menu-lines span {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 2px;
+            border-radius: 999px;
+            background: #111827;
+        }
+        .m-menu-lines::before {
+            top: 0;
+        }
+        .m-menu-lines span {
+            top: 6px;
+        }
+        .m-menu-lines::after {
+            bottom: 0;
+        }
+
+        .m-logo {
+            height: 48px;
+            width: auto;
+            object-fit: contain;
+            max-width: 200px;
+        }
+
+        /* Mobile main bg */
+        .m-main {
+            flex: 1;
+            background: var(--page-bg);
+            padding: 16px;
+            padding-bottom: 100px;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* Mobile Card */
+        .m-card {
+            background: white;
+            border-radius: 16px;
+            border: 1px solid #e5e7eb;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .m-card-title {
+            font-weight: 700;
+            font-size: 18px;
+            line-height: 28px;
+            color: rgb(29, 30, 32);
+            margin-bottom: 12px;
+        }
+
+        .m-card-subtitle {
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 16px;
+        }
+
+        /* Overlay & drawer */
+        .m-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.45);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease-out;
+            z-index: 40;
+        }
+
+        .m-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .m-drawer {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 320px;
+            max-width: 90vw;
+            height: 100%;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            transform: translateX(-100%);
+            transition: transform 0.25s ease-out;
+            overflow-y: auto;
+        }
+
+        .m-overlay.open .m-drawer {
+            transform: translateX(0);
+        }
+
+        /* Drawer header */
+        .m-drawer-header {
+            height: 72px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+        }
+
+        .m-drawer-logo {
+            height: 48px;
+            width: auto;
+            object-fit: contain;
+            max-width: 200px;
+        }
+
+        /* Drawer close button */
+        .m-drawer-close {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+            background: #f9fafb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
         
-        /* NAV */
-        .d-nav-item { display: flex; align-items: center; gap: 12px; padding: 12px; margin: 4px 12px; border-radius: 8px; cursor: pointer; color: var(--text-color); font-weight: 500; }
-        .d-nav-item:hover { background: var(--hover-bg); }
-        .d-nav-item--active { background: var(--active-bg); color: var(--brand-primary); }
-        .d-nav-item--active svg { stroke: var(--icon-active); }
-        .d-submenu { margin-left: 28px; padding-left: 12px; border-left: 1px solid var(--border-subtle); }
-        .d-submenu-item { padding: 10px 12px; display: flex; gap: 10px; align-items: center; cursor: pointer; border-radius: 6px; font-weight: 500; }
-        .d-submenu-item:hover { background: var(--hover-bg); }
-        .d-submenu-item.active { background: var(--active-bg); color: var(--brand-primary); }
+        .m-drawer-close:hover {
+            background: #f3f4f6;
+        }
         
-        /* CARD */
-        .sections-manager-card { background: white; border-radius: 12px; border: 1px solid var(--border-subtle); padding: 32px; box-shadow: var(--shadow-premium); }
-        .toggle-switch { width: 44px; height: 24px; background: var(--switch-off); border-radius: 20px; position: relative; cursor: pointer; transition: 0.3s; flex-shrink: 0; }
-        .toggle-switch.active { background: var(--switch-on); }
-        .toggle-switch::after { content: ''; position: absolute; width: 20px; height: 20px; background: white; border-radius: 50%; top: 2px; left: 2px; transition: 0.3s; }
-        .toggle-switch.active::after { transform: translateX(20px); }
+        .m-drawer-close-icon {
+            width: 14px;
+            height: 14px;
+            position: relative;
+        }
+        .m-drawer-close-icon::before,
+        .m-drawer-close-icon::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            margin: auto;
+            width: 14px;
+            height: 2px;
+            border-radius: 999px;
+            background: #111827;
+        }
+        .m-drawer-close-icon::before {
+            transform: rotate(45deg);
+        }
+        .m-drawer-close-icon::after {
+            transform: rotate(-45deg);
+        }
 
-        /* PRODUCT GRID */
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-top: 16px; }
-        .product-card { border: 1px solid var(--border-subtle); border-radius: 8px; overflow: hidden; cursor: pointer; position: relative; transition: 0.2s; }
-        .product-card:hover { border-color: var(--brand-primary); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-        .product-card.selected { border: 2px solid var(--brand-primary); }
-        .product-image { width: 100%; height: 150px; object-fit: cover; }
-        .product-content { padding: 12px; }
-        .product-title { font-weight: 600; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .product-select-checkbox { position: absolute; top: 8px; right: 8px; width: 20px; height: 20px; background: white; border: 2px solid var(--border-subtle); border-radius: 4px; display: flex; align-items: center; justify-content: center; }
-        .product-select-checkbox.checked { background: var(--brand-primary); border-color: var(--brand-primary); color: white; }
-        .product-select-checkbox.checked::after { content: '✓'; font-size: 12px; font-weight: bold; }
+        /* Drawer nav */
+        .m-drawer-nav {
+            padding: 32px 8px;
+            display: flex;
+            flex-direction: column;
+        }
 
-        /* LIST ITEMS (DRAGGABLE) */
-        .draggable-list { display: flex; flex-direction: column; gap: 8px; }
-        .list-item { display: flex; align-items: center; gap: 12px; padding: 12px; background: white; border: 1px solid var(--border-subtle); border-radius: 8px; cursor: grab; transition: background 0.2s; user-select: none; }
-        .list-item:hover { border-color: #d1d5db; }
-        .list-item.dragging { opacity: 0.5; background: #f3f4f6; border: 1px dashed var(--brand-primary); }
-        .drag-handle { color: #9ca3af; cursor: grab; font-size: 18px; padding: 4px; }
-        .list-item:active { cursor: grabbing; }
-        
-        .action-btn { width: 32px; height: 32px; border: 1px solid var(--border-subtle); border-radius: 6px; background: white; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #6b7280; }
-        .action-btn:hover { background: #f9fafb; color: var(--text-color); }
-        .action-btn.delete:hover { color: var(--danger-color); border-color: #fecaca; background: #fef2f2; }
+        .m-nav-item {
+            display: flex;
+            align-items: center;
+            height: 52px;
+            padding: 0 16px;
+            margin: 2px 0;
+            border-radius: 8px;
+            gap: 12px;
+            cursor: pointer;
+            color: var(--text-color);
+            transition: background 0.15s ease;
+            font-size: 16px;
+            font-weight: 600;
+        }
 
-        /* MODAL */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 2000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
-        .modal-content { background: white; width: 90%; max-width: 800px; border-radius: 12px; display: flex; flex-direction: column; max-height: 85vh; }
-        .modal-header { padding: 16px 24px; border-bottom: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 18px; }
-        .modal-body { padding: 24px; overflow-y: auto; }
-        .modal-footer { padding: 16px 24px; border-top: 1px solid var(--border-subtle); display: flex; justify-content: flex-end; gap: 12px; }
+        .m-nav-item .label {
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
 
-        /* BUTTONS */
-        .btn { padding: 10px 20px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; }
-        .btn-primary { background: var(--brand-gradient); color: white; }
-        .btn-secondary { background: white; border: 1px solid var(--border-subtle); color: var(--text-color); }
-        
-        /* TOAST */
-        #toast { position: fixed; bottom: 20px; right: 20px; z-index: 3000; display: flex; flex-direction: column; gap: 10px; }
-        .toast-msg { background: white; padding: 12px 20px; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); border-left: 4px solid var(--success-color); animation: slideIn 0.3s ease; }
-        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+        .m-nav-item .icon svg {
+            width: 22px;
+            height: 22px;
+            stroke: var(--icon-color);
+        }
 
-        /* MOBILE SPECIFIC */
+        /* active mobile */
+        .m-nav-item.active {
+            background: var(--active-bg);
+        }
+        .m-nav-item.active .icon svg {
+            stroke: var(--icon-active);
+        }
+
+        /* Mobile submenu */
+        .m-submenu {
+            display: none;
+            margin-left: 28px;
+            padding-left: 16px;
+            border-left: 1px solid var(--border-subtle);
+            margin-top: 4px;
+        }
+        .m-submenu.open {
+            display: block;
+        }
+        .m-submenu-item {
+            height: 48px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            border-radius: 8px;
+            margin: 2px 0;
+            cursor: pointer;
+            gap: 12px;
+            font-size: 15px;
+            font-weight: 500;
+        }
+        .m-submenu-item:hover {
+            background: var(--hover-bg);
+        }
+        .m-submenu-item.active {
+            background: var(--active-bg);
+        }
+
+        .m-submenu-item .submenu-icon {
+            width: 18px;
+            height: 18px;
+            stroke: #6b7280;
+        }
+
+        /* Drawer footer account */
+        .m-account-section {
+            margin-top: auto;
+            padding: 16px;
+            border-top: 1px solid var(--border-subtle);
+            cursor: pointer;
+            position: relative;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #6b7280;
+            grid-column: 1/-1;
+            width: 100%;
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 1px dashed #e5e7eb;
+        }
+
+        /* Responsive switch */
         @media (max-width: 768px) {
             .page-desktop { display: none; }
-            .page-mobile { display: block; }
-            .m-header { height: 70px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; background: white; border-bottom: 1px solid var(--border-subtle); position: fixed; top: 0; width: 100%; z-index: 50; }
-            .m-main { margin-top: 70px; padding: 16px; padding-bottom: 100px; }
-            .m-card { background: white; border-radius: 12px; border: 1px solid var(--border-subtle); padding: 16px; margin-bottom: 16px; }
+            .page-mobile  { display: flex; }
             
-            /* Mobile Drawer */
-            .m-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; display: none; }
-            .m-overlay.open { display: block; }
-            .m-drawer { position: fixed; top: 0; left: 0; bottom: 0; width: 280px; background: white; transform: translateX(-100%); transition: 0.3s; z-index: 101; }
-            .m-overlay.open .m-drawer { transform: translateX(0); }
+            .content-inner {
+                padding: 0;
+            }
+            
+            .page-header {
+                display: none;
+            }
+
+            .modal-overlay {
+                align-items: flex-end;
+                padding: 0;
+            }
+            
+            .modal-content {
+                width: 100%;
+                border-radius: 24px 24px 0 0;
+                animation: slideUpModal 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+                max-height: 90vh;
+                overflow-y: auto;
+                max-width: 100%;
+            }
+            
+            @keyframes slideUpModal {
+                from { transform: translateY(100%); }
+                to { transform: translateY(0); }
+            }
+            
+            .product-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            /* Prevent horizontal scrolling */
+            body, html {
+                overflow-x: hidden;
+                position: relative;
+                width: 100%;
+            }
+            
+            .mobile-content-inner {
+                padding: 16px;
+                max-width: 100%;
+                overflow-x: hidden;
+            }
         }
-        @media (min-width: 769px) { .page-mobile { display: none; } }
+
+        @media (min-width: 769px) {
+            .page-desktop { display: flex; }
+            .page-mobile { display: none; }
+        }
+
+        /* Text truncation fixes */
+        .text-truncate {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
     </style>
 </head>
 <body>
-
     <!-- ================= DESKTOP VIEW ================= -->
     <div class="page-desktop">
-        <aside class="d-sidebar">
-            <div style="padding: 20px;">
-                <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Logo" style="height: 40px;">
-            </div>
-            <div style="padding: 0 12px;">
-                <div class="d-nav-item" onclick="window.location.href='index.html'">Dashboard</div>
-                <div class="d-nav-item" onclick="window.location.href='manage-products.html'">Inventory</div>
-                <div class="d-nav-item d-nav-item--active">Customize Site</div>
-                <div class="d-submenu">
-                    <div class="d-submenu-item" onclick="window.location.href='hero-section.html'">Hero Section</div>
-                    <div class="d-submenu-item active">Sections</div>
-                    <div class="d-submenu-item" onclick="window.location.href='popup-manager.html'">Popup Manager</div>
-                </div>
-            </div>
-        </aside>
+        <header class="d-topbar">
+            <img class="d-topbar-logo"
+                 src="https://product-ecommerces.netlify.app/vastramaya.png"
+                 alt="Vastramaya Logo" />
+        </header>
 
-        <main class="d-content">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-                <h1 style="font-size: 24px; font-weight: 700;">Sections Manager</h1>
-                <div style="display: flex; gap: 12px;">
-                    <button class="btn btn-secondary" onclick="resetChanges()">Reset</button>
-                    <button class="btn btn-primary" onclick="saveSections()">Save Changes</button>
-                </div>
-            </div>
+        <div class="d-app">
+            <aside class="d-sidebar">
+                <div class="d-sidebar-inner">
+                    <nav class="d-nav">
+                        <div class="d-nav-group">
+                            <!-- Dashboard -->
+                            <div class="d-nav-item" onclick="window.location.href='index.html'">
+                                <span class="icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="7" height="7" x="3" y="3" rx="1"/>
+                                        <rect width="7" height="7" x="14" y="3" rx="1"/>
+                                        <rect width="7" height="7" x="14" y="14" rx="1"/>
+                                        <rect width="7" height="7" x="3" y="14" rx="1"/>
+                                    </svg>
+                                </span>
+                                <span class="label">Dashboard</span>
+                            </div>
 
-            <div class="sections-manager-card">
-                
-                <!-- Best Sellers -->
-                <div style="margin-bottom: 40px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                        <h3 style="font-size: 18px; font-weight: 600;">Best Sellers Products</h3>
-                        <button class="btn btn-primary" onclick="openProductSelector()">+ Add Products</button>
-                    </div>
-                    
-                    <div id="selected-products-list" class="draggable-list">
-                        <!-- Populated by JS -->
-                        <div style="text-align: center; padding: 40px; background: #f9fafb; border-radius: 8px; color: #6b7280;">
-                            Loading selected products...
+                            <!-- Inventory -->
+                            <div class="d-nav-item" onclick="window.location.href='manage-products.html'">
+                                <span class="icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M2 7v10"/>
+                                        <path d="M6 5v14"/>
+                                        <rect width="12" height="18" x="10" y="3" rx="2"/>
+                                    </svg>
+                                </span>
+                                <span class="label">Inventory</span>
+                            </div>
+
+                            <!-- Customize Site (Active) -->
+                            <div class="d-nav-item d-nav-item--active" id="d-customize-toggle">
+                                <span class="icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12.034 12.681a.498.498 0 0 1 .647-.647l9 3.5a.5.5 0 0 1-.033.943l-3.444 1.068a1 1 0 0 0-.66.66l-1.067 3.443a.5.5 0 0 1-.943.033z"/>
+                                        <path d="M21 11V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6"/>
+                                    </svg>
+                                </span>
+                                <span class="label">Customize Site</span>
+                                <span class="chevron">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2"
+                                         stroke-linecap="round" stroke-linejoin="round"
+                                         class="chevron-icon">
+                                        <path d="m9 18 6-6-6-6"/>
+                                    </svg>
+                                </span>
+                            </div>
+
+                            <!-- Desktop Customize Site submenu -->
+                            <div class="d-submenu open" id="d-customize-submenu">
+                                <div class="d-submenu-item" onclick="window.location.href='hero-section.html'">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
+                                        <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
+                                        <path d="M4 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/>
+                                        <path d="M9.5 12.5 11 14"/>
+                                        <path d="M14 10l-3.5 4"/>
+                                        <path d="m5 15 4.5-4"/>
+                                    </svg>
+                                    <span>Theme & Layout</span>
+                                </div>
+                                <div class="d-submenu-item active">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="18" height="18" x="3" y="3" rx="2"/>
+                                        <path d="M3 9h18"/>
+                                        <path d="M9 21V9"/>
+                                    </svg>
+                                    <span>Sections Manager</span>
+                                </div>
+                                <div class="d-submenu-item" onclick="window.location.href='popup-manager.html'">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="18" cy="5" r="3"/>
+                                        <circle cx="6" cy="12" r="3"/>
+                                        <circle cx="18" cy="19" r="3"/>
+                                        <line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/>
+                                        <line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/>
+                                    </svg>
+                                    <span>Popup Manager</span>
+                                </div>
+                            </div>
+
+                            <!-- MANAGE ORDERS -->
+                            <div class="d-nav-item" id="d-orders-toggle">
+                                <span class="icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
+                                        <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
+                                        <path d="M8 14v2.2l1.6 1"/>
+                                        <circle cx="8" cy="16" r="6"/>
+                                    </svg>
+                                </span>
+                                <span class="label">MANAGE ORDERS</span>
+                                <span class="chevron">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2"
+                                         stroke-linecap="round" stroke-linejoin="round"
+                                         class="chevron-icon">
+                                        <path d="m9 18 6-6-6-6"/>
+                                    </svg>
+                                </span>
+                            </div>
+
+                            <!-- Desktop MANAGE ORDERS submenu -->
+                            <div class="d-submenu" id="d-orders-submenu">
+                                <div class="d-submenu-item">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 6v6l4 2"/>
+                                        <path d="M22 12a10 10 0 1 0-11 9.95"/>
+                                        <path d="m22 16-5.5 5.5L14 19"/>
+                                    </svg>
+                                    <span>Today</span>
+                                </div>
+                                <div class="d-submenu-item">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M8 2v4"/>
+                                        <path d="M16 2v4"/>
+                                        <rect width="18" height="18" x="3" y="4" rx="2"/>
+                                        <path d="M3 10h18"/>
+                                        <path d="M8 14h.01"/>
+                                        <path d="M12 14h.01"/>
+                                        <path d="M16 14h.01"/>
+                                        <path d="M8 18h.01"/>
+                                        <path d="M12 18h.01"/>
+                                        <path d="M16 18h.01"/>
+                                    </svg>
+                                    <span>This Month</span>
+                                </div>
+                                <div class="d-submenu-item">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 2v2"/>
+                                        <path d="M15.726 21.01A2 2 0 0 1 14 22H4a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2"/>
+                                        <path d="M18 2v2"/>
+                                        <path d="M2 13h2"/>
+                                        <path d="M8 8h14"/>
+                                        <rect x="8" y="3" width="14" height="14" rx="2"/>
+                                    </svg>
+                                    <span>All Orders</span>
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
+
+                    <!-- Desktop Account section -->
+                    <div class="d-account-section" id="profile-section">
+                        <div class="account-card">
+                            <img id="sidebar-avatar" class="account-avatar"
+                                 src="https://bpb-us-w2.wpmucdn.com/wp.wpi.edu/dist/e/505/files/2024/06/unknown-person-icon-3.png"
+                                 alt="Profile" />
+                            <div class="account-text">
+                                <div class="account-name" id="sidebar-name">Admin User</div>
+                                <div class="account-email" id="sidebar-email">admin@example.com</div>
+                            </div>
                         </div>
                     </div>
                 </div>
+            </aside>
 
-                <!-- Categories Sorting -->
-                <div>
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                        <div>
-                            <h3 style="font-size: 18px; font-weight: 600;">Categories Order</h3>
-                            <p style="font-size: 13px; color: #6b7280;">Drag to rearrange display order</p>
+            <main class="d-content">
+                <div class="content-inner">
+                    <!-- PAGE HEADER -->
+                    <div class="page-header">
+                        <div class="page-title-wrap">
+                            <div class="page-title">Sections Manager</div>
+                            <div class="breadcrumb">
+                                <span class="breadcrumb-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2"
+                                         stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/>
+                                        <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                                    </svg>
+                                </span>
+                                <span>Home</span>
+                                <span class="breadcrumb-divider">/</span>
+                                <span>Customize Site</span>
+                                <span class="breadcrumb-divider">/</span>
+                                <span>Sections Manager</span>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 12px;">
+                            <button class="btn btn-secondary" onclick="resetChanges()">
+                                Reset
+                            </button>
+                            <button class="btn btn-primary" onclick="saveSections()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                                    <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                                    <polyline points="7 3 7 8 15 8"></polyline>
+                                </svg>
+                                Save Changes
+                            </button>
                         </div>
                     </div>
-                    <div id="categories-list" class="draggable-list">
-                        <!-- Populated by JS -->
-                        <div style="text-align: center; padding: 40px; background: #f9fafb; border-radius: 8px; color: #6b7280;">
-                            Loading categories...
+
+                    <!-- Best Sellers Section -->
+                    <div class="premium-card">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">Best Sellers Products</div>
+                                <div class="card-subtitle">Drag to reorder best-selling products</div>
+                            </div>
+                            <button class="btn btn-primary" onclick="openProductSelector()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M5 12h14"/>
+                                    <path d="M12 5v14"/>
+                                </svg>
+                                Add Products
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div id="selected-products-list" class="draggable-list">
+                                <!-- Products will be loaded here -->
+                                <div class="empty-state">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 12px;">
+                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                        <line x1="3" y1="9" x2="21" y2="9"></line>
+                                        <line x1="9" y1="21" x2="9" y2="9"></line>
+                                    </svg>
+                                    <h3 style="margin-bottom: 8px; color: #374151;">No Products Selected</h3>
+                                    <p>Click "Add Products" to select best-selling products</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Categories Order Section -->
+                    <div class="premium-card">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">Categories Order</div>
+                                <div class="card-subtitle">Drag to rearrange display order, toggle to show/hide</div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div id="categories-list" class="draggable-list">
+                                <!-- Categories will be loaded here -->
+                                <div class="empty-state">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 12px;">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                                    </svg>
+                                    <h3 style="margin-bottom: 8px; color: #374151;">Loading Categories</h3>
+                                    <p>Please wait while we load your categories...</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </main>
+            </main>
+        </div>
     </div>
 
     <!-- ================= MOBILE VIEW ================= -->
     <div class="page-mobile">
+        <!-- Mobile header: menu left, logo right -->
         <header class="m-header">
-            <div onclick="document.getElementById('m-overlay').classList.add('open')" style="padding: 10px;">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-            </div>
-            <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Logo" style="height: 32px;">
-            <div style="width: 44px;"></div> <!-- Spacer -->
-        </header>
+            <button class="m-menu-btn" id="m-menu-toggle" aria-label="Open menu">
+                <div class="m-menu-lines"><span></span></div>
+            </button>
 
-        <div class="m-overlay" id="m-overlay" onclick="if(event.target===this) this.classList.remove('open')">
-            <div class="m-drawer">
-                <div style="padding: 20px; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between;">
-                    <span style="font-weight: 700;">Menu</span>
-                    <span onclick="document.getElementById('m-overlay').classList.remove('open')">✕</span>
-                </div>
-                <div style="padding: 10px;">
-                    <div class="d-nav-item" onclick="window.location.href='index.html'">Dashboard</div>
-                    <div class="d-nav-item" onclick="window.location.href='manage-products.html'">Inventory</div>
-                    <div class="d-nav-item d-nav-item--active">Sections Manager</div>
-                </div>
-            </div>
-        </div>
+            <img
+              class="m-logo"
+              src="https://product-ecommerces.netlify.app/vastramaya.png"
+              alt="Vastramaya Logo" />
+        </header>
 
         <main class="m-main">
             <div class="m-card">
-                <h3 style="margin-bottom: 15px;">Best Sellers</h3>
-                <div id="mobile-selected-products" class="draggable-list"></div>
-                <button class="btn btn-secondary" style="width: 100%; margin-top: 15px;" onclick="openProductSelector()">Edit Selection</button>
+                <div class="m-card-title">Best Sellers</div>
+                <div class="m-card-subtitle">Drag to reorder best-selling products</div>
+                <div id="mobile-selected-products" class="draggable-list">
+                    <!-- Products will be loaded here -->
+                </div>
+                <button class="btn btn-secondary" style="width: 100%; margin-top: 16px;" onclick="openProductSelector()">
+                    Edit Selection
+                </button>
             </div>
 
             <div class="m-card">
-                <h3 style="margin-bottom: 15px;">Categories Order</h3>
-                <p style="font-size:12px; color:#6b7280; margin-bottom:10px;">Long press & drag to reorder</p>
-                <div id="mobile-categories-list" class="draggable-list"></div>
+                <div class="m-card-title">Categories Order</div>
+                <div class="m-card-subtitle">Long press & drag to reorder</div>
+                <div id="mobile-categories-list" class="draggable-list">
+                    <!-- Categories will be loaded here -->
+                </div>
             </div>
 
-            <button class="btn btn-primary" style="width: 100%; position: fixed; bottom: 0; left: 0; border-radius: 0; padding: 15px; z-index: 90;" onclick="saveSections()">Save All Changes</button>
+            <button class="btn btn-primary" style="width: calc(100% - 32px); position: fixed; bottom: 20px; left: 16px; padding: 15px; z-index: 90;" onclick="saveSections()">
+                Save All Changes
+            </button>
         </main>
+
+        <!-- Overlay & drawer -->
+        <div class="m-overlay" id="m-overlay">
+            <div class="m-drawer">
+                <div class="m-drawer-header">
+                    <img
+                      class="m-drawer-logo"
+                      src="https://product-ecommerces.netlify.app/vastramaya.png"
+                      alt="Vastramaya Logo" />
+                    <button class="m-drawer-close" id="m-drawer-close" aria-label="Close menu">
+                        <div class="m-drawer-close-icon"></div>
+                    </button>
+                </div>
+
+                <nav class="m-drawer-nav">
+                    <!-- Dashboard -->
+                    <div class="m-nav-item" onclick="window.location.href='index.html'">
+                        <span class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect width="7" height="7" x="3" y="3" rx="1"/>
+                                <rect width="7" height="7" x="14" y="3" rx="1"/>
+                                <rect width="7" height="7" x="14" y="14" rx="1"/>
+                                <rect width="7" height="7" x="3" y="14" rx="1"/>
+                            </svg>
+                        </span>
+                        <span class="label">Dashboard</span>
+                    </div>
+
+                    <!-- Inventory -->
+                    <div class="m-nav-item" onclick="window.location.href='manage-products.html'">
+                        <span class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M2 7v10"/>
+                                <path d="M6 5v14"/>
+                                <rect width="12" height="18" x="10" y="3" rx="2"/>
+                            </svg>
+                        </span>
+                        <span class="label">Inventory</span>
+                    </div>
+
+                    <!-- Customize Site with dropdown -->
+                    <div class="m-nav-item active" id="m-customize-toggle">
+                        <span class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12.034 12.681a.498.498 0 0 1 .647-.647l9 3.5a.5.5 0 0 1-.033.943l-3.444 1.068a1 1 0 0 0-.66.66l-1.067 3.443a.5.5 0 0 1-.943.033z"/>
+                                <path d="M21 11V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6"/>
+                            </svg>
+                        </span>
+                        <span class="label">Customize Site</span>
+                        <span class="chevron">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round"
+                                 class="chevron-icon">
+                                <path d="m9 18 6-6-6-6"/>
+                            </svg>
+                        </span>
+                    </div>
+
+                    <!-- Mobile Customize Site submenu -->
+                    <div class="m-submenu open" id="m-customize-submenu">
+                        <div class="m-submenu-item" onclick="window.location.href='hero-section.html'">
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
+                                <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
+                                <path d="M4 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/>
+                                <path d="M9.5 12.5 11 14"/>
+                                <path d="M14 10l-3.5 4"/>
+                                <path d="m5 15 4.5-4"/>
+                            </svg>
+                            <span>Theme & Layout</span>
+                        </div>
+                        <div class="m-submenu-item active">
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect width="18" height="18" x="3" y="3" rx="2"/>
+                                <path d="M3 9h18"/>
+                                <path d="M9 21V9"/>
+                            </svg>
+                            <span>Sections Manager</span>
+                        </div>
+                        <div class="m-submenu-item" onclick="window.location.href='popup-manager.html'">
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="18" cy="5" r="3"/>
+                                <circle cx="6" cy="12" r="3"/>
+                                <circle cx="18" cy="19" r="3"/>
+                                <line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/>
+                                <line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/>
+                            </svg>
+                            <span>Popup Manager</span>
+                        </div>
+                    </div>
+
+                    <!-- MANAGE ORDERS with dropdown -->
+                    <div class="m-nav-item" id="m-orders-toggle">
+                        <span class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
+                                <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
+                                <path d="M8 14v2.2l1.6 1"/>
+                                <circle cx="8" cy="16" r="6"/>
+                            </svg>
+                        </span>
+                        <span class="label">MANAGE ORDERS</span>
+                        <span class="chevron">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round"
+                                 class="chevron-icon">
+                                <path d="m9 18 6-6-6-6"/>
+                            </svg>
+                        </span>
+                    </div>
+
+                    <!-- Mobile MANAGE ORDERS submenu -->
+                    <div class="m-submenu" id="m-orders-submenu">
+                        <div class="m-submenu-item">
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 6v6l4 2"/>
+                                <path d="M22 12a10 10 0 1 0-11 9.95"/>
+                                <path d="m22 16-5.5 5.5L14 19"/>
+                            </svg>
+                            <span>Today</span>
+                        </div>
+                        <div class="m-submenu-item">
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M8 2v4"/>
+                                <path d="M16 2v4"/>
+                                <rect width="18" height="18" x="3" y="4" rx="2"/>
+                                <path d="M3 10h18"/>
+                                <path d="M8 14h.01"/>
+                                <path d="M12 14h.01"/>
+                                <path d="M16 14h.01"/>
+                                <path d="M8 18h.01"/>
+                                <path d="M12 18h.01"/>
+                                <path d="M16 18h.01"/>
+                            </svg>
+                            <span>This Month</span>
+                        </div>
+                        <div class="m-submenu-item">
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2v2"/>
+                                <path d="M15.726 21.01A2 2 0 0 1 14 22H4a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2"/>
+                                <path d="M18 2v2"/>
+                                <path d="M2 13h2"/>
+                                <path d="M8 8h14"/>
+                                <rect x="8" y="3" width="14" height="14" rx="2"/>
+                            </svg>
+                            <span>All Orders</span>
+                        </div>
+                    </div>
+                </nav>
+
+                <!-- Mobile account sharing -->
+                <div class="m-account-section" id="mobile-profile-section">
+                    <div class="account-card">
+                        <img id="mobile-sidebar-avatar" class="account-avatar"
+                             src="https://bpb-us-w2.wpmucdn.com/wp.wpi.edu/dist/e/505/files/2024/06/unknown-person-icon-3.png"
+                             alt="Profile" />
+                        <div class="account-text">
+                            <div class="account-name" id="mobile-sidebar-name">Admin User</div>
+                            <div class="account-email" id="mobile-sidebar-email">admin@example.com</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- ============= MODAL: PRODUCT SELECTOR ============= -->
     <div class="modal-overlay" id="product-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <span>Select Best Sellers</span>
-                <button class="action-btn" onclick="closeProductSelector()">✕</button>
+                <div class="modal-title">Select Best Sellers</div>
+                <button class="btn-icon" onclick="closeProductSelector()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 6 6 18"/>
+                        <path d="m6 6 12 12"/>
+                    </svg>
+                </button>
             </div>
             <div class="modal-body">
-                <input type="text" id="modal-search" placeholder="Search products..." style="width: 100%; padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 20px;" onkeyup="filterModalProducts()">
+                <div class="search-input-wrap">
+                    <svg class="search-icon" xmlns="http://www.w3.org/2000/svg"
+                         viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="7"></circle>
+                        <line x1="16.65" y1="16.65" x2="21" y2="21"></line>
+                    </svg>
+                    <input type="text" id="modal-search" placeholder="Search products..." onkeyup="filterModalProducts()">
+                </div>
                 <div id="modal-product-grid" class="product-grid">
-                    <!-- Loaded dynamically -->
+                    <!-- Products loaded dynamically -->
                 </div>
             </div>
             <div class="modal-footer">
@@ -241,7 +1653,7 @@
         </div>
     </div>
 
-    <div id="toast"></div>
+    <div id="toast-container"></div>
 
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -274,6 +1686,84 @@
             categories: []
         };
 
+        // --- UI INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Mobile drawer behaviour
+            const mOverlay = document.getElementById('m-overlay');
+            const mMenuToggle = document.getElementById('m-menu-toggle');
+            const mDrawerClose = document.getElementById('m-drawer-close');
+
+            if (mMenuToggle && mOverlay && mDrawerClose) {
+                mMenuToggle.addEventListener('click', () => {
+                    mOverlay.classList.add('open');
+                });
+
+                mDrawerClose.addEventListener('click', () => {
+                    mOverlay.classList.remove('open');
+                });
+
+                mOverlay.addEventListener('click', (e) => {
+                    if (e.target === mOverlay) {
+                        mOverlay.classList.remove('open');
+                    }
+                });
+            }
+
+            // Desktop dropdowns
+            const dCustomizeToggle = document.getElementById('d-customize-toggle');
+            const dCustomizeSubmenu = document.getElementById('d-customize-submenu');
+            const dOrdersToggle = document.getElementById('d-orders-toggle');
+            const dOrdersSubmenu = document.getElementById('d-orders-submenu');
+
+            if (dCustomizeToggle && dCustomizeSubmenu) {
+                dCustomizeToggle.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    dCustomizeSubmenu.classList.toggle('open');
+                    dCustomizeToggle.classList.toggle('dropdown-open');
+                });
+            }
+
+            if (dOrdersToggle && dOrdersSubmenu) {
+                dOrdersToggle.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    dOrdersSubmenu.classList.toggle('open');
+                    dOrdersToggle.classList.toggle('dropdown-open');
+                });
+            }
+
+            // Mobile dropdowns
+            const mCustomizeToggle = document.getElementById('m-customize-toggle');
+            const mCustomizeSubmenu = document.getElementById('m-customize-submenu');
+            const mOrdersToggle = document.getElementById('m-orders-toggle');
+            const mOrdersSubmenu = document.getElementById('m-orders-submenu');
+
+            if (mCustomizeToggle && mCustomizeSubmenu) {
+                mCustomizeToggle.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    mCustomizeSubmenu.classList.toggle('open');
+                    mCustomizeToggle.classList.toggle('dropdown-open');
+                });
+            }
+
+            if (mOrdersToggle && mOrdersSubmenu) {
+                mOrdersToggle.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    mOrdersSubmenu.classList.toggle('open');
+                    mOrdersToggle.classList.toggle('dropdown-open');
+                });
+            }
+
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.d-nav-item') && !e.target.closest('.d-submenu')) {
+                    dCustomizeSubmenu?.classList.remove('open');
+                    dOrdersSubmenu?.classList.remove('open');
+                    dCustomizeToggle?.classList.remove('dropdown-open');
+                    dOrdersToggle?.classList.remove('dropdown-open');
+                }
+            });
+        });
+
         // --- AUTH & INIT ---
         auth.onAuthStateChanged(user => {
             if (user && user.email === ADMIN_EMAIL) {
@@ -285,7 +1775,7 @@
 
         // --- LOAD DATA ---
         async function loadData() {
-            showToast('Loading data...');
+            showToast('Loading data...', 'success');
             try {
                 // 1. Fetch Products
                 const prodsSnap = await db.collection('products').get();
@@ -314,21 +1804,27 @@
                         };
                     }).sort((a, b) => a.order - b.order);
                 } else {
-                    state.categories = dbCategories.map((c, i) => ({ ...c, enabled: true, order: i + 1 }));
+                    state.categories = dbCategories.map((c, i) => ({ 
+                        id: c.id, 
+                        name: c.name, 
+                        enabled: true, 
+                        order: i + 1 
+                    }));
                 }
 
                 renderAll();
+                showToast('Data loaded successfully!', 'success');
             } catch (error) {
                 console.error("Error:", error);
-                showToast("Failed to load data", true);
+                showToast("Failed to load data", 'error');
             }
         }
 
         function renderAll() {
             renderSelectedProducts('selected-products-list');
-            renderSelectedProducts('mobile-selected-products'); // Mobile specific
+            renderSelectedProducts('mobile-selected-products');
             renderCategories('categories-list');
-            renderCategories('mobile-categories-list'); // Mobile specific
+            renderCategories('mobile-categories-list');
         }
 
         // --- RENDER PRODUCTS LIST ---
@@ -341,19 +1837,42 @@
                 .filter(p => p);
 
             if (selectedObjs.length === 0) {
-                container.innerHTML = `<div style="text-align:center; padding:20px; background:#f9fafb; border-radius:8px;">No products selected.</div>`;
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 12px;">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="3" y1="9" x2="21" y2="9"></line>
+                            <line x1="9" y1="21" x2="9" y2="9"></line>
+                        </svg>
+                        <h3 style="margin-bottom: 8px; color: #374151;">No Products Selected</h3>
+                        <p>Click "Add Products" to select best-selling products</p>
+                    </div>`;
                 return;
             }
 
             container.innerHTML = selectedObjs.map((p, index) => `
-                <div class="list-item" draggable="true" data-index="${index}" data-type="product">
-                    <span class="drag-handle">☰</span>
-                    <img src="${p.image || p.images?.[0] || 'https://via.placeholder.com/40'}" style="width:40px; height:40px; object-fit:cover; border-radius:4px;">
-                    <div style="flex:1">
-                        <div style="font-weight:600">${p.name}</div>
-                        <div style="color:var(--brand-primary); font-size:12px;">₹${p.price}</div>
+                <div class="draggable-item" draggable="true" data-index="${index}" data-type="product">
+                    <div class="drag-handle">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="9" cy="5" r="1"></circle>
+                            <circle cx="9" cy="12" r="1"></circle>
+                            <circle cx="9" cy="19" r="1"></circle>
+                            <circle cx="15" cy="5" r="1"></circle>
+                            <circle cx="15" cy="12" r="1"></circle>
+                            <circle cx="15" cy="19" r="1"></circle>
+                        </svg>
                     </div>
-                    <button class="action-btn delete" onclick="removeProduct('${p.id}')">✕</button>
+                    <img src="${p.image || p.images?.[0] || 'https://via.placeholder.com/40'}" class="item-image">
+                    <div class="item-content">
+                        <div class="item-title">${p.name || 'Unnamed Product'}</div>
+                        <div class="item-subtitle">₹${p.price || '0'}</div>
+                    </div>
+                    <button class="btn-icon delete" onclick="removeProduct('${p.id}')" title="Remove">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 6 6 18"/>
+                            <path d="m6 6 12 12"/>
+                        </svg>
+                    </button>
                 </div>
             `).join('');
 
@@ -365,28 +1884,55 @@
             const container = document.getElementById(containerId);
             if (!container) return;
 
+            if (state.categories.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 12px;">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                        <h3 style="margin-bottom: 8px; color: #374151;">No Categories Found</h3>
+                        <p>Add categories from the Categories Manager</p>
+                    </div>`;
+                return;
+            }
+
             container.innerHTML = state.categories.map((cat, index) => `
-                <div class="list-item" draggable="true" data-index="${index}" data-type="category">
-                    <span class="drag-handle">☰</span>
-                    <div style="flex:1">
-                        <div style="font-weight:600">${cat.name}</div>
-                        <div style="font-size:12px; color:${cat.enabled ? '#10B981' : '#9CA3AF'}">${cat.enabled ? 'Visible' : 'Hidden'}</div>
+                <div class="draggable-item" draggable="true" data-index="${index}" data-type="category">
+                    <div class="drag-handle">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="9" cy="5" r="1"></circle>
+                            <circle cx="9" cy="12" r="1"></circle>
+                            <circle cx="9" cy="19" r="1"></circle>
+                            <circle cx="15" cy="5" r="1"></circle>
+                            <circle cx="15" cy="12" r="1"></circle>
+                            <circle cx="15" cy="19" r="1"></circle>
+                        </svg>
                     </div>
-                    <div class="toggle-switch ${cat.enabled ? 'active' : ''}" onclick="toggleCategory('${cat.id}')"></div>
+                    <div class="item-content">
+                        <div class="item-title">${cat.name}</div>
+                        <div class="item-subtitle" style="color: ${cat.enabled ? '#10B981' : '#9CA3AF'}">
+                            ${cat.enabled ? 'Visible' : 'Hidden'}
+                        </div>
+                    </div>
+                    <div class="toggle-switch">
+                        <input type="checkbox" ${cat.enabled ? 'checked' : ''} onchange="toggleCategory('${cat.id}')">
+                        <span class="toggle-slider"></span>
+                    </div>
                 </div>
             `).join('');
 
             attachDragEvents(container, 'category');
         }
 
-        // --- DRAG & DROP LOGIC (FIXED) ---
+        // --- DRAG & DROP LOGIC ---
         function attachDragEvents(container, type) {
-            const items = container.querySelectorAll('.list-item');
+            const items = container.querySelectorAll('.draggable-item');
             
             items.forEach(item => {
                 item.addEventListener('dragstart', (e) => {
                     item.classList.add('dragging');
-                    // Store source index
                     e.dataTransfer.setData('text/plain', item.dataset.index);
                     e.dataTransfer.effectAllowed = 'move';
                 });
@@ -396,7 +1942,7 @@
                 });
 
                 item.addEventListener('dragover', (e) => {
-                    e.preventDefault(); // Necessary to allow dropping
+                    e.preventDefault();
                     e.dataTransfer.dropEffect = 'move';
                 });
 
@@ -404,8 +1950,7 @@
                     e.preventDefault();
                     const sourceIndex = parseInt(e.dataTransfer.getData('text/plain'));
                     
-                    // Identify target row reliably
-                    const targetRow = e.target.closest('.list-item');
+                    const targetRow = e.target.closest('.draggable-item');
                     if (!targetRow) return;
                     
                     const targetIndex = parseInt(targetRow.dataset.index);
@@ -447,7 +1992,9 @@
         }
 
         function resetChanges() {
-            if(confirm("Discard changes?")) loadData();
+            if(confirm("Discard all changes and reload from server?")) {
+                loadData();
+            }
         }
 
         // --- MODAL LOGIC ---
@@ -468,22 +2015,38 @@
             const searchVal = document.getElementById('modal-search').value.toLowerCase();
             const grid = document.getElementById('modal-product-grid');
             
-            grid.innerHTML = state.allProducts
-                .filter(p => p.name.toLowerCase().includes(searchVal))
-                .map(p => {
-                    const isSelected = tempSelectedIds.includes(p.id);
-                    const img = p.image || p.images?.[0] || 'https://via.placeholder.com/150';
-                    return `
-                    <div class="product-card ${isSelected ? 'selected' : ''}" onclick="toggleTempProduct('${p.id}')">
-                        <div class="product-select-checkbox ${isSelected ? 'checked' : ''}"></div>
-                        <img src="${img}" class="product-image">
-                        <div class="product-content">
-                            <div class="product-title">${p.name}</div>
-                            <div style="color:#6b7280; font-size:12px;">₹${p.price}</div>
-                        </div>
+            const filteredProducts = state.allProducts.filter(p => 
+                (p.name || '').toLowerCase().includes(searchVal) ||
+                (p.description || '').toLowerCase().includes(searchVal)
+            );
+
+            if (filteredProducts.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1/-1;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 12px;">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <h3 style="margin-bottom: 8px; color: #374151;">No Products Found</h3>
+                        <p>Try a different search term</p>
+                    </div>`;
+                return;
+            }
+
+            grid.innerHTML = filteredProducts.map(p => {
+                const isSelected = tempSelectedIds.includes(p.id);
+                const img = p.image || p.images?.[0] || 'https://via.placeholder.com/150x120?text=No+Image';
+                return `
+                <div class="product-card ${isSelected ? 'selected' : ''}" onclick="toggleTempProduct('${p.id}')">
+                    <div class="product-select-checkbox ${isSelected ? 'checked' : ''}"></div>
+                    <img src="${img}" class="product-image">
+                    <div class="product-content">
+                        <div class="product-title">${p.name || 'Unnamed Product'}</div>
+                        <div class="product-price">₹${p.price || '0'}</div>
                     </div>
-                    `;
-                }).join('');
+                </div>
+                `;
+            }).join('');
         }
 
         function toggleTempProduct(id) {
@@ -496,19 +2059,25 @@
             updateModalCount();
         }
 
-        function filterModalProducts() { renderModalGrid(); }
-        function updateModalCount() { document.getElementById('modal-selected-count').innerText = tempSelectedIds.length; }
+        function filterModalProducts() { 
+            renderModalGrid(); 
+        }
+        
+        function updateModalCount() { 
+            document.getElementById('modal-selected-count').innerText = tempSelectedIds.length; 
+        }
 
         function confirmProductSelection() {
             state.selectedProductIds = [...tempSelectedIds];
             renderSelectedProducts('selected-products-list');
             renderSelectedProducts('mobile-selected-products');
             closeProductSelector();
+            showToast('Product selection updated!', 'success');
         }
 
         // --- SAVING ---
         async function saveSections() {
-            const btn = document.querySelector('.page-desktop .btn-primary') || document.querySelector('.page-mobile .btn-primary'); // grab either
+            const btn = document.querySelector('.page-desktop .btn-primary') || document.querySelector('.page-mobile .btn-primary');
             const originalText = btn.innerText;
             btn.innerText = "Saving...";
             btn.disabled = true;
@@ -527,23 +2096,29 @@
                 };
 
                 await db.collection('landingPage').doc('Sections').set(payload, { merge: true });
-                showToast("Changes saved successfully!");
+                showToast("Changes saved successfully!", 'success');
             } catch (error) {
                 console.error("Save error:", error);
-                showToast("Error saving changes", true);
+                showToast("Error saving changes", 'error');
             } finally {
                 btn.innerText = originalText;
                 btn.disabled = false;
             }
         }
 
-        function showToast(msg, isError = false) {
-            const toast = document.createElement('div');
-            toast.className = 'toast-msg';
-            if (isError) toast.style.borderLeftColor = 'var(--danger-color)';
-            toast.innerText = msg;
-            document.getElementById('toast').appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+        function showToast(msg, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const el = document.createElement('div');
+            el.className = `toast ${type}`;
+            el.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    ${type === 'success' ? 
+                        '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>' : 
+                        '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>'}
+                </svg>
+                <span>${msg}</span>`;
+            container.appendChild(el);
+            setTimeout(() => el.remove(), 3000);
         }
     </script>
 </body>
