@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sections Manager - Vastramaya</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --header-height-desktop: 70px;
+            --sidebar-width: 260px;
+            --page-bg: #f4f5f7;
+            --text-color: rgb(24, 24, 26);
+            --icon-color: #6b7280;
+            --icon-active: #5127ba;
+            --active-bg: #f3f4f6;
+            --hover-bg: #f3f4f6;
+            --border-subtle: #e5e7eb;
+            --brand-primary: #5127ba;
+            --brand-gradient: linear-gradient(135deg, #5127ba 0%, #673de6 100%);
+            --danger-color: #ef4444;
+            --success-color: #10B981;
+            --switch-on: #5127ba;
+            --switch-off: #9CA3AF;
+            --shadow-premium: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { min-height: 100vh; background: var(--page-bg); font-family: "DM Sans", sans-serif; font-size: 14px; color: var(--text-color); overflow-x: hidden; }
+
+        /* LAYOUT */
+        .page-desktop { display: flex; flex-direction: column; min-height: 100vh; }
+        .d-topbar { height: var(--header-height-desktop); background: white; border-bottom: 1px solid var(--border-subtle); display: flex; align-items: center; padding-left: 40px; position: fixed; top: 0; width: 100%; z-index: 100; }
+        .d-app { display: flex; margin-top: var(--header-height-desktop); height: calc(100vh - var(--header-height-desktop)); }
+        .d-sidebar { width: var(--sidebar-width); background: white; border-right: 1px solid var(--border-subtle); height: 100%; overflow-y: auto; position: fixed; }
+        .d-content { margin-left: var(--sidebar-width); flex: 1; padding: 24px; overflow-y: auto; }
+        
+        /* NAV */
+        .d-nav-item { display: flex; align-items: center; gap: 12px; padding: 12px; margin: 4px 12px; border-radius: 8px; cursor: pointer; color: var(--text-color); font-weight: 500; }
+        .d-nav-item:hover { background: var(--hover-bg); }
+        .d-nav-item--active { background: var(--active-bg); color: var(--brand-primary); }
+        .d-nav-item--active svg { stroke: var(--icon-active); }
+        .d-submenu { margin-left: 28px; padding-left: 12px; border-left: 1px solid var(--border-subtle); }
+        .d-submenu-item { padding: 10px 12px; display: flex; gap: 10px; align-items: center; cursor: pointer; border-radius: 6px; font-weight: 500; }
+        .d-submenu-item:hover { background: var(--hover-bg); }
+        .d-submenu-item.active { background: var(--active-bg); color: var(--brand-primary); }
+        
+        /* CARD */
+        .sections-manager-card { background: white; border-radius: 12px; border: 1px solid var(--border-subtle); padding: 32px; box-shadow: var(--shadow-premium); }
+        .toggle-switch { width: 44px; height: 24px; background: var(--switch-off); border-radius: 20px; position: relative; cursor: pointer; transition: 0.3s; flex-shrink: 0; }
+        .toggle-switch.active { background: var(--switch-on); }
+        .toggle-switch::after { content: ''; position: absolute; width: 20px; height: 20px; background: white; border-radius: 50%; top: 2px; left: 2px; transition: 0.3s; }
+        .toggle-switch.active::after { transform: translateX(20px); }
+
+        /* PRODUCT GRID */
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-top: 16px; }
+        .product-card { border: 1px solid var(--border-subtle); border-radius: 8px; overflow: hidden; cursor: pointer; position: relative; transition: 0.2s; }
+        .product-card:hover { border-color: var(--brand-primary); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .product-card.selected { border: 2px solid var(--brand-primary); }
+        .product-image { width: 100%; height: 150px; object-fit: cover; }
+        .product-content { padding: 12px; }
+        .product-title { font-weight: 600; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .product-select-checkbox { position: absolute; top: 8px; right: 8px; width: 20px; height: 20px; background: white; border: 2px solid var(--border-subtle); border-radius: 4px; display: flex; align-items: center; justify-content: center; }
+        .product-select-checkbox.checked { background: var(--brand-primary); border-color: var(--brand-primary); color: white; }
+        .product-select-checkbox.checked::after { content: '✓'; font-size: 12px; font-weight: bold; }
+
+        /* LIST ITEMS (DRAGGABLE) */
+        .draggable-list { display: flex; flex-direction: column; gap: 8px; }
+        .list-item { display: flex; align-items: center; gap: 12px; padding: 12px; background: white; border: 1px solid var(--border-subtle); border-radius: 8px; cursor: grab; transition: background 0.2s; user-select: none; }
+        .list-item:hover { border-color: #d1d5db; }
+        .list-item.dragging { opacity: 0.5; background: #f3f4f6; border: 1px dashed var(--brand-primary); }
+        .drag-handle { color: #9ca3af; cursor: grab; font-size: 18px; padding: 4px; }
+        .list-item:active { cursor: grabbing; }
+        
+        .action-btn { width: 32px; height: 32px; border: 1px solid var(--border-subtle); border-radius: 6px; background: white; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #6b7280; }
+        .action-btn:hover { background: #f9fafb; color: var(--text-color); }
+        .action-btn.delete:hover { color: var(--danger-color); border-color: #fecaca; background: #fef2f2; }
+
+        /* MODAL */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 2000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+        .modal-content { background: white; width: 90%; max-width: 800px; border-radius: 12px; display: flex; flex-direction: column; max-height: 85vh; }
+        .modal-header { padding: 16px 24px; border-bottom: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 18px; }
+        .modal-body { padding: 24px; overflow-y: auto; }
+        .modal-footer { padding: 16px 24px; border-top: 1px solid var(--border-subtle); display: flex; justify-content: flex-end; gap: 12px; }
+
+        /* BUTTONS */
+        .btn { padding: 10px 20px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; }
+        .btn-primary { background: var(--brand-gradient); color: white; }
+        .btn-secondary { background: white; border: 1px solid var(--border-subtle); color: var(--text-color); }
+        
+        /* TOAST */
+        #toast { position: fixed; bottom: 20px; right: 20px; z-index: 3000; display: flex; flex-direction: column; gap: 10px; }
+        .toast-msg { background: white; padding: 12px 20px; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); border-left: 4px solid var(--success-color); animation: slideIn 0.3s ease; }
+        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+
+        /* MOBILE SPECIFIC */
+        @media (max-width: 768px) {
+            .page-desktop { display: none; }
+            .page-mobile { display: block; }
+            .m-header { height: 70px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; background: white; border-bottom: 1px solid var(--border-subtle); position: fixed; top: 0; width: 100%; z-index: 50; }
+            .m-main { margin-top: 70px; padding: 16px; padding-bottom: 100px; }
+            .m-card { background: white; border-radius: 12px; border: 1px solid var(--border-subtle); padding: 16px; margin-bottom: 16px; }
+            
+            /* Mobile Drawer */
+            .m-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; display: none; }
+            .m-overlay.open { display: block; }
+            .m-drawer { position: fixed; top: 0; left: 0; bottom: 0; width: 280px; background: white; transform: translateX(-100%); transition: 0.3s; z-index: 101; }
+            .m-overlay.open .m-drawer { transform: translateX(0); }
+        }
+        @media (min-width: 769px) { .page-mobile { display: none; } }
+    </style>
+</head>
+<body>
+
+    <!-- ================= DESKTOP VIEW ================= -->
+    <div class="page-desktop">
+        <aside class="d-sidebar">
+            <div style="padding: 20px;">
+                <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Logo" style="height: 40px;">
+            </div>
+            <div style="padding: 0 12px;">
+                <div class="d-nav-item" onclick="window.location.href='index.html'">Dashboard</div>
+                <div class="d-nav-item" onclick="window.location.href='manage-products.html'">Inventory</div>
+                <div class="d-nav-item d-nav-item--active">Customize Site</div>
+                <div class="d-submenu">
+                    <div class="d-submenu-item" onclick="window.location.href='hero-section.html'">Hero Section</div>
+                    <div class="d-submenu-item active">Sections</div>
+                    <div class="d-submenu-item" onclick="window.location.href='popup-manager.html'">Popup Manager</div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="d-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                <h1 style="font-size: 24px; font-weight: 700;">Sections Manager</h1>
+                <div style="display: flex; gap: 12px;">
+                    <button class="btn btn-secondary" onclick="resetChanges()">Reset</button>
+                    <button class="btn btn-primary" onclick="saveSections()">Save Changes</button>
+                </div>
+            </div>
+
+            <div class="sections-manager-card">
+                
+                <!-- Best Sellers -->
+                <div style="margin-bottom: 40px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3 style="font-size: 18px; font-weight: 600;">Best Sellers Products</h3>
+                        <button class="btn btn-primary" onclick="openProductSelector()">+ Add Products</button>
+                    </div>
+                    
+                    <div id="selected-products-list" class="draggable-list">
+                        <!-- Populated by JS -->
+                        <div style="text-align: center; padding: 40px; background: #f9fafb; border-radius: 8px; color: #6b7280;">
+                            Loading selected products...
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Categories Sorting -->
+                <div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <div>
+                            <h3 style="font-size: 18px; font-weight: 600;">Categories Order</h3>
+                            <p style="font-size: 13px; color: #6b7280;">Drag to rearrange display order</p>
+                        </div>
+                    </div>
+                    <div id="categories-list" class="draggable-list">
+                        <!-- Populated by JS -->
+                        <div style="text-align: center; padding: 40px; background: #f9fafb; border-radius: 8px; color: #6b7280;">
+                            Loading categories...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- ================= MOBILE VIEW ================= -->
+    <div class="page-mobile">
+        <header class="m-header">
+            <div onclick="document.getElementById('m-overlay').classList.add('open')" style="padding: 10px;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            </div>
+            <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Logo" style="height: 32px;">
+            <div style="width: 44px;"></div> <!-- Spacer -->
+        </header>
+
+        <div class="m-overlay" id="m-overlay" onclick="if(event.target===this) this.classList.remove('open')">
+            <div class="m-drawer">
+                <div style="padding: 20px; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between;">
+                    <span style="font-weight: 700;">Menu</span>
+                    <span onclick="document.getElementById('m-overlay').classList.remove('open')">✕</span>
+                </div>
+                <div style="padding: 10px;">
+                    <div class="d-nav-item" onclick="window.location.href='index.html'">Dashboard</div>
+                    <div class="d-nav-item" onclick="window.location.href='manage-products.html'">Inventory</div>
+                    <div class="d-nav-item d-nav-item--active">Sections Manager</div>
+                </div>
+            </div>
+        </div>
+
+        <main class="m-main">
+            <div class="m-card">
+                <h3 style="margin-bottom: 15px;">Best Sellers</h3>
+                <div id="mobile-selected-products" class="draggable-list"></div>
+                <button class="btn btn-secondary" style="width: 100%; margin-top: 15px;" onclick="openProductSelector()">Edit Selection</button>
+            </div>
+
+            <div class="m-card">
+                <h3 style="margin-bottom: 15px;">Categories Order</h3>
+                <p style="font-size:12px; color:#6b7280; margin-bottom:10px;">Long press & drag to reorder</p>
+                <div id="mobile-categories-list" class="draggable-list"></div>
+            </div>
+
+            <button class="btn btn-primary" style="width: 100%; position: fixed; bottom: 0; left: 0; border-radius: 0; padding: 15px; z-index: 90;" onclick="saveSections()">Save All Changes</button>
+        </main>
+    </div>
+
+    <!-- ============= MODAL: PRODUCT SELECTOR ============= -->
+    <div class="modal-overlay" id="product-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span>Select Best Sellers</span>
+                <button class="action-btn" onclick="closeProductSelector()">✕</button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="modal-search" placeholder="Search products..." style="width: 100%; padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 20px;" onkeyup="filterModalProducts()">
+                <div id="modal-product-grid" class="product-grid">
+                    <!-- Loaded dynamically -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div style="margin-right: auto; color: #6b7280; font-size: 13px;">
+                    <span id="modal-selected-count">0</span> selected
+                </div>
+                <button class="btn btn-secondary" onclick="closeProductSelector()">Cancel</button>
+                <button class="btn btn-primary" onclick="confirmProductSelection()">Apply Selection</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast"></div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+    <script>
+        // --- CONFIGURATION ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyCdeonH3VytC21F3X6x0rCVCn2xXrGPoug",
+            authDomain: "vastramaya---magic.firebaseapp.com",
+            projectId: "vastramaya---magic",
+            storageBucket: "vastramaya---magic.firebasestorage.app",
+            messagingSenderId: "543460072082",
+            appId: "1:543460072082:web:f3d1140e8f81ad338ae44b",
+            measurementId: "G-E39VNDCFVE"
+        };
+        const ADMIN_EMAIL = "harshavardhanjw@gmail.com";
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // --- STATE ---
+        let state = {
+            allProducts: [],
+            selectedProductIds: [],
+            categories: []
+        };
+
+        // --- AUTH & INIT ---
+        auth.onAuthStateChanged(user => {
+            if (user && user.email === ADMIN_EMAIL) {
+                loadData();
+            } else {
+                window.location.href = 'index.html';
+            }
+        });
+
+        // --- LOAD DATA ---
+        async function loadData() {
+            showToast('Loading data...');
+            try {
+                // 1. Fetch Products
+                const prodsSnap = await db.collection('products').get();
+                state.allProducts = prodsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+                // 2. Fetch DB Categories
+                const catsSnap = await db.collection('categories').get();
+                const dbCategories = catsSnap.docs.map(doc => ({ id: doc.id, name: doc.data().name }));
+
+                // 3. Fetch Saved Config
+                const configDoc = await db.collection('landingPage').doc('Sections').get();
+                
+                if (configDoc.exists) {
+                    const data = configDoc.data();
+                    state.selectedProductIds = data.bestSellers || [];
+                    
+                    // Merge saved order with current DB categories
+                    const savedCats = data.categories || [];
+                    state.categories = dbCategories.map(dbCat => {
+                        const saved = savedCats.find(sc => sc.id === dbCat.id);
+                        return {
+                            id: dbCat.id,
+                            name: dbCat.name,
+                            enabled: saved ? saved.enabled : true,
+                            order: saved ? saved.order : 999
+                        };
+                    }).sort((a, b) => a.order - b.order);
+                } else {
+                    state.categories = dbCategories.map((c, i) => ({ ...c, enabled: true, order: i + 1 }));
+                }
+
+                renderAll();
+            } catch (error) {
+                console.error("Error:", error);
+                showToast("Failed to load data", true);
+            }
+        }
+
+        function renderAll() {
+            renderSelectedProducts('selected-products-list');
+            renderSelectedProducts('mobile-selected-products'); // Mobile specific
+            renderCategories('categories-list');
+            renderCategories('mobile-categories-list'); // Mobile specific
+        }
+
+        // --- RENDER PRODUCTS LIST ---
+        function renderSelectedProducts(containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            const selectedObjs = state.selectedProductIds
+                .map(id => state.allProducts.find(p => p.id === id))
+                .filter(p => p);
+
+            if (selectedObjs.length === 0) {
+                container.innerHTML = `<div style="text-align:center; padding:20px; background:#f9fafb; border-radius:8px;">No products selected.</div>`;
+                return;
+            }
+
+            container.innerHTML = selectedObjs.map((p, index) => `
+                <div class="list-item" draggable="true" data-index="${index}" data-type="product">
+                    <span class="drag-handle">☰</span>
+                    <img src="${p.image || p.images?.[0] || 'https://via.placeholder.com/40'}" style="width:40px; height:40px; object-fit:cover; border-radius:4px;">
+                    <div style="flex:1">
+                        <div style="font-weight:600">${p.name}</div>
+                        <div style="color:var(--brand-primary); font-size:12px;">₹${p.price}</div>
+                    </div>
+                    <button class="action-btn delete" onclick="removeProduct('${p.id}')">✕</button>
+                </div>
+            `).join('');
+
+            attachDragEvents(container, 'product');
+        }
+
+        // --- RENDER CATEGORIES LIST ---
+        function renderCategories(containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            container.innerHTML = state.categories.map((cat, index) => `
+                <div class="list-item" draggable="true" data-index="${index}" data-type="category">
+                    <span class="drag-handle">☰</span>
+                    <div style="flex:1">
+                        <div style="font-weight:600">${cat.name}</div>
+                        <div style="font-size:12px; color:${cat.enabled ? '#10B981' : '#9CA3AF'}">${cat.enabled ? 'Visible' : 'Hidden'}</div>
+                    </div>
+                    <div class="toggle-switch ${cat.enabled ? 'active' : ''}" onclick="toggleCategory('${cat.id}')"></div>
+                </div>
+            `).join('');
+
+            attachDragEvents(container, 'category');
+        }
+
+        // --- DRAG & DROP LOGIC (FIXED) ---
+        function attachDragEvents(container, type) {
+            const items = container.querySelectorAll('.list-item');
+            
+            items.forEach(item => {
+                item.addEventListener('dragstart', (e) => {
+                    item.classList.add('dragging');
+                    // Store source index
+                    e.dataTransfer.setData('text/plain', item.dataset.index);
+                    e.dataTransfer.effectAllowed = 'move';
+                });
+
+                item.addEventListener('dragend', () => {
+                    item.classList.remove('dragging');
+                });
+
+                item.addEventListener('dragover', (e) => {
+                    e.preventDefault(); // Necessary to allow dropping
+                    e.dataTransfer.dropEffect = 'move';
+                });
+
+                item.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    const sourceIndex = parseInt(e.dataTransfer.getData('text/plain'));
+                    
+                    // Identify target row reliably
+                    const targetRow = e.target.closest('.list-item');
+                    if (!targetRow) return;
+                    
+                    const targetIndex = parseInt(targetRow.dataset.index);
+
+                    if (sourceIndex === targetIndex) return;
+
+                    // Execute Swap Logic
+                    if (type === 'product') {
+                        const itemToMove = state.selectedProductIds.splice(sourceIndex, 1)[0];
+                        state.selectedProductIds.splice(targetIndex, 0, itemToMove);
+                        renderSelectedProducts('selected-products-list');
+                        renderSelectedProducts('mobile-selected-products');
+                    } else if (type === 'category') {
+                        const itemToMove = state.categories.splice(sourceIndex, 1)[0];
+                        state.categories.splice(targetIndex, 0, itemToMove);
+                        // Update order properties
+                        state.categories.forEach((c, i) => c.order = i + 1);
+                        renderCategories('categories-list');
+                        renderCategories('mobile-categories-list');
+                    }
+                });
+            });
+        }
+
+        // --- INTERACTIONS ---
+        function toggleCategory(catId) {
+            const cat = state.categories.find(c => c.id === catId);
+            if (cat) {
+                cat.enabled = !cat.enabled;
+                renderCategories('categories-list');
+                renderCategories('mobile-categories-list');
+            }
+        }
+
+        function removeProduct(id) {
+            state.selectedProductIds = state.selectedProductIds.filter(pid => pid !== id);
+            renderSelectedProducts('selected-products-list');
+            renderSelectedProducts('mobile-selected-products');
+        }
+
+        function resetChanges() {
+            if(confirm("Discard changes?")) loadData();
+        }
+
+        // --- MODAL LOGIC ---
+        let tempSelectedIds = [];
+
+        function openProductSelector() {
+            tempSelectedIds = [...state.selectedProductIds];
+            document.getElementById('product-modal').style.display = 'flex';
+            renderModalGrid();
+            updateModalCount();
+        }
+
+        function closeProductSelector() {
+            document.getElementById('product-modal').style.display = 'none';
+        }
+
+        function renderModalGrid() {
+            const searchVal = document.getElementById('modal-search').value.toLowerCase();
+            const grid = document.getElementById('modal-product-grid');
+            
+            grid.innerHTML = state.allProducts
+                .filter(p => p.name.toLowerCase().includes(searchVal))
+                .map(p => {
+                    const isSelected = tempSelectedIds.includes(p.id);
+                    const img = p.image || p.images?.[0] || 'https://via.placeholder.com/150';
+                    return `
+                    <div class="product-card ${isSelected ? 'selected' : ''}" onclick="toggleTempProduct('${p.id}')">
+                        <div class="product-select-checkbox ${isSelected ? 'checked' : ''}"></div>
+                        <img src="${img}" class="product-image">
+                        <div class="product-content">
+                            <div class="product-title">${p.name}</div>
+                            <div style="color:#6b7280; font-size:12px;">₹${p.price}</div>
+                        </div>
+                    </div>
+                    `;
+                }).join('');
+        }
+
+        function toggleTempProduct(id) {
+            if (tempSelectedIds.includes(id)) {
+                tempSelectedIds = tempSelectedIds.filter(pid => pid !== id);
+            } else {
+                tempSelectedIds.push(id);
+            }
+            renderModalGrid();
+            updateModalCount();
+        }
+
+        function filterModalProducts() { renderModalGrid(); }
+        function updateModalCount() { document.getElementById('modal-selected-count').innerText = tempSelectedIds.length; }
+
+        function confirmProductSelection() {
+            state.selectedProductIds = [...tempSelectedIds];
+            renderSelectedProducts('selected-products-list');
+            renderSelectedProducts('mobile-selected-products');
+            closeProductSelector();
+        }
+
+        // --- SAVING ---
+        async function saveSections() {
+            const btn = document.querySelector('.page-desktop .btn-primary') || document.querySelector('.page-mobile .btn-primary'); // grab either
+            const originalText = btn.innerText;
+            btn.innerText = "Saving...";
+            btn.disabled = true;
+
+            try {
+                const categoriesPayload = state.categories.map((c, idx) => ({
+                    id: c.id,
+                    order: idx + 1,
+                    enabled: c.enabled
+                }));
+
+                const payload = {
+                    bestSellers: state.selectedProductIds,
+                    categories: categoriesPayload,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                await db.collection('landingPage').doc('Sections').set(payload, { merge: true });
+                showToast("Changes saved successfully!");
+            } catch (error) {
+                console.error("Save error:", error);
+                showToast("Error saving changes", true);
+            } finally {
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        function showToast(msg, isError = false) {
+            const toast = document.createElement('div');
+            toast.className = 'toast-msg';
+            if (isError) toast.style.borderLeftColor = 'var(--danger-color)';
+            toast.innerText = msg;
+            document.getElementById('toast').appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+    </script>
+</body>
+</html>
