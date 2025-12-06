@@ -11,6 +11,9 @@
         :root {
             --header-height-desktop: 70px;
             --sidebar-width: 260px;
+            --row-height: 48px;
+            --sidebar-bg: #ffffff;
+            --header-bg: #ffffff;
             --page-bg: #f4f5f7;
             --text-color: rgb(24, 24, 26);
             --icon-color: #6b7280;
@@ -27,284 +30,1823 @@
             --shadow-premium: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
             --radius-md: 8px;
             --radius-lg: 12px;
+            --skeleton-color: #f0f0f0;
+            --skeleton-highlight: #f8f8f8;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { min-height: 100vh; background: var(--page-bg); font-family: "DM Sans", sans-serif; font-size: 14px; color: var(--text-color); overflow-x: hidden; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-        /* LAYOUT */
-        .page-desktop { display: flex; flex-direction: column; min-height: 100vh; }
-        .d-topbar { height: var(--header-height-desktop); background: white; border-bottom: 1px solid var(--border-subtle); display: flex; align-items: center; padding-left: 40px; position: fixed; top: 0; width: 100%; z-index: 100; }
-        .d-topbar-logo { height: 52px; width: auto; }
-        .d-app { display: flex; margin-top: var(--header-height-desktop); height: calc(100vh - var(--header-height-desktop)); }
-        .d-sidebar { width: var(--sidebar-width); background: white; border-right: 1px solid var(--border-subtle); height: 100%; overflow-y: auto; position: fixed; }
-        .d-content { margin-left: var(--sidebar-width); flex: 1; padding: 24px; overflow-y: auto; }
+        body {
+            min-height: 100vh;
+            background: var(--page-bg);
+            font-family: "DM Sans", Roboto, sans-serif;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 20px;
+            color: var(--text-color);
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        /* ============= DESKTOP LAYOUT ============= */
+        .page-desktop {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        /* Desktop header */
+        .d-topbar {
+            height: var(--header-height-desktop);
+            background: var(--header-bg);
+            border-bottom: 1px solid var(--border-subtle);
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            padding-left: 40px;
+        }
+
+        .d-topbar-logo {
+            height: 52px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        /* Desktop main area */
+        .d-app {
+            flex: 1;
+            display: flex;
+            width: 100%;
+        }
+
+        /* Desktop sidebar */
+        .d-sidebar {
+            width: var(--sidebar-width);
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border-subtle);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .d-sidebar-inner {
+            padding: 32px 16px 16px 12px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        /* Desktop nav */
+        .d-nav {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .d-nav-group + .d-nav-group {
+            margin-top: 6px;
+        }
+
+        .d-nav-item {
+            display: flex;
+            align-items: center;
+            height: var(--row-height);
+            padding: 0 20px 0 12px;
+            margin: 2px 0;
+            border-radius: 8px;
+            gap: 12px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 14px;
+            color: var(--text-color);
+            line-height: 20px;
+            transition: background 0.15s ease;
+        }
+
+        .d-nav-item .label {
+            flex: 1;
+        }
+
+        .d-nav-item .icon svg {
+            width: 22px;
+            height: 22px;
+            stroke: var(--icon-color);
+        }
+
+        .chevron-icon {
+            width: 18px;
+            height: 18px;
+            stroke: var(--icon-color);
+            transition: transform 0.2s ease;
+        }
+
+        .dropdown-open .chevron-icon {
+            transform: rotate(90deg);
+        }
+
+        /* Desktop active */
+        .d-nav-item--active {
+            background: var(--active-bg);
+        }
+        .d-nav-item--active .icon svg {
+            stroke: var(--icon-active);
+        }
+
+        /* Desktop hover */
+        .d-nav-item:hover {
+            background: var(--hover-bg);
+        }
+
+        /* Desktop submenus */
+        .d-submenu {
+            display: none;
+            margin-left: 28px;
+            padding-left: 16px;
+            border-left: 1px solid var(--border-subtle);
+            margin-top: 4px;
+        }
+        .d-submenu.open {
+            display: block;
+        }
+        .d-submenu-item {
+            height: 44px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            border-radius: 8px;
+            margin: 2px 0;
+            cursor: pointer;
+            gap: 12px;
+            font-size: 15px;
+            font-weight: 500;
+        }
+        .d-submenu-item:hover {
+            background: var(--hover-bg);
+        }
+        .d-submenu-item.active {
+            background: var(--active-bg);
+        }
+
+        .d-submenu-item .submenu-icon {
+            width: 18px;
+            height: 18px;
+            stroke: #6b7280;
+        }
+
+        /* Desktop account section */
+        .d-account-section {
+            margin-top: auto;
+            padding: 16px;
+            border-top: 1px solid var(--border-subtle);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .account-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .account-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .account-text {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .account-name {
+            font-size: 14px;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 150px;
+        }
+
+        .account-email {
+            font-size: 12px;
+            color: #6b7280;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 150px;
+        }
+
+        /* Desktop content */
+        .d-content {
+            flex: 1;
+            background: var(--page-bg);
+            overflow-y: auto;
+            width: 100%;
+        }
+
+        /* ============= BODY CONTENT ============= */
+        .content-inner {
+            max-width: 1110px;
+            margin: 0 auto;
+            padding: 24px 24px 40px;
+            width: 100%;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            width: 100%;
+        }
+
+        .page-title-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 0;
+        }
+
+        .page-title {
+            font-weight: 700;
+            font-size: 20px;
+            line-height: 32px;
+            color: rgb(29, 30, 32);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            line-height: 20px;
+            color: #6b7280;
+            flex-wrap: wrap;
+        }
+
+        .breadcrumb-icon svg {
+            width: 16px;
+            height: 16px;
+            stroke: #9ca3af;
+        }
+
+        .breadcrumb-divider {
+            color: #d1d5db;
+        }
+
+        .primary-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            line-height: 20px;
+            color: #ffffff;
+            background: var(--brand-primary);
+            transition: background 0.15s ease;
+            white-space: nowrap;
+        }
+        .primary-btn svg {
+            width: 18px;
+            height: 18px;
+            stroke: #ffffff;
+        }
+        .primary-btn:hover {
+            background: #471ea7;
+        }
+
+        /* Popup Manager Card */
+        .popup-manager-card {
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid #e5e7eb;
+            padding: 32px;
+            box-shadow: var(--shadow-premium);
+            margin-bottom: 24px;
+        }
+
+        /* Premium Toggle Container */
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 24px;
+            background: #f9fafb;
+            border-radius: 16px;
+            border: 1px solid #e5e7eb;
+            margin-bottom: 32px;
+        }
+
+        .toggle-content {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .toggle-label {
+            font-weight: 700;
+            font-size: 16px;
+            line-height: 24px;
+            color: rgb(29, 30, 32);
+        }
+
+        .toggle-description {
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 20px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+
+        /* Premium Toggle Switch */
+        .premium-toggle {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 32px;
+            flex-shrink: 0;
+        }
+
+        .premium-toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .premium-toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--switch-off);
+            transition: .4s;
+            border-radius: 32px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .premium-toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 24px;
+            width: 24px;
+            left: 4px;
+            bottom: 4px;
+            background: white;
+            transition: .4s;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        input:checked + .premium-toggle-slider {
+            background: var(--brand-primary);
+        }
+
+        input:checked + .premium-toggle-slider:before {
+            transform: translateX(28px);
+        }
+
+        /* Form Layout */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+            margin-top: 24px;
+        }
+
+        .form-section {
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid #e5e7eb;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .section-icon {
+            width: 24px;
+            height: 24px;
+            stroke: var(--brand-primary);
+        }
+
+        .section-title {
+            font-weight: 700;
+            font-size: 18px;
+            line-height: 28px;
+            color: rgb(29, 30, 32);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: rgb(29, 30, 32);
+            margin-bottom: 8px;
+        }
+
+        .form-label-required::after {
+            content: "*";
+            color: var(--danger-color);
+            margin-left: 4px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background: white;
+            transition: all 0.15s ease;
+            font-family: "DM Sans", Roboto, sans-serif;
+            font-size: 14px;
+        }
+
+        .form-control:focus {
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 3px rgba(81, 39, 186, 0.1);
+            outline: none;
+        }
+
+        .form-hint {
+            font-size: 13px;
+            color: #6b7280;
+            margin-top: 6px;
+            line-height: 18px;
+        }
+
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            padding-right: 40px;
+        }
+
+        /* Premium Image Upload */
+        .image-upload-container {
+            width: 100%;
+        }
+
+        .image-upload-box {
+            border: 2px dashed #E5E7EB;
+            border-radius: 16px;
+            padding: 3rem 2rem;
+            text-align: center;
+            cursor: pointer;
+            background: linear-gradient(135deg, #FAFAFA 0%, #F5F5F5 100%);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            width: 100%;
+            margin-bottom: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 220px;
+            overflow: hidden;
+        }
+
+        .image-upload-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #5127ba, #673de6, #5127ba);
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite linear;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .image-upload-box:hover {
+            border-color: var(--brand-primary);
+            background: linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px rgba(81, 39, 186, 0.15);
+        }
+
+        .image-upload-box:active {
+            transform: translateY(0);
+        }
+
+        .image-upload-box svg {
+            stroke: var(--brand-primary);
+            margin-bottom: 1rem;
+            width: 64px;
+            height: 64px;
+            filter: drop-shadow(0 4px 6px rgba(81, 39, 186, 0.1));
+        }
+
+        .upload-text {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #1F2937;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #5127ba 0%, #673de6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .upload-subtext {
+            font-size: 0.875rem;
+            color: #6B7280;
+            max-width: 80%;
+            margin: 0 auto;
+            line-height: 1.4;
+        }
+
+        /* Image Preview */
+        .image-preview-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 2rem;
+            background: white;
+            border-radius: 16px;
+            border: 1px solid #E5E7EB;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            margin-bottom: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .image-preview-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #5127ba, #673de6, #5127ba);
+            background-size: 200% 100%;
+        }
+
+        .preview-img {
+            width: 200px;
+            height: 200px;
+            object-fit: contain;
+            border-radius: 12px;
+            border: 2px solid white;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .change-image-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 24px;
+            background: white;
+            border: 2px solid var(--brand-primary);
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--brand-primary);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            min-width: 180px;
+        }
+
+        .change-image-btn:hover {
+            background: var(--brand-primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(81, 39, 186, 0.25);
+        }
+
+        /* Conditional Message */
+        .conditional-message {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%);
+            border: 1px solid #BAE6FD;
+            border-radius: 12px;
+            margin-top: 16px;
+            animation: slideIn 0.3s ease;
+        }
+
+        .conditional-message svg {
+            stroke: #0EA5E9;
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+        .conditional-message-text {
+            color: #0369A1;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        /* Button Styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 12px 24px;
+            font-weight: 600;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            border: none;
+            font-size: 14px;
+            white-space: nowrap;
+            min-width: 100px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #5127ba 0%, #673de6 100%);
+            color: white;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #471ea7 0%, #5127ba 100%);
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(81, 39, 186, 0.25);
+        }
+
+        .btn-primary:hover::before {
+            opacity: 1;
+        }
+
+        .btn-secondary {
+            background: white;
+            border: 1px solid #e5e7eb;
+            color: var(--text-color);
+        }
+
+        .btn-secondary:hover {
+            background: #F8FAFC;
+            border-color: #CBD5E1;
+            transform: translateY(-1px);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        /* Toast */
+        #toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 3000;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            padding: 1rem 1.5rem;
+            background: white;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-premium);
+            animation: slideUp 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-left: 4px solid var(--brand-primary);
+            min-width: 300px;
+            pointer-events: auto;
+            max-width: 90vw;
+        }
+
+        .toast.success {
+            border-left-color: var(--success-color);
+        }
+
+        .toast.error {
+            border-left-color: var(--danger-color);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ============= MOBILE LAYOUT ============= */
+        .page-mobile {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            display: none;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* Mobile header */
+        .m-header {
+            height: 72px;
+            background: var(--header-bg);
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            width: 100%;
+        }
+
+        .m-menu-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+            background: #f9fafb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .m-menu-btn:hover {
+            background: #f3f4f6;
+        }
+
+        .m-menu-lines {
+            width: 18px;
+            height: 14px;
+            position: relative;
+        }
+        .m-menu-lines::before,
+        .m-menu-lines::after,
+        .m-menu-lines span {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 2px;
+            border-radius: 999px;
+            background: #111827;
+        }
+        .m-menu-lines::before {
+            top: 0;
+        }
+        .m-menu-lines span {
+            top: 6px;
+        }
+        .m-menu-lines::after {
+            bottom: 0;
+        }
+
+        .m-logo {
+            height: 48px;
+            width: auto;
+            object-fit: contain;
+            max-width: 200px;
+        }
+
+        /* Mobile main bg */
+        .m-main {
+            flex: 1;
+            background: var(--page-bg);
+            padding: 16px;
+            padding-bottom: 80px;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* Overlay & drawer */
+        .m-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.45);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease-out;
+            z-index: 40;
+        }
+
+        .m-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .m-drawer {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 320px;
+            max-width: 90vw;
+            height: 100%;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            transform: translateX(-100%);
+            transition: transform 0.25s ease-out;
+            overflow-y: auto;
+        }
+
+        .m-overlay.open .m-drawer {
+            transform: translateX(0);
+        }
+
+        /* Drawer header */
+        .m-drawer-header {
+            height: 72px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+        }
+
+        .m-drawer-logo {
+            height: 48px;
+            width: auto;
+            object-fit: contain;
+            max-width: 200px;
+        }
+
+        .m-drawer-close {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+            background: #f9fafb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
         
-        /* NAV */
-        .d-nav-item { display: flex; align-items: center; gap: 12px; padding: 12px; margin: 4px 12px; border-radius: 8px; cursor: pointer; color: var(--text-color); font-weight: 500; }
-        .d-nav-item:hover { background: var(--hover-bg); }
-        .d-nav-item--active { background: var(--active-bg); color: var(--brand-primary); }
-        .d-nav-item--active svg { stroke: var(--icon-active); }
-        .d-submenu { margin-left: 28px; padding-left: 12px; border-left: 1px solid var(--border-subtle); }
-        .d-submenu-item { padding: 10px 12px; display: flex; gap: 10px; align-items: center; cursor: pointer; border-radius: 6px; font-weight: 500; }
-        .d-submenu-item:hover { background: var(--hover-bg); }
-        .d-submenu-item.active { background: var(--active-bg); color: var(--brand-primary); }
-
-        /* POPUP MANAGER CARD */
-        .popup-manager-card { background: white; border-radius: 12px; border: 1px solid var(--border-subtle); padding: 32px; box-shadow: var(--shadow-premium); }
-        .popup-toggle-container { display: flex; align-items: center; gap: 16px; padding: 20px; background: #f9fafb; border-radius: 12px; border: 1px solid var(--border-subtle); margin-bottom: 32px; }
-        .popup-toggle { width: 52px; height: 28px; background: var(--switch-off); border-radius: 20px; position: relative; cursor: pointer; transition: 0.3s; }
-        .popup-toggle.active { background: var(--switch-on); }
-        .popup-toggle::after { content: ''; position: absolute; width: 24px; height: 24px; background: white; border-radius: 50%; top: 2px; left: 2px; transition: 0.3s; }
-        .popup-toggle.active::after { transform: translateX(24px); }
-
-        /* FORMS */
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-        .form-section { background: #f9fafb; padding: 24px; border-radius: 12px; border: 1px solid var(--border-subtle); margin-bottom: 24px; }
-        .form-group { margin-bottom: 20px; }
-        .form-label { display: block; margin-bottom: 8px; font-weight: 600; }
-        .form-label-required::after { content: " *"; color: var(--danger-color); }
-        .form-control { width: 100%; padding: 10px; border: 1px solid var(--border-subtle); border-radius: 8px; font-family: inherit; }
-        .form-hint { font-size: 12px; color: #6b7280; margin-top: 4px; }
+        .m-drawer-close:hover {
+            background: #f3f4f6;
+        }
         
-        /* IMAGE UPLOAD */
-        .image-upload-zone { border: 2px dashed #e5e7eb; padding: 30px; text-align: center; border-radius: 12px; cursor: pointer; margin-bottom: 10px; position: relative; }
-        .image-upload-zone:hover { border-color: var(--brand-primary); background: #f9fafb; }
-        .image-upload-zone.has-image { border-style: solid; padding: 10px; }
-        .image-preview-container { display: none; flex-direction: column; align-items: center; gap: 10px; }
-        .image-preview-container.active { display: flex; }
-        .image-preview { max-width: 100%; max-height: 200px; object-fit: contain; border-radius: 8px; }
-        .conditional-fields { background: #eff6ff; border: 1px dashed #3b82f6; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: none; }
-        .conditional-note { display: flex; gap: 10px; align-items: center; color: #1e40af; font-size: 13px; }
+        .m-drawer-close-icon {
+            width: 14px;
+            height: 14px;
+            position: relative;
+        }
+        .m-drawer-close-icon::before,
+        .m-drawer-close-icon::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            margin: auto;
+            width: 14px;
+            height: 2px;
+            border-radius: 999px;
+            background: #111827;
+        }
+        .m-drawer-close-icon::before {
+            transform: rotate(45deg);
+        }
+        .m-drawer-close-icon::after {
+            transform: rotate(-45deg);
+        }
 
-        /* BUTTONS */
-        .btn { padding: 10px 20px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; }
-        .btn-primary { background: var(--brand-gradient); color: white; }
-        .btn-secondary { background: white; border: 1px solid var(--border-subtle); color: var(--text-color); }
-        .btn-sm { padding: 6px 12px; font-size: 12px; }
+        /* Drawer nav */
+        .m-drawer-nav {
+            padding: 32px 8px;
+            display: flex;
+            flex-direction: column;
+        }
 
-        /* TOAST */
-        #toast { position: fixed; bottom: 20px; right: 20px; z-index: 3000; display: flex; flex-direction: column; gap: 10px; }
-        .toast-msg { background: white; padding: 12px 20px; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); border-left: 4px solid var(--success-color); animation: slideIn 0.3s ease; }
-        .toast-msg.error { border-left-color: var(--danger-color); }
-        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+        .m-nav-item {
+            display: flex;
+            align-items: center;
+            height: 52px;
+            padding: 0 16px;
+            margin: 2px 0;
+            border-radius: 8px;
+            gap: 12px;
+            cursor: pointer;
+            color: var(--text-color);
+            transition: background 0.15s ease;
+            font-size: 16px;
+            font-weight: 600;
+        }
 
-        /* MOBILE */
+        .m-nav-item .label {
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .m-nav-item .icon svg {
+            width: 22px;
+            height: 22px;
+            stroke: var(--icon-color);
+        }
+
+        /* active mobile */
+        .m-nav-item.active {
+            background: var(--active-bg);
+        }
+        .m-nav-item.active .icon svg {
+            stroke: var(--icon-active);
+        }
+
+        /* Mobile submenu */
+        .m-submenu {
+            display: none;
+            margin-left: 28px;
+            padding-left: 16px;
+            border-left: 1px solid var(--border-subtle);
+            margin-top: 4px;
+        }
+        .m-submenu.open {
+            display: block;
+        }
+        .m-submenu-item {
+            height: 48px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            border-radius: 8px;
+            margin: 2px 0;
+            cursor: pointer;
+            gap: 12px;
+            font-size: 15px;
+            font-weight: 500;
+        }
+        .m-submenu-item:hover {
+            background: var(--hover-bg);
+        }
+        .m-submenu-item.active {
+            background: var(--active-bg);
+        }
+
+        .m-submenu-item .submenu-icon {
+            width: 18px;
+            height: 18px;
+            stroke: #6b7280;
+        }
+
+        /* Mobile Form Sections */
+        .mobile-form-section {
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid #e5e7eb;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .mobile-section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .mobile-section-title {
+            font-weight: 700;
+            font-size: 16px;
+            line-height: 24px;
+            color: rgb(29, 30, 32);
+        }
+
+        .mobile-toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            background: #f9fafb;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .mobile-toggle-content {
+            flex: 1;
+        }
+
+        .mobile-toggle-label {
+            font-weight: 600;
+            font-size: 15px;
+            line-height: 20px;
+            color: rgb(29, 30, 32);
+        }
+
+        .mobile-toggle-description {
+            font-weight: 500;
+            font-size: 13px;
+            line-height: 18px;
+            color: #6b7280;
+            margin-top: 2px;
+        }
+
+        /* Mobile bottom action bar */
+        .mobile-action-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 16px;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            gap: 12px;
+            z-index: 50;
+        }
+
+        .mobile-action-bar .btn {
+            flex: 1;
+            padding: 14px;
+            font-size: 15px;
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
             .page-desktop { display: none; }
-            .page-mobile { display: block; }
-            .m-header { height: 70px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; background: white; border-bottom: 1px solid var(--border-subtle); position: fixed; top: 0; width: 100%; z-index: 50; }
-            .m-main { margin-top: 70px; padding: 16px; padding-bottom: 100px; }
-            .form-grid { grid-template-columns: 1fr; }
-            .mobile-form-section { background: white; border-radius: 12px; border: 1px solid var(--border-subtle); padding: 16px; margin-bottom: 20px; }
+            .page-mobile  { display: flex; }
             
-            /* Mobile Drawer */
-            .m-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; display: none; }
-            .m-overlay.open { display: block; }
-            .m-drawer { position: fixed; top: 0; left: 0; bottom: 0; width: 280px; background: white; transform: translateX(-100%); transition: 0.3s; z-index: 101; }
-            .m-overlay.open .m-drawer { transform: translateX(0); }
+            .content-inner {
+                padding: 0;
+            }
+            
+            .page-header {
+                display: none;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .popup-manager-card {
+                padding: 20px;
+                margin: 0;
+                border-radius: 0;
+                border: none;
+                box-shadow: none;
+            }
         }
-        @media (min-width: 769px) { .page-mobile { display: none; } }
+
+        @media (min-width: 769px) {
+            .page-desktop { display: flex; }
+            .page-mobile { display: none; }
+        }
+
+        /* Profile Popup */
+        .profile-popup {
+            position: fixed;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 1px solid #e5e7eb;
+            padding: 0;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(10px);
+            transition: all 0.2s ease;
+            width: 280px;
+            max-width: 90vw;
+            overflow: hidden;
+        }
+
+        .profile-popup.active {
+            opacity: 1;
+            pointer-events: all;
+            transform: translateY(0);
+        }
+
+        @media (min-width: 769px) {
+            .profile-popup {
+                left: 30px !important;
+                right: auto !important;
+                bottom: 100px !important;
+                top: auto !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .profile-popup {
+                left: 50% !important;
+                right: auto !important;
+                bottom: 100px !important;
+                top: auto !important;
+                transform: translateX(-50%) translateY(10px);
+            }
+            
+            .profile-popup.active {
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        .popup-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            background: #f9fafb;
+        }
+
+        .popup-list {
+            list-style: none;
+            padding: 0.5rem;
+        }
+
+        .popup-list li {
+            margin: 0;
+            padding: 0;
+        }
+
+        .popup-list a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--text-color);
+            transition: background 0.15s ease;
+            cursor: pointer;
+            font-size: 14px;
+            white-space: nowrap;
+            width: 100%;
+            background: none;
+            border: none;
+            text-align: left;
+        }
+
+        .popup-list a:hover {
+            background: #f3f4f6;
+        }
+
+        .popup-list a.logout {
+            color: var(--danger-color);
+        }
+
+        .popup-list a.logout i {
+            color: var(--danger-color);
+        }
+
+        .popup-icon {
+            width: 18px;
+            height: 18px;
+            stroke: #6b7280;
+            flex-shrink: 0;
+        }
+
+        .logout-icon {
+            stroke: var(--danger-color) !important;
+        }
     </style>
 </head>
 <body>
-
     <!-- ================= DESKTOP VIEW ================= -->
     <div class="page-desktop">
-        <aside class="d-sidebar">
-            <div style="padding: 20px;">
-                <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Logo" style="height: 40px;">
-            </div>
-            <div style="padding: 0 12px;">
-                <div class="d-nav-item" onclick="window.location.href='index.html'">Dashboard</div>
-                <div class="d-nav-item" onclick="window.location.href='manage-products.html'">Inventory</div>
-                <div class="d-nav-item d-nav-item--active">Customize Site</div>
-                <div class="d-submenu">
-                    <div class="d-submenu-item" onclick="window.location.href='hero-section.html'">Hero Section</div>
-                    <div class="d-submenu-item" onclick="window.location.href='sections-manager.html'">Sections</div>
-                    <div class="d-submenu-item active">Popup Manager</div>
-                </div>
-            </div>
-        </aside>
+        <header class="d-topbar">
+            <img class="d-topbar-logo"
+                 src="https://product-ecommerces.netlify.app/vastramaya.png"
+                 alt="Vastramaya Logo" />
+        </header>
 
-        <main class="d-content">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-                <h1 style="font-size: 24px; font-weight: 700;">Popup Manager</h1>
-                <div style="display: flex; gap: 12px;">
-                    <button class="btn btn-secondary" onclick="resetForm()">Reset</button>
-                    <button class="btn btn-primary" onclick="savePopupSettings('desktop')">Save Settings</button>
-                </div>
-            </div>
+        <div class="d-app">
+            <aside class="d-sidebar">
+                <div class="d-sidebar-inner">
+                    <nav class="d-nav">
+                        <div class="d-nav-group">
+                            <!-- Dashboard -->
+                            <div class="d-nav-item" onclick="window.location.href='index.html'">
+                                <span class="icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="7" height="7" x="3" y="3" rx="1"/>
+                                        <rect width="7" height="7" x="14" y="3" rx="1"/>
+                                        <rect width="7" height="7" x="14" y="14" rx="1"/>
+                                        <rect width="7" height="7" x="3" y="14" rx="1"/>
+                                    </svg>
+                                </span>
+                                <span class="label">Dashboard</span>
+                            </div>
 
-            <div class="popup-manager-card">
-                <!-- Enable Toggle -->
-                <div class="popup-toggle-container">
-                    <div class="popup-toggle" id="popup-toggle" onclick="togglePopup()"></div>
-                    <div>
-                        <div style="font-weight: 600; font-size: 16px;">Enable Popup</div>
-                        <div style="color: #6b7280;">Turn on/off the popup for your store visitors</div>
+                            <!-- Inventory -->
+                            <div class="d-nav-item" onclick="window.location.href='manage-products.html'">
+                                <span class="icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M2 7v10"/>
+                                        <path d="M6 5v14"/>
+                                        <rect width="12" height="18" x="10" y="3" rx="2"/>
+                                    </svg>
+                                </span>
+                                <span class="label">Inventory</span>
+                            </div>
+
+                            <!-- Customize Site -->
+                            <div class="d-nav-item d-nav-item--active" id="d-customize-toggle">
+                                <span class="icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12.034 12.681a.498.498 0 0 1 .647-.647l9 3.5a.5.5 0 0 1-.033.943l-3.444 1.068a1 1 0 0 0-.66.66l-1.067 3.443a.5.5 0 0 1-.943.033z"/>
+                                        <path d="M21 11V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6"/>
+                                    </svg>
+                                </span>
+                                <span class="label">Customize Site</span>
+                                <span class="chevron">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2"
+                                         stroke-linecap="round" stroke-linejoin="round"
+                                         class="chevron-icon">
+                                        <path d="m9 18 6-6-6-6"/>
+                                    </svg>
+                                </span>
+                            </div>
+
+                            <!-- Desktop Customize Site submenu -->
+                            <div class="d-submenu open" id="d-customize-submenu">
+                                <div class="d-submenu-item">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
+                                        <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
+                                        <path d="M4 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/>
+                                        <path d="M9.5 12.5 11 14"/>
+                                        <path d="M14 10l-3.5 4"/>
+                                        <path d="m5 15 4.5-4"/>
+                                    </svg>
+                                    <span>Theme & layout</span>
+                                </div>
+                                <div class="d-submenu-item">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="18" height="18" x="3" y="3" rx="2"/>
+                                        <path d="M3 9h18"/>
+                                        <path d="M9 21V9"/>
+                                    </svg>
+                                    <span>Sections</span>
+                                </div>
+                                <div class="d-submenu-item active">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="18" height="18" x="3" y="3" rx="2"/>
+                                        <path d="M8 7v.01"/>
+                                        <path d="M12 7v.01"/>
+                                        <path d="M16 7v.01"/>
+                                        <path d="M8 11v.01"/>
+                                        <path d="M12 11v.01"/>
+                                        <path d="M16 11v.01"/>
+                                        <path d="M8 15v.01"/>
+                                        <path d="M12 15v.01"/>
+                                        <path d="M16 15v.01"/>
+                                    </svg>
+                                    <span>Popup Manager</span>
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
+
+                    <!-- Desktop Account section -->
+                    <div class="d-account-section" id="profile-section">
+                        <div class="account-card">
+                            <img id="sidebar-avatar" class="account-avatar"
+                                 src="https://bpb-us-w2.wpmucdn.com/wp.wpi.edu/dist/e/505/files/2024/06/unknown-person-icon-3.png"
+                                 alt="Profile" />
+                            <div class="account-text">
+                                <div class="account-name" id="sidebar-name">Loading...</div>
+                                <div class="account-email" id="sidebar-email">Admin</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </aside>
 
-                <div class="form-grid">
-                    <!-- Left Col -->
-                    <div>
-                        <div class="form-section">
-                            <h4 style="margin-bottom: 20px; font-weight: 600;">Popup Content</h4>
-                            
-                            <!-- Image Upload -->
-                            <div class="form-group">
-                                <label class="form-label">Popup Image</label>
-                                <div class="image-upload-zone" id="d-upload-zone" onclick="document.getElementById('d-image-input').click()">
-                                    <div class="upload-content">
-                                        <div style="font-weight: 600; margin-bottom: 4px;">Click to upload image</div>
-                                        <div style="font-size: 12px; color: #6b7280;">PNG, JPG up to 5MB</div>
+            <main class="d-content">
+                <div class="content-inner">
+                    <!-- PAGE HEADER -->
+                    <div class="page-header">
+                        <div class="page-title-wrap">
+                            <div class="page-title">Popup Manager</div>
+                            <div class="breadcrumb">
+                                <span class="breadcrumb-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2"
+                                         stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/>
+                                        <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                                    </svg>
+                                </span>
+                                <span>Home</span>
+                                <span class="breadcrumb-divider">/</span>
+                                <span>Customize Site</span>
+                                <span class="breadcrumb-divider">/</span>
+                                <span>Popup Manager</span>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 12px;">
+                            <button class="btn btn-secondary" onclick="resetForm()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                                    <path d="M3 3v5h5"/>
+                                </svg>
+                                <span>Reset</span>
+                            </button>
+                            <button class="btn btn-primary" onclick="savePopupSettings('desktop')">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                                    <polyline points="17 21 17 13 7 13 7 21"/>
+                                    <polyline points="7 3 7 8 15 8"/>
+                                </svg>
+                                <span>Save Settings</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- POPUP MANAGER CARD -->
+                    <div class="popup-manager-card">
+                        <!-- Enable Toggle -->
+                        <div class="toggle-container">
+                            <div class="toggle-content">
+                                <label class="premium-toggle">
+                                    <input type="checkbox" id="popup-toggle">
+                                    <span class="premium-toggle-slider"></span>
+                                </label>
+                                <div>
+                                    <div class="toggle-label">Enable Popup</div>
+                                    <div class="toggle-description">Turn on/off the popup for your store visitors</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-grid">
+                            <!-- Left Column -->
+                            <div>
+                                <!-- Popup Content Section -->
+                                <div class="form-section">
+                                    <div class="section-header">
+                                        <svg class="section-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect width="18" height="18" x="3" y="3" rx="2"/>
+                                            <path d="M8 7v.01"/>
+                                            <path d="M12 7v.01"/>
+                                            <path d="M16 7v.01"/>
+                                            <path d="M8 11v.01"/>
+                                            <path d="M12 11v.01"/>
+                                            <path d="M16 11v.01"/>
+                                            <path d="M8 15v.01"/>
+                                            <path d="M12 15v.01"/>
+                                            <path d="M16 15v.01"/>
+                                        </svg>
+                                        <div class="section-title">Popup Content</div>
                                     </div>
-                                    <div class="image-preview-container" id="d-preview-container">
-                                        <img id="d-image-preview" class="image-preview">
-                                        <button type="button" class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); removeImage()">Remove</button>
+
+                                    <!-- Image Upload -->
+                                    <div class="form-group">
+                                        <label class="form-label">Popup Image</label>
+                                        <div class="image-upload-container">
+                                            <div class="image-upload-box" id="image-upload-box" onclick="document.getElementById('image-input').click()">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                                    <polyline points="17 8 12 3 7 8"/>
+                                                    <line x1="12" y1="3" x2="12" y2="15"/>
+                                                </svg>
+                                                <div class="upload-text">Click to upload image</div>
+                                                <div class="upload-subtext">PNG, JPG up to 5MB</div>
+                                            </div>
+                                            
+                                            <!-- Image Preview -->
+                                            <div class="image-preview-container" id="image-preview-container" style="display: none;">
+                                                <img id="image-preview" class="preview-img">
+                                                <button type="button" class="change-image-btn" onclick="removeImage()">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                        <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
+                                                    </svg>
+                                                    Change Image
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <input type="file" id="image-input" style="display: none;" accept="image/*">
+                                    </div>
+
+                                    <!-- Conditional Message -->
+                                    <div class="conditional-message" id="conditional-message" style="display: none;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <circle cx="12" cy="12" r="10"/>
+                                            <path d="M12 16v-4"/>
+                                            <path d="M12 8h.01"/>
+                                        </svg>
+                                        <div class="conditional-message-text">Image uploaded! Title and message are now optional.</div>
+                                    </div>
+
+                                    <!-- Title and Message -->
+                                    <div class="form-group">
+                                        <label class="form-label form-label-required" id="title-label">Popup Title</label>
+                                        <input type="text" class="form-control" id="popup-title" placeholder="Special Offer!">
+                                        <div class="form-hint">Leave empty if using only image</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label form-label-required" id="message-label">Popup Message</label>
+                                        <textarea class="form-control" id="popup-message" rows="3" placeholder="Get 20% off on your first order!"></textarea>
+                                        <div class="form-hint">Leave empty if using only image</div>
                                     </div>
                                 </div>
-                                <input type="file" id="d-image-input" style="display: none;" accept="image/*">
                             </div>
 
-                            <!-- Conditional Msg -->
-                            <div class="conditional-fields" id="d-conditional-fields">
-                                <div class="conditional-note">
-                                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/></svg>
-                                    Image uploaded! Title and message are now optional.
+                            <!-- Right Column -->
+                            <div>
+                                <!-- Button Settings Section -->
+                                <div class="form-section">
+                                    <div class="section-header">
+                                        <svg class="section-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect width="18" height="18" x="3" y="3" rx="2"/>
+                                            <circle cx="8" cy="8" r="1"/>
+                                            <circle cx="12" cy="12" r="1"/>
+                                            <circle cx="16" cy="16" r="1"/>
+                                        </svg>
+                                        <div class="section-title">Button Settings</div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-label form-label-required">Button Text</label>
+                                        <input type="text" class="form-control" id="button-text" placeholder="Shop Now" value="Shop Now">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label form-label-required">Button Link</label>
+                                        <input type="text" class="form-control" id="button-link" placeholder="/shop" value="/shop">
+                                        <div class="form-hint">Enter relative URL path (e.g., /products) or full URL</div>
+                                    </div>
+                                </div>
+
+                                <!-- Timing Section -->
+                                <div class="form-section">
+                                    <div class="section-header">
+                                        <svg class="section-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <circle cx="12" cy="12" r="10"/>
+                                            <polyline points="12 6 12 12 16 14"/>
+                                        </svg>
+                                        <div class="section-title">Timing</div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-label">Delay (Seconds)</label>
+                                        <input type="number" class="form-control" id="delay-time" value="5" min="0" max="30">
+                                        <div class="form-hint">Seconds before popup appears (0 for immediate)</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Frequency</label>
+                                        <select class="form-control" id="display-frequency">
+                                            <option value="always">Always show</option>
+                                            <option value="once_per_session" selected>Once per session</option>
+                                            <option value="once_per_day">Once per day</option>
+                                        </select>
+                                        <div class="form-hint">Control how often popup appears to visitors</div>
+                                    </div>
                                 </div>
                             </div>
-
-                            <div class="form-group">
-                                <label class="form-label" id="d-title-label">Popup Title</label>
-                                <input type="text" class="form-control" id="d-popup-title" placeholder="Special Offer!">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label" id="d-message-label">Popup Message</label>
-                                <textarea class="form-control" id="d-popup-message" rows="3" placeholder="Enter message..."></textarea>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Right Col -->
-                    <div>
-                        <div class="form-section">
-                            <h4 style="margin-bottom: 20px; font-weight: 600;">Button Settings</h4>
-                            <div class="form-group">
-                                <label class="form-label form-label-required">Button Text</label>
-                                <input type="text" class="form-control" id="d-button-text" placeholder="Shop Now">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label form-label-required">Button Link</label>
-                                <input type="text" class="form-control" id="d-button-link" placeholder="/shop">
-                            </div>
                         </div>
 
-                        <div class="form-section">
-                            <h4 style="margin-bottom: 20px; font-weight: 600;">Timing</h4>
-                            <div class="form-group">
-                                <label class="form-label">Delay (Seconds)</label>
-                                <input type="number" class="form-control" id="d-delay-time" value="5" min="0">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Frequency</label>
-                                <select class="form-control" id="d-display-frequency">
-                                    <option value="always">Always show</option>
-                                    <option value="once_per_session">Once per session</option>
-                                    <option value="once_per_day">Once per day</option>
-                                </select>
-                            </div>
+                        <!-- Action Buttons -->
+                        <div class="action-buttons">
+                            <button class="btn btn-secondary" onclick="resetForm()">
+                                Reset to Default
+                            </button>
+                            <button class="btn btn-primary" onclick="savePopupSettings('desktop')" style="min-width: 150px;">
+                                Save Popup Settings
+                            </button>
                         </div>
                     </div>
                 </div>
-                
-                <div style="text-align: center; margin-top: 20px;">
-                    <button class="btn btn-primary" style="min-width: 200px;" onclick="savePopupSettings('desktop')">Save Popup Settings</button>
-                </div>
-            </div>
-        </main>
+            </main>
+        </div>
     </div>
 
     <!-- ================= MOBILE VIEW ================= -->
     <div class="page-mobile">
+        <!-- Mobile header: menu left, logo right -->
         <header class="m-header">
-            <div onclick="document.getElementById('m-overlay').classList.add('open')" style="padding: 10px;">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-            </div>
-            <img src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Logo" style="height: 32px;">
-            <div style="width: 44px;"></div>
+            <button class="m-menu-btn" id="m-menu-toggle" aria-label="Open menu">
+                <div class="m-menu-lines"><span></span></div>
+            </button>
+
+            <img
+              class="m-logo"
+              src="https://product-ecommerces.netlify.app/vastramaya.png"
+              alt="Vastramaya Logo" />
         </header>
 
-        <div class="m-overlay" id="m-overlay" onclick="if(event.target===this) this.classList.remove('open')">
-            <div class="m-drawer">
-                <div style="padding: 20px; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between;">
-                    <span style="font-weight: 700;">Menu</span>
-                    <span onclick="document.getElementById('m-overlay').classList.remove('open')">✕</span>
-                </div>
-                <div style="padding: 10px;">
-                    <div class="d-nav-item" onclick="window.location.href='index.html'">Dashboard</div>
-                    <div class="d-nav-item" onclick="window.location.href='manage-products.html'">Inventory</div>
-                    <div class="d-nav-item d-nav-item--active">Popup Manager</div>
-                </div>
-            </div>
-        </div>
-
         <main class="m-main">
-            <div class="mobile-form-section" style="display: flex; justify-content: space-between; align-items: center;">
-                <div>
-                    <div style="font-weight: 600;">Enable Popup</div>
-                    <div style="font-size: 12px; color: #6b7280;">Show/Hide popup</div>
+            <!-- Enable Toggle -->
+            <div class="mobile-toggle-row">
+                <div class="mobile-toggle-content">
+                    <div class="mobile-toggle-label">Enable Popup</div>
+                    <div class="mobile-toggle-description">Turn on/off the popup for your store visitors</div>
                 </div>
-                <div class="popup-toggle" id="m-popup-toggle" onclick="toggleMobilePopup()"></div>
+                <label class="premium-toggle">
+                    <input type="checkbox" id="m-popup-toggle">
+                    <span class="premium-toggle-slider"></span>
+                </label>
             </div>
 
+            <!-- Popup Content Section -->
             <div class="mobile-form-section">
-                <h4 style="margin-bottom: 15px; font-weight: 600;">Content</h4>
-                
-                <!-- Mobile Image Upload -->
-                <div class="image-upload-zone" id="m-upload-zone" onclick="document.getElementById('m-image-input').click()">
-                    <div class="upload-content">
-                        <div>Tap to upload image</div>
-                    </div>
-                    <div class="image-preview-container" id="m-preview-container">
-                        <img id="m-image-preview" class="image-preview">
-                        <button type="button" class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); removeMobileImage()">Remove</button>
-                    </div>
+                <div class="mobile-section-header">
+                    <svg class="section-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px;">
+                        <rect width="18" height="18" x="3" y="3" rx="2"/>
+                        <path d="M8 7v.01"/>
+                        <path d="M12 7v.01"/>
+                        <path d="M16 7v.01"/>
+                        <path d="M8 11v.01"/>
+                        <path d="M12 11v.01"/>
+                        <path d="M16 11v.01"/>
+                        <path d="M8 15v.01"/>
+                        <path d="M12 15v.01"/>
+                        <path d="M16 15v.01"/>
+                    </svg>
+                    <div class="mobile-section-title">Popup Content</div>
                 </div>
-                <input type="file" id="m-image-input" style="display: none;" accept="image/*">
 
+                <!-- Mobile Image Upload -->
                 <div class="form-group">
-                    <label class="form-label" id="m-title-label">Title</label>
+                    <label class="form-label">Popup Image</label>
+                    <div class="image-upload-container">
+                        <div class="image-upload-box" id="m-image-upload-box" onclick="document.getElementById('m-image-input').click()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="17 8 12 3 7 8"/>
+                                <line x1="12" y1="3" x2="12" y2="15"/>
+                            </svg>
+                            <div class="upload-text">Tap to upload image</div>
+                            <div class="upload-subtext">PNG, JPG up to 5MB</div>
+                        </div>
+                        
+                        <!-- Mobile Image Preview -->
+                        <div class="image-preview-container" id="m-image-preview-container" style="display: none; padding: 1rem;">
+                            <img id="m-image-preview" class="preview-img" style="max-width: 150px; max-height: 150px;">
+                            <button type="button" class="change-image-btn" onclick="removeMobileImage()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
+                                </svg>
+                                Change Image
+                            </button>
+                        </div>
+                    </div>
+                    <input type="file" id="m-image-input" style="display: none;" accept="image/*">
+                </div>
+
+                <!-- Title and Message -->
+                <div class="form-group">
+                    <label class="form-label form-label-required" id="m-title-label">Popup Title</label>
                     <input type="text" class="form-control" id="m-popup-title" placeholder="Special Offer!">
                 </div>
                 <div class="form-group">
-                    <label class="form-label" id="m-message-label">Message</label>
-                    <textarea class="form-control" id="m-popup-message" rows="3"></textarea>
+                    <label class="form-label form-label-required" id="m-message-label">Popup Message</label>
+                    <textarea class="form-control" id="m-popup-message" rows="3" placeholder="Get 20% off on your first order!"></textarea>
                 </div>
             </div>
 
+            <!-- Button & Timing Section -->
             <div class="mobile-form-section">
-                <h4 style="margin-bottom: 15px; font-weight: 600;">Button & Timing</h4>
+                <div class="mobile-section-header">
+                    <svg class="section-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px;">
+                        <rect width="18" height="18" x="3" y="3" rx="2"/>
+                        <circle cx="8" cy="8" r="1"/>
+                        <circle cx="12" cy="12" r="1"/>
+                        <circle cx="16" cy="16" r="1"/>
+                    </svg>
+                    <div class="mobile-section-title">Button & Timing</div>
+                </div>
+
                 <div class="form-group">
                     <label class="form-label form-label-required">Button Text</label>
-                    <input type="text" class="form-control" id="m-button-text">
+                    <input type="text" class="form-control" id="m-button-text" placeholder="Shop Now" value="Shop Now">
                 </div>
                 <div class="form-group">
                     <label class="form-label form-label-required">Button Link</label>
-                    <input type="text" class="form-control" id="m-button-link">
+                    <input type="text" class="form-control" id="m-button-link" placeholder="/shop" value="/shop">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Delay (sec)</label>
-                    <input type="number" class="form-control" id="m-delay-time">
+                    <label class="form-label">Delay (Seconds)</label>
+                    <input type="number" class="form-control" id="m-delay-time" value="5" min="0" max="30">
                 </div>
             </div>
 
-            <button class="btn btn-primary" style="width: 100%; position: fixed; bottom: 0; left: 0; border-radius: 0; padding: 15px; z-index: 90;" onclick="saveMobilePopupSettings()">Save Settings</button>
+            <!-- Mobile Bottom Action Bar -->
+            <div class="mobile-action-bar">
+                <button class="btn btn-secondary" onclick="resetForm()">
+                    Reset
+                </button>
+                <button class="btn btn-primary" onclick="savePopupSettings('mobile')">
+                    Save Settings
+                </button>
+            </div>
         </main>
+
+        <!-- Overlay & drawer -->
+        <div class="m-overlay" id="m-overlay">
+            <div class="m-drawer">
+                <div class="m-drawer-header">
+                    <img
+                      class="m-drawer-logo"
+                      src="https://product-ecommerces.netlify.app/vastramaya.png"
+                      alt="Vastramaya Logo" />
+                    <button class="m-drawer-close" id="m-drawer-close" aria-label="Close menu">
+                        <div class="m-drawer-close-icon"></div>
+                    </button>
+                </div>
+
+                <nav class="m-drawer-nav">
+                    <!-- Dashboard -->
+                    <div class="m-nav-item" onclick="window.location.href='index.html'">
+                        <span class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect width="7" height="7" x="3" y="3" rx="1"/>
+                                <rect width="7" height="7" x="14" y="3" rx="1"/>
+                                <rect width="7" height="7" x="14" y="14" rx="1"/>
+                                <rect width="7" height="7" x="3" y="14" rx="1"/>
+                            </svg>
+                        </span>
+                        <span class="label">Dashboard</span>
+                    </div>
+
+                    <!-- Inventory -->
+                    <div class="m-nav-item" onclick="window.location.href='manage-products.html'">
+                        <span class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M2 7v10"/>
+                                <path d="M6 5v14"/>
+                                <rect width="12" height="18" x="10" y="3" rx="2"/>
+                            </svg>
+                        </span>
+                        <span class="label">Inventory</span>
+                    </div>
+
+                    <!-- Customize Site -->
+                    <div class="m-nav-item active" id="m-customize-toggle">
+                        <span class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12.034 12.681a.498.498 0 0 1 .647-.647l9 3.5a.5.5 0 0 1-.033.943l-3.444 1.068a1 1 0 0 0-.66.66l-1.067 3.443a.5.5 0 0 1-.943.033z"/>
+                                <path d="M21 11V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6"/>
+                            </svg>
+                        </span>
+                        <span class="label">Customize Site</span>
+                        <span class="chevron">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round"
+                                 class="chevron-icon">
+                                <path d="m9 18 6-6-6-6"/>
+                            </svg>
+                        </span>
+                    </div>
+
+                    <!-- Mobile Customize Site submenu -->
+                    <div class="m-submenu open" id="m-customize-submenu">
+                        <div class="m-submenu-item">
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
+                                <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
+                                <path d="M4 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/>
+                                <path d="M9.5 12.5 11 14"/>
+                                <path d="M14 10l-3.5 4"/>
+                                <path d="m5 15 4.5-4"/>
+                            </svg>
+                            <span>Theme & layout</span>
+                        </div>
+                        <div class="m-submenu-item">
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect width="18" height="18" x="3" y="3" rx="2"/>
+                                <path d="M3 9h18"/>
+                                <path d="M9 21V9"/>
+                            </svg>
+                            <span>Sections</span>
+                        </div>
+                        <div class="m-submenu-item active">
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect width="18" height="18" x="3" y="3" rx="2"/>
+                                <path d="M8 7v.01"/>
+                                <path d="M12 7v.01"/>
+                                <path d="M16 7v.01"/>
+                                <path d="M8 11v.01"/>
+                                <path d="M12 11v.01"/>
+                                <path d="M16 11v.01"/>
+                                <path d="M8 15v.01"/>
+                                <path d="M12 15v.01"/>
+                                <path d="M16 15v.01"/>
+                            </svg>
+                            <span>Popup Manager</span>
+                        </div>
+                    </div>
+                </nav>
+
+                <!-- Mobile account section -->
+                <div class="m-account-section" id="mobile-profile-section">
+                    <div class="account-card">
+                        <img id="mobile-sidebar-avatar" class="account-avatar"
+                             src="https://bpb-us-w2.wpmucdn.com/wp.wpi.edu/dist/e/505/files/2024/06/unknown-person-icon-3.png"
+                             alt="Profile" />
+                        <div class="account-text">
+                            <div class="account-name" id="mobile-sidebar-name">Loading...</div>
+                            <div class="account-email" id="mobile-sidebar-email">Admin</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div id="toast"></div>
+    <!-- Profile Popup -->
+    <div class="profile-popup" id="profile-popup">
+        <div class="popup-header">
+            <img id="popup-avatar" src="" class="account-avatar">
+            <div class="account-text">
+                <span class="account-name" id="popup-name">Loading...</span>
+                <span class="account-email" id="popup-email">Admin</span>
+            </div>
+        </div>
+        <ul class="popup-list">
+            <li>
+                <a href="#">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="popup-icon">
+                        <circle cx="12" cy="8" r="5"/>
+                        <path d="M20 21a8 8 0 0 0-16 0"/>
+                    </svg>
+                    <span>Profile</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="popup-icon">
+                        <path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/>
+                        <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                    <span>Settings</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" onclick="auth.signOut()" class="logout">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="popup-icon logout-icon">
+                        <path d="m16 17 5-5-5-5"/>
+                        <path d="M21 12H9"/>
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                    </svg>
+                    <span>Logout</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div id="toast-container"></div>
 
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -313,7 +1855,104 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
 
     <script>
-        // --- CONFIGURATION ---
+        // --- UI INTERACTIONS ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Mobile drawer behaviour
+            const mOverlay = document.getElementById('m-overlay');
+            const mMenuToggle = document.getElementById('m-menu-toggle');
+            const mDrawerClose = document.getElementById('m-drawer-close');
+
+            if (mMenuToggle && mOverlay && mDrawerClose) {
+                mMenuToggle.addEventListener('click', () => {
+                    mOverlay.classList.add('open');
+                });
+
+                mDrawerClose.addEventListener('click', () => {
+                    mOverlay.classList.remove('open');
+                });
+
+                mOverlay.addEventListener('click', (e) => {
+                    if (e.target === mOverlay) {
+                        mOverlay.classList.remove('open');
+                    }
+                });
+            }
+
+            // Profile section
+            const profileSection = document.getElementById('profile-section');
+            const mobileProfileSection = document.getElementById('mobile-profile-section');
+            const profilePopup = document.getElementById('profile-popup');
+
+            // Fix profile popup positioning for desktop - show on LEFT side
+            if (profileSection) {
+                profileSection.addEventListener('click', e => {
+                    e.stopPropagation();
+                    
+                    // Position the popup at the bottom left of the account section for desktop
+                    if (window.innerWidth >= 769) {
+                        const rect = profileSection.getBoundingClientRect();
+                        profilePopup.style.left = '30px';
+                        profilePopup.style.right = 'auto';
+                        profilePopup.style.bottom = '100px';
+                        profilePopup.style.top = 'auto';
+                    }
+                    
+                    profilePopup.classList.toggle('active');
+                });
+                
+                document.addEventListener('click', e => {
+                    if (!profileSection.contains(e.target) && !profilePopup.contains(e.target)) {
+                        profilePopup.classList.remove('active');
+                    }
+                });
+            }
+
+            if (mobileProfileSection) {
+                mobileProfileSection.addEventListener('click', e => {
+                    e.stopPropagation();
+                    profilePopup.classList.toggle('active');
+                });
+            }
+
+            // Close popups when clicking outside
+            document.addEventListener('click', function(e) {
+                // Close profile popup when clicking outside
+                const profilePopup = document.getElementById('profile-popup');
+                const profileSection = document.getElementById('profile-section');
+                const mobileProfileSection = document.getElementById('mobile-profile-section');
+                
+                if (profilePopup && profilePopup.classList.contains('active')) {
+                    if (!profilePopup.contains(e.target) && 
+                        !profileSection?.contains(e.target) && 
+                        !mobileProfileSection?.contains(e.target)) {
+                        profilePopup.classList.remove('active');
+                    }
+                }
+            });
+
+            // Close popups when pressing Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    document.getElementById('profile-popup')?.classList.remove('active');
+                }
+            });
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth <= 768) {
+                document.body.style.overflowX = 'hidden';
+                document.body.style.maxWidth = '100vw';
+            } else {
+                document.body.style.overflowX = '';
+                document.body.style.maxWidth = '';
+            }
+            
+            // Close popups on resize
+            document.getElementById('profile-popup')?.classList.remove('active');
+        });
+
+        // --- FIREBASE CONFIG ---
         const firebaseConfig = {
             apiKey: "AIzaSyCdeonH3VytC21F3X6x0rCVCn2xXrGPoug",
             authDomain: "vastramaya---magic.firebaseapp.com",
@@ -324,13 +1963,12 @@
             measurementId: "G-E39VNDCFVE"
         };
         const ADMIN_EMAIL = "harshavardhanjw@gmail.com";
-
-        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
         const storage = firebase.storage();
 
-        // --- STATE ---
+        // --- APP LOGIC ---
         let state = {
             enabled: false,
             title: '',
@@ -344,43 +1982,66 @@
         
         let pendingImageFile = null;
 
-        // --- AUTH ---
         auth.onAuthStateChanged(user => {
-            if (user && user.email === ADMIN_EMAIL) {
-                loadData();
-            } else {
+            if (!user || user.email !== ADMIN_EMAIL) {
                 window.location.href = 'index.html';
+                return;
             }
+            initProfile(user);
+            loadData();
         });
 
-        // --- LOAD DATA ---
+        function initProfile(user) {
+            const name = user.displayName || 'Admin';
+            const avatar = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=5127ba&color=fff`;
+            
+            // Desktop
+            document.getElementById('sidebar-name').textContent = name;
+            document.getElementById('sidebar-email').textContent = user.email;
+            document.getElementById('sidebar-avatar').src = avatar;
+            
+            // Mobile
+            document.getElementById('mobile-sidebar-name').textContent = name;
+            document.getElementById('mobile-sidebar-email').textContent = user.email;
+            document.getElementById('mobile-sidebar-avatar').src = avatar;
+            
+            // Popup
+            document.getElementById('popup-name').textContent = name;
+            document.getElementById('popup-email').textContent = user.email;
+            document.getElementById('popup-avatar').src = avatar;
+        }
+
         async function loadData() {
-            showToast('Loading settings...');
             try {
                 const doc = await db.collection('landingPage').doc('HeroPopup').get();
                 if (doc.exists) {
-                    state = { ...state, ...doc.data() };
+                    const data = doc.data();
+                    state = { 
+                        ...state, 
+                        ...data,
+                        enabled: data.enabled !== undefined ? data.enabled : false
+                    };
                 }
                 updateUI();
             } catch (error) {
                 console.error("Error loading data:", error);
-                showToast("Failed to load settings", true);
+                showToast("Failed to load settings", 'error');
             }
         }
 
         // --- UI SYNC ---
         function updateUI() {
             // Desktop Inputs
-            document.getElementById('popup-toggle').classList.toggle('active', state.enabled);
-            document.getElementById('d-popup-title').value = state.title;
-            document.getElementById('d-popup-message').value = state.message;
-            document.getElementById('d-button-text').value = state.buttonText;
-            document.getElementById('d-button-link').value = state.buttonLink;
-            document.getElementById('d-delay-time').value = state.delayTime;
-            document.getElementById('d-display-frequency').value = state.displayFrequency;
+            document.getElementById('popup-toggle').checked = state.enabled;
+            document.getElementById('m-popup-toggle').checked = state.enabled;
+            document.getElementById('popup-title').value = state.title;
+            document.getElementById('popup-message').value = state.message;
+            document.getElementById('button-text').value = state.buttonText;
+            document.getElementById('button-link').value = state.buttonLink;
+            document.getElementById('delay-time').value = state.delayTime;
+            document.getElementById('display-frequency').value = state.displayFrequency;
 
             // Mobile Inputs
-            document.getElementById('m-popup-toggle').classList.toggle('active', state.enabled);
             document.getElementById('m-popup-title').value = state.title;
             document.getElementById('m-popup-message').value = state.message;
             document.getElementById('m-button-text').value = state.buttonText;
@@ -397,70 +2058,70 @@
 
         function showImagePreview(url) {
             // Update Desktop View
-            document.getElementById('d-image-preview').src = url;
-            document.getElementById('d-preview-container').classList.add('active');
-            document.querySelector('#d-upload-zone .upload-content').style.display = 'none';
-            document.getElementById('d-upload-zone').classList.add('has-image');
-            document.getElementById('d-conditional-fields').style.display = 'block';
+            document.getElementById('image-preview').src = url;
+            document.getElementById('image-preview-container').style.display = 'flex';
+            document.getElementById('image-upload-box').style.display = 'none';
+            document.getElementById('conditional-message').style.display = 'flex';
             
             // Update Mobile View
             document.getElementById('m-image-preview').src = url;
-            document.getElementById('m-preview-container').classList.add('active');
-            document.querySelector('#m-upload-zone .upload-content').style.display = 'none';
+            document.getElementById('m-image-preview-container').style.display = 'flex';
+            document.getElementById('m-image-upload-box').style.display = 'none';
             
-            // Logic: Title/Msg are optional if image exists
+            // Update required fields
             updateRequiredFields(false);
         }
 
         function hideImagePreview() {
             // Reset Desktop
-            document.getElementById('d-image-preview').src = '';
-            document.getElementById('d-preview-container').classList.remove('active');
-            document.querySelector('#d-upload-zone .upload-content').style.display = 'block';
-            document.getElementById('d-upload-zone').classList.remove('has-image');
-            document.getElementById('d-conditional-fields').style.display = 'none';
+            document.getElementById('image-preview').src = '';
+            document.getElementById('image-preview-container').style.display = 'none';
+            document.getElementById('image-upload-box').style.display = 'flex';
+            document.getElementById('conditional-message').style.display = 'none';
 
             // Reset Mobile
             document.getElementById('m-image-preview').src = '';
-            document.getElementById('m-preview-container').classList.remove('active');
-            document.querySelector('#m-upload-zone .upload-content').style.display = 'block';
+            document.getElementById('m-image-preview-container').style.display = 'none';
+            document.getElementById('m-image-upload-box').style.display = 'flex';
 
-            // Logic: Title/Msg required again
+            // Update required fields
             updateRequiredFields(true);
         }
 
         function updateRequiredFields(isRequired) {
-            const labels = ['d-title-label', 'd-message-label', 'm-title-label', 'm-message-label'];
+            const labels = ['title-label', 'message-label', 'm-title-label', 'm-message-label'];
             labels.forEach(id => {
                 const el = document.getElementById(id);
                 if (el) {
-                    if (isRequired) el.classList.add('form-label-required');
-                    else el.classList.remove('form-label-required');
+                    if (isRequired) {
+                        el.classList.add('form-label-required');
+                    } else {
+                        el.classList.remove('form-label-required');
+                    }
                 }
             });
         }
 
         // --- INTERACTION HANDLERS ---
         function togglePopup() {
-            state.enabled = !state.enabled;
-            // Update both UI elements immediately
-            document.getElementById('popup-toggle').classList.toggle('active', state.enabled);
-            document.getElementById('m-popup-toggle').classList.toggle('active', state.enabled);
-        }
-
-        function toggleMobilePopup() {
-            togglePopup(); // Alias to same logic
+            const toggle = document.getElementById('popup-toggle');
+            state.enabled = toggle.checked;
+            // Sync mobile toggle
+            document.getElementById('m-popup-toggle').checked = state.enabled;
         }
 
         // Image Selection Logic
-        document.getElementById('d-image-input').addEventListener('change', handleFileSelect);
+        document.getElementById('image-input').addEventListener('change', handleFileSelect);
         document.getElementById('m-image-input').addEventListener('change', handleFileSelect);
 
         function handleFileSelect(e) {
             const file = e.target.files[0];
             if (!file) return;
             
-            if (file.size > 5 * 1024 * 1024) return showToast("Image too large (Max 5MB)", true);
+            if (file.size > 5 * 1024 * 1024) {
+                showToast("Image too large (Max 5MB)", 'error');
+                return;
+            }
             
             pendingImageFile = file;
             const reader = new FileReader();
@@ -474,21 +2135,21 @@
             hideImagePreview();
             
             // Clear inputs
-            document.getElementById('d-image-input').value = '';
+            document.getElementById('image-input').value = '';
             document.getElementById('m-image-input').value = '';
-            showToast('Image removed', false);
+            showToast('Image removed', 'success');
         }
 
         function removeMobileImage() {
-            removeImage(); // Alias
+            removeImage();
         }
 
         function resetForm() {
             if (confirm("Reset all settings to default?")) {
                 state = {
                     enabled: false,
-                    title: 'Special Offer!',
-                    message: 'Get 20% off on your first order!',
+                    title: '',
+                    message: '',
                     buttonText: 'Shop Now',
                     buttonLink: '/shop',
                     delayTime: 5,
@@ -497,20 +2158,20 @@
                 };
                 pendingImageFile = null;
                 updateUI();
-                showToast("Settings reset");
+                showToast("Settings reset", 'success');
             }
         }
 
         // --- SAVE LOGIC ---
         async function savePopupSettings(viewPrefix) {
             // viewPrefix is 'desktop' or 'mobile'
-            const btn = event.target; // The button clicked
+            const btn = event.target;
             const originalText = btn.innerText;
             btn.innerText = "Saving...";
             btn.disabled = true;
 
             // Determine which inputs to read from
-            const prefix = viewPrefix === 'desktop' ? 'd-' : 'm-';
+            const prefix = viewPrefix === 'desktop' ? '' : 'm-';
             
             // Update State from DOM elements of the active view
             state.title = document.getElementById(`${prefix}popup-title`).value.trim();
@@ -518,23 +2179,26 @@
             state.buttonText = document.getElementById(`${prefix}button-text`).value.trim();
             state.buttonLink = document.getElementById(`${prefix}button-link`).value.trim();
             state.delayTime = parseInt(document.getElementById(`${prefix}delay-time`).value);
+            state.enabled = document.getElementById('popup-toggle').checked;
             
-            // Frequency is only on desktop form visually in this design, so fall back to existing state if mobile saving, or grab if desktop
+            // Frequency is only on desktop form
             if (viewPrefix === 'desktop') {
-                state.displayFrequency = document.getElementById('d-display-frequency').value;
+                state.displayFrequency = document.getElementById('display-frequency').value;
             }
 
             // Validation
             if (state.enabled && !pendingImageFile && !state.imageUrl && (!state.title || !state.message)) {
                 btn.innerText = originalText;
                 btn.disabled = false;
-                return showToast("Please provide Title/Message OR an Image", true);
+                showToast("Please provide Title/Message OR an Image", 'error');
+                return;
             }
 
             if (state.enabled && (!state.buttonText || !state.buttonLink)) {
                 btn.innerText = originalText;
                 btn.disabled = false;
-                return showToast("Button Text and Link are required", true);
+                showToast("Button Text and Link are required", 'error');
+                return;
             }
 
             try {
@@ -554,7 +2218,7 @@
 
                 // Sync UI across views
                 updateUI();
-                showToast("Popup settings saved successfully!");
+                showToast("Popup settings saved successfully!", 'success');
                 
                 // If saved from mobile, close drawer
                 if (viewPrefix === 'mobile') {
@@ -563,24 +2227,26 @@
 
             } catch (error) {
                 console.error("Save Error:", error);
-                showToast("Error saving settings", true);
+                showToast("Error saving settings", 'error');
             } finally {
                 btn.innerText = originalText;
                 btn.disabled = false;
             }
         }
 
-        function saveMobilePopupSettings() {
-            savePopupSettings('mobile');
-        }
-
-        // --- UTILS ---
-        function showToast(msg, isError = false) {
-            const toast = document.createElement('div');
-            toast.className = `toast-msg ${isError ? 'error' : ''}`;
-            toast.innerText = msg;
-            document.getElementById('toast').appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+        function showToast(msg, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const el = document.createElement('div');
+            el.className = `toast ${type}`;
+            el.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    ${type === 'success' ? 
+                        '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>' : 
+                        '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>'}
+                </svg>
+                <span>${msg}</span>`;
+            container.appendChild(el);
+            setTimeout(() => el.remove(), 3000);
         }
     </script>
 </body>
