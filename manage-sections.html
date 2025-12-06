@@ -50,6 +50,17 @@
             color: var(--text-color);
             overflow-x: hidden;
             width: 100%;
+            -webkit-touch-callout: none; /* iOS Safari */
+            -webkit-user-select: none; /* Safari */
+            -khtml-user-select: none; /* Konqueror HTML */
+            -moz-user-select: none; /* Old versions of Firefox */
+            -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+        }
+
+        /* Prevent long press context menu on mobile */
+        * {
+            -webkit-tap-highlight-color: transparent;
         }
 
         /* ============= DESKTOP LAYOUT ============= */
@@ -382,6 +393,9 @@
             cursor: grab;
             transition: all 0.2s ease;
             user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
         }
 
         .draggable-item:hover {
@@ -403,6 +417,18 @@
             justify-content: center;
             width: 24px;
             height: 24px;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        /* Prevent context menu on drag handle */
+        .drag-handle {
+            -webkit-touch-callout: none;
+        }
+
+        .drag-handle:active {
+            cursor: grabbing;
         }
 
         .item-image {
@@ -774,6 +800,121 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* ============= FIXED PROFILE POPUP ============= */
+        .profile-popup {
+            position: fixed;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 1px solid #e5e7eb;
+            padding: 0;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(10px);
+            transition: all 0.2s ease;
+            width: 280px;
+            max-width: 90vw;
+            overflow: hidden;
+        }
+
+        .profile-popup.active {
+            opacity: 1;
+            pointer-events: all;
+            transform: translateY(0);
+        }
+
+        /* Desktop positioning - FIXED: Show on LEFT side */
+        @media (min-width: 769px) {
+            .profile-popup {
+                left: 30px !important;
+                right: auto !important;
+                bottom: 100px !important;
+                top: auto !important;
+            }
+        }
+
+        /* Mobile positioning */
+        @media (max-width: 768px) {
+            .profile-popup {
+                left: 50% !important;
+                right: auto !important;
+                bottom: 100px !important;
+                top: auto !important;
+                transform: translateX(-50%) translateY(10px);
+            }
+            
+            .profile-popup.active {
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        .popup-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            background: #f9fafb;
+        }
+
+        .popup-list {
+            list-style: none;
+            padding: 0.5rem;
+        }
+
+        .popup-list li {
+            margin: 0;
+            padding: 0;
+        }
+
+        .popup-list a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--text-color);
+            transition: background 0.15s ease;
+            cursor: pointer;
+            font-size: 14px;
+            white-space: nowrap;
+            width: 100%;
+            background: none;
+            border: none;
+            text-align: left;
+        }
+
+        .popup-list a:hover {
+            background: #f3f4f6;
+        }
+
+        .popup-list a i {
+            font-size: 1.2rem;
+            color: #6b7280;
+            min-width: 20px;
+        }
+
+        .popup-list a.logout {
+            color: var(--danger-color);
+        }
+
+        .popup-list a.logout i {
+            color: var(--danger-color);
+        }
+
+        .popup-icon {
+            width: 18px;
+            height: 18px;
+            stroke: #6b7280;
+            flex-shrink: 0;
+        }
+
+        .logout-icon {
+            stroke: var(--danger-color) !important;
+        }
+
         /* ============= MOBILE LAYOUT ============= */
         .page-mobile {
             min-height: 100vh;
@@ -848,7 +989,7 @@
             max-width: 200px;
         }
 
-        /* Mobile main bg */
+        /* Mobile main bg - FIXED: Save button visibility */
         .m-main {
             flex: 1;
             background: var(--page-bg);
@@ -856,6 +997,7 @@
             padding-bottom: 100px;
             width: 100%;
             overflow-x: hidden;
+            position: relative;
         }
 
         /* Mobile Card */
@@ -911,6 +1053,7 @@
             transform: translateX(-100%);
             transition: transform 0.25s ease-out;
             overflow-y: auto;
+            z-index: 41;
         }
 
         .m-overlay.open .m-drawer {
@@ -981,6 +1124,7 @@
             padding: 32px 8px;
             display: flex;
             flex-direction: column;
+            flex: 1;
         }
 
         .m-nav-item {
@@ -1062,6 +1206,20 @@
             border-top: 1px solid var(--border-subtle);
             cursor: pointer;
             position: relative;
+        }
+
+        /* Mobile Save Button - FIXED: Hide when menu is open */
+        .mobile-save-btn {
+            width: calc(100% - 32px);
+            position: fixed;
+            bottom: 20px;
+            left: 16px;
+            padding: 15px;
+            z-index: 90;
+        }
+
+        .m-overlay.open ~ .mobile-save-btn {
+            display: none !important;
         }
 
         /* Empty State */
@@ -1302,8 +1460,8 @@
                                  src="https://bpb-us-w2.wpmucdn.com/wp.wpi.edu/dist/e/505/files/2024/06/unknown-person-icon-3.png"
                                  alt="Profile" />
                             <div class="account-text">
-                                <div class="account-name" id="sidebar-name">Admin User</div>
-                                <div class="account-email" id="sidebar-email">admin@example.com</div>
+                                <div class="account-name" id="sidebar-name">Loading...</div>
+                                <div class="account-email" id="sidebar-email">Admin</div>
                             </div>
                         </div>
                     </div>
@@ -1441,7 +1599,8 @@
                 </div>
             </div>
 
-            <button class="btn btn-primary" style="width: calc(100% - 32px); position: fixed; bottom: 20px; left: 16px; padding: 15px; z-index: 90;" onclick="saveSections()">
+            <!-- FIXED: Save button outside main content to control visibility -->
+            <button class="btn btn-primary mobile-save-btn" onclick="saveSections()">
                 Save All Changes
             </button>
         </main>
@@ -1608,8 +1767,8 @@
                              src="https://bpb-us-w2.wpmucdn.com/wp.wpi.edu/dist/e/505/files/2024/06/unknown-person-icon-3.png"
                              alt="Profile" />
                         <div class="account-text">
-                            <div class="account-name" id="mobile-sidebar-name">Admin User</div>
-                            <div class="account-email" id="mobile-sidebar-email">admin@example.com</div>
+                            <div class="account-name" id="mobile-sidebar-name">Loading...</div>
+                            <div class="account-email" id="mobile-sidebar-email">Admin</div>
                         </div>
                     </div>
                 </div>
@@ -1651,6 +1810,47 @@
                 <button class="btn btn-primary" onclick="confirmProductSelection()">Apply Selection</button>
             </div>
         </div>
+    </div>
+
+    <!-- Profile Popup with updated SVG icons -->
+    <div class="profile-popup" id="profile-popup">
+        <div class="popup-header">
+            <img id="popup-avatar" src="" class="account-avatar">
+            <div class="account-text">
+                <span class="account-name" id="popup-name">Loading...</span>
+                <span class="account-email" id="popup-email">Admin</span>
+            </div>
+        </div>
+        <ul class="popup-list">
+            <li>
+                <a href="#">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="popup-icon">
+                        <circle cx="12" cy="8" r="5"/>
+                        <path d="M20 21a8 8 0 0 0-16 0"/>
+                    </svg>
+                    <span>Profile</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="popup-icon">
+                        <path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/>
+                        <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                    <span>Settings</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" onclick="auth.signOut()" class="logout">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="popup-icon logout-icon">
+                        <path d="m16 17 5-5-5-5"/>
+                        <path d="M21 12H9"/>
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                    </svg>
+                    <span>Logout</span>
+                </a>
+            </li>
+        </ul>
     </div>
 
     <div id="toast-container"></div>
@@ -1753,6 +1953,50 @@
                 });
             }
 
+            // Profile section functionality
+            const profileSection = document.getElementById('profile-section');
+            const mobileProfileSection = document.getElementById('mobile-profile-section');
+            const profilePopup = document.getElementById('profile-popup');
+
+            // Fix profile popup positioning for desktop - show on LEFT side
+            if (profileSection) {
+                profileSection.addEventListener('click', e => {
+                    e.stopPropagation();
+                    
+                    // Position the popup at the bottom left of the account section for desktop
+                    if (window.innerWidth >= 769) {
+                        const rect = profileSection.getBoundingClientRect();
+                        profilePopup.style.left = '30px';
+                        profilePopup.style.right = 'auto';
+                        profilePopup.style.bottom = '100px';
+                        profilePopup.style.top = 'auto';
+                    }
+                    
+                    profilePopup.classList.toggle('active');
+                });
+                
+                document.addEventListener('click', e => {
+                    if (!profileSection.contains(e.target) && !profilePopup.contains(e.target)) {
+                        profilePopup.classList.remove('active');
+                    }
+                });
+            }
+
+            if (mobileProfileSection) {
+                mobileProfileSection.addEventListener('click', e => {
+                    e.stopPropagation();
+                    profilePopup.classList.toggle('active');
+                });
+            }
+
+            // Prevent context menu on drag handles
+            document.addEventListener('contextmenu', function(e) {
+                if (e.target.closest('.drag-handle') || e.target.closest('.draggable-item')) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
             // Close dropdowns when clicking outside
             document.addEventListener('click', (e) => {
                 if (!e.target.closest('.d-nav-item') && !e.target.closest('.d-submenu')) {
@@ -1761,17 +2005,62 @@
                     dCustomizeToggle?.classList.remove('dropdown-open');
                     dOrdersToggle?.classList.remove('dropdown-open');
                 }
+                
+                // Close profile popup when clicking outside
+                if (profilePopup && profilePopup.classList.contains('active')) {
+                    if (!profilePopup.contains(e.target) && 
+                        !profileSection?.contains(e.target) && 
+                        !mobileProfileSection?.contains(e.target)) {
+                        profilePopup.classList.remove('active');
+                    }
+                }
+            });
+
+            // Prevent drag handle context menu with touch events
+            document.querySelectorAll('.drag-handle').forEach(handle => {
+                handle.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                }, { passive: false });
+                
+                handle.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                }, { passive: false });
+                
+                handle.addEventListener('touchmove', function(e) {
+                    e.preventDefault();
+                }, { passive: false });
             });
         });
 
         // --- AUTH & INIT ---
         auth.onAuthStateChanged(user => {
             if (user && user.email === ADMIN_EMAIL) {
+                initProfile(user);
                 loadData();
             } else {
                 window.location.href = 'index.html';
             }
         });
+
+        function initProfile(user) {
+            const name = user.displayName || 'Admin User';
+            const avatar = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=5127ba&color=fff`;
+            
+            // Desktop
+            document.getElementById('sidebar-name').textContent = name;
+            document.getElementById('sidebar-email').textContent = user.email;
+            document.getElementById('sidebar-avatar').src = avatar;
+            
+            // Mobile
+            document.getElementById('mobile-sidebar-name').textContent = name;
+            document.getElementById('mobile-sidebar-email').textContent = user.email;
+            document.getElementById('mobile-sidebar-avatar').src = avatar;
+            
+            // Popup
+            document.getElementById('popup-name').textContent = name;
+            document.getElementById('popup-email').textContent = user.email;
+            document.getElementById('popup-avatar').src = avatar;
+        }
 
         // --- LOAD DATA ---
         async function loadData() {
@@ -1972,6 +2261,33 @@
                         renderCategories('mobile-categories-list');
                     }
                 });
+
+                // Touch events for mobile
+                item.addEventListener('touchstart', function(e) {
+                    const touch = e.touches[0];
+                    this.dataset.startY = touch.pageY;
+                    this.dataset.startX = touch.pageX;
+                }, { passive: true });
+
+                item.addEventListener('touchmove', function(e) {
+                    if (!this.dataset.startY) return;
+                    
+                    const touch = e.touches[0];
+                    const deltaY = Math.abs(touch.pageY - this.dataset.startY);
+                    const deltaX = Math.abs(touch.pageX - this.dataset.startX);
+                    
+                    // Only consider it a drag if vertical movement is significant
+                    if (deltaY > 10 && deltaY > deltaX) {
+                        e.preventDefault();
+                        this.classList.add('dragging');
+                    }
+                }, { passive: false });
+
+                item.addEventListener('touchend', function() {
+                    this.classList.remove('dragging');
+                    delete this.dataset.startY;
+                    delete this.dataset.startX;
+                });
             });
         }
 
@@ -2077,7 +2393,7 @@
 
         // --- SAVING ---
         async function saveSections() {
-            const btn = document.querySelector('.page-desktop .btn-primary') || document.querySelector('.page-mobile .btn-primary');
+            const btn = document.querySelector('.page-desktop .btn-primary') || document.querySelector('.mobile-save-btn');
             const originalText = btn.innerText;
             btn.innerText = "Saving...";
             btn.disabled = true;
