@@ -72,6 +72,9 @@
             display: flex;
             align-items: center;
             padding-left: 40px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         .d-topbar-logo {
@@ -85,19 +88,21 @@
             flex: 1;
             display: flex;
             width: 100%;
-            overflow: hidden;
+            min-height: calc(100vh - 70px);
         }
 
-        /* Desktop sidebar */
+        /* Desktop sidebar - FIXED */
         .d-sidebar {
             width: var(--sidebar-width);
             background: var(--sidebar-bg);
             border-right: 1px solid var(--border-subtle);
             display: flex;
             flex-direction: column;
-            position: fixed;
-            height: calc(100vh - var(--header-height-desktop));
+            position: sticky;
+            top: 70px;
+            height: calc(100vh - 70px);
             overflow-y: auto;
+            overflow-x: hidden;
         }
 
         .d-sidebar-inner {
@@ -111,7 +116,6 @@
         .d-nav {
             display: flex;
             flex-direction: column;
-            flex: 1;
         }
 
         .d-nav-group + .d-nav-group {
@@ -211,7 +215,6 @@
             border-top: 1px solid var(--border-subtle);
             cursor: pointer;
             position: relative;
-            background: var(--sidebar-bg);
         }
 
         .account-card {
@@ -257,14 +260,15 @@
             background: var(--page-bg);
             overflow-y: auto;
             width: 100%;
-            margin-left: var(--sidebar-width);
+            padding: 0;
+            position: relative;
         }
 
-        /* ============= BODY CONTENT ============= */
+        /* ============= PRODUCT EDITOR CONTENT ============= */
         .content-inner {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 32px 40px 60px;
+            padding: 24px 24px 80px;
             width: 100%;
         }
 
@@ -279,14 +283,14 @@
         .page-title-wrap {
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 8px;
             min-width: 0;
         }
 
         .page-title {
             font-weight: 700;
-            font-size: 24px;
-            line-height: 32px;
+            font-size: 28px;
+            line-height: 36px;
             color: rgb(29, 30, 32);
             white-space: nowrap;
             overflow: hidden;
@@ -313,37 +317,58 @@
             color: #d1d5db;
         }
 
-        /* Premium Cards */
-        .card {
+        /* Premium Editor Layout */
+        .editor-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+            width: 100%;
+        }
+
+        .editor-main {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .editor-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Premium Card Design */
+        .editor-card {
             background: #ffffff;
             border-radius: var(--radius-lg);
-            border: 1px solid var(--border-subtle);
+            border: 1px solid #e5e7eb;
             overflow: hidden;
             width: 100%;
-            margin-bottom: 24px;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .editor-card:hover {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
         }
 
         .card-header {
-            padding: 24px 32px;
-            border-bottom: 1px solid var(--border-subtle);
+            padding: 24px;
+            border-bottom: 1px solid #e5e7eb;
+            background: #fafafa;
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
 
-        .card-body {
-            padding: 32px;
-        }
-
         .card-title {
-            font-weight: 600;
+            font-weight: 700;
             font-size: 18px;
-            line-height: 28px;
+            line-height: 24px;
             color: rgb(29, 30, 32);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
 
         .card-title svg {
@@ -352,23 +377,23 @@
             stroke: var(--brand-primary);
         }
 
-        /* Premium Form Styles */
-        .form-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 32px;
-            margin-top: 8px;
+        .card-body {
+            padding: 24px;
         }
 
-        .form-section {
+        .card-actions {
             display: flex;
-            flex-direction: column;
-            gap: 32px;
+            gap: 12px;
         }
 
+        /* Form Controls */
         .form-group {
             margin-bottom: 24px;
             width: 100%;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
         }
 
         .form-label {
@@ -377,23 +402,27 @@
             font-weight: 600;
             color: rgb(29, 30, 32);
             margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
 
-        .form-label span.required {
+        .form-label .required {
             color: var(--danger-color);
         }
 
         .form-input {
             width: 100%;
             padding: 14px 16px;
-            border: 1px solid var(--border-subtle);
+            border: 1px solid #e5e7eb;
             border-radius: var(--radius-md);
-            background: #ffffff;
+            background: white;
             transition: all 0.15s ease;
             font-family: "DM Sans", Roboto, sans-serif;
             font-size: 15px;
-            font-weight: 400;
+            font-weight: 500;
             line-height: 20px;
+            color: var(--text-color);
         }
 
         .form-input:focus {
@@ -402,99 +431,39 @@
             outline: none;
         }
 
+        .form-input::placeholder {
+            color: #9ca3af;
+            font-weight: 400;
+        }
+
         .form-textarea {
             min-height: 120px;
             resize: vertical;
         }
 
-        /* Premium Select */
-        .select-container {
-            position: relative;
-            width: 100%;
-        }
-
-        .select-trigger {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 14px 16px;
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-md);
-            background: #ffffff;
-            cursor: pointer;
-            font-size: 15px;
-            color: var(--text-color);
-            transition: all 0.15s ease;
-        }
-
-        .select-trigger:hover {
-            border-color: #cbd5e1;
-        }
-
-        .select-options {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: #ffffff;
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-premium);
-            z-index: 100;
-            opacity: 0;
-            pointer-events: none;
-            transform: translateY(-10px);
-            transition: all 0.2s ease;
-            max-height: 300px;
-            overflow-y: auto;
-        }
-
-        .select-options.open {
-            opacity: 1;
-            pointer-events: all;
-            transform: translateY(0);
-        }
-
-        .select-option {
-            padding: 12px 16px;
-            cursor: pointer;
-            transition: background 0.15s ease;
-            font-size: 14px;
-            color: var(--text-color);
-        }
-
-        .select-option:hover {
-            background: var(--hover-bg);
-        }
-
-        .select-option.selected {
-            background: var(--active-bg);
-            color: var(--brand-primary);
-            font-weight: 500;
-        }
-
-        /* Premium Upload Zone - Enhanced */
-        .upload-zone {
-            border: 2px dashed #E5E7EB;
+        /* Premium Upload Zone */
+        .upload-zone-premium {
+            border: 2px dashed #e5e7eb;
             border-radius: var(--radius-lg);
             padding: 48px 32px;
             text-align: center;
             cursor: pointer;
-            background: linear-gradient(135deg, #FAFAFA 0%, #F5F5F5 100%);
+            background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
+            overflow: hidden;
             width: 100%;
             margin-bottom: 16px;
         }
 
-        .upload-zone::before {
+        .upload-zone-premium::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             height: 4px;
-            background: linear-gradient(90deg, var(--brand-primary), #673de6, var(--brand-primary));
+            background: linear-gradient(90deg, #5127ba, #673de6, #5127ba);
             background-size: 200% 100%;
             animation: shimmer 3s infinite linear;
         }
@@ -504,14 +473,18 @@
             100% { background-position: 200% 0; }
         }
 
-        .upload-zone:hover {
+        .upload-zone-premium:hover {
             border-color: var(--brand-primary);
-            background: linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%);
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
             transform: translateY(-2px);
-            box-shadow: 0 20px 40px rgba(81, 39, 186, 0.15);
+            box-shadow: var(--shadow-premium);
         }
 
-        .upload-zone svg {
+        .upload-zone-premium:active {
+            transform: translateY(0);
+        }
+
+        .upload-zone-premium svg {
             stroke: var(--brand-primary);
             margin-bottom: 16px;
             width: 64px;
@@ -522,9 +495,9 @@
         .upload-text {
             font-size: 18px;
             font-weight: 700;
-            color: #1F2937;
+            color: #1f2937;
             margin-bottom: 8px;
-            background: linear-gradient(135deg, var(--brand-primary) 0%, #673de6 100%);
+            background: linear-gradient(135deg, #5127ba 0%, #673de6 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -532,420 +505,261 @@
 
         .upload-subtext {
             font-size: 14px;
-            color: #6B7280;
+            color: #6b7280;
             max-width: 80%;
             margin: 0 auto;
             line-height: 1.4;
         }
 
-        /* Preview Container */
-        .preview-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-            padding: 32px;
-            background: white;
+        /* Image Preview */
+        .image-preview-wrapper {
             border-radius: var(--radius-lg);
-            border: 1px solid #E5E7EB;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-            margin-bottom: 16px;
-            position: relative;
             overflow: hidden;
-        }
-
-        .preview-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--brand-primary), #673de6, var(--brand-primary));
-            background-size: 200% 100%;
-        }
-
-        .preview-img-wrapper {
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            border: 1px solid #e5e7eb;
+            position: relative;
             width: 100%;
-            padding: 20px;
-            background: linear-gradient(135deg, #FAFAFA 0%, #F5F5F5 100%);
-            border-radius: 12px;
-            border: 1px dashed #E5E7EB;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
 
         .preview-img {
-            width: 200px;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 12px;
-            border: 2px solid white;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: contain;
+            background: #f9fafb;
+            display: block;
         }
 
-        .preview-img:hover {
-            transform: scale(1.02);
+        .preview-actions {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            display: flex;
+            gap: 8px;
+        }
+
+        /* Variants Gallery */
+        .variants-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .variant-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .variant-card:hover {
+            border-color: #d1d5db;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .variant-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .variant-swatch {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-md);
+            border: 2px solid #e5e7eb;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .variant-name {
+            font-weight: 600;
+            font-size: 16px;
+            color: rgb(29, 30, 32);
+        }
+
+        .variant-sizes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .size-tag {
+            padding: 6px 12px;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #4b5563;
+        }
+
+        .size-tag.in-stock {
+            background: #d1fae5;
+            border-color: #a7f3d0;
+            color: #065f46;
+        }
+
+        .size-tag.out-of-stock {
+            background: #fee2e2;
+            border-color: #fecaca;
+            color: #991b1b;
+        }
+
+        .variant-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        /* Reviews */
+        .reviews-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .review-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: var(--radius-lg);
+            padding: 20px;
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .reviewer-name {
+            font-weight: 600;
+            font-size: 15px;
+            color: rgb(29, 30, 32);
+        }
+
+        .review-rating {
+            display: flex;
+            gap: 2px;
+            color: #f59e0b;
+        }
+
+        .review-rating svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+
+        .review-text {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #4b5563;
+        }
+
+        .review-date {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-top: 8px;
         }
 
         /* Buttons */
         .btn {
             display: inline-flex;
             align-items: center;
-            justify-content: center;
             gap: 8px;
             padding: 12px 24px;
-            font-weight: 600;
             border-radius: var(--radius-md);
-            cursor: pointer;
-            transition: all 0.15s ease;
             border: none;
+            cursor: pointer;
+            font-weight: 600;
             font-size: 14px;
             line-height: 20px;
+            transition: all 0.15s ease;
             white-space: nowrap;
-            min-width: 120px;
+            font-family: "DM Sans", Roboto, sans-serif;
+            height: 44px;
         }
 
-        .btn-sm {
-            padding: 8px 16px;
-            font-size: 13px;
-            min-width: 100px;
+        .btn svg {
+            width: 20px;
+            height: 20px;
         }
 
         .btn-primary {
             background: var(--brand-gradient);
-            color: white;
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-        }
-
-        .btn-primary::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, #471ea7 0%, var(--brand-primary) 100%);
-            z-index: -1;
-            opacity: 0;
-            transition: opacity 0.3s ease;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(81, 39, 186, 0.2);
         }
 
         .btn-primary:hover {
+            background: linear-gradient(135deg, #471ea7 0%, #5127ba 100%);
             transform: translateY(-1px);
-            box-shadow: 0 8px 20px rgba(81, 39, 186, 0.25);
-        }
-
-        .btn-primary:hover::before {
-            opacity: 1;
+            box-shadow: 0 6px 20px rgba(81, 39, 186, 0.3);
         }
 
         .btn-secondary {
-            background: white;
-            border: 1px solid var(--border-subtle);
-            color: var(--text-color);
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            color: #673de6;
         }
 
         .btn-secondary:hover {
-            background: #F8FAFC;
-            border-color: #CBD5E1;
-            transform: translateY(-1px);
+            background: #f2efff;
+            border-color: #673de6;
         }
 
         .btn-danger {
-            background: #FEF2F2;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
             color: var(--danger-color);
-            border: 1px solid #FECACA;
         }
 
         .btn-danger:hover {
-            background: #FEE2E2;
-            transform: translateY(-1px);
+            background: #fee2e2;
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            height: 36px;
+            font-size: 13px;
         }
 
         .btn-icon {
             width: 40px;
             height: 40px;
+            padding: 0;
             border-radius: 8px;
-            display: inline-flex;
+            display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            background: white;
-            border: 1px solid var(--border-subtle);
-            transition: all 0.2s ease;
-            padding: 0;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            color: #6b7280;
         }
 
         .btn-icon:hover {
-            background: var(--hover-bg);
+            background: #f9fafb;
             border-color: #d1d5db;
         }
 
-        .btn-icon svg {
-            width: 20px;
-            height: 20px;
-            stroke: #6b7280;
-        }
-
-        /* Variant Cards */
-        .variant-card {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px;
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-md);
-            margin-bottom: 12px;
-            background: #fff;
-            transition: all 0.2s ease;
-        }
-
-        .variant-card:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        }
-
-        .variant-info {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            flex: 1;
-        }
-
-        .variant-swatch {
-            width: 48px;
-            height: 48px;
-            border-radius: 8px;
-            border: 2px solid white;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            object-fit: cover;
-        }
-
-        .variant-details h4 {
-            font-weight: 600;
-            font-size: 14px;
-            margin-bottom: 4px;
-            color: rgb(29, 30, 32);
-        }
-
-        .variant-details p {
-            font-size: 12px;
-            color: #6b7280;
-        }
-
-        .variant-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        /* Review Cards */
-        .review-card {
-            padding: 20px;
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-md);
-            margin-bottom: 12px;
-            background: #fff;
-            transition: all 0.2s ease;
-        }
-
-        .review-card:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        }
-
-        .review-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 12px;
-            align-items: center;
-        }
-
-        .review-name {
-            font-weight: 600;
-            font-size: 14px;
-            color: rgb(29, 30, 32);
-        }
-
-        .star-rating {
-            display: flex;
-            gap: 2px;
-            color: #FFD700;
-        }
-
-        .star-rating svg {
-            width: 16px;
-            height: 16px;
-            fill: currentColor;
-        }
-
-        .review-text {
-            font-size: 14px;
-            color: #6b7280;
-            line-height: 1.5;
-        }
-
-        .review-actions {
-            display: flex;
-            gap: 8px;
-            margin-top: 12px;
-        }
-
-        /* Gallery Grid */
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-            gap: 12px;
-            margin-top: 16px;
-        }
-
-        .gallery-item {
-            position: relative;
-            width: 100%;
-            aspect-ratio: 1;
-            border-radius: var(--radius-md);
-            overflow: hidden;
-            border: 1px solid var(--border-subtle);
-        }
-
-        .gallery-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .gallery-remove {
-            position: absolute;
-            top: 4px;
-            right: 4px;
-            background: rgba(255, 255, 255, 0.9);
+        .btn-icon.danger {
             color: var(--danger-color);
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            font-size: 14px;
-            font-weight: bold;
-            border: none;
+            border-color: #fecaca;
         }
 
-        /* Swatch Upload */
-        .swatch-upload-container {
-            width: 80px;
-            height: 80px;
-            border-radius: var(--radius-md);
-            border: 2px dashed #CBD5E1;
-            background: #F8FAFC;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            overflow: hidden;
-            position: relative;
-            transition: all 0.2s ease;
+        .btn-icon.danger:hover {
+            background: #fef2f2;
         }
 
-        .swatch-upload-container:hover {
-            border-color: var(--brand-primary);
-            background: #EFF6FF;
-        }
-
-        .swatch-upload-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: none;
-        }
-
-        .swatch-upload-container svg {
-            width: 24px;
-            height: 24px;
-            stroke: var(--text-secondary);
-            margin-bottom: 4px;
-        }
-
-        .swatch-upload-container span {
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-
-        /* Size Selection */
-        .size-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-            gap: 12px;
-        }
-
-        .size-item {
-            border: 2px solid var(--border-subtle);
-            border-radius: var(--radius-md);
-            padding: 12px;
-            text-align: center;
-            cursor: pointer;
-            background: white;
-            transition: all 0.2s ease;
-        }
-
-        .size-item:hover {
-            border-color: var(--brand-primary);
-            transform: translateY(-1px);
-        }
-
-        .size-item.selected {
-            background: linear-gradient(135deg, rgba(81, 39, 186, 0.1) 0%, rgba(103, 61, 230, 0.05) 100%);
-            border-color: var(--brand-primary);
-        }
-
-        .size-name {
-            font-weight: 600;
-            font-size: 14px;
-            margin-bottom: 4px;
-        }
-
-        .size-status {
-            font-size: 12px;
-            color: #6b7280;
-        }
-
-        /* Star Rating */
-        .star-rating-input {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-            margin: 20px 0;
-        }
-
-        .star-rating-input svg {
-            width: 32px;
-            height: 32px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .star-rating-input svg:hover {
-            transform: scale(1.1);
-        }
-
-        .star-filled {
-            fill: #FFD700;
-            stroke: #FFD700;
-        }
-
-        .star-empty {
-            fill: none;
-            stroke: #E5E7EB;
-        }
-
-        /* Modals */
+        /* Modal Overlay */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -964,7 +778,7 @@
         .modal-content {
             background: white;
             width: 100%;
-            max-width: 600px;
+            max-width: 500px;
             border-radius: var(--radius-lg);
             box-shadow: var(--shadow-premium);
             display: flex;
@@ -981,7 +795,7 @@
         }
 
         .modal-header {
-            padding: 24px 32px;
+            padding: 24px;
             border-bottom: 1px solid var(--border-subtle);
             display: flex;
             justify-content: space-between;
@@ -992,16 +806,17 @@
         .modal-title {
             font-weight: 700;
             font-size: 20px;
+            line-height: 32px;
             color: rgb(29, 30, 32);
         }
 
         .modal-body {
-            padding: 32px;
-            background: #F8FAFC;
+            padding: 24px;
+            background: #f8fafc;
         }
 
         .modal-footer {
-            padding: 24px 32px;
+            padding: 24px;
             background: white;
             border-top: 1px solid var(--border-subtle);
             display: flex;
@@ -1022,7 +837,7 @@
         }
 
         .toast {
-            padding: 16px 24px;
+            padding: 16px 20px;
             background: white;
             border-radius: var(--radius-md);
             box-shadow: var(--shadow-premium);
@@ -1048,8 +863,8 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Progress Overlay */
-        #progress-overlay {
+        /* Loading Overlay */
+        #loading-overlay {
             position: fixed;
             top: 0;
             left: 0;
@@ -1062,22 +877,21 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            text-align: center;
         }
 
-        .progress-content {
+        .loading-content {
             background: white;
             padding: 40px;
             border-radius: var(--radius-lg);
             box-shadow: var(--shadow-premium);
-            border: 1px solid var(--border-subtle);
-            min-width: 300px;
+            text-align: center;
+            border: 1px solid #e5e7eb;
         }
 
         .spinner {
             width: 48px;
             height: 48px;
-            border: 4px solid #E2E8F0;
+            border: 4px solid #e5e7eb;
             border-top: 4px solid var(--brand-primary);
             border-radius: 50%;
             animation: spin 1s linear infinite;
@@ -1089,21 +903,7 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Mobile Save Bar */
-        .mobile-save-bar {
-            display: none;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: white;
-            padding: 16px;
-            border-top: 1px solid var(--border-subtle);
-            z-index: 90;
-            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        /* ============= FIXED PROFILE POPUP ============= */
+        /* Profile Popup */
         .profile-popup {
             position: fixed;
             background-color: #ffffff;
@@ -1132,7 +932,7 @@
             align-items: center;
             gap: 12px;
             padding: 16px;
-            border-bottom: 1px solid var(--border-subtle);
+            border-bottom: 1px solid #e5e7eb;
             background: #f9fafb;
         }
 
@@ -1157,15 +957,11 @@
             transition: background 0.15s ease;
             cursor: pointer;
             font-size: 14px;
-            white-space: nowrap;
-            width: 100%;
-            background: none;
-            border: none;
-            text-align: left;
+            font-weight: 500;
         }
 
         .popup-list a:hover {
-            background: var(--hover-bg);
+            background: #f3f4f6;
         }
 
         .popup-list a svg {
@@ -1180,6 +976,66 @@
 
         .popup-list a.logout svg {
             stroke: var(--danger-color);
+        }
+
+        /* Custom Select */
+        .custom-select {
+            position: relative;
+            width: 100%;
+        }
+
+        .select-trigger {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 16px;
+            border: 1px solid #e5e7eb;
+            border-radius: var(--radius-md);
+            background: white;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .select-options {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-premium);
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-10px);
+            transition: all 0.2s ease;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .select-options.open {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+
+        .select-option {
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+
+        .select-option:hover {
+            background: #f9fafb;
+            color: var(--brand-primary);
+        }
+
+        .select-option.selected {
+            background: #f2efff;
+            color: var(--brand-primary);
+            font-weight: 600;
         }
 
         /* ============= MOBILE LAYOUT ============= */
@@ -1262,10 +1118,10 @@
         .m-main {
             flex: 1;
             background: var(--page-bg);
-            padding-bottom: 20px;
+            padding-bottom: 100px;
             width: 100%;
             overflow-x: hidden;
-            padding-top: 16px;
+            overflow-y: auto;
         }
 
         /* Overlay & drawer */
@@ -1297,6 +1153,7 @@
             transform: translateX(-100%);
             transition: transform 0.25s ease-out;
             overflow-y: auto;
+            z-index: 50;
         }
 
         .m-overlay.open .m-drawer {
@@ -1366,7 +1223,6 @@
             padding: 32px 8px;
             display: flex;
             flex-direction: column;
-            flex: 1;
         }
 
         .m-nav-item {
@@ -1405,7 +1261,7 @@
             stroke: var(--icon-active);
         }
 
-        /* Mobile account section */
+        /* Drawer footer account */
         .m-account-section {
             margin-top: auto;
             padding: 16px;
@@ -1414,9 +1270,9 @@
             position: relative;
         }
 
-        /* Mobile content */
+        /* Mobile content layout */
         .mobile-content-inner {
-            padding: 16px;
+            padding: 20px 16px;
             width: 100%;
             overflow-x: hidden;
         }
@@ -1431,13 +1287,13 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
             width: 100%;
         }
 
         .mobile-page-title {
             font-weight: 700;
-            font-size: 22px;
+            font-size: 24px;
             line-height: 32px;
             color: rgb(29, 30, 32);
             white-space: nowrap;
@@ -1465,44 +1321,44 @@
             color: #d1d5db;
         }
 
-        /* Mobile form adjustments */
-        .mobile-form-group {
-            margin-bottom: 20px;
+        /* Mobile Save Bar */
+        .mobile-save-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
             width: 100%;
-        }
-
-        .mobile-form-input {
-            width: 100%;
-            padding: 14px 16px;
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-md);
-            background: #ffffff;
-            font-family: "DM Sans", Roboto, sans-serif;
-            font-size: 16px;
-        }
-
-        .mobile-card {
             background: white;
-            border-radius: var(--radius-lg);
-            border: 1px solid var(--border-subtle);
-            padding: 20px;
-            margin-bottom: 20px;
+            padding: 16px;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            gap: 12px;
+            z-index: 90;
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
         }
 
-        /* Responsive switch */
+        .mobile-save-bar .btn {
+            flex: 1;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .editor-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .editor-sidebar {
+                order: 2;
+            }
+            
+            .editor-main {
+                order: 1;
+            }
+        }
+
         @media (max-width: 768px) {
             .page-desktop { display: none; }
-            .page-mobile { display: flex; }
+            .page-mobile  { display: flex; }
             
-            .content-inner {
-                padding: 0;
-                display: none;
-            }
-            
-            .page-header {
-                display: none;
-            }
-
             .modal-overlay {
                 align-items: flex-end;
                 padding: 0;
@@ -1522,82 +1378,185 @@
                 to { transform: translateY(0); }
             }
             
-            .mobile-save-bar {
-                display: flex;
-                gap: 12px;
+            /* Prevent horizontal scrolling */
+            body, html {
+                overflow-x: hidden;
+                position: relative;
+                width: 100%;
             }
             
-            .upload-zone {
-                padding: 32px 20px;
-            }
-            
-            .upload-text {
-                font-size: 16px;
-            }
-            
-            .upload-subtext {
-                font-size: 13px;
-            }
-            
-            .preview-container {
-                padding: 20px;
-            }
-            
-            .preview-img {
-                width: 150px;
-                height: 150px;
+            .mobile-content-inner {
+                padding: 16px;
+                max-width: 100%;
+                overflow-x: hidden;
             }
         }
 
         @media (min-width: 769px) {
             .page-desktop { display: flex; }
             .page-mobile { display: none; }
+            
+            /* Desktop profile popup positioning - show on LEFT side */
+            .profile-popup {
+                left: 30px !important;
+                right: auto !important;
+                bottom: 100px !important;
+                top: auto !important;
+            }
         }
 
-        /* Loading State */
-        .loading-state {
+        /* Mobile positioning */
+        @media (max-width: 768px) {
+            .profile-popup {
+                left: 50% !important;
+                right: auto !important;
+                bottom: 100px !important;
+                top: auto !important;
+                transform: translateX(-50%) translateY(10px);
+            }
+            
+            .profile-popup.active {
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        /* Gallery Images */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .gallery-item {
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            border: 1px solid #e5e7eb;
+        }
+
+        .gallery-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .gallery-remove {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid #e5e7eb;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 80px 20px;
-            text-align: center;
+            cursor: pointer;
+            color: var(--danger-color);
+            font-size: 18px;
         }
 
-        .loading-spinner {
-            width: 48px;
-            height: 48px;
-            border: 4px solid #E2E8F0;
-            border-top: 4px solid var(--brand-primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 20px;
+        /* Sizes Grid */
+        .sizes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .size-option {
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: var(--radius-md);
+            text-align: center;
+            cursor: pointer;
+            background: white;
+            transition: all 0.2s ease;
+            font-weight: 600;
+            color: #4b5563;
+        }
+
+        .size-option:hover {
+            border-color: #d1d5db;
+            background: #f9fafb;
+        }
+
+        .size-option.selected {
+            border-color: var(--brand-primary);
+            background: #f2efff;
+            color: var(--brand-primary);
         }
 
         /* Empty States */
         .empty-state {
             text-align: center;
-            padding: 48px 20px;
+            padding: 48px 24px;
             color: #6b7280;
+            width: 100%;
+            background: #f9fafb;
+            border-radius: var(--radius-lg);
+            border: 2px dashed #e5e7eb;
         }
 
         .empty-state svg {
-            width: 64px;
-            height: 64px;
-            stroke: #d1d5db;
+            width: 48px;
+            height: 48px;
+            stroke: #9ca3af;
             margin-bottom: 16px;
         }
 
-        .empty-state h3 {
-            font-size: 18px;
+        .empty-state-title {
             font-weight: 600;
+            font-size: 16px;
             margin-bottom: 8px;
+            color: #4b5563;
+        }
+
+        .empty-state-text {
+            font-size: 14px;
             color: #6b7280;
         }
 
-        .empty-state p {
-            font-size: 14px;
-            color: #9ca3af;
+        /* Preview Images */
+        .preview-images {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding: 12px 0;
+            margin-top: 16px;
+        }
+
+        .preview-thumb {
+            width: 80px;
+            height: 80px;
+            border-radius: var(--radius-md);
+            object-fit: cover;
+            border: 2px solid transparent;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .preview-thumb:hover {
+            border-color: var(--brand-primary);
+            transform: scale(1.05);
+        }
+
+        /* Form Row */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
         }
     </style>
 </head>
@@ -1773,6 +1732,14 @@
             </aside>
 
             <main class="d-content">
+                <div id="loading-overlay">
+                    <div class="loading-content">
+                        <div class="spinner"></div>
+                        <h3 style="margin:0 0 8px 0; font-size:18px; color:rgb(29, 30, 32);">Processing</h3>
+                        <p style="margin:0; color:#6b7280; font-size:14px;">Please wait...</p>
+                    </div>
+                </div>
+                
                 <div class="content-inner">
                     <!-- PAGE HEADER -->
                     <div class="page-header">
@@ -1795,58 +1762,63 @@
                             </div>
                         </div>
 
-                        <div class="header-actions">
-                            <button class="btn btn-secondary" onclick="window.history.back()">Cancel</button>
-                            <button class="btn btn-primary" id="save-btn">Save Product</button>
+                        <div class="card-actions">
+                            <button class="btn btn-secondary" onclick="window.history.back()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M19 12H5"/>
+                                    <path d="M12 19l-7-7 7-7"/>
+                                </svg>
+                                Cancel
+                            </button>
+                            <button class="btn btn-primary" id="save-btn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                                    <polyline points="17 21 17 13 7 13 7 21"/>
+                                    <polyline points="7 3 7 8 15 8"/>
+                                </svg>
+                                Save Product
+                            </button>
                         </div>
                     </div>
 
-                    <!-- Loading State -->
-                    <div id="loading-state" class="loading-state">
-                        <div class="loading-spinner"></div>
-                        <div style="color: #6b7280; font-size: 14px;">Loading product editor...</div>
-                    </div>
-
-                    <!-- Product Form -->
-                    <form id="product-form" style="display: none;">
-                        <div class="form-grid">
-                            <!-- Left Column -->
-                            <div class="form-section">
+                    <!-- EDITOR CONTENT -->
+                    <form id="product-form">
+                        <div class="editor-grid">
+                            <!-- Main Column -->
+                            <div class="editor-main">
                                 <!-- Cover Image Card -->
-                                <div class="card">
+                                <div class="editor-card">
                                     <div class="card-header">
-                                        <h3 class="card-title">
+                                        <div class="card-title">
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                <rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect>
-                                                <circle cx="9" cy="9" r="2"></circle>
-                                                <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
+                                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                                <circle cx="8.5" cy="8.5" r="1.5"/>
+                                                <polyline points="21 15 16 10 5 21"/>
                                             </svg>
                                             Cover Image
-                                        </h3>
+                                        </div>
                                     </div>
                                     <div class="card-body">
-                                        <div class="upload-zone" id="cover-upload-zone" onclick="document.getElementById('cover-input').click()">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <div class="upload-zone-premium" id="cover-upload-zone" onclick="document.getElementById('cover-input').click()">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                                                 <polyline points="17 8 12 3 7 8"/>
                                                 <line x1="12" y1="3" x2="12" y2="15"/>
                                             </svg>
                                             <div class="upload-text">Click to upload cover image</div>
-                                            <div class="upload-subtext">PNG, JPG up to 5MB</div>
+                                            <div class="upload-subtext">JPG, PNG up to 5MB • High quality recommended</div>
                                         </div>
                                         <input type="file" id="cover-input" accept="image/*" style="display:none;">
-                                        <div id="preview-container" class="preview-container" style="display:none;">
-                                            <div class="preview-img-wrapper">
-                                                <img id="cover-preview" class="preview-img">
-                                            </div>
+                                        <div id="cover-preview-wrapper" class="image-preview-wrapper" style="display:none;">
+                                            <img id="cover-preview" class="preview-img">
                                             <div class="preview-actions">
-                                                <button type="button" class="btn btn-secondary" onclick="removeCoverImage()">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <button type="button" class="btn btn-secondary btn-sm" onclick="removeCoverImage()">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                         <path d="M3 6h18"/>
                                                         <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
                                                         <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
                                                     </svg>
-                                                    Remove Image
+                                                    Remove
                                                 </button>
                                             </div>
                                         </div>
@@ -1854,49 +1826,53 @@
                                 </div>
 
                                 <!-- Product Details Card -->
-                                <div class="card">
+                                <div class="editor-card">
                                     <div class="card-header">
-                                        <h3 class="card-title">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <div class="card-title">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                 <circle cx="12" cy="12" r="10"/>
-                                                <path d="M12 16v-4"/>
-                                                <path d="M12 8h.01"/>
+                                                <line x1="12" y1="16" x2="12" y2="12"/>
+                                                <line x1="12" y1="8" x2="12.01" y2="8"/>
                                             </svg>
                                             Product Details
-                                        </h3>
+                                        </div>
                                     </div>
                                     <div class="card-body">
                                         <div class="form-group">
                                             <label class="form-label">Product Name <span class="required">*</span></label>
-                                            <input type="text" class="form-input" id="name" required placeholder="e.g. Classic Cotton Shirt">
+                                            <input type="text" class="form-input" id="product-name" required placeholder="e.g. Premium Cotton T-Shirt">
                                         </div>
                                         <div class="form-group">
                                             <label class="form-label">Category <span class="required">*</span></label>
-                                            <div class="select-container" id="category-select"></div>
+                                            <div class="custom-select" id="category-select">
+                                                <div class="select-trigger" onclick="this.nextElementSibling.classList.toggle('open')">
+                                                    <span id="selected-category-text">Select Category</span>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                        <path d="m6 9 6 6 6-6"/>
+                                                    </svg>
+                                                </div>
+                                                <div class="select-options" id="category-options"></div>
+                                            </div>
                                             <input type="hidden" id="selected-category">
                                         </div>
                                         <div class="form-group">
                                             <label class="form-label">Description</label>
-                                            <textarea class="form-input form-textarea" id="description" rows="4" placeholder="Detailed product description..."></textarea>
+                                            <textarea class="form-input form-textarea" id="product-description" rows="5" placeholder="Describe the product features, materials, care instructions..."></textarea>
                                         </div>
                                     </div>
                                 </div>
 
                                 <!-- Color Variants Card -->
-                                <div class="card">
+                                <div class="editor-card">
                                     <div class="card-header">
-                                        <h3 class="card-title">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                <circle cx="13.5" cy="6.5" r=".5"/>
-                                                <circle cx="17.5" cy="10.5" r=".5"/>
-                                                <circle cx="8.5" cy="7.5" r=".5"/>
-                                                <circle cx="6.5" cy="12.5" r=".5"/>
-                                                <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/>
+                                        <div class="card-title">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
                                             </svg>
                                             Color Variants
-                                        </h3>
-                                        <button type="button" class="btn btn-primary btn-sm" onclick="openColorModal()">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        </div>
+                                        <button type="button" class="btn btn-primary btn-sm" onclick="openVariantModal()">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                 <path d="M12 5v14"/>
                                                 <path d="M5 12h14"/>
                                             </svg>
@@ -1904,33 +1880,29 @@
                                         </button>
                                     </div>
                                     <div class="card-body">
-                                        <div id="variants-list">
+                                        <div id="variants-container">
                                             <div class="empty-state">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                    <circle cx="13.5" cy="6.5" r=".5"/>
-                                                    <circle cx="17.5" cy="10.5" r=".5"/>
-                                                    <circle cx="8.5" cy="7.5" r=".5"/>
-                                                    <circle cx="6.5" cy="12.5" r=".5"/>
-                                                    <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
                                                 </svg>
-                                                <h3>No Variants Added</h3>
-                                                <p>Add your first color variant to get started.</p>
+                                                <div class="empty-state-title">No Variants Added</div>
+                                                <div class="empty-state-text">Add color variants to showcase different options</div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
                                 <!-- Customer Reviews Card -->
-                                <div class="card">
+                                <div class="editor-card">
                                     <div class="card-header">
-                                        <h3 class="card-title">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <div class="card-title">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                 <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
                                             </svg>
                                             Customer Reviews
-                                        </h3>
+                                        </div>
                                         <button type="button" class="btn btn-primary btn-sm" onclick="openReviewModal()">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                 <path d="M12 5v14"/>
                                                 <path d="M5 12h14"/>
                                             </svg>
@@ -1938,40 +1910,109 @@
                                         </button>
                                     </div>
                                     <div class="card-body">
-                                        <div id="reviews-list">
+                                        <div id="reviews-container">
                                             <div class="empty-state">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                     <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
                                                 </svg>
-                                                <h3>No Reviews Yet</h3>
-                                                <p>Add customer reviews to build trust.</p>
+                                                <div class="empty-state-title">No Reviews Yet</div>
+                                                <div class="empty-state-text">Add customer reviews to build trust</div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Right Column -->
-                            <div class="form-section">
+                            <!-- Sidebar Column -->
+                            <div class="editor-sidebar">
                                 <!-- Pricing Card -->
-                                <div class="card">
+                                <div class="editor-card">
                                     <div class="card-header">
-                                        <h3 class="card-title">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                <line x1="12" y1="1" x2="12" y2="23"></line>
-                                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                        <div class="card-title">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <line x1="12" y1="1" x2="12" y2="23"/>
+                                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
                                             </svg>
                                             Pricing
-                                        </h3>
+                                        </div>
                                     </div>
                                     <div class="card-body">
                                         <div class="form-group">
                                             <label class="form-label">Current Price (₹) <span class="required">*</span></label>
-                                            <input type="number" class="form-input" id="price" step="0.01" required placeholder="0.00">
+                                            <input type="number" class="form-input" id="current-price" required step="0.01" min="0" placeholder="0.00">
                                         </div>
                                         <div class="form-group">
-                                            <label class="form-label">Old Price (₹) <span class="required">*</span></label>
-                                            <input type="number" class="form-input" id="oldPrice" step="0.01" required placeholder="0.00">
+                                            <label class="form-label">Original Price (₹) <span class="required">*</span></label>
+                                            <input type="number" class="form-input" id="original-price" required step="0.01" min="0" placeholder="0.00">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Discount Percentage</label>
+                                            <div style="padding: 12px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: var(--radius-md); text-align: center;">
+                                                <span style="font-weight: 600; color: #065f46;" id="discount-percentage">0%</span> off
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Status Card -->
+                                <div class="editor-card">
+                                    <div class="card-header">
+                                        <div class="card-title">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <circle cx="12" cy="12" r="10"/>
+                                                <path d="m9 12 2 2 4-4"/>
+                                            </svg>
+                                            Status
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="form-group">
+                                            <label class="form-label">Product Status</label>
+                                            <div style="display: flex; align-items: center; gap: 12px;">
+                                                <label class="toggle-switch">
+                                                    <input type="checkbox" id="product-status" checked>
+                                                    <span class="toggle-slider"></span>
+                                                </label>
+                                                <span style="font-weight: 600; color: #10b981;" id="status-text">Active</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Featured Product</label>
+                                            <div style="display: flex; align-items: center; gap: 12px;">
+                                                <label class="toggle-switch">
+                                                    <input type="checkbox" id="featured-status">
+                                                    <span class="toggle-slider"></span>
+                                                </label>
+                                                <span style="font-weight: 500; color: #6b7280;" id="featured-text">Not Featured</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Inventory Card -->
+                                <div class="editor-card">
+                                    <div class="card-header">
+                                        <div class="card-title">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                                                <line x1="3" y1="6" x2="21" y2="6"/>
+                                                <path d="M16 10a4 4 0 0 1-8 0"/>
+                                            </svg>
+                                            Inventory
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="form-group">
+                                            <label class="form-label">SKU Code</label>
+                                            <input type="text" class="form-input" id="sku-code" placeholder="PROD-001">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Stock Quantity</label>
+                                            <input type="number" class="form-input" id="stock-quantity" min="0" value="0">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Low Stock Alert</label>
+                                            <input type="number" class="form-input" id="low-stock-alert" min="0" value="10">
                                         </div>
                                     </div>
                                 </div>
@@ -1998,11 +2039,19 @@
         </header>
 
         <main class="m-main">
+            <div id="loading-overlay">
+                <div class="loading-content">
+                    <div class="spinner"></div>
+                    <h3 style="margin:0 0 8px 0; font-size:18px; color:rgb(29, 30, 32);">Processing</h3>
+                    <p style="margin:0; color:#6b7280; font-size:14px;">Please wait...</p>
+                </div>
+            </div>
+            
             <div class="mobile-content-inner">
                 <!-- Mobile Page Header -->
                 <div class="mobile-page-header">
                     <div class="mobile-page-title-wrap">
-                        <div class="mobile-page-title">Product Editor</div>
+                        <div class="mobile-page-title" id="mobile-editor-title">Product Editor</div>
                         <div class="mobile-breadcrumb">
                             <span class="mobile-breadcrumb-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
@@ -2021,138 +2070,159 @@
                     </div>
                 </div>
 
-                <!-- Mobile Loading -->
-                <div id="mobile-loading-state" class="loading-state">
-                    <div class="loading-spinner"></div>
-                    <div style="color: #6b7280; font-size: 14px;">Loading product editor...</div>
-                </div>
-
                 <!-- Mobile Form -->
-                <form id="mobile-product-form" style="display: none;">
+                <form id="mobile-product-form">
                     <!-- Cover Image -->
-                    <div class="mobile-card">
-                        <h3 style="font-weight: 600; font-size: 18px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px; stroke: var(--brand-primary);">
-                                <rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect>
-                                <circle cx="9" cy="9" r="2"></circle>
-                                <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
-                            </svg>
-                            Cover Image
-                        </h3>
-                        <div class="upload-zone" id="mobile-cover-upload-zone" onclick="document.getElementById('mobile-cover-input').click()">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                                <polyline points="17 8 12 3 7 8"/>
-                                <line x1="12" y1="3" x2="12" y2="15"/>
-                            </svg>
-                            <div class="upload-text">Tap to upload cover</div>
-                            <div class="upload-subtext">PNG, JPG up to 5MB</div>
-                        </div>
-                        <input type="file" id="mobile-cover-input" accept="image/*" style="display:none;">
-                        <div id="mobile-preview-container" class="preview-container" style="display:none; margin-top: 16px;">
-                            <div class="preview-img-wrapper">
-                                <img id="mobile-cover-preview" class="preview-img">
+                    <div class="editor-card" style="margin-bottom: 20px;">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                                    <polyline points="21 15 16 10 5 21"/>
+                                </svg>
+                                Cover Image
                             </div>
-                            <div style="display: flex; gap: 12px; margin-top: 16px;">
-                                <button type="button" class="btn btn-secondary" onclick="removeMobileCoverImage()" style="flex: 1;">
-                                    Remove Image
-                                </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="upload-zone-premium" id="mobile-cover-upload-zone" onclick="document.getElementById('mobile-cover-input').click()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="17 8 12 3 7 8"/>
+                                    <line x1="12" y1="3" x2="12" y2="15"/>
+                                </svg>
+                                <div class="upload-text">Tap to upload cover image</div>
+                                <div class="upload-subtext">JPG, PNG up to 5MB</div>
+                            </div>
+                            <input type="file" id="mobile-cover-input" accept="image/*" style="display:none;">
+                            <div id="mobile-cover-preview-wrapper" class="image-preview-wrapper" style="display:none; margin-top: 16px;">
+                                <img id="mobile-cover-preview" class="preview-img">
+                                <div class="preview-actions">
+                                    <button type="button" class="btn btn-secondary btn-sm" onclick="removeMobileCoverImage()">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M3 6h18"/>
+                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+                                            <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                        </svg>
+                                        Remove
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- Product Details -->
-                    <div class="mobile-card">
-                        <h3 style="font-weight: 600; font-size: 18px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px; stroke: var(--brand-primary);">
-                                <circle cx="12" cy="12" r="10"/>
-                                <path d="M12 16v-4"/>
-                                <path d="M12 8h.01"/>
-                            </svg>
-                            Product Details
-                        </h3>
-                        <div class="mobile-form-group">
-                            <label style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: rgb(29, 30, 32);">Product Name</label>
-                            <input type="text" class="mobile-form-input" id="mobile-name" required placeholder="e.g. Classic Cotton Shirt">
-                        </div>
-                        <div class="mobile-form-group">
-                            <label style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: rgb(29, 30, 32);">Category</label>
-                            <div class="select-container" id="mobile-category-select"></div>
-                            <input type="hidden" id="mobile-selected-category">
-                        </div>
-                        <div class="mobile-form-group">
-                            <label style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: rgb(29, 30, 32);">Description</label>
-                            <textarea class="mobile-form-input" id="mobile-description" rows="4" placeholder="Detailed product description..." style="min-height: 100px; resize: vertical;"></textarea>
-                        </div>
-                    </div>
-
-                    <!-- Pricing -->
-                    <div class="mobile-card">
-                        <h3 style="font-weight: 600; font-size: 18px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px; stroke: var(--brand-primary);">
-                                <line x1="12" y1="1" x2="12" y2="23"></line>
-                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                            </svg>
-                            Pricing
-                        </h3>
-                        <div class="mobile-form-group">
-                            <label style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: rgb(29, 30, 32);">Current Price (₹)</label>
-                            <input type="number" class="mobile-form-input" id="mobile-price" step="0.01" required placeholder="0.00">
-                        </div>
-                        <div class="mobile-form-group">
-                            <label style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: rgb(29, 30, 32);">Old Price (₹)</label>
-                            <input type="number" class="mobile-form-input" id="mobile-oldPrice" step="0.01" required placeholder="0.00">
-                        </div>
-                    </div>
-
-                    <!-- Color Variants -->
-                    <div class="mobile-card">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                            <h3 style="font-weight: 600; font-size: 18px; display: flex; align-items: center; gap: 10px; margin: 0;">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px; stroke: var(--brand-primary);">
-                                    <circle cx="13.5" cy="6.5" r=".5"/>
-                                    <circle cx="17.5" cy="10.5" r=".5"/>
-                                    <circle cx="8.5" cy="7.5" r=".5"/>
-                                    <circle cx="6.5" cy="12.5" r=".5"/>
-                                    <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/>
+                    <div class="editor-card" style="margin-bottom: 20px;">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <line x1="12" y1="16" x2="12" y2="12"/>
+                                    <line x1="12" y1="8" x2="12.01" y2="8"/>
                                 </svg>
-                                Color Variants
-                            </h3>
-                            <button type="button" class="btn btn-primary btn-sm" onclick="openColorModal()" style="padding: 8px 12px;">
-                                Add
-                            </button>
+                                Product Details
+                            </div>
                         </div>
-                        <div id="mobile-variants-list">
-                            <div class="empty-state">
-                                <h3>No Variants</h3>
-                                <p>Add color variants</p>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label class="form-label">Product Name <span class="required">*</span></label>
+                                <input type="text" class="form-input" id="mobile-product-name" required placeholder="e.g. Premium Cotton T-Shirt">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Category <span class="required">*</span></label>
+                                <div class="custom-select" id="mobile-category-select">
+                                    <div class="select-trigger" onclick="this.nextElementSibling.classList.toggle('open')">
+                                        <span id="mobile-selected-category-text">Select Category</span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="m6 9 6 6 6-6"/>
+                                        </svg>
+                                    </div>
+                                    <div class="select-options" id="mobile-category-options"></div>
+                                </div>
+                                <input type="hidden" id="mobile-selected-category">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Description</label>
+                                <textarea class="form-input form-textarea" id="mobile-product-description" rows="4" placeholder="Describe the product..."></textarea>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Reviews -->
-                    <div class="mobile-card">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                            <h3 style="font-weight: 600; font-size: 18px; display: flex; align-items: center; gap: 10px; margin: 0;">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px; stroke: var(--brand-primary);">
-                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                    <!-- Pricing -->
+                    <div class="editor-card" style="margin-bottom: 20px;">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="12" y1="1" x2="12" y2="23"/>
+                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
                                 </svg>
-                                Reviews
-                            </h3>
-                            <button type="button" class="btn btn-primary btn-sm" onclick="openReviewModal()" style="padding: 8px 12px;">
+                                Pricing
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Current Price (₹)</label>
+                                    <input type="number" class="form-input" id="mobile-current-price" required step="0.01" min="0">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Original Price (₹)</label>
+                                    <input type="number" class="form-input" id="mobile-original-price" required step="0.01" min="0">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Color Variants -->
+                    <div class="editor-card" style="margin-bottom: 20px;">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                                </svg>
+                                Color Variants
+                            </div>
+                            <button type="button" class="btn btn-primary btn-sm" onclick="openVariantModal()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 5v14"/>
+                                    <path d="M5 12h14"/>
+                                </svg>
                                 Add
                             </button>
                         </div>
-                        <div id="mobile-reviews-list">
-                            <div class="empty-state">
-                                <h3>No Reviews</h3>
-                                <p>Add customer reviews</p>
+                        <div class="card-body">
+                            <div id="mobile-variants-container">
+                                <div class="empty-state">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                                    </svg>
+                                    <div class="empty-state-title">No Variants Added</div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </form>
             </div>
         </main>
+
+        <!-- Mobile Save Bar -->
+        <div class="mobile-save-bar">
+            <button class="btn btn-secondary" onclick="window.history.back()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 12H5"/>
+                    <path d="M12 19l-7-7 7-7"/>
+                </svg>
+                Cancel
+            </button>
+            <button class="btn btn-primary" id="mobile-save-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                    <polyline points="17 21 17 13 7 13 7 21"/>
+                    <polyline points="7 3 7 8 15 8"/>
+                </svg>
+                Save
+            </button>
+        </div>
 
         <!-- Overlay & drawer -->
         <div class="m-overlay" id="m-overlay">
@@ -2195,7 +2265,7 @@
                         <span class="label">Inventory</span>
                     </div>
 
-                    <!-- Customize Site -->
+                    <!-- Customize Site with dropdown -->
                     <div class="m-nav-item" id="m-customize-toggle">
                         <span class="icon">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
@@ -2248,7 +2318,7 @@
                         </div>
                     </div>
 
-                    <!-- MANAGE ORDERS -->
+                    <!-- MANAGE ORDERS with dropdown -->
                     <div class="m-nav-item" id="m-orders-toggle">
                         <span class="icon">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
@@ -2323,12 +2393,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Mobile Save Bar -->
-        <div class="mobile-save-bar">
-            <button type="button" class="btn btn-secondary" onclick="window.history.back()" style="flex: 1;">Cancel</button>
-            <button type="button" class="btn btn-primary" id="mobile-save-btn" style="flex: 1;">Save Product</button>
-        </div>
     </div>
 
     <!-- Profile Popup -->
@@ -2372,13 +2436,12 @@
         </ul>
     </div>
 
-    <!-- ================= MODALS ================= -->
-    <!-- Color Variant Modal -->
-    <div class="modal-overlay" id="color-modal">
+    <!-- Variant Modal -->
+    <div class="modal-overlay" id="variant-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <div class="modal-title" id="color-modal-title">Add Color Variant</div>
-                <button class="btn-icon" onclick="closeColorModal()">
+                <div class="modal-title" id="variant-modal-title">Add Color Variant</div>
+                <button class="btn-icon" onclick="closeVariantModal()">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M18 6 6 18"/>
                         <path d="m6 6 12 12"/>
@@ -2386,54 +2449,53 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="color-form">
-                    <div class="form-group">
-                        <label class="form-label">Color Name <span class="required">*</span></label>
-                        <input type="text" class="form-input" id="color-name" placeholder="e.g. Midnight Blue" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Color Swatch Image</label>
-                        <div style="display: flex; gap: 16px; align-items: flex-start;">
-                            <div class="swatch-upload-container" onclick="document.getElementById('color-swatch-input').click()">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                                    <polyline points="17 8 12 3 7 8"/>
-                                    <line x1="12" y1="3" x2="12" y2="15"/>
-                                </svg>
-                                <span>Upload</span>
-                                <img id="swatch-preview">
-                            </div>
-                            <div style="flex: 1;">
-                                <p style="font-size: 13px; color: #6b7280; margin-bottom: 8px;">Upload an image that represents this color variant.</p>
-                                <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('color-swatch-input').click()">Choose File</button>
-                            </div>
-                            <input type="file" id="color-swatch-input" accept="image/*" style="display:none;">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Available Sizes</label>
-                        <div class="size-grid" id="size-selection"></div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Gallery Images</label>
-                        <div id="existing-gallery" class="gallery-grid" style="display: none;"></div>
-                        <div class="upload-zone" style="padding: 24px 20px;" onclick="document.getElementById('variant-images-input').click()">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                                <polyline points="17 8 12 3 7 8"/>
-                                <line x1="12" y1="3" x2="12" y2="15"/>
+                <div class="form-group">
+                    <label class="form-label">Color Name <span class="required">*</span></label>
+                    <input type="text" class="form-input" id="variant-name" placeholder="e.g. Midnight Blue" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Color Swatch</label>
+                    <div style="display: flex; align-items: center; gap: 16px;">
+                        <div class="upload-zone-premium" onclick="document.getElementById('variant-swatch-input').click()" style="width: 120px; height: 120px; padding: 20px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                <circle cx="8.5" cy="8.5" r="1.5"/>
+                                <polyline points="21 15 16 10 5 21"/>
                             </svg>
-                            <div class="upload-text">Upload Gallery Images</div>
-                            <div class="upload-subtext">Multiple images allowed</div>
                         </div>
-                        <input type="file" id="variant-images-input" multiple accept="image/*" style="display:none;">
-                        <div id="variant-image-previews" style="display: flex; gap: 8px; overflow-x: auto; padding: 16px 0; display: none;"></div>
+                        <div style="flex: 1;">
+                            <div style="font-size: 14px; color: #6b7280;">Click to upload color swatch image</div>
+                            <div id="variant-swatch-preview" style="margin-top: 12px; display: none;">
+                                <img id="variant-swatch-img" style="width: 80px; height: 80px; border-radius: var(--radius-md); object-fit: cover; border: 2px solid #e5e7eb;">
+                            </div>
+                        </div>
+                        <input type="file" id="variant-swatch-input" accept="image/*" style="display: none;">
                     </div>
-                </form>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Available Sizes</label>
+                    <div class="sizes-grid" id="sizes-container">
+                        <!-- Sizes will be populated by JavaScript -->
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Gallery Images</label>
+                    <div id="gallery-preview" class="preview-images"></div>
+                    <div class="upload-zone-premium" onclick="document.getElementById('variant-gallery-input').click()" style="padding: 24px 16px; margin-top: 16px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="17 8 12 3 7 8"/>
+                            <line x1="12" y1="3" x2="12" y2="15"/>
+                        </svg>
+                        <div class="upload-text">Upload Gallery Images</div>
+                        <div class="upload-subtext">Add multiple images for this variant</div>
+                    </div>
+                    <input type="file" id="variant-gallery-input" accept="image/*" multiple style="display: none;">
+                </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" onclick="closeColorModal()">Cancel</button>
-                <button type="button" class="btn btn-primary" onclick="saveColorVariant()" id="color-save-btn">Save Variant</button>
+                <button type="button" class="btn btn-secondary" onclick="closeVariantModal()">Cancel</button>
+                <button type="button" class="btn btn-primary" id="variant-save-btn">Save Variant</button>
             </div>
         </div>
     </div>
@@ -2451,55 +2513,43 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="review-form">
-                    <div class="form-group">
-                        <label class="form-label">Customer Name <span class="required">*</span></label>
-                        <input type="text" class="form-input" id="review-name" placeholder="e.g. John Doe" required>
+                <div class="form-group">
+                    <label class="form-label">Customer Name <span class="required">*</span></label>
+                    <input type="text" class="form-input" id="reviewer-name" required placeholder="e.g. John Doe">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Rating <span class="required">*</span></label>
+                    <div style="display: flex; justify-content: center; gap: 8px; margin: 16px 0;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="star" data-value="1" onclick="setRating(1)" style="cursor: pointer;">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="star" data-value="2" onclick="setRating(2)" style="cursor: pointer;">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="star" data-value="3" onclick="setRating(3)" style="cursor: pointer;">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="star" data-value="4" onclick="setRating(4)" style="cursor: pointer;">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="star" data-value="5" onclick="setRating(5)" style="cursor: pointer;">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                        </svg>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">Rating <span class="required">*</span></label>
-                        <div class="star-rating-input" id="star-rating">
-                            <svg class="star-empty" data-val="1">
-                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                            </svg>
-                            <svg class="star-empty" data-val="2">
-                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                            </svg>
-                            <svg class="star-empty" data-val="3">
-                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                            </svg>
-                            <svg class="star-empty" data-val="4">
-                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                            </svg>
-                            <svg class="star-empty" data-val="5">
-                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                            </svg>
-                        </div>
-                        <input type="hidden" id="review-rating" value="0">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Review Comment <span class="required">*</span></label>
-                        <textarea class="form-input form-textarea" id="review-text" rows="4" placeholder="Write the review here..." required></textarea>
-                    </div>
-                </form>
+                    <input type="hidden" id="review-rating" value="0">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Review Comment</label>
+                    <textarea class="form-input form-textarea" id="review-comment" rows="4" placeholder="Write the review here..."></textarea>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" onclick="closeReviewModal()">Cancel</button>
-                <button type="button" class="btn btn-primary" id="review-save-btn" onclick="addReview()">Add Review</button>
+                <button type="button" class="btn btn-primary" id="review-save-btn">Add Review</button>
             </div>
         </div>
     </div>
 
-    <!-- Progress Overlay -->
-    <div id="progress-overlay">
-        <div class="progress-content">
-            <div class="spinner"></div>
-            <h3 style="margin:0 0 0.5rem 0; font-size:1.1rem;" id="progress-title">Processing</h3>
-            <p style="margin:0; color:var(--text-secondary); font-size:0.9rem;" id="progress-desc">Please wait...</p>
-        </div>
-    </div>
-
-    <!-- Toast Container -->
     <div id="toast-container"></div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -2576,13 +2626,13 @@
             const mobileProfileSection = document.getElementById('mobile-profile-section');
             const profilePopup = document.getElementById('profile-popup');
 
-            // Desktop profile popup positioning
+            // Desktop profile popup
             if (profileSection) {
                 profileSection.addEventListener('click', e => {
                     e.stopPropagation();
                     
+                    // Position the popup at the bottom left of the account section for desktop
                     if (window.innerWidth >= 769) {
-                        const rect = profileSection.getBoundingClientRect();
                         profilePopup.style.left = '30px';
                         profilePopup.style.right = 'auto';
                         profilePopup.style.bottom = '100px';
@@ -2590,12 +2640,6 @@
                     }
                     
                     profilePopup.classList.toggle('active');
-                });
-                
-                document.addEventListener('click', e => {
-                    if (!profileSection.contains(e.target) && !profilePopup.contains(e.target)) {
-                        profilePopup.classList.remove('active');
-                    }
                 });
             }
 
@@ -2607,15 +2651,6 @@
                 });
             }
 
-            // Star rating interaction
-            document.querySelectorAll('#star-rating svg').forEach(star => {
-                star.addEventListener('click', function() {
-                    const val = parseInt(this.dataset.val);
-                    document.getElementById('review-rating').value = val;
-                    updateStars(val);
-                });
-            });
-
             // Close popups when clicking outside
             document.addEventListener('click', function(e) {
                 // Close profile popup
@@ -2626,16 +2661,88 @@
                         profilePopup.classList.remove('active');
                     }
                 }
+                
+                // Close select dropdowns
+                document.querySelectorAll('.select-options').forEach(dropdown => {
+                    if (!dropdown.parentElement.contains(e.target)) {
+                        dropdown.classList.remove('open');
+                    }
+                });
             });
 
-            // Close modals on escape
+            // Close popups when pressing Escape key
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape') {
-                    closeColorModal();
+                    profilePopup?.classList.remove('active');
+                    closeVariantModal();
                     closeReviewModal();
-                    profilePopup.classList.remove('active');
                 }
             });
+
+            // Initialize toggle switches
+            const productStatus = document.getElementById('product-status');
+            const featuredStatus = document.getElementById('featured-status');
+            const statusText = document.getElementById('status-text');
+            const featuredText = document.getElementById('featured-text');
+
+            if (productStatus) {
+                productStatus.addEventListener('change', function() {
+                    statusText.textContent = this.checked ? 'Active' : 'Inactive';
+                    statusText.style.color = this.checked ? '#10b981' : '#6b7280';
+                });
+            }
+
+            if (featuredStatus) {
+                featuredStatus.addEventListener('change', function() {
+                    featuredText.textContent = this.checked ? 'Featured' : 'Not Featured';
+                    featuredText.style.color = this.checked ? '#5127ba' : '#6b7280';
+                });
+            }
+
+            // Calculate discount
+            const currentPrice = document.getElementById('current-price');
+            const originalPrice = document.getElementById('original-price');
+            const discountPercentage = document.getElementById('discount-percentage');
+
+            function calculateDiscount() {
+                const current = parseFloat(currentPrice.value) || 0;
+                const original = parseFloat(originalPrice.value) || 0;
+                
+                if (original > 0 && current < original) {
+                    const discount = ((original - current) / original) * 100;
+                    discountPercentage.textContent = Math.round(discount) + '%';
+                } else {
+                    discountPercentage.textContent = '0%';
+                }
+            }
+
+            if (currentPrice && originalPrice) {
+                currentPrice.addEventListener('input', calculateDiscount);
+                originalPrice.addEventListener('input', calculateDiscount);
+            }
+
+            // Mobile pricing
+            const mobileCurrentPrice = document.getElementById('mobile-current-price');
+            const mobileOriginalPrice = document.getElementById('mobile-original-price');
+            
+            if (mobileCurrentPrice && mobileOriginalPrice) {
+                mobileCurrentPrice.addEventListener('input', calculateDiscount);
+                mobileOriginalPrice.addEventListener('input', calculateDiscount);
+            }
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth <= 768) {
+                document.body.style.overflowX = 'hidden';
+                document.body.style.maxWidth = '100vw';
+            } else {
+                document.body.style.overflowX = '';
+                document.body.style.maxWidth = '';
+            }
+            
+            // Close popups on resize
+            document.getElementById('profile-popup')?.classList.remove('active');
         });
 
         // --- FIREBASE CONFIG ---
@@ -2648,28 +2755,24 @@
             appId: "1:543460072082:web:f3d1140e8f81ad338ae44b",
             measurementId: "G-E39VNDCFVE"
         };
-        
+        const ADMIN_EMAIL = "harshavardhanjw@gmail.com";
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
         const storage = firebase.storage();
-        const ADMIN_EMAIL = "harshavardhanjw@gmail.com";
 
-        // --- APP STATE ---
+        // --- APP LOGIC ---
         let allCategories = [];
-        let coverImageFile = null;
-        let mobileCoverImageFile = null;
         let colorVariants = [];
         let productReviews = [];
         let editingVariantIndex = null;
         let editingReviewIndex = null;
-        let tempVariantFiles = [];
-        let tempSwatchFile = null;
-        let existingVariantImages = [];
-        let isMobile = window.innerWidth <= 768;
         let currentProductId = null;
+        let coverImageFile = null;
+        let variantSwatchFile = null;
+        let variantGalleryFiles = [];
+        let existingVariantImages = [];
 
-        // --- AUTHENTICATION ---
         auth.onAuthStateChanged(user => {
             if (!user || user.email !== ADMIN_EMAIL) {
                 window.location.href = 'index.html';
@@ -2699,190 +2802,123 @@
             document.getElementById('popup-avatar').src = avatar;
         }
 
-        // --- EDITOR LOADING ---
         async function loadEditor() {
-            const params = new URLSearchParams(window.location.search);
-            const id = params.get('id');
-            currentProductId = id;
-
+            showLoading();
+            
             try {
                 // Load categories
                 const catSnap = await db.collection('categories').orderBy('name').get();
                 allCategories = catSnap.docs.map(d => d.data().name);
+                populateCategoryDropdowns();
                 
-                if (isMobile) {
-                    setupMobileCategoryDropdown();
-                } else {
-                    setupCategoryDropdown();
-                }
-
+                // Check if editing existing product
+                const params = new URLSearchParams(window.location.search);
+                const id = params.get('id');
+                
                 if (id) {
-                    // Edit mode
+                    currentProductId = id;
                     document.getElementById('editor-title').textContent = 'Edit Product';
+                    document.getElementById('mobile-editor-title').textContent = 'Edit Product';
+                    
                     const doc = await db.collection('products').doc(id).get();
                     if (doc.exists) {
-                        populateForm({id: doc.id, ...doc.data()});
-                        if (isMobile) {
-                            populateMobileForm({id: doc.id, ...doc.data()});
-                        }
+                        await populateForm(doc.data());
                     }
                 } else {
-                    // New product mode
                     document.getElementById('editor-title').textContent = 'New Product';
-                    if (isMobile) {
-                        document.getElementById('mobile-product-form').style.display = 'block';
-                        document.getElementById('mobile-loading-state').style.display = 'none';
-                    } else {
-                        document.getElementById('product-form').style.display = 'block';
-                        document.getElementById('loading-state').style.display = 'none';
-                    }
+                    document.getElementById('mobile-editor-title').textContent = 'New Product';
                 }
             } catch (e) {
-                console.error(e);
+                console.error('Error loading editor:', e);
                 showToast('Error loading data', 'error');
+            } finally {
+                hideLoading();
             }
         }
 
-        // --- CATEGORY DROPDOWN ---
-        function setupCategoryDropdown() {
-            const container = document.getElementById('category-select');
-            let html = `
-                <div class="select-trigger" id="category-trigger">
-                    <span id="cat-display">Select Category</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="m6 9 6 6 6-6"/>
-                    </svg>
-                </div>
-                <div class="select-options" id="category-options">
-            `;
-            allCategories.forEach(cat => {
-                html += `<div class="select-option" data-value="${cat}" onclick="selectCategory('${cat}')">${cat}</div>`;
-            });
-            html += `</div>`;
-            container.innerHTML = html;
-
-            // Toggle dropdown
-            document.getElementById('category-trigger').addEventListener('click', function() {
-                document.getElementById('category-options').classList.toggle('open');
-            });
-
-            // Close dropdown when clicking outside
-            document.addEventListener('click', function(e) {
-                if (!container.contains(e.target)) {
-                    document.getElementById('category-options').classList.remove('open');
-                }
-            });
+        function populateCategoryDropdowns() {
+            // Desktop dropdown
+            const desktopOptions = document.getElementById('category-options');
+            const mobileOptions = document.getElementById('mobile-category-options');
+            
+            if (desktopOptions) {
+                desktopOptions.innerHTML = allCategories.map(category => `
+                    <div class="select-option" onclick="selectCategory('${category}')">${category}</div>
+                `).join('');
+            }
+            
+            if (mobileOptions) {
+                mobileOptions.innerHTML = allCategories.map(category => `
+                    <div class="select-option" onclick="selectMobileCategory('${category}')">${category}</div>
+                `).join('');
+            }
         }
 
-        function setupMobileCategoryDropdown() {
-            const container = document.getElementById('mobile-category-select');
-            let html = `
-                <div class="select-trigger" id="mobile-category-trigger">
-                    <span id="mobile-cat-display">Select Category</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="m6 9 6 6 6-6"/>
-                    </svg>
-                </div>
-                <div class="select-options" id="mobile-category-options">
-            `;
-            allCategories.forEach(cat => {
-                html += `<div class="select-option" data-value="${cat}" onclick="selectMobileCategory('${cat}')">${cat}</div>`;
-            });
-            html += `</div>`;
-            container.innerHTML = html;
-
-            // Toggle dropdown
-            document.getElementById('mobile-category-trigger').addEventListener('click', function() {
-                document.getElementById('mobile-category-options').classList.toggle('open');
-            });
-
-            // Close dropdown when clicking outside
-            document.addEventListener('click', function(e) {
-                if (!container.contains(e.target)) {
-                    document.getElementById('mobile-category-options').classList.remove('open');
-                }
-            });
-        }
-
-        function selectCategory(cat) {
-            document.getElementById('selected-category').value = cat;
-            document.getElementById('cat-display').textContent = cat;
+        function selectCategory(category) {
+            document.getElementById('selected-category').value = category;
+            document.getElementById('selected-category-text').textContent = category;
             document.getElementById('category-options').classList.remove('open');
-            
-            // Update selected state
-            document.querySelectorAll('#category-options .select-option').forEach(option => {
-                option.classList.remove('selected');
-                if (option.dataset.value === cat) {
-                    option.classList.add('selected');
-                }
-            });
         }
 
-        function selectMobileCategory(cat) {
-            document.getElementById('mobile-selected-category').value = cat;
-            document.getElementById('mobile-cat-display').textContent = cat;
+        function selectMobileCategory(category) {
+            document.getElementById('mobile-selected-category').value = category;
+            document.getElementById('mobile-selected-category-text').textContent = category;
             document.getElementById('mobile-category-options').classList.remove('open');
-            
-            document.querySelectorAll('#mobile-category-options .select-option').forEach(option => {
-                option.classList.remove('selected');
-                if (option.dataset.value === cat) {
-                    option.classList.add('selected');
-                }
-            });
         }
 
-        // --- FORM POPULATION ---
-        function populateForm(data) {
-            document.getElementById('name').value = data.name || '';
-            document.getElementById('description').value = data.description || '';
-            document.getElementById('price').value = data.price || '';
-            document.getElementById('oldPrice').value = data.oldPrice || '';
-            if (data.category) selectCategory(data.category);
+        async function populateForm(data) {
+            // Basic information
+            document.getElementById('product-name').value = data.name || '';
+            document.getElementById('mobile-product-name').value = data.name || '';
+            document.getElementById('product-description').value = data.description || '';
+            document.getElementById('mobile-product-description').value = data.description || '';
+            document.getElementById('current-price').value = data.price || '';
+            document.getElementById('mobile-current-price').value = data.price || '';
+            document.getElementById('original-price').value = data.oldPrice || '';
+            document.getElementById('mobile-original-price').value = data.oldPrice || '';
+            document.getElementById('sku-code').value = data.sku || '';
+            document.getElementById('stock-quantity').value = data.stockQuantity || 0;
+            document.getElementById('low-stock-alert').value = data.lowStockAlert || 10;
             
+            // Status
+            if (document.getElementById('product-status')) {
+                document.getElementById('product-status').checked = data.enabled !== false;
+            }
+            if (document.getElementById('featured-status')) {
+                document.getElementById('featured-status').checked = data.featured || false;
+            }
+            
+            // Category
+            if (data.category) {
+                selectCategory(data.category);
+                selectMobileCategory(data.category);
+            }
+            
+            // Cover image
             const coverUrl = data.image || (data.images && data.images.length > 0 ? data.images[0] : null);
             if (coverUrl) {
                 document.getElementById('cover-preview').src = coverUrl;
-                document.getElementById('preview-container').style.display = 'flex';
+                document.getElementById('cover-preview-wrapper').style.display = 'block';
                 document.getElementById('cover-upload-zone').style.display = 'none';
                 document.getElementById('cover-preview').dataset.url = coverUrl;
-            }
-            
-            colorVariants = data.colorVariants || [];
-            renderVariants();
-            
-            productReviews = data.reviews || [];
-            renderReviewsList();
-            
-            document.getElementById('product-form').style.display = 'block';
-            document.getElementById('loading-state').style.display = 'none';
-        }
-
-        function populateMobileForm(data) {
-            document.getElementById('mobile-name').value = data.name || '';
-            document.getElementById('mobile-description').value = data.description || '';
-            document.getElementById('mobile-price').value = data.price || '';
-            document.getElementById('mobile-oldPrice').value = data.oldPrice || '';
-            if (data.category) selectMobileCategory(data.category);
-            
-            const coverUrl = data.image || (data.images && data.images.length > 0 ? data.images[0] : null);
-            if (coverUrl) {
+                
                 document.getElementById('mobile-cover-preview').src = coverUrl;
-                document.getElementById('mobile-preview-container').style.display = 'flex';
+                document.getElementById('mobile-cover-preview-wrapper').style.display = 'block';
                 document.getElementById('mobile-cover-upload-zone').style.display = 'none';
                 document.getElementById('mobile-cover-preview').dataset.url = coverUrl;
             }
             
+            // Color variants
             colorVariants = data.colorVariants || [];
+            renderVariants();
             renderMobileVariants();
             
+            // Reviews
             productReviews = data.reviews || [];
-            renderMobileReviewsList();
-            
-            document.getElementById('mobile-product-form').style.display = 'block';
-            document.getElementById('mobile-loading-state').style.display = 'none';
+            renderReviews();
         }
 
-        // --- COVER IMAGE HANDLING ---
+        // Cover image handling
         document.getElementById('cover-input').addEventListener('change', handleCoverImage);
         document.getElementById('mobile-cover-input').addEventListener('change', handleMobileCoverImage);
 
@@ -2890,14 +2926,15 @@
             const file = e.target.files[0];
             if (file) {
                 if (file.size > 5 * 1024 * 1024) {
-                    showToast('Image too large (Max 5MB)', 'error');
+                    showToast('Image too large (max 5MB)', 'error');
                     return;
                 }
+                
                 coverImageFile = file;
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     document.getElementById('cover-preview').src = e.target.result;
-                    document.getElementById('preview-container').style.display = 'flex';
+                    document.getElementById('cover-preview-wrapper').style.display = 'block';
                     document.getElementById('cover-upload-zone').style.display = 'none';
                 };
                 reader.readAsDataURL(file);
@@ -2908,14 +2945,15 @@
             const file = e.target.files[0];
             if (file) {
                 if (file.size > 5 * 1024 * 1024) {
-                    showToast('Image too large (Max 5MB)', 'error');
+                    showToast('Image too large (max 5MB)', 'error');
                     return;
                 }
-                mobileCoverImageFile = file;
+                
+                coverImageFile = file;
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     document.getElementById('mobile-cover-preview').src = e.target.result;
-                    document.getElementById('mobile-preview-container').style.display = 'flex';
+                    document.getElementById('mobile-cover-preview-wrapper').style.display = 'block';
                     document.getElementById('mobile-cover-upload-zone').style.display = 'none';
                 };
                 reader.readAsDataURL(file);
@@ -2927,43 +2965,328 @@
             document.getElementById('cover-input').value = '';
             document.getElementById('cover-preview').src = '';
             delete document.getElementById('cover-preview').dataset.url;
-            document.getElementById('preview-container').style.display = 'none';
+            document.getElementById('cover-preview-wrapper').style.display = 'none';
             document.getElementById('cover-upload-zone').style.display = 'block';
         }
 
         function removeMobileCoverImage() {
-            mobileCoverImageFile = null;
+            coverImageFile = null;
             document.getElementById('mobile-cover-input').value = '';
             document.getElementById('mobile-cover-preview').src = '';
             delete document.getElementById('mobile-cover-preview').dataset.url;
-            document.getElementById('mobile-preview-container').style.display = 'none';
+            document.getElementById('mobile-cover-preview-wrapper').style.display = 'none';
             document.getElementById('mobile-cover-upload-zone').style.display = 'block';
         }
 
-        // --- REVIEWS ---
+        // Variant modal
+        function openVariantModal(index = null) {
+            editingVariantIndex = index;
+            const isEdit = index !== null;
+            
+            document.getElementById('variant-modal-title').textContent = isEdit ? 'Edit Variant' : 'Add Variant';
+            document.getElementById('variant-save-btn').textContent = isEdit ? 'Update Variant' : 'Add Variant';
+            
+            // Reset form
+            document.getElementById('variant-name').value = '';
+            document.getElementById('variant-swatch-preview').style.display = 'none';
+            variantSwatchFile = null;
+            variantGalleryFiles = [];
+            existingVariantImages = [];
+            document.getElementById('gallery-preview').innerHTML = '';
+            
+            // Populate sizes
+            const sizesContainer = document.getElementById('sizes-container');
+            const sizes = ['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL'];
+            sizesContainer.innerHTML = sizes.map(size => `
+                <div class="size-option" onclick="toggleSize(this)">
+                    ${size}
+                    <input type="checkbox" class="size-checkbox" value="${size}" style="display: none;">
+                </div>
+            `).join('');
+            
+            // If editing, populate data
+            if (isEdit && colorVariants[index]) {
+                const variant = colorVariants[index];
+                document.getElementById('variant-name').value = variant.name || '';
+                
+                // Swatch image
+                if (variant.swatch) {
+                    document.getElementById('variant-swatch-img').src = variant.swatch;
+                    document.getElementById('variant-swatch-preview').style.display = 'block';
+                }
+                
+                // Sizes
+                if (variant.sizes) {
+                    variant.sizes.forEach(size => {
+                        const sizeOption = sizesContainer.querySelector(`.size-option:contains(${size})`);
+                        if (sizeOption) {
+                            sizeOption.classList.add('selected');
+                            sizeOption.querySelector('.size-checkbox').checked = true;
+                        }
+                    });
+                }
+                
+                // Gallery images
+                if (variant.images) {
+                    existingVariantImages = variant.images;
+                    renderGalleryPreview();
+                }
+            }
+            
+            document.getElementById('variant-modal').style.display = 'flex';
+        }
+
+        function toggleSize(element) {
+            element.classList.toggle('selected');
+            const checkbox = element.querySelector('.size-checkbox');
+            checkbox.checked = !checkbox.checked;
+        }
+
+        // Variant swatch image
+        document.getElementById('variant-swatch-input').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                if (file.size > 5 * 1024 * 1024) {
+                    showToast('Image too large (max 5MB)', 'error');
+                    return;
+                }
+                
+                variantSwatchFile = file;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    document.getElementById('variant-swatch-img').src = e.target.result;
+                    document.getElementById('variant-swatch-preview').style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Variant gallery images
+        document.getElementById('variant-gallery-input').addEventListener('change', function(e) {
+            Array.from(e.target.files).forEach(file => {
+                if (file.size > 5 * 1024 * 1024) {
+                    showToast(`${file.name} is too large (max 5MB)`, 'error');
+                    return;
+                }
+                
+                variantGalleryFiles.push(file);
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'preview-thumb';
+                    img.dataset.file = file.name;
+                    document.getElementById('gallery-preview').appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+
+        function renderGalleryPreview() {
+            const container = document.getElementById('gallery-preview');
+            container.innerHTML = '';
+            
+            existingVariantImages.forEach((url, index) => {
+                const img = document.createElement('img');
+                img.src = url;
+                img.className = 'preview-thumb';
+                img.dataset.index = index;
+                container.appendChild(img);
+            });
+        }
+
+        function closeVariantModal() {
+            document.getElementById('variant-modal').style.display = 'none';
+            editingVariantIndex = null;
+        }
+
+        async function saveVariant() {
+            const name = document.getElementById('variant-name').value.trim();
+            if (!name) {
+                showToast('Please enter variant name', 'error');
+                return;
+            }
+            
+            showLoading();
+            
+            try {
+                // Get selected sizes
+                const selectedSizes = [];
+                document.querySelectorAll('.size-checkbox:checked').forEach(cb => {
+                    selectedSizes.push(cb.value);
+                });
+                
+                if (selectedSizes.length === 0) {
+                    showToast('Please select at least one size', 'error');
+                    hideLoading();
+                    return;
+                }
+                
+                // Upload swatch image if new
+                let swatchUrl = '';
+                if (variantSwatchFile) {
+                    swatchUrl = await uploadFile(variantSwatchFile, 'variants/swatches');
+                } else if (editingVariantIndex !== null && colorVariants[editingVariantIndex]?.swatch) {
+                    swatchUrl = colorVariants[editingVariantIndex].swatch;
+                }
+                
+                // Upload gallery images
+                const galleryUrls = [...existingVariantImages];
+                for (const file of variantGalleryFiles) {
+                    const url = await uploadFile(file, 'variants/gallery');
+                    galleryUrls.push(url);
+                }
+                
+                const variant = {
+                    name,
+                    swatch: swatchUrl,
+                    sizes: selectedSizes,
+                    images: galleryUrls
+                };
+                
+                if (editingVariantIndex !== null) {
+                    colorVariants[editingVariantIndex] = variant;
+                } else {
+                    colorVariants.push(variant);
+                }
+                
+                renderVariants();
+                renderMobileVariants();
+                closeVariantModal();
+                showToast('Variant saved successfully', 'success');
+            } catch (e) {
+                console.error('Error saving variant:', e);
+                showToast('Error saving variant', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function renderVariants() {
+            const container = document.getElementById('variants-container');
+            
+            if (!colorVariants || colorVariants.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                        </svg>
+                        <div class="empty-state-title">No Variants Added</div>
+                        <div class="empty-state-text">Add color variants to showcase different options</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = `
+                <div class="variants-grid">
+                    ${colorVariants.map((variant, index) => `
+                        <div class="variant-card">
+                            <div class="variant-header">
+                                ${variant.swatch ? `<img src="${variant.swatch}" class="variant-swatch">` : `<div class="variant-swatch" style="background: #e5e7eb;"></div>`}
+                                <div class="variant-name">${variant.name}</div>
+                            </div>
+                            <div class="variant-sizes">
+                                ${variant.sizes?.map(size => `<span class="size-tag">${size}</span>`).join('') || ''}
+                            </div>
+                            <div class="variant-actions">
+                                <button class="btn btn-secondary btn-sm" onclick="openVariantModal(${index})">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M13 21h8"/>
+                                        <path d="m15 5 4 4"/>
+                                        <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
+                                    </svg>
+                                    Edit
+                                </button>
+                                <button class="btn btn-danger btn-sm" onclick="deleteVariant(${index})">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M3 6h18"/>
+                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+                                        <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                    </svg>
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function renderMobileVariants() {
+            const container = document.getElementById('mobile-variants-container');
+            
+            if (!colorVariants || colorVariants.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                        </svg>
+                        <div class="empty-state-title">No Variants Added</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = colorVariants.map((variant, index) => `
+                <div class="variant-card" style="margin-bottom: 12px;">
+                    <div class="variant-header">
+                        ${variant.swatch ? `<img src="${variant.swatch}" class="variant-swatch">` : `<div class="variant-swatch" style="background: #e5e7eb;"></div>`}
+                        <div class="variant-name">${variant.name}</div>
+                    </div>
+                    <div class="variant-sizes" style="margin-top: 8px;">
+                        ${variant.sizes?.map(size => `<span class="size-tag">${size}</span>`).join('') || ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function deleteVariant(index) {
+            if (confirm('Are you sure you want to delete this variant?')) {
+                colorVariants.splice(index, 1);
+                renderVariants();
+                renderMobileVariants();
+                showToast('Variant deleted', 'success');
+            }
+        }
+
+        // Review modal
         function openReviewModal(index = null) {
             editingReviewIndex = index;
             const isEdit = index !== null;
-            const title = document.getElementById('review-modal-title');
-            const btn = document.getElementById('review-save-btn');
             
+            document.getElementById('review-modal-title').textContent = isEdit ? 'Edit Review' : 'Add Customer Review';
+            document.getElementById('review-save-btn').textContent = isEdit ? 'Update Review' : 'Add Review';
+            
+            // Reset form
+            document.getElementById('reviewer-name').value = '';
+            document.getElementById('review-comment').value = '';
+            setRating(0);
+            
+            // If editing, populate data
             if (isEdit && productReviews[index]) {
-                const rev = productReviews[index];
-                document.getElementById('review-name').value = rev.name;
-                document.getElementById('review-text').value = rev.comment;
-                document.getElementById('review-rating').value = rev.rating;
-                updateStars(rev.rating);
-                title.textContent = 'Edit Review';
-                btn.textContent = 'Update Review';
-            } else {
-                document.getElementById('review-name').value = '';
-                document.getElementById('review-text').value = '';
-                document.getElementById('review-rating').value = '0';
-                updateStars(0);
-                title.textContent = 'Add Customer Review';
-                btn.textContent = 'Add Review';
+                const review = productReviews[index];
+                document.getElementById('reviewer-name').value = review.name || '';
+                document.getElementById('review-comment').value = review.comment || '';
+                setRating(review.rating || 0);
             }
+            
             document.getElementById('review-modal').style.display = 'flex';
+        }
+
+        function setRating(rating) {
+            document.getElementById('review-rating').value = rating;
+            
+            // Update star display
+            document.querySelectorAll('.star').forEach((star, index) => {
+                if (index < rating) {
+                    star.style.fill = '#f59e0b';
+                    star.style.stroke = '#f59e0b';
+                } else {
+                    star.style.fill = 'none';
+                    star.style.stroke = '#e5e7eb';
+                }
+            });
         }
 
         function closeReviewModal() {
@@ -2971,526 +3294,224 @@
             editingReviewIndex = null;
         }
 
-        function updateStars(val) {
-            document.querySelectorAll('#star-rating svg').forEach(star => {
-                const starVal = parseInt(star.dataset.val);
-                if (starVal <= val) {
-                    star.classList.remove('star-empty');
-                    star.classList.add('star-filled');
-                } else {
-                    star.classList.remove('star-filled');
-                    star.classList.add('star-empty');
-                }
-            });
-        }
-
-        function addReview() {
-            const name = document.getElementById('review-name').value.trim();
+        function saveReview() {
+            const name = document.getElementById('reviewer-name').value.trim();
+            const comment = document.getElementById('review-comment').value.trim();
             const rating = parseInt(document.getElementById('review-rating').value);
-            const comment = document.getElementById('review-text').value.trim();
             
-            if (!name || rating === 0 || !comment) {
-                showToast('Please fill all fields', 'error');
+            if (!name) {
+                showToast('Please enter customer name', 'error');
                 return;
             }
             
-            const reviewData = { 
-                name, 
-                rating, 
-                comment, 
-                date: new Date().toISOString().split('T')[0] 
+            if (rating === 0) {
+                showToast('Please select a rating', 'error');
+                return;
+            }
+            
+            if (!comment) {
+                showToast('Please enter review comment', 'error');
+                return;
+            }
+            
+            const review = {
+                name,
+                comment,
+                rating,
+                date: new Date().toISOString().split('T')[0]
             };
             
-            if (editingReviewIndex !== null && productReviews[editingReviewIndex]) {
-                productReviews[editingReviewIndex] = reviewData;
-                showToast('Review updated', 'success');
+            if (editingReviewIndex !== null) {
+                productReviews[editingReviewIndex] = review;
             } else {
-                productReviews.push(reviewData);
-                showToast('Review added', 'success');
+                productReviews.push(review);
             }
             
-            if (isMobile) {
-                renderMobileReviewsList();
-            } else {
-                renderReviewsList();
-            }
-            
+            renderReviews();
             closeReviewModal();
+            showToast('Review saved successfully', 'success');
         }
 
-        function renderReviewsList() {
-            const container = document.getElementById('reviews-list');
+        function renderReviews() {
+            const container = document.getElementById('reviews-container');
+            
             if (!productReviews || productReviews.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
                         </svg>
-                        <h3>No Reviews Yet</h3>
-                        <p>Add customer reviews to build trust.</p>
+                        <div class="empty-state-title">No Reviews Yet</div>
+                        <div class="empty-state-text">Add customer reviews to build trust</div>
                     </div>
                 `;
                 return;
             }
             
-            container.innerHTML = productReviews.map((r, i) => `
-                <div class="review-card">
-                    <div class="review-header">
-                        <div class="review-name">${r.name}</div>
-                        <div class="star-rating">
-                            ${Array(r.rating).fill('<svg width="16" height="16" viewBox="0 0 24 24" fill="#FFD700" stroke="#FFD700"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>').join('')}
+            container.innerHTML = `
+                <div class="reviews-list">
+                    ${productReviews.map((review, index) => `
+                        <div class="review-card">
+                            <div class="review-header">
+                                <div class="reviewer-name">${review.name}</div>
+                                <div style="display: flex; gap: 8px;">
+                                    <button class="btn-icon" onclick="openReviewModal(${index})">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M13 21h8"/>
+                                            <path d="m15 5 4 4"/>
+                                            <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
+                                        </svg>
+                                    </button>
+                                    <button class="btn-icon danger" onclick="deleteReview(${index})">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M3 6h18"/>
+                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+                                            <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="review-rating">
+                                ${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}
+                            </div>
+                            <div class="review-text">${review.comment}</div>
+                            <div class="review-date">${review.date}</div>
                         </div>
-                    </div>
-                    <div class="review-text">${r.comment}</div>
-                    <div class="review-actions">
-                        <button type="button" class="btn btn-secondary btn-sm" onclick="openReviewModal(${i})">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
-                            </svg>
-                            Edit
-                        </button>
-                        <button type="button" class="btn btn-danger btn-sm" onclick="removeReview(${i})">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M3 6h18"/>
-                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
-                                <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-                            </svg>
-                            Delete
-                        </button>
-                    </div>
+                    `).join('')}
                 </div>
-            `).join('');
+            `;
         }
 
-        function renderMobileReviewsList() {
-            const container = document.getElementById('mobile-reviews-list');
-            if (!productReviews || productReviews.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <h3>No Reviews</h3>
-                        <p>Add customer reviews</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            container.innerHTML = productReviews.map((r, i) => `
-                <div style="border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 12px; margin-bottom: 8px; background: white;">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                        <div style="font-weight: 600; font-size: 14px;">${r.name}</div>
-                        <div style="display: flex; gap: 4px;">
-                            ${Array(r.rating).fill('<svg width="12" height="12" viewBox="0 0 24 24" fill="#FFD700" stroke="#FFD700"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>').join('')}
-                        </div>
-                    </div>
-                    <div style="font-size: 13px; color: #6b7280; margin-bottom: 8px;">${r.comment}</div>
-                    <div style="display: flex; gap: 8px;">
-                        <button type="button" onclick="openReviewModal(${i})" style="flex: 1; padding: 6px 12px; border: 1px solid var(--border-subtle); border-radius: 6px; background: white; font-size: 12px;">Edit</button>
-                        <button type="button" onclick="removeReview(${i})" style="flex: 1; padding: 6px 12px; border: 1px solid #FECACA; border-radius: 6px; background: #FEF2F2; color: var(--danger-color); font-size: 12px;">Delete</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function removeReview(index) {
-            if (confirm("Delete this review?")) {
+        function deleteReview(index) {
+            if (confirm('Are you sure you want to delete this review?')) {
                 productReviews.splice(index, 1);
-                if (isMobile) {
-                    renderMobileReviewsList();
-                } else {
-                    renderReviewsList();
-                }
+                renderReviews();
+                showToast('Review deleted', 'success');
             }
         }
 
-        // --- COLOR VARIANTS ---
-        function openColorModal(index = null) {
-            editingVariantIndex = index;
-            const isEdit = index !== null;
-            const data = isEdit ? colorVariants[index] : {};
+        // Save product
+        document.getElementById('save-btn').addEventListener('click', saveProduct);
+        document.getElementById('mobile-save-btn').addEventListener('click', saveProduct);
+
+        async function saveProduct() {
+            // Get form data
+            const name = document.getElementById('product-name').value || document.getElementById('mobile-product-name').value;
+            const category = document.getElementById('selected-category').value || document.getElementById('mobile-selected-category').value;
+            const description = document.getElementById('product-description').value || document.getElementById('mobile-product-description').value;
+            const price = parseFloat(document.getElementById('current-price').value || document.getElementById('mobile-current-price').value);
+            const oldPrice = parseFloat(document.getElementById('original-price').value || document.getElementById('mobile-original-price').value);
+            const sku = document.getElementById('sku-code').value;
+            const stockQuantity = parseInt(document.getElementById('stock-quantity').value) || 0;
+            const lowStockAlert = parseInt(document.getElementById('low-stock-alert').value) || 10;
+            const enabled = document.getElementById('product-status')?.checked !== false;
+            const featured = document.getElementById('featured-status')?.checked || false;
             
-            document.getElementById('color-modal-title').textContent = isEdit ? 'Edit Variant' : 'Add Variant';
-            document.getElementById('color-name').value = data.name || '';
-            
-            const swatchImg = document.getElementById('swatch-preview');
-            if (data.hex && data.hex.includes('http')) {
-                swatchImg.src = data.hex;
-                swatchImg.style.display = 'block';
-                swatchImg.previousElementSibling.style.display = 'none';
-                swatchImg.nextElementSibling.style.display = 'none';
-            } else {
-                swatchImg.style.display = 'none';
-            }
-            
-            // Setup size selection
-            const sizesContainer = document.getElementById('size-selection');
-            const SIZES = ['S', 'M', 'L', 'XL', '2XL'];
-            sizesContainer.innerHTML = SIZES.map(size => {
-                const existing = data.sizes?.find(s => s.name === size);
-                const isSelected = !!existing;
-                const isInStock = existing?.available || false;
-                
-                return `
-                    <div class="size-item ${isSelected ? 'selected' : ''}" onclick="toggleSize(this, '${size}')">
-                        <div class="size-name">${size}</div>
-                        <div class="size-status">${isSelected ? (isInStock ? 'In Stock' : 'Out of Stock') : 'Select'}</div>
-                        <input type="hidden" class="size-check" value="${size}" ${isSelected ? 'checked' : ''}>
-                        <input type="hidden" class="stock-check" ${isInStock ? 'checked' : ''}>
-                    </div>
-                `;
-            }).join('');
-
-            tempSwatchFile = null;
-            tempVariantFiles = [];
-            existingVariantImages = data.images || [];
-            renderExistingGallery();
-            document.getElementById('variant-image-previews').innerHTML = '';
-            document.getElementById('color-modal').style.display = 'flex';
-        }
-
-        function renderExistingGallery() {
-            const container = document.getElementById('existing-gallery');
-            if (existingVariantImages.length === 0) {
-                container.style.display = 'none';
-                return;
-            }
-            container.style.display = 'grid';
-            container.innerHTML = existingVariantImages.map((url, i) => `
-                <div class="gallery-item">
-                    <img src="${url}" class="gallery-img">
-                    <button class="gallery-remove" onclick="removeExistingGalleryImage(${i})">×</button>
-                </div>
-            `).join('');
-        }
-
-        function removeExistingGalleryImage(index) {
-            existingVariantImages.splice(index, 1);
-            renderExistingGallery();
-        }
-
-        function toggleSize(el, size) {
-            const checkbox = el.querySelector('.size-check');
-            const isSelected = !checkbox.checked;
-            checkbox.checked = isSelected;
-            
-            if (isSelected) {
-                el.classList.add('selected');
-                el.querySelector('.size-status').textContent = 'In Stock';
-                el.querySelector('.stock-check').checked = true;
-            } else {
-                el.classList.remove('selected');
-                el.querySelector('.size-status').textContent = 'Select';
-                el.querySelector('.stock-check').checked = false;
-            }
-        }
-
-        function closeColorModal() {
-            document.getElementById('color-modal').style.display = 'none';
-            editingVariantIndex = null;
-        }
-
-        document.getElementById('color-swatch-input').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                tempSwatchFile = file;
-                const prev = document.getElementById('swatch-preview');
-                prev.src = URL.createObjectURL(file);
-                prev.style.display = 'block';
-                prev.previousElementSibling.style.display = 'none';
-                prev.nextElementSibling.style.display = 'none';
-            }
-        });
-
-        document.getElementById('variant-images-input').addEventListener('change', function(e) {
-            const previewsContainer = document.getElementById('variant-image-previews');
-            previewsContainer.style.display = 'flex';
-            
-            Array.from(e.target.files).forEach(file => {
-                tempVariantFiles.push(file);
-                const img = document.createElement('img');
-                img.src = URL.createObjectURL(file);
-                img.style.cssText = "width:80px; height:80px; border-radius:8px; object-fit:cover; border:1px solid #eee; flex-shrink:0;";
-                previewsContainer.appendChild(img);
-            });
-        });
-
-        function showProgress(title, desc) {
-            document.getElementById('progress-title').textContent = title;
-            document.getElementById('progress-desc').textContent = desc;
-            document.getElementById('progress-overlay').style.display = 'flex';
-        }
-
-        function hideProgress() {
-            document.getElementById('progress-overlay').style.display = 'none';
-        }
-
-        async function saveColorVariant() {
-            const name = document.getElementById('color-name').value;
-            if (!name) {
-                showToast('Color name required', 'error');
-                return;
-            }
-
-            showProgress('Saving Variant', 'Uploading images and details...');
-
-            try {
-                let hex = '';
-                if (tempSwatchFile) {
-                    hex = await uploadFile(tempSwatchFile, 'swatches');
-                } else if (editingVariantIndex !== null && colorVariants[editingVariantIndex]?.hex) {
-                    hex = colorVariants[editingVariantIndex].hex;
-                }
-
-                let images = [...existingVariantImages];
-                if (tempVariantFiles.length) {
-                    for (let f of tempVariantFiles) {
-                        const url = await uploadFile(f, 'variants');
-                        images.push(url);
-                    }
-                }
-
-                let sizes = [];
-                document.querySelectorAll('.size-check').forEach(cb => {
-                    if (cb.checked) {
-                        const stock = cb.parentElement.querySelector('.stock-check').checked;
-                        sizes.push({ name: cb.value, available: stock });
-                    }
-                });
-
-                const variant = { name, hex, sizes, images };
-                if (editingVariantIndex !== null) {
-                    colorVariants[editingVariantIndex] = variant;
-                } else {
-                    colorVariants.push(variant);
-                }
-                
-                if (isMobile) {
-                    renderMobileVariants();
-                } else {
-                    renderVariants();
-                }
-                
-                closeColorModal();
-                showToast('Variant Saved', 'success');
-            } catch (e) {
-                console.error(e);
-                showToast('Failed to save variant', 'error');
-            } finally {
-                hideProgress();
-            }
-        }
-
-        async function uploadFile(file, path) {
-            const ref = storage.ref().child(`${path}/${Date.now()}-${file.name}`);
-            await ref.put(file);
-            return await ref.getDownloadURL();
-        }
-
-        function renderVariants() {
-            const container = document.getElementById('variants-list');
-            if (colorVariants.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="13.5" cy="6.5" r=".5"/>
-                            <circle cx="17.5" cy="10.5" r=".5"/>
-                            <circle cx="8.5" cy="7.5" r=".5"/>
-                            <circle cx="6.5" cy="12.5" r=".5"/>
-                            <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/>
-                        </svg>
-                        <h3>No Variants Added</h3>
-                        <p>Add your first color variant to get started.</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            container.innerHTML = colorVariants.map((v, i) => `
-                <div class="variant-card">
-                    <div class="variant-info">
-                        <img src="${v.hex && v.hex.includes('http') ? v.hex : 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23f3f4f6"/></svg>'}" 
-                             class="variant-swatch" 
-                             style="${!v.hex.includes('http') ? 'background: ' + (v.hex || '#eee') : ''}">
-                        <div class="variant-details">
-                            <h4>${v.name}</h4>
-                            <p>${v.sizes.length} sizes • ${v.images?.length || 0} images</p>
-                        </div>
-                    </div>
-                    <div class="variant-actions">
-                        <button type="button" class="btn-icon" onclick="openColorModal(${i})">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
-                            </svg>
-                        </button>
-                        <button type="button" class="btn-icon" onclick="removeVariant(${i})" style="border-color: #FECACA; color: var(--danger-color);">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M3 6h18"/>
-                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
-                                <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function renderMobileVariants() {
-            const container = document.getElementById('mobile-variants-list');
-            if (colorVariants.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <h3>No Variants</h3>
-                        <p>Add color variants</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            container.innerHTML = colorVariants.map((v, i) => `
-                <div style="border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 12px; margin-bottom: 8px; background: white; display: flex; justify-content: space-between; align-items: center;">
-                    <div style="display: flex; align-items: center; gap: 12px;">
-                        <div style="width: 40px; height: 40px; border-radius: 6px; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); background: ${v.hex && !v.hex.includes('http') ? v.hex : '#eee'}; overflow: hidden;">
-                            ${v.hex && v.hex.includes('http') ? `<img src="${v.hex}" style="width: 100%; height: 100%; object-fit: cover;">` : ''}
-                        </div>
-                        <div>
-                            <div style="font-weight: 600; font-size: 14px;">${v.name}</div>
-                            <div style="font-size: 12px; color: #6b7280;">${v.sizes.length} sizes</div>
-                        </div>
-                    </div>
-                    <div style="display: flex; gap: 4px;">
-                        <button type="button" onclick="openColorModal(${i})" style="padding: 6px; border: 1px solid var(--border-subtle); border-radius: 6px; background: white;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
-                            </svg>
-                        </button>
-                        <button type="button" onclick="removeVariant(${i})" style="padding: 6px; border: 1px solid #FECACA; border-radius: 6px; background: #FEF2F2; color: var(--danger-color);">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M3 6h18"/>
-                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
-                                <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function removeVariant(i) {
-            if (confirm('Remove this variant?')) {
-                colorVariants.splice(i, 1);
-                if (isMobile) {
-                    renderMobileVariants();
-                } else {
-                    renderVariants();
-                }
-            }
-        }
-
-        // --- SAVE PRODUCT ---
-        async function handleSave() {
-            let name, price, category, oldPrice, description;
-            
-            if (isMobile) {
-                name = document.getElementById('mobile-name').value;
-                price = document.getElementById('mobile-price').value;
-                category = document.getElementById('mobile-selected-category').value;
-                oldPrice = document.getElementById('mobile-oldPrice').value;
-                description = document.getElementById('mobile-description').value;
-            } else {
-                name = document.getElementById('name').value;
-                price = document.getElementById('price').value;
-                category = document.getElementById('selected-category').value;
-                oldPrice = document.getElementById('oldPrice').value;
-                description = document.getElementById('description').value;
-            }
-            
-            if (!name || !price || !category || !oldPrice) {
+            // Validation
+            if (!name || !category || isNaN(price) || isNaN(oldPrice)) {
                 showToast('Please fill all required fields', 'error');
                 return;
             }
-
-            showProgress('Saving Product', 'Processing details and images...');
-
+            
+            if (price <= 0 || oldPrice <= 0) {
+                showToast('Prices must be greater than 0', 'error');
+                return;
+            }
+            
+            showLoading();
+            
             try {
-                let coverUrl = '';
-                if (isMobile) {
-                    coverUrl = document.getElementById('mobile-cover-preview').dataset.url || '';
-                    if (mobileCoverImageFile) {
-                        coverUrl = await uploadFile(mobileCoverImageFile, 'products');
-                    }
-                } else {
-                    coverUrl = document.getElementById('cover-preview').dataset.url || '';
-                    if (coverImageFile) {
-                        coverUrl = await uploadFile(coverImageFile, 'products');
-                    }
+                // Upload cover image if new
+                let coverImageUrl = document.getElementById('cover-preview').dataset.url || 
+                                  document.getElementById('mobile-cover-preview').dataset.url;
+                
+                if (coverImageFile) {
+                    coverImageUrl = await uploadFile(coverImageFile, 'products/cover');
                 }
                 
-                if (!coverUrl) {
-                    hideProgress();
-                    showToast('Cover image is required', 'error');
+                if (!coverImageUrl) {
+                    hideLoading();
+                    showToast('Please upload a cover image', 'error');
                     return;
                 }
-
+                
+                // Prepare product data
                 const productData = {
                     name,
-                    description,
                     category,
-                    price: parseFloat(price),
-                    oldPrice: parseFloat(oldPrice),
-                    image: coverUrl,
-                    images: [coverUrl],
+                    description,
+                    price,
+                    oldPrice,
+                    sku,
+                    stockQuantity,
+                    lowStockAlert,
+                    enabled,
+                    featured,
+                    image: coverImageUrl,
+                    images: [coverImageUrl],
                     colorVariants,
                     reviews: productReviews,
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
-
+                
+                // Save to Firestore
                 if (currentProductId) {
-                    // Update existing product
                     await db.collection('products').doc(currentProductId).update(productData);
-                    showToast('Product Updated Successfully!', 'success');
+                    showToast('Product updated successfully', 'success');
                 } else {
-                    // Create new product
                     productData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
                     await db.collection('products').add(productData);
-                    showToast('Product Created Successfully!', 'success');
+                    showToast('Product created successfully', 'success');
                 }
                 
-                setTimeout(() => window.history.back(), 1500);
+                // Redirect after short delay
+                setTimeout(() => {
+                    window.history.back();
+                }, 1500);
+                
             } catch (e) {
-                console.error(e);
-                showToast('Save Failed: ' + e.message, 'error');
+                console.error('Error saving product:', e);
+                showToast('Error saving product', 'error');
             } finally {
-                hideProgress();
+                hideLoading();
             }
         }
 
-        // Attach save handlers
-        document.getElementById('save-btn').addEventListener('click', handleSave);
-        document.getElementById('mobile-save-btn').addEventListener('click', handleSave);
+        // Utility functions
+        async function uploadFile(file, path) {
+            const ref = storage.ref().child(`${path}/${Date.now()}_${file.name}`);
+            await ref.put(file);
+            return await ref.getDownloadURL();
+        }
 
-        // --- UTILITIES ---
-        function showToast(msg, type = 'success') {
+        function showLoading() {
+            document.getElementById('loading-overlay').style.display = 'flex';
+        }
+
+        function hideLoading() {
+            document.getElementById('loading-overlay').style.display = 'none';
+        }
+
+        function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
-            const el = document.createElement('div');
-            el.className = `toast ${type}`;
-            el.innerHTML = `
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    ${type === 'success' ? 
-                        '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>' : 
-                        '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>'}
-                </svg>
-                <span>${msg}</span>
-            `;
-            container.appendChild(el);
-            setTimeout(() => el.remove(), 3000);
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icon = type === 'success' ? 
+                '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>' :
+                '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>';
+            
+            toast.innerHTML = `${icon}<span>${message}</span>`;
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
         }
 
-        // Handle window resize
-        window.addEventListener('resize', function() {
-            isMobile = window.innerWidth <= 768;
-            if (isMobile) {
-                // Refresh mobile UI if needed
-            }
-        });
+        // Attach event listeners
+        document.getElementById('variant-save-btn').addEventListener('click', saveVariant);
+        document.getElementById('review-save-btn').addEventListener('click', saveReview);
     </script>
 </body>
 </html>
