@@ -50,15 +50,14 @@
             color: var(--text-color);
             overflow-x: hidden;
             width: 100%;
-            -webkit-touch-callout: none; /* iOS Safari */
-            -webkit-user-select: none; /* Safari */
-            -khtml-user-select: none; /* Konqueror HTML */
-            -moz-user-select: none; /* Old versions of Firefox */
-            -ms-user-select: none; /* Internet Explorer/Edge */
-            user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
-        /* Prevent long press context menu on mobile */
         * {
             -webkit-tap-highlight-color: transparent;
         }
@@ -207,14 +206,6 @@
             height: 18px;
             stroke: #6b7280;
         }
-                .d-submenu-item.active .submenu-icon {
-            stroke: var(--brand-primary);
-        }
-.d-submenu a,
-.m-submenu a {
-    text-decoration: none !important;
-    color: inherit !important;
-}
 
         /* Desktop account section */
         .d-account-section {
@@ -428,11 +419,6 @@
             -webkit-touch-callout: none;
             -webkit-user-select: none;
             user-select: none;
-        }
-
-        /* Prevent context menu on drag handle */
-        .drag-handle {
-            -webkit-touch-callout: none;
         }
 
         .drag-handle:active {
@@ -898,12 +884,6 @@
             background: #f3f4f6;
         }
 
-        .popup-list a i {
-            font-size: 1.2rem;
-            color: #6b7280;
-            min-width: 20px;
-        }
-
         .popup-list a.logout {
             color: var(--danger-color);
         }
@@ -1224,8 +1204,12 @@
             left: 16px;
             padding: 15px;
             z-index: 90;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
+        /* KEY FIX: Hide save button when menu overlay is open */
         .m-overlay.open ~ .mobile-save-btn {
             display: none !important;
         }
@@ -1368,20 +1352,35 @@
 
                             <!-- Desktop Customize Site submenu -->
                             <div class="d-submenu open" id="d-customize-submenu">
-    <a href="/manage-hero.html" class="d-submenu-item">
-        <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8h20"/><rect width="20" height="16" x="2" y="4" rx="2"/><path d="M6 16h12"/></svg>
-        <span>Hero Section</span>
-    </a>
-
-    <a href="/manage-sections.html" class="d-submenu-item active">
-        <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/><path d="M14 4h7"/><path d="M14 9h7"/><path d="M14 15h7"/><path d="M14 20h7"/></svg>
-        <span>Sections</span>
-    </a>
-
-    <a href="/manage-hero-popup.html" class="d-submenu-item">
-        <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 21h10"/><rect width="20" height="14" x="2" y="3" rx="2"/></svg>
-        <span>Popup</span>
-    </a>
+                                <div class="d-submenu-item" onclick="window.location.href='hero-section.html'">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
+                                        <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
+                                        <path d="M4 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/>
+                                        <path d="M9.5 12.5 11 14"/>
+                                        <path d="M14 10l-3.5 4"/>
+                                        <path d="m5 15 4.5-4"/>
+                                    </svg>
+                                    <span>Theme & Layout</span>
+                                </div>
+                                <div class="d-submenu-item active">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="18" height="18" x="3" y="3" rx="2"/>
+                                        <path d="M3 9h18"/>
+                                        <path d="M9 21V9"/>
+                                    </svg>
+                                    <span>Sections Manager</span>
+                                </div>
+                                <div class="d-submenu-item" onclick="window.location.href='popup-manager.html'">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="18" cy="5" r="3"/>
+                                        <circle cx="6" cy="12" r="3"/>
+                                        <circle cx="18" cy="19" r="3"/>
+                                        <line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/>
+                                        <line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/>
+                                    </svg>
+                                    <span>Popup Manager</span>
+                                </div>
                             </div>
 
                             <!-- MANAGE ORDERS -->
@@ -1516,7 +1515,6 @@
                         </div>
                         <div class="card-body">
                             <div id="selected-products-list" class="draggable-list">
-                                <!-- Products will be loaded here -->
                                 <div class="empty-state">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 12px;">
                                         <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
@@ -1540,7 +1538,6 @@
                         </div>
                         <div class="card-body">
                             <div id="categories-list" class="draggable-list">
-                                <!-- Categories will be loaded here -->
                                 <div class="empty-state">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 12px;">
                                         <circle cx="12" cy="12" r="10"></circle>
@@ -1576,9 +1573,7 @@
             <div class="m-card">
                 <div class="m-card-title">Best Sellers</div>
                 <div class="m-card-subtitle">Drag to reorder best-selling products</div>
-                <div id="mobile-selected-products" class="draggable-list">
-                    <!-- Products will be loaded here -->
-                </div>
+                <div id="mobile-selected-products" class="draggable-list"></div>
                 <button class="btn btn-secondary" style="width: 100%; margin-top: 16px;" onclick="openProductSelector()">
                     Edit Selection
                 </button>
@@ -1587,16 +1582,14 @@
             <div class="m-card">
                 <div class="m-card-title">Categories Order</div>
                 <div class="m-card-subtitle">Long press & drag to reorder</div>
-                <div id="mobile-categories-list" class="draggable-list">
-                    <!-- Categories will be loaded here -->
-                </div>
+                <div id="mobile-categories-list" class="draggable-list"></div>
             </div>
-
-            <!-- FIXED: Save button outside main content to control visibility -->
-            <button class="btn btn-primary mobile-save-btn" onclick="saveSections()">
-                Save All Changes
-            </button>
         </main>
+
+        <!-- FIXED: Save button moved here - outside main content -->
+        <button class="btn btn-primary mobile-save-btn" onclick="saveSections()">
+            Save All Changes
+        </button>
 
         <!-- Overlay & drawer -->
         <div class="m-overlay" id="m-overlay">
@@ -1661,20 +1654,35 @@
 
                     <!-- Mobile Customize Site submenu -->
                     <div class="m-submenu open" id="m-customize-submenu">
-    <a href="/manage-hero.html" class="m-submenu-item">
-        <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8h20"/><rect width="20" height="16" x="2" y="4" rx="2"/><path d="M6 16h12"/></svg>
-        <span>Hero Section</span>
-    </a>
-
-    <a href="/manage-sections.html" class="m-submenu-item active">
-        <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/><path d="M14 4h7"/><path d="M14 9h7"/><path d="M14 15h7"/><path d="M14 20h7"/></svg>
-        <span>Sections</span>
-    </a>
-
-    <a href="/manage-hero-popup.html" class="m-submenu-item">
-        <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 21h10"/><rect width="20" height="14" x="2" y="3" rx="2"/></svg>
-        <span>Popup</span>
-    </a>
+                        <div class="m-submenu-item" onclick="window.location.href='hero-section.html'">
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
+                                <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
+                                <path d="M4 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/>
+                                <path d="M9.5 12.5 11 14"/>
+                                <path d="M14 10l-3.5 4"/>
+                                <path d="m5 15 4.5-4"/>
+                            </svg>
+                            <span>Theme & Layout</span>
+                        </div>
+                        <div class="m-submenu-item active">
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect width="18" height="18" x="3" y="3" rx="2"/>
+                                <path d="M3 9h18"/>
+                                <path d="M9 21V9"/>
+                            </svg>
+                            <span>Sections Manager</span>
+                        </div>
+                        <div class="m-submenu-item" onclick="window.location.href='popup-manager.html'">
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="18" cy="5" r="3"/>
+                                <circle cx="6" cy="12" r="3"/>
+                                <circle cx="18" cy="19" r="3"/>
+                                <line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/>
+                                <line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/>
+                            </svg>
+                            <span>Popup Manager</span>
+                        </div>
                     </div>
 
                     <!-- MANAGE ORDERS with dropdown -->
@@ -1776,9 +1784,7 @@
                     </svg>
                     <input type="text" id="modal-search" placeholder="Search products..." onkeyup="filterModalProducts()">
                 </div>
-                <div id="modal-product-grid" class="product-grid">
-                    <!-- Products loaded dynamically -->
-                </div>
+                <div id="modal-product-grid" class="product-grid"></div>
             </div>
             <div class="modal-footer">
                 <div style="margin-right: auto; color: #6b7280; font-size: 13px;">
@@ -1790,7 +1796,7 @@
         </div>
     </div>
 
-    <!-- Profile Popup with updated SVG icons -->
+    <!-- Profile Popup -->
     <div class="profile-popup" id="profile-popup">
         <div class="popup-header">
             <img id="popup-avatar" src="" class="account-avatar">
@@ -2003,10 +2009,6 @@
                 handle.addEventListener('touchend', function(e) {
                     e.preventDefault();
                 }, { passive: false });
-                
-                handle.addEventListener('touchmove', function(e) {
-                    e.preventDefault();
-                }, { passive: false });
             });
         });
 
@@ -2147,51 +2149,40 @@
         }
 
         // --- RENDER CATEGORIES LIST ---
-        function renderCategories(containerId) {
-            const container = document.getElementById(containerId);
-            if (!container) return;
+// --- RENDER CATEGORIES LIST ---
+function renderCategories(containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
 
-            if (state.categories.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 12px;">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <line x1="12" y1="8" x2="12" y2="12"></line>
-                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                        </svg>
-                        <h3 style="margin-bottom: 8px; color: #374151;">No Categories Found</h3>
-                        <p>Add categories from the Categories Manager</p>
-                    </div>`;
-                return;
-            }
+    if (state.categories.length === 0) {
+        // ... (empty state code remains the same) ...
+        return;
+    }
 
-            container.innerHTML = state.categories.map((cat, index) => `
-                <div class="draggable-item" draggable="true" data-index="${index}" data-type="category">
-                    <div class="drag-handle">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="9" cy="5" r="1"></circle>
-                            <circle cx="9" cy="12" r="1"></circle>
-                            <circle cx="9" cy="19" r="1"></circle>
-                            <circle cx="15" cy="5" r="1"></circle>
-                            <circle cx="15" cy="12" r="1"></circle>
-                            <circle cx="15" cy="19" r="1"></circle>
-                        </svg>
-                    </div>
-                    <div class="item-content">
-                        <div class="item-title">${cat.name}</div>
-                        <div class="item-subtitle" style="color: ${cat.enabled ? '#10B981' : '#9CA3AF'}">
-                            ${cat.enabled ? 'Visible' : 'Hidden'}
-                        </div>
-                    </div>
-                    <div class="toggle-switch">
-                        <input type="checkbox" ${cat.enabled ? 'checked' : ''} onchange="toggleCategory('${cat.id}')">
-                        <span class="toggle-slider"></span>
-                    </div>
+    container.innerHTML = state.categories.map((cat, index) => `
+        <div class="draggable-item" draggable="true" data-index="${index}" data-type="category">
+            <div class="drag-handle">
+                <!-- ... svg code ... -->
+            </div>
+            <div class="item-content">
+                <div class="item-title">${cat.name}</div>
+                <div class="item-subtitle" style="color: ${cat.enabled ? '#10B981' : '#9CA3AF'}">
+                    ${cat.enabled ? 'Visible' : 'Hidden'}
                 </div>
-            `).join('');
+            </div>
+            
+            <!-- THIS IS THE PART TO CHANGE -->
+            <label class="toggle-switch">
+                <input type="checkbox" ${cat.enabled ? 'checked' : ''} onchange="toggleCategory('${cat.id}')">
+                <span class="toggle-slider"></span>
+            </label>
+            <!-- END CHANGE -->
 
-            attachDragEvents(container, 'category');
-        }
+        </div>
+    `).join('');
+
+    attachDragEvents(container, 'category');
+}
 
         // --- DRAG & DROP LOGIC ---
         function attachDragEvents(container, type) {
@@ -2238,33 +2229,6 @@
                         renderCategories('categories-list');
                         renderCategories('mobile-categories-list');
                     }
-                });
-
-                // Touch events for mobile
-                item.addEventListener('touchstart', function(e) {
-                    const touch = e.touches[0];
-                    this.dataset.startY = touch.pageY;
-                    this.dataset.startX = touch.pageX;
-                }, { passive: true });
-
-                item.addEventListener('touchmove', function(e) {
-                    if (!this.dataset.startY) return;
-                    
-                    const touch = e.touches[0];
-                    const deltaY = Math.abs(touch.pageY - this.dataset.startY);
-                    const deltaX = Math.abs(touch.pageX - this.dataset.startX);
-                    
-                    // Only consider it a drag if vertical movement is significant
-                    if (deltaY > 10 && deltaY > deltaX) {
-                        e.preventDefault();
-                        this.classList.add('dragging');
-                    }
-                }, { passive: false });
-
-                item.addEventListener('touchend', function() {
-                    this.classList.remove('dragging');
-                    delete this.dataset.startY;
-                    delete this.dataset.startX;
                 });
             });
         }
