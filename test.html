@@ -1657,6 +1657,106 @@
             flex-shrink: 0;
         }
 
+        .switch-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--switch-off);
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--switch-on);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+
+        .upload-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: #e5e7eb;
+            overflow: hidden;
+            border-radius: 0 0 8px 8px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--brand-primary);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .upload-status {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .upload-status.success {
+            color: var(--success-color);
+        }
+
+        .upload-status.error {
+            color: var(--danger-color);
+        }
+
+        .upload-status.uploading {
+            color: var(--brand-primary);
+        }
+
+        .image-uploading {
+            opacity: 0.7;
+        }
+
         @media (max-width: 768px) {
             .page-desktop { display: none; }
             .page-mobile { display: flex; }
@@ -2513,6 +2613,13 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label">Available Sizes</label>
+                        <div class="switch-container">
+                            <span style="font-weight: 600; font-size: 14px;">Enable Sizes</span>
+                            <label class="switch">
+                                <input type="checkbox" id="size-toggle" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
                         <div class="size-grid" id="size-selection">
                         </div>
                     </div>
@@ -2834,6 +2941,20 @@
                     });
                 });
             }
+
+            const sizeToggle = document.getElementById('size-toggle');
+            if (sizeToggle) {
+                sizeToggle.addEventListener('change', function() {
+                    const sizeSelection = document.getElementById('size-selection');
+                    if (sizeSelection) {
+                        if (this.checked) {
+                            sizeSelection.style.display = 'grid';
+                        } else {
+                            sizeSelection.style.display = 'none';
+                        }
+                    }
+                });
+            }
         });
 
         const firebaseConfig = {
@@ -2864,6 +2985,8 @@
         let tempSwatchFile = null;
         let existingVariantImages = [];
         let productId = null;
+        let uploadingImages = new Map();
+        let variantImagesData = [];
 
         auth.onAuthStateChanged(user => {
             if (!user || user.email !== ADMIN_EMAIL) {
@@ -3270,7 +3393,6 @@
             productReviews = data.reviews || [];
             renderReviews();
             
-            
             document.getElementById('product-form').style.display = 'block';
             document.getElementById('loading-state').style.display = 'none';
             document.getElementById('mobile-product-form').style.display = 'block';
@@ -3346,15 +3468,45 @@
                 swatchContainer.style.display = 'none';
             }
             
-            const sizeOptions = document.querySelectorAll('#size-selection .size-option');
-            sizeOptions.forEach(option => {
-                const size = option.getAttribute('data-size');
-                const selected = data && data.sizes && data.sizes.some(s => s.name === size);
+            const sizeToggle = document.getElementById('size-toggle');
+            const sizeSelection = document.getElementById('size-selection');
+            
+            if (data && data.sizes && data.sizes.length > 0) {
+                if (data.sizes[0] === 'sizes no required') {
+                    sizeToggle.checked = false;
+                    sizeSelection.style.display = 'none';
+                    
+                    const sizeOptions = document.querySelectorAll('#size-selection .size-option');
+                    sizeOptions.forEach(option => {
+                        option.classList.remove('selected');
+                        option.querySelector('input[type="checkbox"]').checked = false;
+                        option.querySelector('.size-status').textContent = 'Select';
+                    });
+                } else {
+                    sizeToggle.checked = true;
+                    sizeSelection.style.display = 'grid';
+                    
+                    const sizeOptions = document.querySelectorAll('#size-selection .size-option');
+                    sizeOptions.forEach(option => {
+                        const size = option.getAttribute('data-size');
+                        const selected = data.sizes.some(s => s.name === size);
+                        
+                        option.classList.toggle('selected', selected);
+                        option.querySelector('input[type="checkbox"]').checked = selected;
+                        option.querySelector('.size-status').textContent = selected ? 'Selected' : 'Select';
+                    });
+                }
+            } else {
+                sizeToggle.checked = true;
+                sizeSelection.style.display = 'grid';
                 
-                option.classList.toggle('selected', selected);
-                option.querySelector('input[type="checkbox"]').checked = selected;
-                option.querySelector('.size-status').textContent = selected ? 'Selected' : 'Select';
-            });
+                const sizeOptions = document.querySelectorAll('#size-selection .size-option');
+                sizeOptions.forEach(option => {
+                    option.classList.remove('selected');
+                    option.querySelector('input[type="checkbox"]').checked = false;
+                    option.querySelector('.size-status').textContent = 'Select';
+                });
+            }
             
             const existingGallery = document.getElementById('existing-gallery');
             existingGallery.innerHTML = '';
@@ -3375,7 +3527,8 @@
             }
             
             document.getElementById('variant-image-previews').innerHTML = '';
-            tempVariantFiles = [];
+            variantImagesData = [];
+            uploadingImages.clear();
             
             document.getElementById('color-modal').style.display = 'flex';
             
@@ -3394,8 +3547,14 @@
             document.getElementById('swatch-preview-container').style.display = 'none';
             document.getElementById('existing-gallery').innerHTML = '';
             document.getElementById('variant-image-previews').innerHTML = '';
-            tempVariantFiles = [];
-            tempSwatchFile = null;
+            variantImagesData = [];
+            
+            uploadingImages.forEach((uploadTask, imageId) => {
+                if (uploadTask) {
+                    uploadTask.cancel();
+                }
+            });
+            uploadingImages.clear();
         }
 
         document.getElementById('color-swatch-input').addEventListener('change', (e) => {
@@ -3427,24 +3586,134 @@
                     return;
                 }
                 
-                tempVariantFiles.push(file);
+                const imageId = 'img_' + Date.now() + Math.random().toString(36).substr(2, 9);
+                const previewContainer = document.getElementById('variant-image-previews');
+                
+                const preview = document.createElement('div');
+                preview.className = 'gallery-item image-uploading';
+                preview.id = imageId;
+                preview.innerHTML = `
+                    <img src="" class="gallery-img">
+                    <div class="upload-progress">
+                        <div class="progress-bar" id="progress-${imageId}"></div>
+                    </div>
+                    <div class="upload-status uploading" id="status-${imageId}">↻</div>
+                    <div class="gallery-remove" onclick="cancelImageUpload('${imageId}')">×</div>
+                `;
+                previewContainer.appendChild(preview);
                 
                 const reader = new FileReader();
                 reader.onload = (event) => {
-                    const previewContainer = document.getElementById('variant-image-previews');
-                    const preview = document.createElement('div');
-                    preview.className = 'gallery-item';
-                    preview.innerHTML = `
-                        <img src="${event.target.result}" class="gallery-img">
-                        <div class="gallery-remove" onclick="removeTempGalleryImage(this)">×</div>
-                    `;
-                    previewContainer.appendChild(preview);
+                    preview.querySelector('img').src = event.target.result;
                 };
                 reader.readAsDataURL(file);
+                
+                uploadImageWithProgress(file, imageId);
             });
         });
 
+        async function uploadImageWithProgress(file, imageId) {
+            try {
+                const storageRef = storage.ref();
+                const fileRef = storageRef.child(`variants/${Date.now()}_${file.name}`);
+                
+                const uploadTask = fileRef.put(file);
+                uploadingImages.set(imageId, uploadTask);
+                
+                variantImagesData.push({
+                    id: imageId,
+                    file: file,
+                    url: null,
+                    status: 'uploading'
+                });
+                
+                uploadTask.on('state_changed',
+                    (snapshot) => {
+                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                        const progressBar = document.getElementById(`progress-${imageId}`);
+                        if (progressBar) {
+                            progressBar.style.width = progress + '%';
+                        }
+                    },
+                    (error) => {
+                        console.error('Upload error:', error);
+                        const status = document.getElementById(`status-${imageId}`);
+                        if (status) {
+                            status.className = 'upload-status error';
+                            status.textContent = '!';
+                        }
+                        const imgData = variantImagesData.find(img => img.id === imageId);
+                        if (imgData) {
+                            imgData.status = 'error';
+                        }
+                        uploadingImages.delete(imageId);
+                    },
+                    async () => {
+                        const downloadURL = await uploadTask.snapshot.ref.getDownloadURL();
+                        const status = document.getElementById(`status-${imageId}`);
+                        if (status) {
+                            status.className = 'upload-status success';
+                            status.textContent = '✓';
+                        }
+                        
+                        const preview = document.getElementById(imageId);
+                        if (preview) {
+                            preview.classList.remove('image-uploading');
+                        }
+                        
+                        const imgData = variantImagesData.find(img => img.id === imageId);
+                        if (imgData) {
+                            imgData.url = downloadURL;
+                            imgData.status = 'completed';
+                        }
+                        
+                        uploadingImages.delete(imageId);
+                    }
+                );
+            } catch (error) {
+                console.error('Error starting upload:', error);
+                const status = document.getElementById(`status-${imageId}`);
+                if (status) {
+                    status.className = 'upload-status error';
+                    status.textContent = '!';
+                }
+            }
+        }
+
+        function cancelImageUpload(imageId) {
+            const uploadTask = uploadingImages.get(imageId);
+            if (uploadTask) {
+                uploadTask.cancel();
+                uploadingImages.delete(imageId);
+            }
+            
+            const preview = document.getElementById(imageId);
+            if (preview) {
+                preview.remove();
+            }
+            
+            const index = variantImagesData.findIndex(img => img.id === imageId);
+            if (index !== -1) {
+                const imgData = variantImagesData[index];
+                if (imgData.url && imgData.status === 'completed') {
+                    deleteImageFromStorage(imgData.url);
+                }
+                variantImagesData.splice(index, 1);
+            }
+        }
+
+        async function deleteImageFromStorage(url) {
+            try {
+                const storageRef = storage.refFromURL(url);
+                await storageRef.delete();
+            } catch (error) {
+                console.error('Error deleting image:', error);
+            }
+        }
+
         function removeGalleryImage(index) {
+            const url = existingVariantImages[index];
+            deleteImageFromStorage(url);
             existingVariantImages.splice(index, 1);
             const existingGallery = document.getElementById('existing-gallery');
             existingGallery.innerHTML = '';
@@ -3458,13 +3727,6 @@
                 `;
                 existingGallery.appendChild(galleryItem);
             });
-        }
-
-        function removeTempGalleryImage(element) {
-            const previewContainer = document.getElementById('variant-image-previews');
-            const index = Array.from(previewContainer.children).indexOf(element.parentElement);
-            tempVariantFiles.splice(index, 1);
-            element.parentElement.remove();
         }
 
         async function saveColorVariant() {
@@ -3481,6 +3743,12 @@
                 return;
             }
             
+            const uploadingCount = Array.from(variantImagesData).filter(img => img.status === 'uploading').length;
+            if (uploadingCount > 0) {
+                showToast('Please wait for all images to finish uploading', 'error');
+                return;
+            }
+            
             showProgress('Saving variant...', 'Please wait');
             
             try {
@@ -3492,28 +3760,31 @@
                     swatchImage = colorVariants[editingVariantIndex].hex;
                 }
                 
-                const sizes = [];
-                document.querySelectorAll('#size-selection .size-option.selected').forEach(option => {
-                    const sizeName = option.getAttribute('data-size');
-                    sizes.push({
-                        name: sizeName,
-                        available: true
+                let sizes = [];
+                const sizeToggle = document.getElementById('size-toggle');
+                
+                if (sizeToggle.checked) {
+                    document.querySelectorAll('#size-selection .size-option.selected').forEach(option => {
+                        const sizeName = option.getAttribute('data-size');
+                        sizes.push({
+                            name: sizeName,
+                            available: true
+                        });
                     });
-                });
-                
-                if (sizes.length === 0) {
-                    hideProgress();
-                    showToast('Please select at least one size', 'error');
-                    return;
+                    
+                    if (sizes.length === 0) {
+                        hideProgress();
+                        showToast('Please select at least one size', 'error');
+                        return;
+                    }
+                } else {
+                    sizes = ['sizes no required'];
                 }
                 
-                const newImages = [];
-                for (const file of tempVariantFiles) {
-                    const url = await uploadFile(file, 'variants');
-                    newImages.push(url);
-                }
+                const completedImages = variantImagesData.filter(img => img.status === 'completed');
+                const newImageUrls = completedImages.map(img => img.url).filter(url => url);
                 
-                const allImages = [...existingVariantImages, ...newImages];
+                const allImages = [...existingVariantImages, ...newImageUrls];
                 
                 const variant = {
                     name,
@@ -3578,7 +3849,7 @@
                              style="${variant.colorHex ? `background-color: ${variant.colorHex};` : ''}">
                         <div class="variant-details">
                             <div class="variant-name">${variant.name}</div>
-                            <div class="variant-sizes">${variant.sizes.length} sizes • ${variant.images ? variant.images.length : 0} images</div>
+                            <div class="variant-sizes">${Array.isArray(variant.sizes) ? variant.sizes.length + ' sizes' : 'No sizes'} • ${variant.images ? variant.images.length : 0} images</div>
                         </div>
                     </div>
                     <div class="variant-actions">
@@ -3611,7 +3882,7 @@
                              style="${variant.colorHex ? `background-color: ${variant.colorHex};` : ''}">
                         <div class="variant-details">
                             <div class="variant-name">${variant.name}</div>
-                            <div class="variant-sizes">${variant.sizes.length} sizes</div>
+                            <div class="variant-sizes">${Array.isArray(variant.sizes) ? variant.sizes.length + ' sizes' : 'No sizes'}</div>
                         </div>
                     </div>
                     <div class="variant-actions">
@@ -3629,6 +3900,12 @@
 
         function removeVariant(index) {
             if (confirm('Are you sure you want to remove this variant?')) {
+                const variant = colorVariants[index];
+                if (variant.images) {
+                    variant.images.forEach(url => {
+                        deleteImageFromStorage(url);
+                    });
+                }
                 colorVariants.splice(index, 1);
                 renderVariants();
                 showToast('Variant removed', 'success');
@@ -3846,7 +4123,7 @@
                 }
                 
                 setTimeout(() => {
-                    window.location.href = 'manage-products.html';
+                    window.history.back();
                 }, 1500);
                 
             } catch (error) {
