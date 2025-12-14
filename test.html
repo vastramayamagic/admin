@@ -25,7 +25,7 @@
             --brand-gradient: linear-gradient(135deg, #5127ba 0%, #673de6 100%);
             --danger-color: #ef4444;
             --success-color: #10B981;
-            --warning-color: #f59e0b;
+            --warning-color: #F59E0B;
             --switch-on: #5127ba;
             --switch-off: #9CA3AF;
             --shadow-premium: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
@@ -484,24 +484,117 @@
             background: #fef2f2;
         }
 
-        /* Category Products Badge */
-        .category-products-badge {
-            display: inline-flex;
+        /* Category Products Preview */
+        .category-products-preview {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px dashed #e5e7eb;
+        }
+
+        .category-products-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #6b7280;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .category-products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .category-product-item {
+            display: flex;
+            flex-direction: column;
             align-items: center;
             gap: 4px;
-            padding: 2px 8px;
-            background: #f3f4f6;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 500;
-            color: #6b7280;
+            cursor: pointer;
+        }
+
+        .category-product-image {
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            object-fit: cover;
             border: 1px solid #e5e7eb;
         }
 
-        .category-products-badge.active {
-            background: #dbeafe;
-            color: var(--brand-primary);
-            border-color: #bfdbfe;
+        .category-product-name {
+            font-size: 10px;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 70px;
+        }
+
+        .category-product-remove {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            width: 16px;
+            height: 16px;
+            background: var(--danger-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .category-product-item:hover .category-product-remove {
+            opacity: 1;
+        }
+
+        .category-product-image-wrap {
+            position: relative;
+        }
+
+        /* Edit Products Button */
+        .edit-products-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: 1px solid #e5e7eb;
+            background: white;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-color);
+            transition: all 0.15s ease;
+        }
+
+        .edit-products-btn:hover {
+            background: #f9fafb;
+            border-color: #d1d5db;
+        }
+
+        .edit-products-btn svg {
+            width: 14px;
+            height: 14px;
+            stroke: currentColor;
+        }
+
+        .products-count-badge {
+            background: var(--brand-primary);
+            color: white;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 10px;
+            min-width: 20px;
+            text-align: center;
         }
 
         /* Toggle Switch */
@@ -619,41 +712,6 @@
             text-overflow: ellipsis;
         }
 
-        /* Category Modal Header */
-        .category-modal-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
-            padding: 12px;
-            background: #f8fafc;
-            border-radius: 8px;
-            border: 1px solid #e5e7eb;
-        }
-
-        .category-modal-title {
-            font-weight: 600;
-            font-size: 16px;
-            color: var(--text-color);
-        }
-
-        .category-modal-subtitle {
-            font-size: 13px;
-            color: #6b7280;
-            margin-top: 2px;
-        }
-
-        .selection-count {
-            margin-left: auto;
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--brand-primary);
-        }
-
-        .selection-limit {
-            color: #9ca3af;
-        }
-
         /* Product Grid */
         .product-grid {
             display: grid;
@@ -681,11 +739,6 @@
         .product-card.selected {
             border: 2px solid var(--brand-primary);
             box-shadow: 0 4px 12px rgba(81, 39, 186, 0.15);
-        }
-
-        .product-card.disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
         }
 
         .product-image {
@@ -815,20 +868,24 @@
             transform: translateY(-1px);
         }
 
-        .btn-warning {
-            background: var(--warning-color);
-            color: white;
+        /* Category Products Modal */
+        .category-modal-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1rem;
+            color: #6b7280;
         }
 
-        .btn-warning:hover {
-            background: #d97706;
-            transform: translateY(-1px);
+        .selection-limit {
+            font-size: 13px;
+            color: #9ca3af;
+            margin-top: 4px;
         }
 
-        .btn-small {
-            padding: 6px 12px;
-            font-size: 12px;
-            min-width: auto;
+        .limit-warning {
+            color: var(--warning-color);
+            font-weight: 600;
         }
 
         /* Toast */
@@ -864,10 +921,6 @@
 
         .toast.error {
             border-left-color: var(--danger-color);
-        }
-
-        .toast.warning {
-            border-left-color: var(--warning-color);
         }
 
         @keyframes slideUp {
@@ -1093,6 +1146,26 @@
             margin-bottom: 16px;
         }
 
+        /* Mobile Category Products */
+        .mobile-category-products {
+            margin-top: 12px;
+        }
+
+        .mobile-products-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .mobile-product-preview {
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            object-fit: cover;
+            border: 1px solid #e5e7eb;
+        }
+
         /* Overlay & drawer */
         .m-overlay {
             position: fixed;
@@ -1307,44 +1380,6 @@
             border: 1px dashed #e5e7eb;
         }
 
-        /* Category Products Preview */
-        .category-products-preview {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 12px;
-            padding: 12px;
-            background: #f9fafb;
-            border-radius: 8px;
-            border: 1px dashed #e5e7eb;
-        }
-
-        .category-product-chip {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 4px 8px;
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 16px;
-            font-size: 11px;
-            max-width: 120px;
-        }
-
-        .category-product-chip img {
-            width: 20px;
-            height: 20px;
-            border-radius: 4px;
-            object-fit: cover;
-        }
-
-        .category-product-chip span {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            flex: 1;
-        }
-
         /* Responsive switch */
         @media (max-width: 768px) {
             .page-desktop { display: none; }
@@ -1394,12 +1429,8 @@
                 overflow-x: hidden;
             }
 
-            .category-products-preview {
-                flex-direction: column;
-            }
-
-            .category-product-chip {
-                max-width: 100%;
+            .category-products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
             }
         }
 
@@ -1413,15 +1444,6 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-        }
-
-        /* Quick Action Buttons */
-        .quick-actions {
-            display: flex;
-            gap: 8px;
-            margin-top: 16px;
-            padding-top: 16px;
-            border-top: 1px solid #e5e7eb;
         }
     </style>
 </head>
@@ -1669,18 +1691,7 @@
                         <div class="card-header">
                             <div>
                                 <div class="card-title">Categories Order</div>
-                                <div class="card-subtitle">Drag to rearrange display order, toggle to show/hide, add products for each category</div>
-                            </div>
-                            <div style="display: flex; gap: 8px;">
-                                <button class="btn btn-warning" onclick="showCategoryProductsModal(null, true)">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
-                                        <circle cx="9" cy="7" r="4"/>
-                                        <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
-                                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                                    </svg>
-                                    Bulk Add Products
-                                </button>
+                                <div class="card-subtitle">Drag to rearrange display order, toggle to show/hide, add up to 6 featured products per category</div>
                             </div>
                         </div>
                         <div class="card-body">
@@ -1694,24 +1705,6 @@
                                     <h3 style="margin-bottom: 8px; color: #374151;">Loading Categories</h3>
                                     <p>Please wait while we load your categories...</p>
                                 </div>
-                            </div>
-                            
-                            <!-- Quick Actions -->
-                            <div class="quick-actions">
-                                <button class="btn btn-secondary btn-small" onclick="clearAllCategoryProducts()">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M3 6h18"/>
-                                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
-                                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
-                                    </svg>
-                                    Clear All Products
-                                </button>
-                                <button class="btn btn-secondary btn-small" onclick="autoAssignProductsToCategories()">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
-                                    </svg>
-                                    Auto-Assign Products
-                                </button>
                             </div>
                         </div>
                     </div>
@@ -1746,17 +1739,8 @@
 
             <div class="m-card">
                 <div class="m-card-title">Categories Order</div>
-                <div class="m-card-subtitle">Long press & drag to reorder</div>
+                <div class="m-card-subtitle">Long press & drag to reorder, add up to 6 products per category</div>
                 <div id="mobile-categories-list" class="draggable-list"></div>
-                
-                <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 16px;">
-                    <button class="btn btn-warning" style="width: 100%;" onclick="showCategoryProductsModal(null, true)">
-                        Bulk Add Products
-                    </button>
-                    <button class="btn btn-secondary" style="width: 100%;" onclick="autoAssignProductsToCategories()">
-                        Auto-Assign Products
-                    </button>
-                </div>
             </div>
         </main>
 
@@ -1974,7 +1958,13 @@
     <div class="modal-overlay" id="category-products-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <div class="modal-title" id="category-modal-title">Select Products for Category</div>
+                <div>
+                    <div class="modal-title">Select Products for <span id="category-modal-name">Category</span></div>
+                    <div class="selection-limit">
+                        Select up to 6 products for this category
+                        <span id="limit-warning" class="limit-warning" style="display: none;"> (Limit reached)</span>
+                    </div>
+                </div>
                 <button class="btn-icon" onclick="closeCategoryProductsModal()">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M18 6 6 18"/>
@@ -1983,24 +1973,6 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="category-modal-header" id="category-modal-header">
-                    <div>
-                        <div class="category-modal-title" id="current-category-name">Select Category</div>
-                        <div class="category-modal-subtitle">Select up to 6 products for this category</div>
-                    </div>
-                    <div class="selection-count">
-                        Selected: <span id="category-selected-count">0</span>/<span class="selection-limit">6</span>
-                    </div>
-                </div>
-                
-                <!-- Bulk selector for all categories -->
-                <div id="bulk-category-selector" style="display: none;">
-                    <div style="margin-bottom: 16px; padding: 12px; background: #f0f9ff; border-radius: 8px; border: 1px solid #bae6fd;">
-                        <div style="font-weight: 600; color: #0369a1; margin-bottom: 4px;">Bulk Product Assignment</div>
-                        <div style="font-size: 13px; color: #0c4a6e;">Select products that will be added to ALL categories. Each category can have up to 6 products.</div>
-                    </div>
-                </div>
-                
                 <div class="search-input-wrap">
                     <svg class="search-icon" xmlns="http://www.w3.org/2000/svg"
                          viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -2008,17 +1980,16 @@
                         <circle cx="11" cy="11" r="7"></circle>
                         <line x1="16.65" y1="16.65" x2="21" y2="21"></line>
                     </svg>
-                    <input type="text" id="category-modal-search" placeholder="Search products..." onkeyup="filterCategoryModalProducts()">
+                    <input type="text" id="category-modal-search" placeholder="Search products in this category..." onkeyup="filterCategoryProducts()">
                 </div>
-                <div id="category-modal-product-grid" class="product-grid"></div>
+                <div id="category-product-grid" class="product-grid"></div>
             </div>
             <div class="modal-footer">
                 <div style="margin-right: auto; color: #6b7280; font-size: 13px;">
-                    <span id="category-total-selected-count">0</span> products selected
+                    <span id="category-modal-selected-count">0</span> selected (Max: 6)
                 </div>
                 <button class="btn btn-secondary" onclick="closeCategoryProductsModal()">Cancel</button>
-                <button class="btn btn-primary" onclick="confirmCategoryProductSelection()">Apply to Category</button>
-                <button class="btn btn-warning" id="apply-to-all-btn" onclick="applyProductsToAllCategories()" style="display: none;">Apply to All Categories</button>
+                <button class="btn btn-primary" onclick="confirmCategoryProductSelection()">Save Selection</button>
             </div>
         </div>
     </div>
@@ -2095,9 +2066,7 @@
             allProducts: [],
             selectedProductIds: [],
             categories: [],
-            currentCategoryId: null,
-            isBulkMode: false,
-            tempCategoryProducts: []
+            categoryProducts: {} // New: Store products for each category {categoryId: [productIds]}
         };
 
         // --- UI INITIALIZATION ---
@@ -2281,15 +2250,16 @@
                 state.allProducts = prodsSnap.docs.map(doc => ({ 
                     id: doc.id, 
                     ...doc.data(),
-                    // Ensure products have category info
-                    category: doc.data().category || 'uncategorized'
+                    // Store category if product has it
+                    category: doc.data().category || doc.data().categoryId || null
                 }));
 
                 // 2. Fetch DB Categories
                 const catsSnap = await db.collection('categories').get();
                 const dbCategories = catsSnap.docs.map(doc => ({ 
                     id: doc.id, 
-                    name: doc.data().name 
+                    name: doc.data().name,
+                    description: doc.data().description || ''
                 }));
 
                 // 3. Fetch Saved Config
@@ -2299,6 +2269,9 @@
                     const data = configDoc.data();
                     state.selectedProductIds = data.bestSellers || [];
                     
+                    // Initialize category products from saved data
+                    state.categoryProducts = data.categoryProducts || {};
+                    
                     // Merge saved order with current DB categories
                     const savedCats = data.categories || [];
                     state.categories = dbCategories.map(dbCat => {
@@ -2306,20 +2279,20 @@
                         return {
                             id: dbCat.id,
                             name: dbCat.name,
+                            description: dbCat.description,
                             enabled: saved ? saved.enabled : true,
-                            order: saved ? saved.order : 999,
-                            // Load category products if they exist
-                            products: saved && saved.products ? saved.products : []
+                            order: saved ? saved.order : 999
                         };
                     }).sort((a, b) => a.order - b.order);
                 } else {
                     state.categories = dbCategories.map((c, i) => ({ 
                         id: c.id, 
-                        name: c.name, 
+                        name: c.name,
+                        description: c.description,
                         enabled: true, 
-                        order: i + 1,
-                        products: []
+                        order: i + 1 
                     }));
+                    state.categoryProducts = {};
                 }
 
                 renderAll();
@@ -2349,7 +2322,7 @@
             if (selectedObjs.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 12px;">
+                        <svg xmlns="http://www.w3.org2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 12px;">
                             <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                             <line x1="3" y1="9" x2="21" y2="9"></line>
                             <line x1="9" y1="21" x2="9" y2="9"></line>
@@ -2409,9 +2382,15 @@
             }
 
             container.innerHTML = state.categories.map((cat, index) => {
-                const productCount = cat.products ? cat.products.length : 0;
-                const hasProducts = productCount > 0;
+                const categoryProducts = state.categoryProducts[cat.id] || [];
+                const productCount = categoryProducts.length;
                 
+                // Get product details for preview
+                const previewProducts = categoryProducts
+                    .slice(0, 6) // Show max 6 in preview
+                    .map(pid => state.allProducts.find(p => p.id === pid))
+                    .filter(p => p);
+
                 return `
                 <div class="draggable-item" draggable="true" data-index="${index}" data-type="category">
                     <div class="drag-handle">
@@ -2426,30 +2405,54 @@
                     </div>
                     <div class="item-content">
                         <div class="item-title">${cat.name}</div>
-                        <div class="item-actions" style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
-                            <span class="category-products-badge ${hasProducts ? 'active' : ''}" 
-                                  onclick="showCategoryProductsModal('${cat.id}')"
-                                  style="cursor: pointer;">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                                    <line x1="3" y1="9" x2="21" y2="9"></line>
-                                    <line x1="9" y1="21" x2="9" y2="9"></line>
-                                </svg>
-                                ${productCount}/6 products
-                            </span>
-                            <span class="item-subtitle" style="color: ${cat.enabled ? '#10B981' : '#9CA3AF'}">
-                                ${cat.enabled ? 'Visible' : 'Hidden'}
-                            </span>
+                        <div class="item-subtitle" style="color: ${cat.enabled ? '#10B981' : '#9CA3AF'}">
+                            ${cat.enabled ? 'Visible' : 'Hidden'}
                         </div>
-                        ${hasProducts ? renderCategoryProductsPreview(cat) : ''}
+                        
+                        <!-- Category Products Preview -->
+                        ${productCount > 0 ? `
+                        <div class="category-products-preview">
+                            <div class="category-products-title">
+                                <span>Featured Products (${productCount}/6)</span>
+                                <button class="edit-products-btn" onclick="openCategoryProductsModal('${cat.id}', '${cat.name.replace(/'/g, "\\'")}')">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                    </svg>
+                                    Edit
+                                </button>
+                            </div>
+                            <div class="category-products-grid">
+                                ${previewProducts.map(p => `
+                                    <div class="category-product-item" title="${p.name || 'Unnamed Product'} - ₹${p.price || '0'}">
+                                        <div class="category-product-image-wrap">
+                                            <img src="${p.image || p.images?.[0] || 'https://via.placeholder.com/40'}" 
+                                                 class="category-product-image" 
+                                                 alt="${p.name || 'Product'}">
+                                            <div class="category-product-remove" onclick="removeProductFromCategory('${cat.id}', '${p.id}', event)">
+                                                ×
+                                            </div>
+                                        </div>
+                                        <div class="category-product-name">${(p.name || '').substring(0, 15)}${(p.name || '').length > 15 ? '...' : ''}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                        ` : `
+                        <div class="category-products-preview">
+                            <div class="category-products-title">
+                                <span>No featured products</span>
+                                <button class="edit-products-btn" onclick="openCategoryProductsModal('${cat.id}', '${cat.name.replace(/'/g, "\\'")}')">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 5v14M5 12h14"/>
+                                    </svg>
+                                    Add Products
+                                </button>
+                            </div>
+                        </div>
+                        `}
                     </div>
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <button class="btn-icon" onclick="showCategoryProductsModal('${cat.id}')" title="Edit Products">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                            </svg>
-                        </button>
+                    <div class="item-actions">
                         <div class="toggle-switch">
                             <input type="checkbox" ${cat.enabled ? 'checked' : ''} onchange="toggleCategory('${cat.id}')">
                             <span class="toggle-slider"></span>
@@ -2460,35 +2463,6 @@
             }).join('');
 
             attachDragEvents(container, 'category');
-        }
-
-        function renderCategoryProductsPreview(cat) {
-            if (!cat.products || cat.products.length === 0) return '';
-            
-            const previewProducts = cat.products.slice(0, 3);
-            const remainingCount = cat.products.length - 3;
-            
-            return `
-            <div class="category-products-preview">
-                ${previewProducts.map(productId => {
-                    const product = state.allProducts.find(p => p.id === productId);
-                    if (!product) return '';
-                    const img = product.image || product.images?.[0] || 'https://via.placeholder.com/20';
-                    const name = product.name || 'Unnamed';
-                    return `
-                    <div class="category-product-chip">
-                        <img src="${img}" alt="${name}">
-                        <span>${name}</span>
-                    </div>
-                    `;
-                }).join('')}
-                ${remainingCount > 0 ? `
-                <div class="category-product-chip" style="background: #f3f4f6;">
-                    +${remainingCount} more
-                </div>
-                ` : ''}
-            </div>
-            `;
         }
 
         // --- DRAG & DROP LOGIC ---
@@ -2556,199 +2530,30 @@
             renderSelectedProducts('mobile-selected-products');
         }
 
+        function removeProductFromCategory(categoryId, productId, event) {
+            if (event) event.stopPropagation();
+            
+            if (state.categoryProducts[categoryId]) {
+                state.categoryProducts[categoryId] = state.categoryProducts[categoryId].filter(id => id !== productId);
+                renderCategories('categories-list');
+                renderCategories('mobile-categories-list');
+                showToast('Product removed from category', 'success');
+            }
+        }
+
         function resetChanges() {
             if(confirm("Discard all changes and reload from server?")) {
                 loadData();
             }
         }
 
-        // --- CATEGORY PRODUCTS MODAL ---
-        function showCategoryProductsModal(categoryId = null, bulkMode = false) {
-            state.currentCategoryId = categoryId;
-            state.isBulkMode = bulkMode;
-            state.tempCategoryProducts = [];
-            
-            if (bulkMode) {
-                document.getElementById('category-modal-title').textContent = 'Bulk Add Products to All Categories';
-                document.getElementById('current-category-name').textContent = 'All Categories';
-                document.getElementById('apply-to-all-btn').style.display = 'inline-flex';
-                document.getElementById('bulk-category-selector').style.display = 'block';
-            } else {
-                const category = state.categories.find(c => c.id === categoryId);
-                if (category) {
-                    document.getElementById('category-modal-title').textContent = `Select Products for ${category.name}`;
-                    document.getElementById('current-category-name').textContent = category.name;
-                    state.tempCategoryProducts = [...(category.products || [])];
-                }
-                document.getElementById('apply-to-all-btn').style.display = 'none';
-                document.getElementById('bulk-category-selector').style.display = 'none';
-            }
-            
-            document.getElementById('category-products-modal').style.display = 'flex';
-            renderCategoryModalGrid();
-            updateCategoryModalCount();
-        }
-
-        function closeCategoryProductsModal() {
-            document.getElementById('category-products-modal').style.display = 'none';
-        }
-
-        function renderCategoryModalGrid() {
-            const searchVal = document.getElementById('category-modal-search').value.toLowerCase();
-            const grid = document.getElementById('category-modal-product-grid');
-            
-            const filteredProducts = state.allProducts.filter(p => 
-                (p.name || '').toLowerCase().includes(searchVal) ||
-                (p.description || '').toLowerCase().includes(searchVal)
-            );
-
-            if (filteredProducts.length === 0) {
-                grid.innerHTML = `
-                    <div class="empty-state" style="grid-column: 1/-1;">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 12px;">
-                            <circle cx="11" cy="11" r="8"></circle>
-                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                        </svg>
-                        <h3 style="margin-bottom: 8px; color: #374151;">No Products Found</h3>
-                        <p>Try a different search term</p>
-                    </div>`;
-                return;
-            }
-
-            grid.innerHTML = filteredProducts.map(p => {
-                const isSelected = state.tempCategoryProducts.includes(p.id);
-                const img = p.image || p.images?.[0] || 'https://via.placeholder.com/150x120?text=No+Image';
-                const isDisabled = !state.isBulkMode && state.tempCategoryProducts.length >= 6 && !isSelected;
-                
-                return `
-                <div class="product-card ${isSelected ? 'selected' : ''} ${isDisabled ? 'disabled' : ''}" 
-                     onclick="${isDisabled ? '' : `toggleTempCategoryProduct('${p.id}')`}">
-                    <div class="product-select-checkbox ${isSelected ? 'checked' : ''}"></div>
-                    <img src="${img}" class="product-image">
-                    <div class="product-content">
-                        <div class="product-title">${p.name || 'Unnamed Product'}</div>
-                        <div class="product-price">₹${p.price || '0'}</div>
-                    </div>
-                </div>
-                `;
-            }).join('');
-        }
-
-        function toggleTempCategoryProduct(id) {
-            if (state.tempCategoryProducts.includes(id)) {
-                state.tempCategoryProducts = state.tempCategoryProducts.filter(pid => pid !== id);
-            } else {
-                if (state.tempCategoryProducts.length < 6) {
-                    state.tempCategoryProducts.push(id);
-                }
-            }
-            renderCategoryModalGrid();
-            updateCategoryModalCount();
-        }
-
-        function filterCategoryModalProducts() { 
-            renderCategoryModalGrid(); 
-        }
-        
-        function updateCategoryModalCount() { 
-            document.getElementById('category-selected-count').textContent = state.tempCategoryProducts.length;
-            document.getElementById('category-total-selected-count').textContent = state.tempCategoryProducts.length;
-        }
-
-        function confirmCategoryProductSelection() {
-            if (state.isBulkMode) {
-                // Apply to all categories
-                applyProductsToAllCategories();
-                return;
-            }
-            
-            const category = state.categories.find(c => c.id === state.currentCategoryId);
-            if (category) {
-                category.products = [...state.tempCategoryProducts];
-                renderCategories('categories-list');
-                renderCategories('mobile-categories-list');
-                closeCategoryProductsModal();
-                showToast(`Products added to ${category.name}`, 'success');
-            }
-        }
-
-        function applyProductsToAllCategories() {
-            if (state.tempCategoryProducts.length === 0) {
-                showToast('Please select at least one product', 'warning');
-                return;
-            }
-            
-            state.categories.forEach(category => {
-                // Keep existing products but add new ones (max 6)
-                const existingProducts = category.products || [];
-                const newProducts = [...new Set([...existingProducts, ...state.tempCategoryProducts])];
-                category.products = newProducts.slice(0, 6); // Limit to 6
-            });
-            
-            renderCategories('categories-list');
-            renderCategories('mobile-categories-list');
-            closeCategoryProductsModal();
-            showToast(`Products added to all categories`, 'success');
-        }
-
-        // --- QUICK ACTIONS ---
-        function clearAllCategoryProducts() {
-            if (confirm('Clear all products from all categories?')) {
-                state.categories.forEach(category => {
-                    category.products = [];
-                });
-                renderCategories('categories-list');
-                renderCategories('mobile-categories-list');
-                showToast('All category products cleared', 'success');
-            }
-        }
-
-        function autoAssignProductsToCategories() {
-            if (state.allProducts.length === 0) {
-                showToast('No products available to assign', 'warning');
-                return;
-            }
-            
-            // Clear existing assignments
-            state.categories.forEach(category => {
-                category.products = [];
-            });
-            
-            // Assign products to categories based on their category field
-            const productsByCategory = {};
-            state.allProducts.forEach(product => {
-                const categoryName = product.category?.toLowerCase() || 'uncategorized';
-                if (!productsByCategory[categoryName]) {
-                    productsByCategory[categoryName] = [];
-                }
-                productsByCategory[categoryName].push(product.id);
-            });
-            
-            // Assign up to 6 products to each matching category
-            state.categories.forEach(category => {
-                const categoryName = category.name.toLowerCase();
-                const matchingProducts = productsByCategory[categoryName] || [];
-                category.products = matchingProducts.slice(0, 6);
-                
-                // If no exact match, try partial match
-                if (category.products.length === 0) {
-                    for (const [catName, productIds] of Object.entries(productsByCategory)) {
-                        if (categoryName.includes(catName) || catName.includes(categoryName)) {
-                            category.products = productIds.slice(0, 6);
-                            break;
-                        }
-                    }
-                }
-            });
-            
-            renderCategories('categories-list');
-            renderCategories('mobile-categories-list');
-            showToast('Products auto-assigned to categories', 'success');
-        }
-
-        // --- MODAL LOGIC (Original Best Sellers) ---
+        // --- MODAL LOGIC ---
         let tempSelectedIds = [];
+        let tempCategorySelectedIds = [];
+        let currentCategoryId = null;
+        let currentCategoryName = '';
 
+        // Best Sellers Modal Functions
         function openProductSelector() {
             tempSelectedIds = [...state.selectedProductIds];
             document.getElementById('product-modal').style.display = 'flex';
@@ -2824,6 +2629,120 @@
             showToast('Product selection updated!', 'success');
         }
 
+        // Category Products Modal Functions
+        function openCategoryProductsModal(categoryId, categoryName) {
+            currentCategoryId = categoryId;
+            currentCategoryName = categoryName;
+            tempCategorySelectedIds = [...(state.categoryProducts[categoryId] || [])];
+            
+            document.getElementById('category-modal-name').textContent = categoryName;
+            document.getElementById('category-products-modal').style.display = 'flex';
+            renderCategoryProductGrid();
+            updateCategoryModalCount();
+        }
+
+        function closeCategoryProductsModal() {
+            document.getElementById('category-products-modal').style.display = 'none';
+            currentCategoryId = null;
+            currentCategoryName = '';
+        }
+
+        function renderCategoryProductGrid() {
+            const searchVal = document.getElementById('category-modal-search').value.toLowerCase();
+            const grid = document.getElementById('category-product-grid');
+            
+            // Filter products that belong to this category or have no category assigned
+            const filteredProducts = state.allProducts.filter(p => {
+                const matchesSearch = (p.name || '').toLowerCase().includes(searchVal) ||
+                                     (p.description || '').toLowerCase().includes(searchVal);
+                
+                // Check if product belongs to this category or has no category
+                const productCategory = p.category || p.categoryId;
+                const belongsToCategory = !productCategory || productCategory === currentCategoryId;
+                
+                return matchesSearch && belongsToCategory;
+            });
+
+            if (filteredProducts.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1/-1;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 12px;">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <h3 style="margin-bottom: 8px; color: #374151;">No Products Found</h3>
+                        <p>${searchVal ? 'Try a different search term' : 'No products available for this category'}</p>
+                    </div>`;
+                return;
+            }
+
+            grid.innerHTML = filteredProducts.map(p => {
+                const isSelected = tempCategorySelectedIds.includes(p.id);
+                const isDisabled = tempCategorySelectedIds.length >= 6 && !isSelected;
+                const img = p.image || p.images?.[0] || 'https://via.placeholder.com/150x120?text=No+Image';
+                
+                return `
+                <div class="product-card ${isSelected ? 'selected' : ''} ${isDisabled ? 'disabled' : ''}" 
+                     onclick="${isDisabled ? '' : `toggleTempCategoryProduct('${p.id}')`}"
+                     style="${isDisabled ? 'opacity: 0.6; cursor: not-allowed;' : ''}">
+                    ${isDisabled ? `<div class="product-select-checkbox" style="background: #f3f4f6; color: #9ca3af;">6</div>` : 
+                     `<div class="product-select-checkbox ${isSelected ? 'checked' : ''}"></div>`}
+                    <img src="${img}" class="product-image" style="${isDisabled ? 'filter: grayscale(0.5);' : ''}">
+                    <div class="product-content">
+                        <div class="product-title">${p.name || 'Unnamed Product'}</div>
+                        <div class="product-price">₹${p.price || '0'}</div>
+                        ${p.category ? `<div style="font-size: 11px; color: #6b7280; margin-top: 2px;">Category: ${p.category}</div>` : ''}
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        function toggleTempCategoryProduct(id) {
+            if (tempCategorySelectedIds.includes(id)) {
+                tempCategorySelectedIds = tempCategorySelectedIds.filter(pid => pid !== id);
+            } else {
+                if (tempCategorySelectedIds.length < 6) {
+                    tempCategorySelectedIds.push(id);
+                }
+            }
+            renderCategoryProductGrid();
+            updateCategoryModalCount();
+            
+            // Show/hide limit warning
+            const warning = document.getElementById('limit-warning');
+            warning.style.display = tempCategorySelectedIds.length >= 6 ? 'inline' : 'none';
+        }
+
+        function filterCategoryProducts() { 
+            renderCategoryProductGrid(); 
+        }
+        
+        function updateCategoryModalCount() { 
+            const count = tempCategorySelectedIds.length;
+            document.getElementById('category-modal-selected-count').innerText = count;
+            
+            // Update color based on limit
+            const countElement = document.getElementById('category-modal-selected-count');
+            if (count >= 6) {
+                countElement.style.color = 'var(--warning-color)';
+                countElement.style.fontWeight = '600';
+            } else {
+                countElement.style.color = '#6b7280';
+                countElement.style.fontWeight = 'normal';
+            }
+        }
+
+        function confirmCategoryProductSelection() {
+            if (!currentCategoryId) return;
+            
+            state.categoryProducts[currentCategoryId] = [...tempCategorySelectedIds];
+            renderCategories('categories-list');
+            renderCategories('mobile-categories-list');
+            closeCategoryProductsModal();
+            showToast(`Products saved for ${currentCategoryName}`, 'success');
+        }
+
         // --- SAVING ---
         async function saveSections() {
             const btn = document.querySelector('.page-desktop .btn-primary') || document.querySelector('.mobile-save-btn');
@@ -2834,20 +2753,19 @@
             try {
                 const categoriesPayload = state.categories.map((c, idx) => ({
                     id: c.id,
-                    name: c.name,
                     order: idx + 1,
-                    enabled: c.enabled,
-                    products: c.products || [] // Save category products
+                    enabled: c.enabled
                 }));
 
                 const payload = {
                     bestSellers: state.selectedProductIds,
                     categories: categoriesPayload,
+                    categoryProducts: state.categoryProducts, // Save category products
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
 
                 await db.collection('landingPage').doc('Sections').set(payload, { merge: true });
-                showToast("Changes saved successfully!", 'success');
+                showToast("All changes saved successfully!", 'success');
             } catch (error) {
                 console.error("Save error:", error);
                 showToast("Error saving changes", 'error');
@@ -2865,9 +2783,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     ${type === 'success' ? 
                         '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>' : 
-                        type === 'error' ?
-                        '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>' :
-                        '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>'}
+                        '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>'}
                 </svg>
                 <span>${msg}</span>`;
             container.appendChild(el);
