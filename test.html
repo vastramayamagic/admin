@@ -25,7 +25,6 @@
             --brand-gradient: linear-gradient(135deg, #5127ba 0%, #673de6 100%);
             --danger-color: #ef4444;
             --success-color: #10B981;
-            --warning-color: #F59E0B;
             --switch-on: #5127ba;
             --switch-off: #9CA3AF;
             --shadow-premium: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
@@ -484,117 +483,54 @@
             background: #fef2f2;
         }
 
-        /* Category Products Preview */
-        .category-products-preview {
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px dashed #e5e7eb;
-        }
-
-        .category-products-title {
+        .category-products-badge {
+            background: var(--brand-primary);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
             font-size: 12px;
             font-weight: 600;
-            color: #6b7280;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            min-width: 60px;
+            text-align: center;
         }
 
-        .category-products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-            gap: 8px;
+        /* Category Products Preview */
+        .category-products-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
             margin-top: 8px;
+            max-height: 60px;
+            overflow-y: auto;
+            padding: 4px;
+            border-radius: 6px;
+            background: #f9fafb;
         }
 
-        .category-product-item {
+        .product-preview-item {
             display: flex;
-            flex-direction: column;
             align-items: center;
             gap: 4px;
-            cursor: pointer;
-        }
-
-        .category-product-image {
-            width: 40px;
-            height: 40px;
-            border-radius: 6px;
-            object-fit: cover;
+            padding: 4px 8px;
+            background: white;
             border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            font-size: 11px;
+            max-width: 120px;
         }
 
-        .category-product-name {
-            font-size: 10px;
-            text-align: center;
+        .product-preview-image {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            object-fit: cover;
+        }
+
+        .product-preview-name {
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
             max-width: 70px;
-        }
-
-        .category-product-remove {
-            position: absolute;
-            top: -4px;
-            right: -4px;
-            width: 16px;
-            height: 16px;
-            background: var(--danger-color);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 10px;
-            cursor: pointer;
-            opacity: 0;
-            transition: opacity 0.2s ease;
-        }
-
-        .category-product-item:hover .category-product-remove {
-            opacity: 1;
-        }
-
-        .category-product-image-wrap {
-            position: relative;
-        }
-
-        /* Edit Products Button */
-        .edit-products-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 4px 10px;
-            border-radius: 6px;
-            border: 1px solid #e5e7eb;
-            background: white;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: 500;
-            color: var(--text-color);
-            transition: all 0.15s ease;
-        }
-
-        .edit-products-btn:hover {
-            background: #f9fafb;
-            border-color: #d1d5db;
-        }
-
-        .edit-products-btn svg {
-            width: 14px;
-            height: 14px;
-            stroke: currentColor;
-        }
-
-        .products-count-badge {
-            background: var(--brand-primary);
-            color: white;
-            font-size: 10px;
-            font-weight: 600;
-            padding: 2px 6px;
-            border-radius: 10px;
-            min-width: 20px;
-            text-align: center;
         }
 
         /* Toggle Switch */
@@ -868,24 +804,10 @@
             transform: translateY(-1px);
         }
 
-        /* Category Products Modal */
-        .category-modal-title {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 1rem;
-            color: #6b7280;
-        }
-
-        .selection-limit {
+        .btn-sm {
+            padding: 6px 12px;
             font-size: 13px;
-            color: #9ca3af;
-            margin-top: 4px;
-        }
-
-        .limit-warning {
-            color: var(--warning-color);
-            font-weight: 600;
+            min-width: auto;
         }
 
         /* Toast */
@@ -1146,26 +1068,6 @@
             margin-bottom: 16px;
         }
 
-        /* Mobile Category Products */
-        .mobile-category-products {
-            margin-top: 12px;
-        }
-
-        .mobile-products-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 8px;
-        }
-
-        .mobile-product-preview {
-            width: 40px;
-            height: 40px;
-            border-radius: 6px;
-            object-fit: cover;
-            border: 1px solid #e5e7eb;
-        }
-
         /* Overlay & drawer */
         .m-overlay {
             position: fixed;
@@ -1380,6 +1282,33 @@
             border: 1px dashed #e5e7eb;
         }
 
+        /* Category Products Modal */
+        .category-modal-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border-left: 4px solid var(--brand-primary);
+        }
+
+        .category-modal-title {
+            font-weight: 600;
+            font-size: 16px;
+            color: var(--text-color);
+        }
+
+        .selected-count {
+            background: var(--brand-primary);
+            color: white;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
         /* Responsive switch */
         @media (max-width: 768px) {
             .page-desktop { display: none; }
@@ -1428,9 +1357,9 @@
                 max-width: 100%;
                 overflow-x: hidden;
             }
-
-            .category-products-grid {
-                grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+            
+            .category-products-preview {
+                max-height: 80px;
             }
         }
 
@@ -1691,7 +1620,7 @@
                         <div class="card-header">
                             <div>
                                 <div class="card-title">Categories Order</div>
-                                <div class="card-subtitle">Drag to rearrange display order, toggle to show/hide, add up to 6 featured products per category</div>
+                                <div class="card-subtitle">Drag to rearrange display order, toggle to show/hide, add up to 6 products per category</div>
                             </div>
                         </div>
                         <div class="card-body">
@@ -1954,18 +1883,18 @@
         </div>
     </div>
 
-    <!-- ============= MODAL: CATEGORY PRODUCTS SELECTOR ============= -->
-    <div class="modal-overlay" id="category-products-modal">
+    <!-- ============= MODAL: CATEGORY PRODUCT SELECTOR ============= -->
+    <div class="modal-overlay" id="category-product-modal">
         <div class="modal-content">
             <div class="modal-header">
                 <div>
-                    <div class="modal-title">Select Products for <span id="category-modal-name">Category</span></div>
-                    <div class="selection-limit">
-                        Select up to 6 products for this category
-                        <span id="limit-warning" class="limit-warning" style="display: none;"> (Limit reached)</span>
+                    <div class="modal-title">Select Products for Category</div>
+                    <div class="category-modal-header">
+                        <div class="category-modal-title" id="current-category-name">Category Name</div>
+                        <div class="selected-count" id="category-selected-count">0/6</div>
                     </div>
                 </div>
-                <button class="btn-icon" onclick="closeCategoryProductsModal()">
+                <button class="btn-icon" onclick="closeCategoryProductSelector()">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M18 6 6 18"/>
                         <path d="m6 6 12 12"/>
@@ -1980,16 +1909,16 @@
                         <circle cx="11" cy="11" r="7"></circle>
                         <line x1="16.65" y1="16.65" x2="21" y2="21"></line>
                     </svg>
-                    <input type="text" id="category-modal-search" placeholder="Search products in this category..." onkeyup="filterCategoryProducts()">
+                    <input type="text" id="category-modal-search" placeholder="Search products..." onkeyup="filterCategoryModalProducts()">
                 </div>
-                <div id="category-product-grid" class="product-grid"></div>
+                <div id="category-modal-product-grid" class="product-grid"></div>
             </div>
             <div class="modal-footer">
                 <div style="margin-right: auto; color: #6b7280; font-size: 13px;">
-                    <span id="category-modal-selected-count">0</span> selected (Max: 6)
+                    Maximum 6 products per category
                 </div>
-                <button class="btn btn-secondary" onclick="closeCategoryProductsModal()">Cancel</button>
-                <button class="btn btn-primary" onclick="confirmCategoryProductSelection()">Save Selection</button>
+                <button class="btn btn-secondary" onclick="closeCategoryProductSelector()">Cancel</button>
+                <button class="btn btn-primary" onclick="confirmCategoryProductSelection()">Save Products</button>
             </div>
         </div>
     </div>
@@ -2068,6 +1997,10 @@
             categories: [],
             categoryProducts: {} // New: Store products for each category {categoryId: [productIds]}
         };
+
+        // Variables for category product selection
+        let currentCategoryId = null;
+        let tempCategoryProductIds = [];
 
         // --- UI INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
@@ -2250,16 +2183,15 @@
                 state.allProducts = prodsSnap.docs.map(doc => ({ 
                     id: doc.id, 
                     ...doc.data(),
-                    // Store category if product has it
-                    category: doc.data().category || doc.data().categoryId || null
+                    // Ensure we have image URL
+                    image: doc.data().image || doc.data().images?.[0] || 'https://via.placeholder.com/150x120?text=No+Image'
                 }));
 
                 // 2. Fetch DB Categories
                 const catsSnap = await db.collection('categories').get();
                 const dbCategories = catsSnap.docs.map(doc => ({ 
                     id: doc.id, 
-                    name: doc.data().name,
-                    description: doc.data().description || ''
+                    name: doc.data().name 
                 }));
 
                 // 3. Fetch Saved Config
@@ -2269,7 +2201,7 @@
                     const data = configDoc.data();
                     state.selectedProductIds = data.bestSellers || [];
                     
-                    // Initialize category products from saved data
+                    // Load category products if they exist
                     state.categoryProducts = data.categoryProducts || {};
                     
                     // Merge saved order with current DB categories
@@ -2279,7 +2211,6 @@
                         return {
                             id: dbCat.id,
                             name: dbCat.name,
-                            description: dbCat.description,
                             enabled: saved ? saved.enabled : true,
                             order: saved ? saved.order : 999
                         };
@@ -2287,8 +2218,7 @@
                 } else {
                     state.categories = dbCategories.map((c, i) => ({ 
                         id: c.id, 
-                        name: c.name,
-                        description: c.description,
+                        name: c.name, 
                         enabled: true, 
                         order: i + 1 
                     }));
@@ -2322,7 +2252,7 @@
             if (selectedObjs.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
-                        <svg xmlns="http://www.w3.org2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 12px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 12px;">
                             <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                             <line x1="3" y1="9" x2="21" y2="9"></line>
                             <line x1="9" y1="21" x2="9" y2="9"></line>
@@ -2382,15 +2312,14 @@
             }
 
             container.innerHTML = state.categories.map((cat, index) => {
-                const categoryProducts = state.categoryProducts[cat.id] || [];
-                const productCount = categoryProducts.length;
-                
-                // Get product details for preview
-                const previewProducts = categoryProducts
-                    .slice(0, 6) // Show max 6 in preview
-                    .map(pid => state.allProducts.find(p => p.id === pid))
+                const categoryProductIds = state.categoryProducts[cat.id] || [];
+                const categoryProducts = categoryProductIds
+                    .map(id => state.allProducts.find(p => p.id === id))
                     .filter(p => p);
-
+                
+                const productsCount = categoryProducts.length;
+                const productsPreview = categoryProducts.slice(0, 3); // Show max 3 previews
+                
                 return `
                 <div class="draggable-item" draggable="true" data-index="${index}" data-type="category">
                     <div class="drag-handle">
@@ -2406,53 +2335,24 @@
                     <div class="item-content">
                         <div class="item-title">${cat.name}</div>
                         <div class="item-subtitle" style="color: ${cat.enabled ? '#10B981' : '#9CA3AF'}">
-                            ${cat.enabled ? 'Visible' : 'Hidden'}
+                            ${cat.enabled ? 'Visible' : 'Hidden'} • ${productsCount}/6 products
                         </div>
-                        
-                        <!-- Category Products Preview -->
-                        ${productCount > 0 ? `
-                        <div class="category-products-preview">
-                            <div class="category-products-title">
-                                <span>Featured Products (${productCount}/6)</span>
-                                <button class="edit-products-btn" onclick="openCategoryProductsModal('${cat.id}', '${cat.name.replace(/'/g, "\\'")}')">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                    </svg>
-                                    Edit
-                                </button>
-                            </div>
-                            <div class="category-products-grid">
-                                ${previewProducts.map(p => `
-                                    <div class="category-product-item" title="${p.name || 'Unnamed Product'} - ₹${p.price || '0'}">
-                                        <div class="category-product-image-wrap">
-                                            <img src="${p.image || p.images?.[0] || 'https://via.placeholder.com/40'}" 
-                                                 class="category-product-image" 
-                                                 alt="${p.name || 'Product'}">
-                                            <div class="category-product-remove" onclick="removeProductFromCategory('${cat.id}', '${p.id}', event)">
-                                                ×
-                                            </div>
-                                        </div>
-                                        <div class="category-product-name">${(p.name || '').substring(0, 15)}${(p.name || '').length > 15 ? '...' : ''}</div>
+                        ${productsCount > 0 ? `
+                            <div class="category-products-preview">
+                                ${productsPreview.map(p => `
+                                    <div class="product-preview-item" title="${p.name || 'Unnamed Product'}">
+                                        <img src="${p.image || p.images?.[0] || 'https://via.placeholder.com/20'}" class="product-preview-image">
+                                        <span class="product-preview-name">${(p.name || 'Unnamed').substring(0, 15)}${(p.name || '').length > 15 ? '...' : ''}</span>
                                     </div>
                                 `).join('')}
+                                ${productsCount > 3 ? `<div class="product-preview-item">+${productsCount - 3} more</div>` : ''}
                             </div>
-                        </div>
-                        ` : `
-                        <div class="category-products-preview">
-                            <div class="category-products-title">
-                                <span>No featured products</span>
-                                <button class="edit-products-btn" onclick="openCategoryProductsModal('${cat.id}', '${cat.name.replace(/'/g, "\\'")}')">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M12 5v14M5 12h14"/>
-                                    </svg>
-                                    Add Products
-                                </button>
-                            </div>
-                        </div>
-                        `}
+                        ` : ''}
                     </div>
                     <div class="item-actions">
+                        <button class="btn btn-sm" onclick="openCategoryProductSelector('${cat.id}', '${cat.name.replace(/'/g, "\\'")}')" style="margin-right: 8px;">
+                            ${productsCount > 0 ? 'Edit' : 'Add'} Products
+                        </button>
                         <div class="toggle-switch">
                             <input type="checkbox" ${cat.enabled ? 'checked' : ''} onchange="toggleCategory('${cat.id}')">
                             <span class="toggle-slider"></span>
@@ -2530,30 +2430,108 @@
             renderSelectedProducts('mobile-selected-products');
         }
 
-        function removeProductFromCategory(categoryId, productId, event) {
-            if (event) event.stopPropagation();
-            
-            if (state.categoryProducts[categoryId]) {
-                state.categoryProducts[categoryId] = state.categoryProducts[categoryId].filter(id => id !== productId);
-                renderCategories('categories-list');
-                renderCategories('mobile-categories-list');
-                showToast('Product removed from category', 'success');
-            }
-        }
-
         function resetChanges() {
             if(confirm("Discard all changes and reload from server?")) {
                 loadData();
             }
         }
 
-        // --- MODAL LOGIC ---
-        let tempSelectedIds = [];
-        let tempCategorySelectedIds = [];
-        let currentCategoryId = null;
-        let currentCategoryName = '';
+        // --- CATEGORY PRODUCT SELECTION FUNCTIONS ---
+        function openCategoryProductSelector(categoryId, categoryName) {
+            currentCategoryId = categoryId;
+            tempCategoryProductIds = [...(state.categoryProducts[categoryId] || [])];
+            
+            // Update modal title
+            document.getElementById('current-category-name').textContent = categoryName;
+            updateCategoryModalCount();
+            
+            // Show modal
+            document.getElementById('category-product-modal').style.display = 'flex';
+            renderCategoryProductGrid();
+        }
 
-        // Best Sellers Modal Functions
+        function closeCategoryProductSelector() {
+            document.getElementById('category-product-modal').style.display = 'none';
+            currentCategoryId = null;
+            tempCategoryProductIds = [];
+        }
+
+        function renderCategoryProductGrid() {
+            const searchVal = document.getElementById('category-modal-search').value.toLowerCase();
+            const grid = document.getElementById('category-modal-product-grid');
+            
+            const filteredProducts = state.allProducts.filter(p => 
+                (p.name || '').toLowerCase().includes(searchVal) ||
+                (p.description || '').toLowerCase().includes(searchVal)
+            );
+
+            if (filteredProducts.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1/-1;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 12px;">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <h3 style="margin-bottom: 8px; color: #374151;">No Products Found</h3>
+                        <p>Try a different search term</p>
+                    </div>`;
+                return;
+            }
+
+            grid.innerHTML = filteredProducts.map(p => {
+                const isSelected = tempCategoryProductIds.includes(p.id);
+                const img = p.image || p.images?.[0] || 'https://via.placeholder.com/150x120?text=No+Image';
+                return `
+                <div class="product-card ${isSelected ? 'selected' : ''}" onclick="toggleCategoryProduct('${p.id}')">
+                    <div class="product-select-checkbox ${isSelected ? 'checked' : ''}"></div>
+                    <img src="${img}" class="product-image">
+                    <div class="product-content">
+                        <div class="product-title">${p.name || 'Unnamed Product'}</div>
+                        <div class="product-price">₹${p.price || '0'}</div>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        function toggleCategoryProduct(productId) {
+            if (tempCategoryProductIds.includes(productId)) {
+                // Remove if already selected
+                tempCategoryProductIds = tempCategoryProductIds.filter(id => id !== productId);
+            } else {
+                // Add if less than 6
+                if (tempCategoryProductIds.length < 6) {
+                    tempCategoryProductIds.push(productId);
+                } else {
+                    showToast('Maximum 6 products per category', 'error');
+                    return;
+                }
+            }
+            renderCategoryProductGrid();
+            updateCategoryModalCount();
+        }
+
+        function filterCategoryModalProducts() { 
+            renderCategoryProductGrid(); 
+        }
+        
+        function updateCategoryModalCount() { 
+            document.getElementById('category-selected-count').innerText = `${tempCategoryProductIds.length}/6`; 
+        }
+
+        function confirmCategoryProductSelection() {
+            if (currentCategoryId) {
+                state.categoryProducts[currentCategoryId] = [...tempCategoryProductIds];
+                renderCategories('categories-list');
+                renderCategories('mobile-categories-list');
+                closeCategoryProductSelector();
+                showToast(`Products saved for category!`, 'success');
+            }
+        }
+
+        // --- MODAL LOGIC (FOR BEST SELLERS) ---
+        let tempSelectedIds = [];
+
         function openProductSelector() {
             tempSelectedIds = [...state.selectedProductIds];
             document.getElementById('product-modal').style.display = 'flex';
@@ -2629,120 +2607,6 @@
             showToast('Product selection updated!', 'success');
         }
 
-        // Category Products Modal Functions
-        function openCategoryProductsModal(categoryId, categoryName) {
-            currentCategoryId = categoryId;
-            currentCategoryName = categoryName;
-            tempCategorySelectedIds = [...(state.categoryProducts[categoryId] || [])];
-            
-            document.getElementById('category-modal-name').textContent = categoryName;
-            document.getElementById('category-products-modal').style.display = 'flex';
-            renderCategoryProductGrid();
-            updateCategoryModalCount();
-        }
-
-        function closeCategoryProductsModal() {
-            document.getElementById('category-products-modal').style.display = 'none';
-            currentCategoryId = null;
-            currentCategoryName = '';
-        }
-
-        function renderCategoryProductGrid() {
-            const searchVal = document.getElementById('category-modal-search').value.toLowerCase();
-            const grid = document.getElementById('category-product-grid');
-            
-            // Filter products that belong to this category or have no category assigned
-            const filteredProducts = state.allProducts.filter(p => {
-                const matchesSearch = (p.name || '').toLowerCase().includes(searchVal) ||
-                                     (p.description || '').toLowerCase().includes(searchVal);
-                
-                // Check if product belongs to this category or has no category
-                const productCategory = p.category || p.categoryId;
-                const belongsToCategory = !productCategory || productCategory === currentCategoryId;
-                
-                return matchesSearch && belongsToCategory;
-            });
-
-            if (filteredProducts.length === 0) {
-                grid.innerHTML = `
-                    <div class="empty-state" style="grid-column: 1/-1;">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 12px;">
-                            <circle cx="11" cy="11" r="8"></circle>
-                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                        </svg>
-                        <h3 style="margin-bottom: 8px; color: #374151;">No Products Found</h3>
-                        <p>${searchVal ? 'Try a different search term' : 'No products available for this category'}</p>
-                    </div>`;
-                return;
-            }
-
-            grid.innerHTML = filteredProducts.map(p => {
-                const isSelected = tempCategorySelectedIds.includes(p.id);
-                const isDisabled = tempCategorySelectedIds.length >= 6 && !isSelected;
-                const img = p.image || p.images?.[0] || 'https://via.placeholder.com/150x120?text=No+Image';
-                
-                return `
-                <div class="product-card ${isSelected ? 'selected' : ''} ${isDisabled ? 'disabled' : ''}" 
-                     onclick="${isDisabled ? '' : `toggleTempCategoryProduct('${p.id}')`}"
-                     style="${isDisabled ? 'opacity: 0.6; cursor: not-allowed;' : ''}">
-                    ${isDisabled ? `<div class="product-select-checkbox" style="background: #f3f4f6; color: #9ca3af;">6</div>` : 
-                     `<div class="product-select-checkbox ${isSelected ? 'checked' : ''}"></div>`}
-                    <img src="${img}" class="product-image" style="${isDisabled ? 'filter: grayscale(0.5);' : ''}">
-                    <div class="product-content">
-                        <div class="product-title">${p.name || 'Unnamed Product'}</div>
-                        <div class="product-price">₹${p.price || '0'}</div>
-                        ${p.category ? `<div style="font-size: 11px; color: #6b7280; margin-top: 2px;">Category: ${p.category}</div>` : ''}
-                    </div>
-                </div>
-                `;
-            }).join('');
-        }
-
-        function toggleTempCategoryProduct(id) {
-            if (tempCategorySelectedIds.includes(id)) {
-                tempCategorySelectedIds = tempCategorySelectedIds.filter(pid => pid !== id);
-            } else {
-                if (tempCategorySelectedIds.length < 6) {
-                    tempCategorySelectedIds.push(id);
-                }
-            }
-            renderCategoryProductGrid();
-            updateCategoryModalCount();
-            
-            // Show/hide limit warning
-            const warning = document.getElementById('limit-warning');
-            warning.style.display = tempCategorySelectedIds.length >= 6 ? 'inline' : 'none';
-        }
-
-        function filterCategoryProducts() { 
-            renderCategoryProductGrid(); 
-        }
-        
-        function updateCategoryModalCount() { 
-            const count = tempCategorySelectedIds.length;
-            document.getElementById('category-modal-selected-count').innerText = count;
-            
-            // Update color based on limit
-            const countElement = document.getElementById('category-modal-selected-count');
-            if (count >= 6) {
-                countElement.style.color = 'var(--warning-color)';
-                countElement.style.fontWeight = '600';
-            } else {
-                countElement.style.color = '#6b7280';
-                countElement.style.fontWeight = 'normal';
-            }
-        }
-
-        function confirmCategoryProductSelection() {
-            if (!currentCategoryId) return;
-            
-            state.categoryProducts[currentCategoryId] = [...tempCategorySelectedIds];
-            renderCategories('categories-list');
-            renderCategories('mobile-categories-list');
-            closeCategoryProductsModal();
-            showToast(`Products saved for ${currentCategoryName}`, 'success');
-        }
-
         // --- SAVING ---
         async function saveSections() {
             const btn = document.querySelector('.page-desktop .btn-primary') || document.querySelector('.mobile-save-btn');
@@ -2760,12 +2624,12 @@
                 const payload = {
                     bestSellers: state.selectedProductIds,
                     categories: categoriesPayload,
-                    categoryProducts: state.categoryProducts, // Save category products
+                    categoryProducts: state.categoryProducts, // NEW: Save category products
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
 
                 await db.collection('landingPage').doc('Sections').set(payload, { merge: true });
-                showToast("All changes saved successfully!", 'success');
+                showToast("Changes saved successfully!", 'success');
             } catch (error) {
                 console.error("Save error:", error);
                 showToast("Error saving changes", 'error');
