@@ -71,7 +71,7 @@
             overflow: hidden;
         }
 
-        /* Desktop header */
+        /* Desktop header - FIXED POSITION */
         .d-topbar {
             height: var(--header-height-desktop);
             background: var(--header-bg);
@@ -80,6 +80,13 @@
             display: flex;
             align-items: center;
             padding-left: 40px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
         }
 
         .d-topbar-logo {
@@ -93,15 +100,23 @@
             flex: 1;
             display: flex;
             width: 100%;
+            margin-top: var(--header-height-desktop);
         }
 
-        /* Desktop sidebar */
+        /* Desktop sidebar - FIXED POSITION */
         .d-sidebar {
             width: var(--sidebar-width);
             background: var(--sidebar-bg);
             border-right: 1px solid var(--border-subtle);
             display: flex;
             flex-direction: column;
+            position: fixed;
+            top: var(--header-height-desktop);
+            left: 0;
+            bottom: 0;
+            z-index: 90;
+            overflow-y: auto;
+            overflow-x: hidden;
         }
 
         .d-sidebar-inner {
@@ -253,12 +268,14 @@
             max-width: 150px;
         }
 
-        /* Desktop content */
+        /* Desktop content - WITH SIDEBAR MARGIN */
         .d-content {
             flex: 1;
             background: var(--page-bg);
             overflow-y: auto;
             width: 100%;
+            margin-left: var(--sidebar-width);
+            height: calc(100vh - var(--header-height-desktop));
         }
 
         /* ============= BODY CONTENT ============= */
@@ -342,11 +359,17 @@
         /* Premium Card */
         .premium-card {
             background: #ffffff;
-            border-radius: 12px;
+            border-radius: 16px;
             border: 1px solid #e5e7eb;
             overflow: hidden;
             box-shadow: var(--shadow-premium);
             margin-bottom: 24px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .premium-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
         }
 
         .card-header {
@@ -355,6 +378,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
         }
 
         .card-title {
@@ -362,6 +386,9 @@
             font-size: 18px;
             line-height: 28px;
             color: rgb(29, 30, 32);
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .card-subtitle {
@@ -385,10 +412,10 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 12px 16px;
+            padding: 16px 20px;
             background: white;
             border: 1px solid #e5e7eb;
-            border-radius: 8px;
+            border-radius: 12px;
             cursor: grab;
             transition: all 0.2s ease;
             user-select: none;
@@ -398,14 +425,16 @@
         }
 
         .draggable-item:hover {
-            border-color: #d1d5db;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            border-color: var(--brand-primary);
+            box-shadow: 0 4px 12px rgba(81, 39, 186, 0.1);
+            transform: translateX(4px);
         }
 
         .draggable-item.dragging {
             opacity: 0.5;
             background: #f9fafb;
-            border: 1px dashed var(--brand-primary);
+            border: 2px dashed var(--brand-primary);
+            box-shadow: 0 8px 16px rgba(81, 39, 186, 0.15);
         }
 
         .drag-handle {
@@ -419,6 +448,11 @@
             -webkit-touch-callout: none;
             -webkit-user-select: none;
             user-select: none;
+            transition: color 0.2s ease;
+        }
+
+        .drag-handle:hover {
+            color: var(--brand-primary);
         }
 
         .drag-handle:active {
@@ -426,11 +460,16 @@
         }
 
         .item-image {
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
             object-fit: cover;
             border: 1px solid #e5e7eb;
+            transition: transform 0.2s ease;
+        }
+
+        .draggable-item:hover .item-image {
+            transform: scale(1.05);
         }
 
         .item-content {
@@ -440,28 +479,32 @@
 
         .item-title {
             font-weight: 600;
-            font-size: 14px;
+            font-size: 15px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            color: rgb(29, 30, 32);
         }
 
         .item-subtitle {
-            font-size: 12px;
+            font-size: 13px;
             color: #6b7280;
             margin-top: 2px;
-        }
-
-        .item-actions {
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
+        .item-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
         .btn-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 6px;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
             border: 1px solid #e5e7eb;
             background: white;
             display: flex;
@@ -475,6 +518,8 @@
         .btn-icon:hover {
             background: #f9fafb;
             color: var(--text-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
         }
 
         .btn-icon.delete:hover {
@@ -484,61 +529,115 @@
         }
 
         .category-products-badge {
-            background: var(--brand-primary);
+            background: linear-gradient(135deg, var(--brand-primary) 0%, #673de6 100%);
             color: white;
-            padding: 2px 8px;
-            border-radius: 12px;
+            padding: 4px 12px;
+            border-radius: 20px;
             font-size: 12px;
             font-weight: 600;
-            min-width: 60px;
+            min-width: 80px;
             text-align: center;
+            box-shadow: 0 2px 4px rgba(81, 39, 186, 0.2);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
         }
 
-        /* Category Products Preview */
+        /* Category Products Preview - ENHANCED */
         .category-products-preview {
             display: flex;
             flex-wrap: wrap;
-            gap: 6px;
-            margin-top: 8px;
-            max-height: 60px;
-            overflow-y: auto;
-            padding: 4px;
-            border-radius: 6px;
-            background: #f9fafb;
+            gap: 8px;
+            margin-top: 12px;
+            padding: 12px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border: 1px solid #e5e7eb;
         }
 
         .product-preview-item {
             display: flex;
             align-items: center;
-            gap: 4px;
-            padding: 4px 8px;
+            gap: 6px;
+            padding: 6px 10px;
             background: white;
             border: 1px solid #e5e7eb;
-            border-radius: 6px;
-            font-size: 11px;
-            max-width: 120px;
+            border-radius: 8px;
+            font-size: 12px;
+            max-width: 150px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .product-preview-item:hover {
+            border-color: var(--brand-primary);
+            box-shadow: 0 4px 12px rgba(81, 39, 186, 0.15);
+            transform: translateY(-2px);
         }
 
         .product-preview-image {
-            width: 20px;
-            height: 20px;
-            border-radius: 4px;
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
             object-fit: cover;
+            border: 1px solid #e5e7eb;
         }
 
         .product-preview-name {
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            max-width: 70px;
+            max-width: 80px;
+            font-weight: 500;
+            color: #374151;
         }
 
-        /* Toggle Switch */
+        /* Premium Add Products Button */
+        .premium-add-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, var(--brand-primary) 0%, #673de6 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(81, 39, 186, 0.25);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .premium-add-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(81, 39, 186, 0.35);
+        }
+
+        .premium-add-btn:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .premium-add-btn:hover:before {
+            left: 100%;
+        }
+
+        /* Enhanced Toggle Switch */
         .toggle-switch {
             position: relative;
             display: inline-block;
-            width: 44px;
-            height: 24px;
+            width: 52px;
+            height: 28px;
             flex-shrink: 0;
         }
 
@@ -557,27 +656,30 @@
             bottom: 0;
             background-color: var(--switch-off);
             transition: .4s;
-            border-radius: 24px;
+            border-radius: 28px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .toggle-slider:before {
             position: absolute;
             content: "";
-            height: 16px;
-            width: 16px;
+            height: 20px;
+            width: 20px;
             left: 4px;
             bottom: 4px;
             background-color: white;
             transition: .4s;
             border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
         input:checked + .toggle-slider {
-            background-color: var(--brand-primary);
+            background: linear-gradient(135deg, var(--brand-primary) 0%, #673de6 100%);
         }
 
         input:checked + .toggle-slider:before {
-            transform: translateX(20px);
+            transform: translateX(24px);
+            box-shadow: 0 2px 6px rgba(81, 39, 186, 0.3);
         }
 
         /* Product Selector Modal */
@@ -587,32 +689,39 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(4px);
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(8px);
             z-index: 2000;
             display: none;
             align-items: center;
             justify-content: center;
             padding: 1rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .modal-content {
             background: white;
             width: 100%;
             max-width: 900px;
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-premium);
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            animation: modalPop 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             max-height: 90vh;
             overflow-y: auto;
+            border: 1px solid #e5e7eb;
         }
 
         @keyframes modalPop {
-            from { transform: scale(0.95); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
+            from { transform: scale(0.9) translateY(20px); opacity: 0; }
+            to { transform: scale(1) translateY(0); opacity: 1; }
         }
 
         .modal-header {
@@ -621,8 +730,10 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: #fff;
-            position: relative;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
 
         .modal-body {
@@ -635,23 +746,29 @@
             background: white;
             border-top: 1px solid var(--border-subtle);
             display: flex;
-            justify-content: flex-end;
-            gap: 0.75rem;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            bottom: 0;
+            z-index: 10;
         }
 
         .modal-title {
             font-weight: 700;
-            font-size: 1.25rem;
+            font-size: 1.5rem;
             color: rgb(29, 30, 32);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         /* Product Grid */
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 16px;
             margin-top: 16px;
         }
@@ -659,61 +776,68 @@
         .product-card {
             background: white;
             border: 1px solid #e5e7eb;
-            border-radius: 8px;
+            border-radius: 12px;
             overflow: hidden;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             position: relative;
         }
 
         .product-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
             border-color: var(--brand-primary);
         }
 
         .product-card.selected {
             border: 2px solid var(--brand-primary);
-            box-shadow: 0 4px 12px rgba(81, 39, 186, 0.15);
+            box-shadow: 0 12px 24px rgba(81, 39, 186, 0.15);
         }
 
         .product-image {
             width: 100%;
-            height: 120px;
+            height: 140px;
             object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover .product-image {
+            transform: scale(1.05);
         }
 
         .product-content {
-            padding: 12px;
+            padding: 16px;
         }
 
         .product-title {
             font-weight: 600;
             font-size: 14px;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            color: rgb(29, 30, 32);
         }
 
         .product-price {
             color: var(--brand-primary);
             font-weight: 700;
-            font-size: 13px;
+            font-size: 14px;
         }
 
         .product-select-checkbox {
             position: absolute;
-            top: 8px;
-            right: 8px;
-            width: 20px;
-            height: 20px;
+            top: 12px;
+            right: 12px;
+            width: 24px;
+            height: 24px;
             background: white;
             border: 2px solid var(--border-subtle);
-            border-radius: 4px;
+            border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: all 0.2s ease;
         }
 
         .product-select-checkbox.checked {
@@ -724,31 +848,34 @@
         .product-select-checkbox.checked::after {
             content: '✓';
             color: white;
-            font-size: 12px;
+            font-size: 14px;
             font-weight: bold;
         }
 
-        /* Search Input */
+        /* Search Input - ENHANCED */
         .search-input-wrap {
-            background: #f9fafb;
-            border-radius: 8px;
+            background: #ffffff;
+            border-radius: 12px;
             border: 1px solid #e5e7eb;
-            padding: 8px 16px;
-            height: 40px;
+            padding: 12px 20px;
+            height: 48px;
             display: flex;
             align-items: center;
-            gap: 8px;
-            transition: border-color 0.15s ease;
+            gap: 12px;
+            transition: all 0.3s ease;
             width: 100%;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
 
         .search-input-wrap:focus-within {
-            border-color: #673de6;
+            border-color: var(--brand-primary);
+            box-shadow: 0 4px 16px rgba(81, 39, 186, 0.15);
+            transform: translateY(-1px);
         }
 
         .search-icon {
-            width: 16px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
             stroke: #9ca3af;
         }
 
@@ -758,8 +885,9 @@
             outline: none;
             flex: 1;
             font-family: "DM Sans", Roboto, sans-serif;
-            font-size: 14px;
+            font-size: 15px;
             width: 100%;
+            color: var(--text-color);
         }
 
         /* Buttons */
@@ -767,47 +895,63 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1.25rem;
+            gap: 0.75rem;
+            padding: 0.875rem 1.5rem;
             font-weight: 600;
-            border-radius: var(--radius-md);
+            border-radius: 12px;
             cursor: pointer;
-            transition: all 0.15s ease;
+            transition: all 0.3s ease;
             border: none;
-            font-size: 14px;
+            font-size: 15px;
             white-space: nowrap;
-            min-width: 100px;
+            min-width: 120px;
         }
 
         .btn-primary {
-            background: var(--brand-gradient);
+            background: linear-gradient(135deg, var(--brand-primary) 0%, #673de6 100%);
             color: white;
             position: relative;
             overflow: hidden;
             z-index: 1;
+            box-shadow: 0 4px 15px rgba(81, 39, 186, 0.25);
         }
 
         .btn-primary:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 8px 20px rgba(81, 39, 186, 0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(81, 39, 186, 0.35);
         }
 
         .btn-secondary {
             background: white;
             border: 1px solid #e5e7eb;
             color: var(--text-color);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
 
         .btn-secondary:hover {
             background: #F8FAFC;
             border-color: #CBD5E1;
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         .btn-sm {
-            padding: 6px 12px;
+            padding: 8px 16px;
             font-size: 13px;
             min-width: auto;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--brand-primary) 0%, #673de6 100%);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(81, 39, 186, 0.2);
+        }
+
+        .btn-sm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(81, 39, 186, 0.3);
         }
 
         /* Toast */
@@ -825,7 +969,7 @@
         .toast {
             padding: 1rem 1.5rem;
             background: white;
-            border-radius: var(--radius-md);
+            border-radius: 12px;
             box-shadow: var(--shadow-premium);
             animation: slideUp 0.3s ease;
             display: flex;
@@ -835,6 +979,8 @@
             min-width: 300px;
             pointer-events: auto;
             max-width: 90vw;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
         }
 
         .toast.success {
@@ -854,18 +1000,20 @@
         .profile-popup {
             position: fixed;
             background-color: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
             border: 1px solid #e5e7eb;
             padding: 0;
             z-index: 1000;
             opacity: 0;
             pointer-events: none;
             transform: translateY(10px);
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             width: 280px;
             max-width: 90vw;
             overflow: hidden;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.98);
         }
 
         .profile-popup.active {
@@ -905,7 +1053,7 @@
             gap: 0.75rem;
             padding: 1rem;
             border-bottom: 1px solid #e5e7eb;
-            background: #f9fafb;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
         }
 
         .popup-list {
@@ -979,30 +1127,38 @@
             justify-content: space-between;
             padding: 0 16px;
             width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
         }
 
         /* Mobile menu button */
         .m-menu-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
             border: 1px solid #e5e7eb;
-            background: #f9fafb;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             flex-shrink: 0;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
         }
 
         .m-menu-btn:hover {
             background: #f3f4f6;
+            transform: rotate(90deg);
         }
 
         .m-menu-lines {
-            width: 18px;
-            height: 14px;
+            width: 20px;
+            height: 16px;
             position: relative;
         }
         .m-menu-lines::before,
@@ -1014,13 +1170,14 @@
             right: 0;
             height: 2px;
             border-radius: 999px;
-            background: #111827;
+            background: var(--brand-primary);
+            transition: all 0.3s ease;
         }
         .m-menu-lines::before {
             top: 0;
         }
         .m-menu-lines span {
-            top: 6px;
+            top: 7px;
         }
         .m-menu-lines::after {
             bottom: 0;
@@ -1042,6 +1199,7 @@
             width: 100%;
             overflow-x: hidden;
             position: relative;
+            margin-top: 72px;
         }
 
         /* Mobile Card */
@@ -1049,9 +1207,15 @@
             background: white;
             border-radius: 16px;
             border: 1px solid #e5e7eb;
-            padding: 16px;
+            padding: 20px;
             margin-bottom: 16px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease;
+        }
+
+        .m-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
         }
 
         .m-card-title {
@@ -1059,7 +1223,7 @@
             font-size: 18px;
             line-height: 28px;
             color: rgb(29, 30, 32);
-            margin-bottom: 12px;
+            margin-bottom: 8px;
         }
 
         .m-card-subtitle {
@@ -1072,11 +1236,12 @@
         .m-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(15, 23, 42, 0.45);
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(8px);
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.25s ease-out;
-            z-index: 40;
+            transition: opacity 0.3s ease-out;
+            z-index: 200;
         }
 
         .m-overlay.open {
@@ -1095,9 +1260,11 @@
             display: flex;
             flex-direction: column;
             transform: translateX(-100%);
-            transition: transform 0.25s ease-out;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             overflow-y: auto;
-            z-index: 41;
+            overflow-x: hidden;
+            z-index: 201;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.2);
         }
 
         .m-overlay.open .m-drawer {
@@ -1112,6 +1279,7 @@
             align-items: center;
             justify-content: space-between;
             padding: 0 16px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
         }
 
         .m-drawer-logo {
@@ -1123,26 +1291,27 @@
 
         /* Drawer close button */
         .m-drawer-close {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
             border: 1px solid #e5e7eb;
-            background: #f9fafb;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             flex-shrink: 0;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
         }
         
         .m-drawer-close:hover {
             background: #f3f4f6;
+            transform: rotate(90deg);
         }
         
         .m-drawer-close-icon {
-            width: 14px;
-            height: 14px;
+            width: 16px;
+            height: 16px;
             position: relative;
         }
         .m-drawer-close-icon::before,
@@ -1151,10 +1320,11 @@
             position: absolute;
             inset: 0;
             margin: auto;
-            width: 14px;
+            width: 16px;
             height: 2px;
             border-radius: 999px;
-            background: #111827;
+            background: var(--brand-primary);
+            transition: all 0.3s ease;
         }
         .m-drawer-close-icon::before {
             transform: rotate(45deg);
@@ -1263,6 +1433,20 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            background: linear-gradient(135deg, var(--brand-primary) 0%, #673de6 100%);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 24px rgba(81, 39, 186, 0.3);
+        }
+
+        .mobile-save-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(81, 39, 186, 0.4);
         }
 
         /* KEY FIX: Hide save button when menu overlay is open */
@@ -1277,36 +1461,47 @@
             color: #6b7280;
             grid-column: 1/-1;
             width: 100%;
-            background: #f9fafb;
-            border-radius: 8px;
-            border: 1px dashed #e5e7eb;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 12px;
+            border: 2px dashed #e5e7eb;
+            transition: all 0.3s ease;
         }
 
-        /* Category Products Modal */
+        .empty-state:hover {
+            border-color: var(--brand-primary);
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+        }
+
+        /* Category Products Modal Header */
         .category-modal-header {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 16px;
             margin-bottom: 16px;
-            padding: 12px;
-            background: #f8fafc;
-            border-radius: 8px;
-            border-left: 4px solid var(--brand-primary);
+            padding: 16px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 12px;
+            border-left: 6px solid var(--brand-primary);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
 
         .category-modal-title {
-            font-weight: 600;
-            font-size: 16px;
+            font-weight: 700;
+            font-size: 18px;
             color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .selected-count {
-            background: var(--brand-primary);
+            background: linear-gradient(135deg, var(--brand-primary) 0%, #673de6 100%);
             color: white;
-            padding: 2px 10px;
-            border-radius: 12px;
-            font-size: 13px;
-            font-weight: 600;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 700;
+            box-shadow: 0 2px 8px rgba(81, 39, 186, 0.2);
         }
 
         /* Responsive switch */
@@ -1330,7 +1525,7 @@
             .modal-content {
                 width: 100%;
                 border-radius: 24px 24px 0 0;
-                animation: slideUpModal 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+                animation: slideUpModal 0.4s cubic-bezier(0.16, 1, 0.3, 1);
                 max-height: 90vh;
                 overflow-y: auto;
                 max-width: 100%;
@@ -1342,7 +1537,7 @@
             }
             
             .product-grid {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
             }
             
             /* Prevent horizontal scrolling */
@@ -1373,6 +1568,39 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--brand-primary);
+            border-radius: 4px;
+            transition: background 0.3s ease;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #471ea7;
+        }
+
+        /* Loading Animation */
+        @keyframes shimmer {
+            0% { background-position: -200px 0; }
+            100% { background-position: 200px 0; }
+        }
+
+        .loading-shimmer {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200px 100%;
+            animation: shimmer 1.5s infinite;
         }
     </style>
 </head>
@@ -1589,10 +1817,17 @@
                     <div class="premium-card">
                         <div class="card-header">
                             <div>
-                                <div class="card-title">Best Sellers Products</div>
+                                <div class="card-title">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="m12 15 2 2 4-4"/>
+                                        <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
+                                        <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+                                    </svg>
+                                    Best Sellers Products
+                                </div>
                                 <div class="card-subtitle">Drag to reorder best-selling products</div>
                             </div>
-                            <button class="btn btn-primary" onclick="openProductSelector()">
+                            <button class="premium-add-btn" onclick="openProductSelector()">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M5 12h14"/>
                                     <path d="M12 5v14"/>
@@ -1619,7 +1854,17 @@
                     <div class="premium-card">
                         <div class="card-header">
                             <div>
-                                <div class="card-title">Categories Order</div>
+                                <div class="card-title">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M4 6h16"/>
+                                        <path d="M4 12h16"/>
+                                        <path d="M4 18h16"/>
+                                        <circle cx="8" cy="6" r="1" fill="currentColor"/>
+                                        <circle cx="8" cy="12" r="1" fill="currentColor"/>
+                                        <circle cx="8" cy="18" r="1" fill="currentColor"/>
+                                    </svg>
+                                    Categories Order
+                                </div>
                                 <div class="card-subtitle">Drag to rearrange display order, toggle to show/hide, add up to 6 products per category</div>
                             </div>
                         </div>
@@ -1674,7 +1919,7 @@
         </main>
 
         <!-- FIXED: Save button moved here - outside main content -->
-        <button class="btn btn-primary mobile-save-btn" onclick="saveSections()">
+        <button class="mobile-save-btn" onclick="saveSections()">
             Save All Changes
         </button>
 
@@ -1853,7 +2098,14 @@
     <div class="modal-overlay" id="product-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <div class="modal-title">Select Best Sellers</div>
+                <div class="modal-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m12 15 2 2 4-4"/>
+                        <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
+                        <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+                    </svg>
+                    Select Best Sellers
+                </div>
                 <button class="btn-icon" onclick="closeProductSelector()">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M18 6 6 18"/>
@@ -1888,7 +2140,13 @@
         <div class="modal-content">
             <div class="modal-header">
                 <div>
-                    <div class="modal-title">Select Products for Category</div>
+                    <div class="modal-title">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                            <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                        </svg>
+                        Select Products for Category
+                    </div>
                     <div class="category-modal-header">
                         <div class="category-modal-title" id="current-category-name">Category Name</div>
                         <div class="selected-count" id="category-selected-count">0/6</div>
@@ -1909,7 +2167,7 @@
                         <circle cx="11" cy="11" r="7"></circle>
                         <line x1="16.65" y1="16.65" x2="21" y2="21"></line>
                     </svg>
-                    <input type="text" id="category-modal-search" placeholder="Search products..." onkeyup="filterCategoryModalProducts()">
+                    <input type="text" id="category-modal-search" placeholder="Search products in this category..." onkeyup="filterCategoryModalProducts()">
                 </div>
                 <div id="category-modal-product-grid" class="product-grid"></div>
             </div>
@@ -1995,7 +2253,8 @@
             allProducts: [],
             selectedProductIds: [],
             categories: [],
-            categoryProducts: {} // New: Store products for each category {categoryId: [productIds]}
+            categoryProducts: {}, // Store products for each category {categoryId: [productIds]}
+            productCategoryMap: {} // Map product IDs to their categories
         };
 
         // Variables for category product selection
@@ -2187,6 +2446,16 @@
                     image: doc.data().image || doc.data().images?.[0] || 'https://via.placeholder.com/150x120?text=No+Image'
                 }));
 
+                // Create product category map (assuming products have categoryId or category field)
+                state.productCategoryMap = {};
+                state.allProducts.forEach(product => {
+                    // Try to get category from product data
+                    const categoryId = product.categoryId || product.category;
+                    if (categoryId) {
+                        state.productCategoryMap[product.id] = categoryId;
+                    }
+                });
+
                 // 2. Fetch DB Categories
                 const catsSnap = await db.collection('categories').get();
                 const dbCategories = catsSnap.docs.map(doc => ({ 
@@ -2275,10 +2544,13 @@
                             <circle cx="15" cy="19" r="1"></circle>
                         </svg>
                     </div>
-                    <img src="${p.image || p.images?.[0] || 'https://via.placeholder.com/40'}" class="item-image">
+                    <img src="${p.image || p.images?.[0] || 'https://via.placeholder.com/48'}" class="item-image">
                     <div class="item-content">
                         <div class="item-title">${p.name || 'Unnamed Product'}</div>
-                        <div class="item-subtitle">₹${p.price || '0'}</div>
+                        <div class="item-subtitle">
+                            <span>₹${p.price || '0'}</span>
+                            <span class="category-products-badge">Best Seller</span>
+                        </div>
                     </div>
                     <button class="btn-icon delete" onclick="removeProduct('${p.id}')" title="Remove">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -2341,7 +2613,7 @@
                             <div class="category-products-preview">
                                 ${productsPreview.map(p => `
                                     <div class="product-preview-item" title="${p.name || 'Unnamed Product'}">
-                                        <img src="${p.image || p.images?.[0] || 'https://via.placeholder.com/20'}" class="product-preview-image">
+                                        <img src="${p.image || p.images?.[0] || 'https://via.placeholder.com/24'}" class="product-preview-image">
                                         <span class="product-preview-name">${(p.name || 'Unnamed').substring(0, 15)}${(p.name || '').length > 15 ? '...' : ''}</span>
                                     </div>
                                 `).join('')}
@@ -2350,13 +2622,14 @@
                         ` : ''}
                     </div>
                     <div class="item-actions">
-                        <button class="btn btn-sm" onclick="openCategoryProductSelector('${cat.id}', '${cat.name.replace(/'/g, "\\'")}')" style="margin-right: 8px;">
-                            ${productsCount > 0 ? 'Edit' : 'Add'} Products
+                        <button class="btn-sm" onclick="openCategoryProductSelector('${cat.id}', '${cat.name.replace(/'/g, "\\'")}')" style="margin-right: 8px;">
+                            ${productsCount > 0 ? 'Edit Products' : 'Add Products'}
                         </button>
-                        <div class="toggle-switch">
-                            <input type="checkbox" ${cat.enabled ? 'checked' : ''} onchange="toggleCategory('${cat.id}')">
+                        <label class="toggle-switch">
+                            <input type="checkbox" ${cat.enabled ? 'checked' : ''} 
+                                   onchange="toggleCategory('${cat.id}', this.checked)">
                             <span class="toggle-slider"></span>
-                        </div>
+                        </label>
                     </div>
                 </div>
                 `;
@@ -2415,12 +2688,12 @@
         }
 
         // --- INTERACTIONS ---
-        function toggleCategory(catId) {
+        function toggleCategory(catId, enabled) {
             const cat = state.categories.find(c => c.id === catId);
             if (cat) {
-                cat.enabled = !cat.enabled;
-                renderCategories('categories-list');
-                renderCategories('mobile-categories-list');
+                cat.enabled = enabled;
+                // No need to re-render entire list, just update the specific toggle
+                showToast(`Category ${enabled ? 'enabled' : 'disabled'}`, 'success');
             }
         }
 
@@ -2428,6 +2701,7 @@
             state.selectedProductIds = state.selectedProductIds.filter(pid => pid !== id);
             renderSelectedProducts('selected-products-list');
             renderSelectedProducts('mobile-selected-products');
+            showToast('Product removed from best sellers', 'success');
         }
 
         function resetChanges() {
@@ -2454,16 +2728,33 @@
             document.getElementById('category-product-modal').style.display = 'none';
             currentCategoryId = null;
             tempCategoryProductIds = [];
+            // Clear search
+            document.getElementById('category-modal-search').value = '';
         }
 
         function renderCategoryProductGrid() {
             const searchVal = document.getElementById('category-modal-search').value.toLowerCase();
             const grid = document.getElementById('category-modal-product-grid');
             
-            const filteredProducts = state.allProducts.filter(p => 
-                (p.name || '').toLowerCase().includes(searchVal) ||
-                (p.description || '').toLowerCase().includes(searchVal)
-            );
+            // Filter products by current category
+            let filteredProducts = state.allProducts.filter(p => {
+                // Get product's category from the map we created
+                const productCategoryId = state.productCategoryMap[p.id];
+                return productCategoryId === currentCategoryId;
+            });
+
+            // If no category mapping exists, show all products
+            if (filteredProducts.length === 0) {
+                filteredProducts = state.allProducts;
+            }
+
+            // Apply search filter
+            if (searchVal) {
+                filteredProducts = filteredProducts.filter(p => 
+                    (p.name || '').toLowerCase().includes(searchVal) ||
+                    (p.description || '').toLowerCase().includes(searchVal)
+                );
+            }
 
             if (filteredProducts.length === 0) {
                 grid.innerHTML = `
@@ -2541,6 +2832,8 @@
 
         function closeProductSelector() {
             document.getElementById('product-modal').style.display = 'none';
+            // Clear search
+            document.getElementById('modal-search').value = '';
         }
 
         function renderModalGrid() {
@@ -2604,14 +2897,20 @@
             renderSelectedProducts('selected-products-list');
             renderSelectedProducts('mobile-selected-products');
             closeProductSelector();
-            showToast('Product selection updated!', 'success');
+            showToast('Best sellers updated!', 'success');
         }
 
         // --- SAVING ---
         async function saveSections() {
             const btn = document.querySelector('.page-desktop .btn-primary') || document.querySelector('.mobile-save-btn');
             const originalText = btn.innerText;
-            btn.innerText = "Saving...";
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="loading-spinner">
+                    <path d="M21 12a9 9 0 11-6.219-8.56"/>
+                </svg>
+                Saving...
+            `;
             btn.disabled = true;
 
             try {
@@ -2624,7 +2923,7 @@
                 const payload = {
                     bestSellers: state.selectedProductIds,
                     categories: categoriesPayload,
-                    categoryProducts: state.categoryProducts, // NEW: Save category products
+                    categoryProducts: state.categoryProducts,
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
 
@@ -2634,6 +2933,7 @@
                 console.error("Save error:", error);
                 showToast("Error saving changes", 'error');
             } finally {
+                btn.innerHTML = originalHTML;
                 btn.innerText = originalText;
                 btn.disabled = false;
             }
