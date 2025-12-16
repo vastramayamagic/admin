@@ -2582,7 +2582,8 @@
                 state.allProducts = prodsSnap.docs.map(doc => ({ 
                     id: doc.id, 
                     ...doc.data(),
-                    image: doc.data().image || doc.data().images?.[0] || 'https://via.placeholder.com/150x120?text=No+Image'
+                    image: doc.data().image || doc.data().images?.[0] || 'https://via.placeholder.com/150x120?text=No+Image',
+                    categoryId: doc.data().categoryId || ''
                 }));
 
                 // 2. Group products by category for faster filtering
@@ -2764,24 +2765,15 @@
                         <button class="btn btn-sm" onclick="openCategoryProductSelector('${cat.id}', '${cat.name.replace(/'/g, "\\'")}')" style="margin-right: 12px;">
                             ${productsCount > 0 ? 'Edit' : 'Add'} Products
                         </button>
-                        <div class="toggle-switch">
-    <input type="checkbox" ${cat.enabled ? 'checked' : ''} 
-           onchange="toggleCategory('${cat.id}')" 
-           ${cat.enabled ? '' : 'checked'}>
-    <span class="toggle-slider"></span>
-</div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" ${cat.enabled ? 'checked' : ''} 
+                                   onchange="toggleCategory('${cat.id}', this.checked)">
+                            <span class="toggle-slider"></span>
+                        </label>
                     </div>
                 </div>
                 `;
             }).join('');
-
-            // Re-attach toggle switch event listeners
-            state.categories.forEach(cat => {
-                const toggle = document.getElementById(`toggle-${cat.id}`);
-                if (toggle) {
-                    toggle.onchange = () => toggleCategory(cat.id);
-                }
-            });
 
             attachDragEvents(container, 'category');
         }
@@ -2836,19 +2828,13 @@
         }
 
         // --- INTERACTIONS ---
-function toggleCategory(catId) {
-    const catIndex = state.categories.findIndex(c => c.id === catId);
-    if (catIndex !== -1) {
-        state.categories[catIndex].enabled = !state.categories[catIndex].enabled;
-        // Re-render categories to update UI
-        renderCategories('categories-list');
-        renderCategories('mobile-categories-list');
-        
-        const catName = state.categories[catIndex].name;
-        const enabled = state.categories[catIndex].enabled;
-        showToast(`${catName} ${enabled ? 'enabled' : 'disabled'}`, 'success');
-    }
-}
+        function toggleCategory(catId, isChecked) {
+            const cat = state.categories.find(c => c.id === catId);
+            if (cat) {
+                cat.enabled = isChecked;
+                showToast(`${cat.name} ${cat.enabled ? 'enabled' : 'disabled'}`, 'success');
+            }
+        }
 
         function removeProduct(id) {
             state.selectedProductIds = state.selectedProductIds.filter(pid => pid !== id);
@@ -2890,9 +2876,10 @@ function toggleCategory(catId) {
             const searchVal = document.getElementById('category-modal-search').value.toLowerCase();
             const grid = document.getElementById('category-modal-product-grid');
             
-            // Get products for the current category only
+            // Get products ONLY from the current category
             const categoryProducts = state.productsByCategory[currentCategoryId] || [];
             
+            // If no products in this category, check all products to find ones with matching categoryId
             const filteredProducts = categoryProducts.filter(p => 
                 (p.name || '').toLowerCase().includes(searchVal) ||
                 (p.description || '').toLowerCase().includes(searchVal)
