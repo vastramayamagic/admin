@@ -3467,78 +3467,75 @@
             element.parentElement.remove();
         }
 
-        async function saveColorVariant() {
-            const name = document.getElementById('selected-color-name').value;
-            const hex = document.getElementById('color-hex').value.trim();
-            
-            if (!name) {
-                showToast('Please select or add a color', 'error');
-                return;
-            }
-            
-            if (!hex || !/^#[0-9A-F]{6}$/i.test(hex)) {
-                showToast('Please enter a valid hex color code (e.g., #000000)', 'error');
-                return;
-            }
-            
-            showProgress('Saving variant...', 'Please wait');
-            
-            try {
-                let swatchImage = '';
-                
-                if (tempSwatchFile) {
-                    swatchImage = await uploadFile(tempSwatchFile, 'swatches');
-                } else if (editingVariantIndex !== null && colorVariants[editingVariantIndex]) {
-                    swatchImage = colorVariants[editingVariantIndex].hex;
-                }
-                
-                const sizes = [];
-                document.querySelectorAll('#size-selection .size-option.selected').forEach(option => {
-                    const sizeName = option.getAttribute('data-size');
-                    sizes.push({
-                        name: sizeName,
-                        available: true
-                    });
-                });
-                
-                if (sizes.length === 0) {
-                    hideProgress();
-                    showToast('Please select at least one size', 'error');
-                    return;
-                }
-                
-                const newImages = [];
-                for (const file of tempVariantFiles) {
-                    const url = await uploadFile(file, 'variants');
-                    newImages.push(url);
-                }
-                
-                const allImages = [...existingVariantImages, ...newImages];
-                
-                const variant = {
-                    name,
-                    hex: swatchImage || hex,
-                    colorHex: hex,
-                    sizes,
-                    images: allImages
-                };
-                
-                if (editingVariantIndex !== null) {
-                    colorVariants[editingVariantIndex] = variant;
-                } else {
-                    colorVariants.push(variant);
-                }
-                
-                renderVariants();
-                closeColorModal();
-                showToast('Variant saved successfully', 'success');
-            } catch (error) {
-                console.error('Error saving variant:', error);
-                showToast('Failed to save variant', 'error');
-            } finally {
-                hideProgress();
-            }
+async function saveColorVariant() {
+    const name = document.getElementById('selected-color-name').value;
+    const hex = document.getElementById('color-hex').value.trim();
+    
+    if (!name) {
+        showToast('Please select or add a color', 'error');
+        return;
+    }
+    
+    if (!hex || !/^#[0-9A-F]{6}$/i.test(hex)) {
+        showToast('Please enter a valid hex color code (e.g., #000000)', 'error');
+        return;
+    }
+    
+    showProgress('Saving variant...', 'Please wait');
+    
+    try {
+        let swatchImage = '';
+        
+        if (tempSwatchFile) {
+            swatchImage = await uploadFile(tempSwatchFile, 'swatches');
+        } else if (editingVariantIndex !== null && colorVariants[editingVariantIndex]) {
+            swatchImage = colorVariants[editingVariantIndex].hex;
         }
+        
+        const sizes = [];
+        document.querySelectorAll('#size-selection .size-option.selected').forEach(option => {
+            const sizeName = option.getAttribute('data-size');
+            sizes.push({
+                name: sizeName,
+                available: true
+            });
+        });
+        
+        // REMOVED SIZE VALIDATION HERE
+        // Sizes can be empty array now
+        
+        const newImages = [];
+        for (const file of tempVariantFiles) {
+            const url = await uploadFile(file, 'variants');
+            newImages.push(url);
+        }
+        
+        const allImages = [...existingVariantImages, ...newImages];
+        
+        const variant = {
+            name,
+            hex: swatchImage || hex,
+            colorHex: hex,
+            sizes, // This can be empty array []
+            images: allImages
+        };
+        
+        if (editingVariantIndex !== null) {
+            colorVariants[editingVariantIndex] = variant;
+        } else {
+            colorVariants.push(variant);
+        }
+        
+        renderVariants();
+        closeColorModal();
+        showToast('Variant saved successfully', 'success');
+    } catch (error) {
+        console.error('Error saving variant:', error);
+        showToast('Failed to save variant', 'error');
+    } finally {
+        hideProgress();
+    }
+}
 
         function renderVariants() {
             const desktopContainer = document.getElementById('variants-list');
@@ -3578,7 +3575,7 @@
                              style="${variant.colorHex ? `background-color: ${variant.colorHex};` : ''}">
                         <div class="variant-details">
                             <div class="variant-name">${variant.name}</div>
-                            <div class="variant-sizes">${variant.sizes.length} sizes • ${variant.images ? variant.images.length : 0} images</div>
+                            <div class="variant-sizes">${variant.sizes.length > 0 ? variant.sizes.length + ' sizes • ' : 'No sizes • '}${variant.images ? variant.images.length : 0} images</div>
                         </div>
                     </div>
                     <div class="variant-actions">
@@ -3611,7 +3608,7 @@
                              style="${variant.colorHex ? `background-color: ${variant.colorHex};` : ''}">
                         <div class="variant-details">
                             <div class="variant-name">${variant.name}</div>
-                            <div class="variant-sizes">${variant.sizes.length} sizes</div>
+                            <div class="variant-sizes">${variant.sizes.length > 0 ? variant.sizes.length + ' sizes' : 'No sizes'}</div>
                         </div>
                     </div>
                     <div class="variant-actions">
