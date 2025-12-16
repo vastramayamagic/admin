@@ -2883,7 +2883,7 @@
             const grid = document.getElementById('category-modal-product-grid');
             
             // Get products for the current category only
-            const categoryProducts = state.productsByCategory[currentCategoryId] || [];
+            const categoryProducts = state.allProducts.filter(p => p.categoryId === currentCategoryId);
             
             const filteredProducts = categoryProducts.filter(p => 
                 (p.name || '').toLowerCase().includes(searchVal) ||
