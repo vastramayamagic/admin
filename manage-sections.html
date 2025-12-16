@@ -65,21 +65,16 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* ============= FIXED SCROLLING ISSUE ============= */
+        /* ============= DESKTOP LAYOUT ============= */
         .page-desktop {
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             width: 100%;
             overflow: hidden;
-            position: fixed; /* FIX: Prevent scrolling of entire layout */
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
         }
 
-        /* Desktop header - FIXED (No Scroll) */
+        /* Desktop header - FIXED */
         .d-topbar {
             height: var(--header-height-desktop);
             background: var(--glass-bg);
@@ -95,7 +90,6 @@
             right: 0;
             z-index: 1000;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            -webkit-backdrop-filter: blur(10px);
         }
 
         .d-topbar-logo {
@@ -110,11 +104,9 @@
             display: flex;
             width: 100%;
             margin-top: var(--header-height-desktop);
-            position: relative;
-            height: calc(100vh - var(--header-height-desktop));
         }
 
-        /* Desktop sidebar - FIXED (No Scroll) */
+        /* Desktop sidebar - FIXED */
         .d-sidebar {
             width: var(--sidebar-width);
             background: var(--sidebar-bg);
@@ -128,7 +120,6 @@
             z-index: 900;
             overflow-y: auto;
             box-shadow: 2px 0 4px rgba(0, 0, 0, 0.05);
-            -webkit-overflow-scrolling: touch;
         }
 
         .d-sidebar-inner {
@@ -138,619 +129,202 @@
             height: 100%;
         }
 
-        /* Desktop content - Scrollable Only */
+        /* Desktop nav */
+        .d-nav {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .d-nav-group + .d-nav-group {
+            margin-top: 6px;
+        }
+
+        .d-nav-item {
+            display: flex;
+            align-items: center;
+            height: var(--row-height);
+            padding: 0 20px 0 12px;
+            margin: 2px 0;
+            border-radius: 8px;
+            gap: 12px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 14px;
+            color: var(--text-color);
+            line-height: 20px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .d-nav-item .label {
+            flex: 1;
+        }
+
+        .d-nav-item .icon svg {
+            width: 22px;
+            height: 22px;
+            stroke: var(--icon-color);
+            transition: all 0.3s ease;
+        }
+
+        .chevron-icon {
+            width: 18px;
+            height: 18px;
+            stroke: var(--icon-color);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .dropdown-open .chevron-icon {
+            transform: rotate(90deg);
+        }
+
+        /* Desktop active */
+        .d-nav-item--active {
+            background: var(--active-bg);
+            box-shadow: 0 4px 12px rgba(81, 39, 186, 0.1);
+        }
+        .d-nav-item--active .icon svg {
+            stroke: var(--icon-active);
+        }
+
+        /* Desktop hover */
+        .d-nav-item:hover {
+            background: var(--hover-bg);
+            transform: translateX(4px);
+        }
+
+        /* Desktop submenus */
+        .d-submenu {
+            display: none;
+            margin-left: 28px;
+            padding-left: 16px;
+            border-left: 1px solid var(--border-subtle);
+            margin-top: 4px;
+        }
+        .d-submenu.open {
+            display: block;
+        }
+        .d-submenu-item {
+            height: 44px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            border-radius: 8px;
+            margin: 2px 0;
+            cursor: pointer;
+            gap: 12px;
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        .d-submenu-item:hover {
+            background: var(--hover-bg);
+            transform: translateX(4px);
+        }
+        .d-submenu-item.active {
+            background: var(--active-bg);
+            box-shadow: 0 2px 8px rgba(81, 39, 186, 0.1);
+        }
+
+        .d-submenu-item .submenu-icon {
+            width: 18px;
+            height: 18px;
+            stroke: #6b7280;
+            transition: all 0.3s ease;
+        }
+
+        .d-submenu-item:hover .submenu-icon {
+            stroke: var(--brand-primary);
+        }
+
+        /* Desktop account section */
+        .d-account-section {
+            margin-top: auto;
+            padding: 16px;
+            border-top: 1px solid var(--border-subtle);
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .d-account-section:hover {
+            background: var(--hover-bg);
+            border-radius: 12px;
+        }
+
+        .account-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .account-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--brand-primary);
+            padding: 2px;
+        }
+
+        .account-text {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .account-name {
+            font-size: 14px;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 150px;
+        }
+
+        .account-email {
+            font-size: 12px;
+            color: #6b7280;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 150px;
+        }
+
+        /* Desktop content */
         .d-content {
             flex: 1;
             background: var(--page-bg);
             overflow-y: auto;
-            overflow-x: hidden;
             width: 100%;
             margin-left: var(--sidebar-width);
-            min-height: calc(100vh - var(--header-height-desktop));
             padding-top: 24px;
-            -webkit-overflow-scrolling: touch;
-            position: relative;
+            min-height: calc(100vh - var(--header-height-desktop));
         }
 
-        /* ============= ENHANCED UI ELEMENTS ============= */
-        /* Premium Glass Card - Enhanced */
-        .premium-glass-card {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: var(--radius-xl);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            overflow: hidden;
-            box-shadow: 
-                0 20px 40px rgba(0, 0, 0, 0.08),
-                0 8px 16px rgba(0, 0, 0, 0.04),
-                inset 0 1px 0 rgba(255, 255, 255, 0.4);
-            margin-bottom: 32px;
-            position: relative;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        /* ============= BODY CONTENT ============= */
+        .content-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 32px 40px 60px;
+            width: 100%;
         }
 
-        .premium-glass-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 
-                0 30px 60px rgba(0, 0, 0, 0.15),
-                0 12px 24px rgba(0, 0, 0, 0.08),
-                inset 0 1px 0 rgba(255, 255, 255, 0.6);
-        }
-
-        .premium-glass-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 5px;
-            background: var(--brand-gradient);
-            z-index: 2;
-        }
-
-        .premium-glass-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(81, 39, 186, 0.03) 0%, rgba(103, 61, 230, 0.01) 100%);
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        /* Card Header - Enhanced */
-        .glass-card-header {
-            padding: 32px 40px;
-            border-bottom: 1px solid rgba(229, 231, 235, 0.6);
+        .page-header {
             display: flex;
+            align-items: center;
             justify-content: space-between;
-            align-items: center;
-            background: linear-gradient(135deg, rgba(250, 250, 250, 0.8) 0%, rgba(245, 245, 245, 0.8) 100%);
-            position: relative;
-            z-index: 2;
-        }
-
-        .glass-card-title {
-            font-weight: 800;
-            font-size: 24px;
-            line-height: 32px;
-            color: rgb(29, 30, 32);
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            background: var(--brand-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .glass-card-title svg {
-            width: 28px;
-            height: 28px;
-            stroke: url(#gradient-icon);
-            filter: drop-shadow(0 2px 4px rgba(81, 39, 186, 0.2));
-        }
-
-        .glass-card-subtitle {
-            font-size: 16px;
-            color: #6b7280;
-            margin-top: 8px;
-            font-weight: 500;
-            line-height: 1.6;
-            opacity: 0.9;
-        }
-
-        /* Card Body - Enhanced */
-        .glass-card-body {
-            padding: 40px;
-            background: transparent;
-            position: relative;
-            z-index: 2;
-        }
-
-        /* Enhanced Draggable Item */
-        .glass-draggable-item {
-            display: flex;
-            align-items: center;
-            gap: 20px;
+            margin-bottom: 32px;
+            width: 100%;
+            background: white;
             padding: 24px 32px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.6);
             border-radius: var(--radius-lg);
-            cursor: grab;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            user-select: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            position: relative;
-            overflow: hidden;
-            margin-bottom: 16px;
-            box-shadow: 
-                0 4px 20px rgba(0, 0, 0, 0.04),
-                0 1px 0 rgba(255, 255, 255, 0.8);
-        }
-
-        .glass-draggable-item::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 5px;
-            background: var(--brand-gradient);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            border-radius: var(--radius-lg) 0 0 var(--radius-lg);
-        }
-
-        .glass-draggable-item:hover::before {
-            opacity: 1;
-        }
-
-        .glass-draggable-item:hover {
-            border-color: rgba(81, 39, 186, 0.3);
-            box-shadow: 
-                0 12px 32px rgba(81, 39, 186, 0.15),
-                0 4px 8px rgba(81, 39, 186, 0.05),
-                inset 0 1px 0 rgba(255, 255, 255, 0.8);
-            transform: translateX(8px) translateY(-2px);
-        }
-
-        .glass-draggable-item.dragging {
-            opacity: 0.8;
-            background: rgba(249, 250, 251, 0.8);
-            border: 2px dashed var(--brand-primary);
-            box-shadow: 0 12px 32px rgba(81, 39, 186, 0.2);
-            backdrop-filter: blur(5px);
-        }
-
-        /* Enhanced Drag Handle */
-        .glass-drag-handle {
-            color: #9ca3af;
-            cursor: grab;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-            border: 1px solid rgba(229, 231, 235, 0.8);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            user-select: none;
-            box-shadow: 
-                inset 0 1px 0 rgba(255, 255, 255, 0.8),
-                0 2px 4px rgba(0, 0, 0, 0.05);
-        }
-
-        .glass-drag-handle:hover {
-            background: var(--brand-gradient);
-            color: white;
-            border-color: transparent;
-            transform: scale(1.1);
-            box-shadow: 
-                0 4px 12px rgba(81, 39, 186, 0.3),
-                inset 0 1px 0 rgba(255, 255, 255, 0.4);
-        }
-
-        .glass-drag-handle:active {
-            cursor: grabbing;
-            transform: scale(0.95);
-        }
-
-        /* Enhanced Item Image */
-        .glass-item-image {
-            width: 64px;
-            height: 64px;
-            border-radius: 16px;
-            object-fit: cover;
-            border: 3px solid white;
-            box-shadow: 
-                0 8px 24px rgba(0, 0, 0, 0.1),
-                0 4px 8px rgba(0, 0, 0, 0.04),
-                inset 0 1px 0 rgba(255, 255, 255, 0.8);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .glass-draggable-item:hover .glass-item-image {
-            transform: scale(1.08) rotate(2deg);
-            box-shadow: 
-                0 12px 32px rgba(0, 0, 0, 0.15),
-                0 6px 12px rgba(0, 0, 0, 0.06);
-        }
-
-        /* Enhanced Item Content */
-        .glass-item-content {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .glass-item-title {
-            font-weight: 800;
-            font-size: 18px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            color: rgb(29, 30, 32);
-            margin-bottom: 4px;
-        }
-
-        .glass-item-subtitle {
-            font-size: 15px;
-            color: #6b7280;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        /* Enhanced Status Badge */
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 700;
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
-            color: var(--success-color);
-            border: 1px solid rgba(16, 185, 129, 0.2);
-            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.1);
-        }
-
-        .status-badge.hidden {
-            background: linear-gradient(135deg, rgba(156, 163, 175, 0.1) 0%, rgba(156, 163, 175, 0.05) 100%);
-            color: #9CA3AF;
-            border-color: rgba(156, 163, 175, 0.2);
-            box-shadow: 0 2px 8px rgba(156, 163, 175, 0.1);
-        }
-
-        /* Enhanced Products Preview */
-        .glass-products-preview {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-top: 16px;
-            max-height: 100px;
-            overflow-y: auto;
-            padding: 20px;
-            border-radius: 16px;
-            background: linear-gradient(135deg, rgba(248, 250, 252, 0.8) 0%, rgba(241, 245, 249, 0.8) 100%);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(229, 231, 235, 0.6);
-            box-shadow: 
-                inset 0 1px 0 rgba(255, 255, 255, 0.6),
-                0 2px 8px rgba(0, 0, 0, 0.04);
-        }
-
-        .glass-product-preview-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 16px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 100%);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(229, 231, 235, 0.8);
-            border-radius: 12px;
-            font-size: 13px;
-            max-width: 200px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-        }
-
-        .glass-product-preview-item:hover {
-            border-color: rgba(81, 39, 186, 0.4);
-            transform: translateY(-2px);
-            box-shadow: 
-                0 6px 20px rgba(81, 39, 186, 0.15),
-                0 2px 4px rgba(81, 39, 186, 0.05);
-        }
-
-        .glass-product-preview-image {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            object-fit: cover;
-            border: 2px solid white;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .glass-product-preview-name {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 120px;
-            font-weight: 600;
-            color: #374151;
-        }
-
-        /* Enhanced Toggle Switch */
-        .premium-toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 60px;
-            height: 32px;
-            flex-shrink: 0;
-        }
-
-        .premium-toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .premium-toggle-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
-            transition: .4s;
-            border-radius: 34px;
-            box-shadow: 
-                inset 0 2px 4px rgba(0, 0, 0, 0.1),
-                0 1px 0 rgba(255, 255, 255, 0.6);
-        }
-
-        .premium-toggle-slider:before {
-            position: absolute;
-            content: "";
-            height: 24px;
-            width: 24px;
-            left: 4px;
-            bottom: 4px;
-            background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
-            transition: .4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border-radius: 50%;
-            box-shadow: 
-                0 4px 12px rgba(0, 0, 0, 0.15),
-                0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        input:checked + .premium-toggle-slider {
-            background: var(--brand-gradient);
-            box-shadow: 
-                inset 0 2px 4px rgba(81, 39, 186, 0.3),
-                0 1px 0 rgba(255, 255, 255, 0.6);
-        }
-
-        input:checked + .premium-toggle-slider:before {
-            transform: translateX(28px);
-            box-shadow: 
-                0 6px 16px rgba(81, 39, 186, 0.3),
-                0 2px 4px rgba(81, 39, 186, 0.1);
-        }
-
-        /* Enhanced Primary Button */
-        .glass-primary-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            padding: 16px 32px;
-            border-radius: var(--radius-lg);
-            border: none;
-            cursor: pointer;
-            font-weight: 800;
-            font-size: 16px;
-            line-height: 24px;
-            color: #ffffff;
-            background: linear-gradient(135deg, #5127ba 0%, #673de6 100%);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            white-space: nowrap;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 
-                0 8px 32px rgba(81, 39, 186, 0.3),
-                0 4px 8px rgba(81, 39, 186, 0.2),
-                inset 0 1px 0 rgba(255, 255, 255, 0.4);
-            letter-spacing: 0.5px;
-        }
-
-        .glass-primary-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, 
-                transparent, 
-                rgba(255, 255, 255, 0.3), 
-                transparent);
-            transition: left 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .glass-primary-btn:hover::before {
-            left: 100%;
-        }
-
-        .glass-primary-btn:hover {
-            transform: translateY(-4px) scale(1.02);
-            box-shadow: 
-                0 16px 48px rgba(81, 39, 186, 0.4),
-                0 8px 16px rgba(81, 39, 186, 0.25),
-                inset 0 1px 0 rgba(255, 255, 255, 0.6);
-        }
-
-        .glass-primary-btn:active {
-            transform: translateY(-2px) scale(1);
-            box-shadow: 
-                0 8px 32px rgba(81, 39, 186, 0.3),
-                0 4px 8px rgba(81, 39, 186, 0.2),
-                inset 0 1px 0 rgba(255, 255, 255, 0.4);
-        }
-
-        .glass-primary-btn svg {
-            width: 22px;
-            height: 22px;
-            stroke: #ffffff;
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-        }
-
-        .glass-primary-btn:hover svg {
-            transform: scale(1.15) rotate(5deg);
-        }
-
-        /* Enhanced Secondary Button */
-        .glass-secondary-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            padding: 16px 32px;
-            border-radius: var(--radius-lg);
-            border: none;
-            cursor: pointer;
-            font-weight: 700;
-            font-size: 16px;
-            line-height: 24px;
-            color: var(--text-color);
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            white-space: nowrap;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid rgba(229, 231, 235, 0.8);
-            box-shadow: 
-                0 4px 20px rgba(0, 0, 0, 0.05),
-                0 1px 0 rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-        }
-
-        .glass-secondary-btn:hover {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.98) 100%);
-            border-color: rgba(81, 39, 186, 0.3);
-            transform: translateY(-2px);
-            box-shadow: 
-                0 8px 32px rgba(0, 0, 0, 0.1),
-                0 2px 4px rgba(0, 0, 0, 0.05),
-                inset 0 1px 0 rgba(255, 255, 255, 0.9);
-        }
-
-        .glass-secondary-btn svg {
-            width: 20px;
-            height: 20px;
-            stroke: var(--text-color);
-            transition: transform 0.3s ease;
-        }
-
-        /* Products Count Badge */
-        .products-count-badge {
-            background: var(--brand-gradient);
-            color: white;
-            padding: 8px 20px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 800;
-            min-width: 100px;
-            text-align: center;
-            box-shadow: 
-                0 4px 16px rgba(81, 39, 186, 0.3),
-                0 2px 4px rgba(81, 39, 186, 0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin-left: auto;
-        }
-
-        /* Enhanced Item Actions */
-        .glass-item-actions {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin-left: auto;
-        }
-
-        /* Enhanced Action Button */
-        .glass-action-btn {
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
-            border: 1px solid rgba(229, 231, 235, 0.8);
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            color: #6b7280;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 
-                0 2px 8px rgba(0, 0, 0, 0.05),
-                0 1px 0 rgba(255, 255, 255, 0.8);
-        }
-
-        .glass-action-btn:hover {
-            background: var(--brand-gradient);
-            color: white;
-            border-color: transparent;
-            transform: scale(1.1) rotate(5deg);
-            box-shadow: 
-                0 8px 24px rgba(81, 39, 186, 0.3),
-                0 4px 8px rgba(81, 39, 186, 0.2);
-        }
-
-        .glass-action-btn.delete:hover {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-            box-shadow: 
-                0 8px 24px rgba(239, 68, 68, 0.3),
-                0 4px 8px rgba(239, 68, 68, 0.2);
-        }
-
-        /* Add Products Button */
-        .add-products-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 24px;
-            background: linear-gradient(135deg, rgba(81, 39, 186, 0.1) 0%, rgba(103, 61, 230, 0.05) 100%);
-            border: 1px solid rgba(81, 39, 186, 0.2);
-            color: var(--brand-primary);
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            margin-left: 16px;
-        }
-
-        .add-products-btn:hover {
-            background: linear-gradient(135deg, rgba(81, 39, 186, 0.2) 0%, rgba(103, 61, 230, 0.1) 100%);
-            border-color: rgba(81, 39, 186, 0.4);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 16px rgba(81, 39, 186, 0.15);
-        }
-
-        /* Empty State Enhancement */
-        .glass-empty-state {
-            text-align: center;
-            padding: 80px 40px;
-            color: #6b7280;
-            grid-column: 1/-1;
-            width: 100%;
-            background: linear-gradient(135deg, rgba(250, 250, 250, 0.8) 0%, rgba(245, 245, 245, 0.8) 100%);
-            backdrop-filter: blur(10px);
-            border-radius: 24px;
-            border: 2px dashed rgba(229, 231, 235, 0.8);
+            box-shadow: var(--shadow-premium);
+            border: 1px solid var(--border-subtle);
             position: relative;
             overflow: hidden;
         }
 
-        .glass-empty-state::before {
+        .page-header::before {
             content: '';
             position: absolute;
             top: 0;
@@ -760,47 +334,1418 @@
             background: var(--brand-gradient);
         }
 
-        /* Responsive */
+        .page-title-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-width: 0;
+        }
+
+        .page-title {
+            font-weight: 800;
+            font-size: 28px;
+            line-height: 36px;
+            color: rgb(29, 30, 32);
+            background: var(--brand-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            line-height: 20px;
+            color: #6b7280;
+            flex-wrap: wrap;
+        }
+
+        .breadcrumb-icon svg {
+            width: 16px;
+            height: 16px;
+            stroke: var(--brand-primary);
+        }
+
+        .breadcrumb-divider {
+            color: #d1d5db;
+        }
+
+        /* Premium Buttons */
+        .primary-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px 28px;
+            border-radius: var(--radius-md);
+            border: none;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 15px;
+            line-height: 20px;
+            color: #ffffff;
+            background: var(--brand-gradient);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            white-space: nowrap;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(81, 39, 186, 0.25);
+        }
+
+        .primary-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s;
+        }
+
+        .primary-btn:hover::before {
+            left: 100%;
+        }
+
+        .primary-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(81, 39, 186, 0.35);
+        }
+
+        .primary-btn:active {
+            transform: translateY(0);
+        }
+
+        .primary-btn svg {
+            width: 20px;
+            height: 20px;
+            stroke: #ffffff;
+            transition: transform 0.3s ease;
+        }
+
+        .primary-btn:hover svg {
+            transform: scale(1.1);
+        }
+
+        /* Premium Card - ENHANCED */
+        .premium-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-subtle);
+            overflow: hidden;
+            box-shadow: var(--shadow-premium);
+            margin-bottom: 32px;
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .premium-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .premium-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--brand-gradient);
+        }
+
+        .card-header {
+            padding: 28px 32px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+        }
+
+        .card-title {
+            font-weight: 800;
+            font-size: 22px;
+            line-height: 32px;
+            color: rgb(29, 30, 32);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card-title svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--brand-primary);
+        }
+
+        .card-subtitle {
+            font-size: 15px;
+            color: #6b7280;
+            margin-top: 6px;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+
+        .card-body {
+            padding: 32px;
+            background: white;
+        }
+
+        /* Enhanced Draggable List */
+        .draggable-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .draggable-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 20px 24px;
+            background: white;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            cursor: grab;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .draggable-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--brand-gradient);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .draggable-item:hover::before {
+            opacity: 1;
+        }
+
+        .draggable-item:hover {
+            border-color: var(--brand-primary);
+            box-shadow: 0 8px 25px rgba(81, 39, 186, 0.1);
+            transform: translateX(4px);
+        }
+
+        .draggable-item.dragging {
+            opacity: 0.8;
+            background: #f9fafb;
+            border: 2px dashed var(--brand-primary);
+            box-shadow: 0 8px 25px rgba(81, 39, 186, 0.15);
+        }
+
+        .drag-handle {
+            color: #9ca3af;
+            cursor: grab;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            transition: all 0.2s ease;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .drag-handle:hover {
+            background: var(--brand-primary);
+            color: white;
+            border-color: var(--brand-primary);
+        }
+
+        .drag-handle:active {
+            cursor: grabbing;
+        }
+
+        .item-image {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            object-fit: cover;
+            border: 2px solid white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .draggable-item:hover .item-image {
+            transform: scale(1.05);
+        }
+
+        .item-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .item-title {
+            font-weight: 700;
+            font-size: 16px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: rgb(29, 30, 32);
+        }
+
+        .item-subtitle {
+            font-size: 14px;
+            color: #6b7280;
+            margin-top: 4px;
+            font-weight: 500;
+        }
+
+        .item-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #6b7280;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-icon:hover {
+            background: var(--brand-primary);
+            color: white;
+            border-color: var(--brand-primary);
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(81, 39, 186, 0.2);
+        }
+
+        .btn-icon.delete:hover {
+            background: var(--danger-color);
+            border-color: var(--danger-color);
+        }
+
+        .category-products-badge {
+            background: var(--brand-gradient);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            min-width: 80px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(81, 39, 186, 0.2);
+        }
+
+        /* Enhanced Category Products Preview */
+        .category-products-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+            max-height: 80px;
+            overflow-y: auto;
+            padding: 12px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border: 1px solid #e5e7eb;
+        }
+
+        .product-preview-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 12px;
+            max-width: 150px;
+            transition: all 0.2s ease;
+        }
+
+        .product-preview-item:hover {
+            border-color: var(--brand-primary);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(81, 39, 186, 0.1);
+        }
+
+        .product-preview-image {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            object-fit: cover;
+            border: 1px solid #e5e7eb;
+        }
+
+        .product-preview-name {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100px;
+            font-weight: 500;
+        }
+
+        /* Enhanced Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 52px;
+            height: 28px;
+            flex-shrink: 0;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--switch-off);
+            transition: .4s;
+            border-radius: 34px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        input:checked + .toggle-slider {
+            background: var(--brand-gradient);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
+
+        /* Premium Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 1000px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-premium);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transform: translateY(20px) scale(0.95);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+
+        .modal-header {
+            padding: 28px 32px 24px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+            position: relative;
+        }
+
+        .modal-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--brand-gradient);
+        }
+
+        .modal-body {
+            padding: 32px;
+            background: #F8FAFC;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .modal-footer {
+            padding: 24px 32px 32px;
+            background: white;
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: flex-end;
+            gap: 16px;
+        }
+
+        .modal-title {
+            font-weight: 800;
+            font-size: 24px;
+            color: rgb(29, 30, 32);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            background: var(--brand-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Premium Product Grid */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .product-card {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            border-color: var(--brand-primary);
+        }
+
+        .product-card.selected {
+            border: 3px solid var(--brand-primary);
+            box-shadow: 0 20px 40px rgba(81, 39, 186, 0.2);
+            transform: translateY(-4px);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .product-card:hover .product-image {
+            transform: scale(1.1);
+        }
+
+        .product-content {
+            padding: 16px;
+        }
+
+        .product-title {
+            font-weight: 700;
+            font-size: 15px;
+            margin-bottom: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: rgb(29, 30, 32);
+        }
+
+        .product-price {
+            color: var(--brand-primary);
+            font-weight: 800;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .product-price::before {
+            content: '₹';
+            font-size: 14px;
+        }
+
+        .product-select-checkbox {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border: 2px solid var(--border-subtle);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-select-checkbox.checked {
+            background: var(--brand-primary);
+            border-color: var(--brand-primary);
+        }
+
+        .product-select-checkbox.checked::after {
+            content: '✓';
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        /* Premium Search Input */
+        .search-input-wrap {
+            background: white;
+            border-radius: 12px;
+            border: 2px solid #e5e7eb;
+            padding: 12px 20px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+            width: 100%;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .search-input-wrap:focus-within {
+            border-color: var(--brand-primary);
+            box-shadow: 0 4px 20px rgba(81, 39, 186, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .search-icon {
+            width: 20px;
+            height: 20px;
+            stroke: #9ca3af;
+            transition: stroke 0.3s ease;
+        }
+
+        .search-input-wrap:focus-within .search-icon {
+            stroke: var(--brand-primary);
+        }
+
+        .search-input-wrap input {
+            border: none;
+            background: transparent;
+            outline: none;
+            flex: 1;
+            font-family: "DM Sans", Roboto, sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            width: 100%;
+            color: rgb(29, 30, 32);
+        }
+
+        /* Premium Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px 28px;
+            font-weight: 700;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            font-size: 15px;
+            white-space: nowrap;
+            min-width: 120px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: var(--brand-gradient);
+            color: white;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            box-shadow: 0 4px 20px rgba(81, 39, 186, 0.25);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(81, 39, 186, 0.35);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: white;
+            border: 2px solid #e5e7eb;
+            color: var(--text-color);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .btn-secondary:hover {
+            background: #F8FAFC;
+            border-color: #CBD5E1;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-sm {
+            padding: 10px 20px;
+            font-size: 14px;
+            min-width: auto;
+        }
+
+        /* Premium Toast */
+        #toast-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 3000;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .toast {
+            padding: 20px 24px;
+            background: white;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-premium);
+            animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border-left: 4px solid var(--brand-primary);
+            min-width: 320px;
+            pointer-events: auto;
+            max-width: 400px;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success {
+            border-left-color: var(--success-color);
+        }
+
+        .toast.error {
+            border-left-color: var(--danger-color);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Profile Popup */
+        .profile-popup {
+            position: fixed;
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: var(--shadow-premium);
+            border: 1px solid #e5e7eb;
+            padding: 0;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(10px) scale(0.95);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 300px;
+            max-width: 90vw;
+            overflow: hidden;
+        }
+
+        .profile-popup.active {
+            opacity: 1;
+            pointer-events: all;
+            transform: translateY(0) scale(1);
+        }
+
+        @media (min-width: 769px) {
+            .profile-popup {
+                left: 30px !important;
+                right: auto !important;
+                bottom: 100px !important;
+                top: auto !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .profile-popup {
+                left: 50% !important;
+                right: auto !important;
+                bottom: 100px !important;
+                top: auto !important;
+                transform: translateX(-50%) translateY(10px) scale(0.95);
+            }
+            
+            .profile-popup.active {
+                transform: translateX(-50%) translateY(0) scale(1);
+            }
+        }
+
+        .popup-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 20px;
+            border-bottom: 1px solid #e5e7eb;
+            background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+        }
+
+        .popup-list {
+            list-style: none;
+            padding: 8px;
+        }
+
+        .popup-list li {
+            margin: 0;
+            padding: 0;
+        }
+
+        .popup-list a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            border-radius: 10px;
+            text-decoration: none;
+            color: var(--text-color);
+            transition: all 0.2s ease;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            white-space: nowrap;
+            width: 100%;
+            background: none;
+            border: none;
+            text-align: left;
+        }
+
+        .popup-list a:hover {
+            background: var(--hover-bg);
+            transform: translateX(4px);
+        }
+
+        .popup-list a.logout {
+            color: var(--danger-color);
+        }
+
+        .popup-list a.logout:hover {
+            background: #fef2f2;
+        }
+
+        .popup-icon {
+            width: 20px;
+            height: 20px;
+            stroke: #6b7280;
+            flex-shrink: 0;
+            transition: stroke 0.2s ease;
+        }
+
+        .popup-list a:hover .popup-icon {
+            stroke: var(--brand-primary);
+        }
+
+        .logout-icon {
+            stroke: var(--danger-color) !important;
+        }
+
+        /* ============= MOBILE LAYOUT ============= */
+        .page-mobile {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            display: none;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* Mobile header */
+        .m-header {
+            height: 72px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Mobile menu button */
+        .m-menu-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .m-menu-btn:hover {
+            background: #f3f4f6;
+            transform: scale(1.05);
+        }
+
+        .m-menu-lines {
+            width: 20px;
+            height: 14px;
+            position: relative;
+        }
+        .m-menu-lines::before,
+        .m-menu-lines::after,
+        .m-menu-lines span {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 2px;
+            border-radius: 999px;
+            background: #111827;
+            transition: all 0.3s ease;
+        }
+        .m-menu-lines::before {
+            top: 0;
+        }
+        .m-menu-lines span {
+            top: 6px;
+        }
+        .m-menu-lines::after {
+            bottom: 0;
+        }
+
+        .m-logo {
+            height: 48px;
+            width: auto;
+            object-fit: contain;
+            max-width: 200px;
+        }
+
+        /* Mobile main bg */
+        .m-main {
+            flex: 1;
+            background: var(--page-bg);
+            padding: 20px;
+            padding-top: 92px;
+            padding-bottom: 100px;
+            width: 100%;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Mobile Card */
+        .m-card {
+            background: white;
+            border-radius: 20px;
+            border: 1px solid #e5e7eb;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-premium);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .m-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--brand-gradient);
+        }
+
+        .m-card-title {
+            font-weight: 800;
+            font-size: 20px;
+            line-height: 28px;
+            color: rgb(29, 30, 32);
+            margin-bottom: 8px;
+            background: var(--brand-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .m-card-subtitle {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 20px;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+
+        /* Overlay & drawer */
+        .m-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(8px);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease-out;
+            z-index: 2000;
+        }
+
+        .m-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .m-drawer {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 320px;
+            max-width: 85vw;
+            height: 100%;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            transform: translateX(-100%);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            overflow-y: auto;
+            z-index: 2001;
+            box-shadow: var(--shadow-premium);
+        }
+
+        .m-overlay.open .m-drawer {
+            transform: translateX(0);
+        }
+
+        /* Drawer header */
+        .m-drawer-header {
+            height: 72px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+        }
+
+        .m-drawer-logo {
+            height: 48px;
+            width: auto;
+            object-fit: contain;
+            max-width: 200px;
+        }
+
+        /* Drawer close button */
+        .m-drawer-close {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .m-drawer-close:hover {
+            background: #f3f4f6;
+            transform: scale(1.05);
+        }
+        
+        .m-drawer-close-icon {
+            width: 16px;
+            height: 16px;
+            position: relative;
+        }
+        .m-drawer-close-icon::before,
+        .m-drawer-close-icon::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            margin: auto;
+            width: 16px;
+            height: 2px;
+            border-radius: 999px;
+            background: #111827;
+            transition: all 0.3s ease;
+        }
+        .m-drawer-close-icon::before {
+            transform: rotate(45deg);
+        }
+        .m-drawer-close-icon::after {
+            transform: rotate(-45deg);
+        }
+
+        /* Drawer nav */
+        .m-drawer-nav {
+            padding: 32px 12px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .m-nav-item {
+            display: flex;
+            align-items: center;
+            height: 56px;
+            padding: 0 20px;
+            margin: 4px 0;
+            border-radius: 12px;
+            gap: 16px;
+            cursor: pointer;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .m-nav-item .label {
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .m-nav-item .icon svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--icon-color);
+            transition: all 0.3s ease;
+        }
+
+        /* active mobile */
+        .m-nav-item.active {
+            background: var(--active-bg);
+            box-shadow: 0 4px 12px rgba(81, 39, 186, 0.1);
+            transform: translateX(4px);
+        }
+        .m-nav-item.active .icon svg {
+            stroke: var(--icon-active);
+        }
+
+        /* Mobile submenu */
+        .m-submenu {
+            display: none;
+            margin-left: 32px;
+            padding-left: 20px;
+            border-left: 1px solid var(--border-subtle);
+            margin-top: 4px;
+        }
+        .m-submenu.open {
+            display: block;
+        }
+        .m-submenu-item {
+            height: 52px;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            border-radius: 12px;
+            margin: 4px 0;
+            cursor: pointer;
+            gap: 16px;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .m-submenu-item:hover {
+            background: var(--hover-bg);
+            transform: translateX(4px);
+        }
+        .m-submenu-item.active {
+            background: var(--active-bg);
+            box-shadow: 0 2px 8px rgba(81, 39, 186, 0.1);
+        }
+
+        .m-submenu-item .submenu-icon {
+            width: 20px;
+            height: 20px;
+            stroke: #6b7280;
+            transition: all 0.3s ease;
+        }
+
+        /* Drawer footer account */
+        .m-account-section {
+            margin-top: auto;
+            padding: 20px;
+            border-top: 1px solid var(--border-subtle);
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .m-account-section:hover {
+            background: var(--hover-bg);
+        }
+
+        /* Mobile Save Button */
+        .mobile-save-btn {
+            width: calc(100% - 40px);
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            padding: 18px;
+            z-index: 900;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        /* KEY FIX: Hide save button when menu overlay is open */
+        .m-overlay.open ~ .mobile-save-btn {
+            display: none !important;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6b7280;
+            grid-column: 1/-1;
+            width: 100%;
+            background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+            border-radius: 16px;
+            border: 2px dashed #e5e7eb;
+        }
+
+        /* Category Products Modal */
+        .category-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 16px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 12px;
+            border-left: 4px solid var(--brand-primary);
+        }
+
+        .category-modal-title {
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--text-color);
+        }
+
+        .selected-count {
+            background: var(--brand-gradient);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 700;
+            box-shadow: 0 2px 8px rgba(81, 39, 186, 0.2);
+        }
+
+        /* Responsive switch */
         @media (max-width: 768px) {
             .page-desktop { display: none; }
             .page-mobile  { display: flex; }
             
-            .premium-glass-card {
-                margin: 16px;
-                border-radius: 20px;
+            .content-inner {
+                padding: 0;
             }
             
-            .glass-card-header {
-                padding: 24px;
-                flex-direction: column;
-                gap: 16px;
-                align-items: stretch;
+            .page-header {
+                display: none;
+            }
+
+            .modal-overlay {
+                align-items: flex-end;
+                padding: 0;
             }
             
-            .glass-card-body {
-                padding: 24px;
-            }
-            
-            .glass-draggable-item {
-                padding: 20px;
-                flex-direction: column;
-                align-items: stretch;
-                gap: 16px;
-            }
-            
-            .glass-item-actions {
+            .modal-content {
                 width: 100%;
-                justify-content: space-between;
-                margin-top: 16px;
+                border-radius: 24px 24px 0 0;
+                animation: slideUpModal 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+                max-height: 90vh;
+                overflow-y: auto;
+                max-width: 100%;
+                transform: translateY(100%);
+            }
+            
+            .modal-overlay.active .modal-content {
+                transform: translateY(0);
+            }
+            
+            @keyframes slideUpModal {
+                from { transform: translateY(100%); }
+                to { transform: translateY(0); }
+            }
+            
+            .product-grid {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            }
+            
+            /* Prevent horizontal scrolling */
+            body, html {
+                overflow-x: hidden;
+                position: relative;
+                width: 100%;
+            }
+            
+            .mobile-content-inner {
+                padding: 16px;
+                max-width: 100%;
+                overflow-x: hidden;
+            }
+            
+            .category-products-preview {
+                max-height: 80px;
             }
         }
 
-        /* Keep existing styles for other elements... */
-        /* (Previous CSS code remains the same, I'm just adding the enhanced styles) */
+        @media (min-width: 769px) {
+            .page-desktop { display: flex; }
+            .page-mobile { display: none; }
+        }
 
-        /* ============= EXISTING STYLES ============= */
-        /* All existing styles remain, only enhanced styles added above */
-        /* Navigation, header, modal styles remain unchanged */
+        /* Text truncation fixes */
+        .text-truncate {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Category Badge */
+        .category-badge {
+            background: var(--brand-gradient);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-top: 4px;
+            display: inline-block;
+        }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f4f6;
+            border-top: 3px solid var(--brand-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Scrollbar Styling */
+        .d-sidebar::-webkit-scrollbar,
+        .modal-body::-webkit-scrollbar,
+        .category-products-preview::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .d-sidebar::-webkit-scrollbar-track,
+        .modal-body::-webkit-scrollbar-track,
+        .category-products-preview::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 10px;
+        }
+
+        .d-sidebar::-webkit-scrollbar-thumb,
+        .modal-body::-webkit-scrollbar-thumb,
+        .category-products-preview::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        .d-sidebar::-webkit-scrollbar-thumb:hover,
+        .modal-body::-webkit-scrollbar-thumb:hover,
+        .category-products-preview::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
     </style>
 </head>
 <body>
@@ -998,100 +1943,83 @@
                         </div>
 
                         <div style="display: flex; gap: 16px;">
-                            <button class="glass-secondary-btn" onclick="resetChanges()">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <button class="btn btn-secondary" onclick="resetChanges()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
                                     <path d="M3 3v5h5"/>
                                 </svg>
-                                Reset Changes
+                                Reset
                             </button>
-                            <button class="glass-primary-btn" onclick="saveSections()">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <button class="btn btn-primary" onclick="saveSections()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
                                     <polyline points="17 21 17 13 7 13 7 21"></polyline>
                                     <polyline points="7 3 7 8 15 8"></polyline>
                                 </svg>
-                                Save All Changes
+                                Save Changes
                             </button>
                         </div>
                     </div>
 
-                    <!-- Best Sellers Section - Enhanced -->
-                    <div class="premium-glass-card">
-                        <div class="glass-card-header">
+                    <!-- Best Sellers Section -->
+                    <div class="premium-card">
+                        <div class="card-header">
                             <div>
-                                <div class="glass-card-title">
+                                <div class="card-title">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
                                     </svg>
                                     Best Sellers Products
                                 </div>
-                                <div class="glass-card-subtitle">Drag to reorder best-selling products. Select up to 10 products to showcase top-selling items.</div>
+                                <div class="card-subtitle">Drag to reorder best-selling products. Select up to 10 products.</div>
                             </div>
-                            <div class="products-count-badge">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                                    <line x1="3" y1="9" x2="21" y2="9"></line>
-                                    <line x1="9" y1="21" x2="9" y2="9"></line>
+                            <button class="primary-btn" onclick="openProductSelector()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M5 12h14"/>
+                                    <path d="M12 5v14"/>
                                 </svg>
-                                <span id="best-sellers-count">0/10</span>
-                            </div>
+                                Add Products
+                            </button>
                         </div>
-                        <div class="glass-card-body">
+                        <div class="card-body">
                             <div id="selected-products-list" class="draggable-list">
-                                <div class="glass-empty-state">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 24px;">
+                                <div class="empty-state">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 16px;">
                                         <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                                         <line x1="3" y1="9" x2="21" y2="9"></line>
                                         <line x1="9" y1="21" x2="9" y2="9"></line>
                                     </svg>
-                                    <h3 style="margin-bottom: 16px; color: #374151; font-size: 24px; font-weight: 800;">No Products Selected</h3>
-                                    <p style="font-size: 16px; opacity: 0.8;">Click "Add Products" to select best-selling products for your homepage</p>
-                                    <button class="glass-primary-btn" style="margin-top: 32px;" onclick="openProductSelector()">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M5 12h14"/>
-                                            <path d="M12 5v14"/>
-                                        </svg>
-                                        Add Best Sellers
-                                    </button>
+                                    <h3 style="margin-bottom: 12px; color: #374151; font-size: 20px;">No Products Selected</h3>
+                                    <p style="font-size: 15px;">Click "Add Products" to select best-selling products</p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Categories Order Section - ENHANCED PREMIUM -->
-                    <div class="premium-glass-card">
-                        <div class="glass-card-header">
+                    <!-- Categories Order Section - ENHANCED -->
+                    <div class="premium-card">
+                        <div class="card-header">
                             <div>
-                                <div class="glass-card-title">
+                                <div class="card-title">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <circle cx="12" cy="12" r="10"/>
                                         <path d="m9 12 2 2 4-4"/>
                                     </svg>
-                                    Categories Manager
+                                    Categories Order
                                 </div>
-                                <div class="glass-card-subtitle">Drag to rearrange display order, toggle visibility, and add up to 6 products per category for featured sections.</div>
-                            </div>
-                            <div class="products-count-badge" style="background: linear-gradient(135deg, #10B981 0%, #059669 100%);">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                    <line x1="12" y1="8" x2="12" y2="12"></line>
-                                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                                </svg>
-                                <span id="categories-count">0</span> Categories
+                                <div class="card-subtitle">Drag to rearrange display order, toggle to show/hide, add up to 6 products per category</div>
                             </div>
                         </div>
-                        <div class="glass-card-body">
+                        <div class="card-body">
                             <div id="categories-list" class="draggable-list">
-                                <div class="glass-empty-state">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 24px;">
+                                <div class="empty-state">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 16px;">
                                         <circle cx="12" cy="12" r="10"></circle>
                                         <line x1="12" y1="8" x2="12" y2="12"></line>
                                         <line x1="12" y1="16" x2="12.01" y2="16"></line>
                                     </svg>
-                                    <h3 style="margin-bottom: 16px; color: #374151; font-size: 24px; font-weight: 800;">Loading Categories</h3>
-                                    <p style="font-size: 16px; opacity: 0.8;">Please wait while we load your categories...</p>
-                                    <div class="loading-spinner" style="margin: 32px auto; width: 40px; height: 40px; border-width: 4px;"></div>
+                                    <h3 style="margin-bottom: 12px; color: #374151; font-size: 20px;">Loading Categories</h3>
+                                    <p style="font-size: 15px;">Please wait while we load your categories...</p>
                                 </div>
                             </div>
                         </div>
@@ -1140,7 +2068,7 @@
         <button class="btn btn-primary mobile-save-btn" onclick="saveSections()">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
-                                <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                <polyline points="17 21 17 13 7 13 7 21"></polyline>
                 <polyline points="7 3 7 8 15 8"></polyline>
             </svg>
             Save All Changes
@@ -1228,7 +2156,7 @@
                             </svg>
                             <span>Sections Manager</span>
                         </div>
-                        <div class="d-submenu-item" onclick="window.location.href='popup-manager.html'">
+                        <div class="m-submenu-item" onclick="window.location.href='popup-manager.html'">
                             <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <circle cx="18" cy="5" r="3"/>
                                 <circle cx="6" cy="12" r="3"/>
@@ -1356,9 +2284,9 @@
         <div class="modal-content">
             <div class="modal-header">
                 <div>
-                    <div class="modal-title">Select Products for <span id="current-category-name">Category</span></div>
+                    <div class="modal-title">Select Products for Category</div>
                     <div class="category-modal-header">
-                        <div class="category-modal-title" style="font-weight: 800;">Select only products from this category</div>
+                        <div class="category-modal-title" id="current-category-name">Category Name</div>
                         <div class="selected-count" id="category-selected-count">0/6</div>
                     </div>
                 </div>
@@ -1377,13 +2305,13 @@
                         <circle cx="11" cy="11" r="7"></circle>
                         <line x1="16.65" y1="16.65" x2="21" y2="21"></line>
                     </svg>
-                    <input type="text" id="category-modal-search" placeholder="Search products in this category only..." onkeyup="filterCategoryModalProducts()">
+                    <input type="text" id="category-modal-search" placeholder="Search products in this category..." onkeyup="filterCategoryModalProducts()">
                 </div>
                 <div id="category-modal-product-grid" class="product-grid"></div>
             </div>
             <div class="modal-footer">
                 <div style="margin-right: auto; color: #6b7280; font-size: 14px; font-weight: 500;">
-                    Only products from <span id="current-category-display" style="font-weight: 700; color: var(--brand-primary);">this category</span> are shown
+                    Maximum 6 products per category
                 </div>
                 <button class="btn btn-secondary" onclick="closeCategoryProductSelector()">Cancel</button>
                 <button class="btn btn-primary" onclick="confirmCategoryProductSelection()">Save Products</button>
@@ -1546,6 +2474,7 @@
             const mobileProfileSection = document.getElementById('mobile-profile-section');
             const profilePopup = document.getElementById('profile-popup');
 
+            // Fix profile popup positioning for desktop
             if (profileSection) {
                 profileSection.addEventListener('click', e => {
                     e.stopPropagation();
@@ -1718,14 +2647,6 @@
             renderSelectedProducts('mobile-selected-products');
             renderCategories('categories-list');
             renderCategories('mobile-categories-list');
-            updateCounts();
-        }
-
-        function updateCounts() {
-            // Update best sellers count
-            document.getElementById('best-sellers-count').textContent = `${state.selectedProductIds.length}/10`;
-            // Update categories count
-            document.getElementById('categories-count').textContent = state.categories.length;
         }
 
         // --- RENDER PRODUCTS LIST ---
@@ -1738,34 +2659,23 @@
                 .filter(p => p);
 
             if (selectedObjs.length === 0) {
-                if (containerId === 'selected-products-list') {
-                    container.innerHTML = `
-                        <div class="glass-empty-state">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 24px;">
-                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                                <line x1="3" y1="9" x2="21" y2="9"></line>
-                                <line x1="9" y1="21" x2="9" y2="9"></line>
-                            </svg>
-                            <h3 style="margin-bottom: 16px; color: #374151; font-size: 24px; font-weight: 800;">No Products Selected</h3>
-                            <p style="font-size: 16px; opacity: 0.8;">Click "Add Products" to select best-selling products for your homepage</p>
-                            <button class="glass-primary-btn" style="margin-top: 32px;" onclick="openProductSelector()">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M5 12h14"/>
-                                    <path d="M12 5v14"/>
-                                </svg>
-                                Add Best Sellers
-                            </button>
-                        </div>`;
-                } else {
-                    container.innerHTML = '<div class="empty-state">No products selected</div>';
-                }
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 16px;">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="3" y1="9" x2="21" y2="9"></line>
+                            <line x1="9" y1="21" x2="9" y2="9"></line>
+                        </svg>
+                        <h3 style="margin-bottom: 12px; color: #374151; font-size: 20px;">No Products Selected</h3>
+                        <p style="font-size: 15px;">Click "Add Products" to select best-selling products</p>
+                    </div>`;
                 return;
             }
 
             container.innerHTML = selectedObjs.map((p, index) => `
-                <div class="glass-draggable-item" draggable="true" data-index="${index}" data-type="product">
-                    <div class="glass-drag-handle">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <div class="draggable-item" draggable="true" data-index="${index}" data-type="product">
+                    <div class="drag-handle">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="9" cy="5" r="1"></circle>
                             <circle cx="9" cy="12" r="1"></circle>
                             <circle cx="9" cy="19" r="1"></circle>
@@ -1774,31 +2684,23 @@
                             <circle cx="15" cy="19" r="1"></circle>
                         </svg>
                     </div>
-                    <img src="${p.image}" class="glass-item-image">
-                    <div class="glass-item-content">
-                        <div class="glass-item-title">${p.name || 'Unnamed Product'}</div>
-                        <div class="glass-item-subtitle">
-                            <span>₹${p.price || '0'}</span>
-                            ${p.categoryId && state.categories.find(c => c.id === p.categoryId) ? 
-                                `<span style="color: #6b7280;">•</span>
-                                 <span style="color: var(--brand-primary); font-weight: 600;">
-                                    ${state.categories.find(c => c.id === p.categoryId).name}
-                                 </span>` : ''}
-                        </div>
+                    <img src="${p.image}" class="item-image">
+                    <div class="item-content">
+                        <div class="item-title">${p.name || 'Unnamed Product'}</div>
+                        <div class="item-subtitle">₹${p.price || '0'}</div>
+                        ${p.categoryId && state.categories.find(c => c.id === p.categoryId) ? 
+                            `<div class="category-badge">${state.categories.find(c => c.id === p.categoryId).name}</div>` : ''}
                     </div>
-                    <div class="glass-item-actions">
-                        <button class="glass-action-btn delete" onclick="removeProduct('${p.id}')" title="Remove">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M18 6 6 18"/>
-                                <path d="m6 6 12 12"/>
-                            </svg>
-                        </button>
-                    </div>
+                    <button class="btn-icon delete" onclick="removeProduct('${p.id}')" title="Remove">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 6 6 18"/>
+                            <path d="m6 6 12 12"/>
+                        </svg>
+                    </button>
                 </div>
             `).join('');
 
             attachDragEvents(container, 'product');
-            updateCounts();
         }
 
         // --- RENDER CATEGORIES LIST ---
@@ -1808,14 +2710,14 @@
 
             if (state.categories.length === 0) {
                 container.innerHTML = `
-                    <div class="glass-empty-state">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 24px;">
+                    <div class="empty-state">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 16px;">
                             <circle cx="12" cy="12" r="10"></circle>
                             <line x1="12" y1="8" x2="12" y2="12"></line>
                             <line x1="12" y1="16" x2="12.01" y2="16"></line>
                         </svg>
-                        <h3 style="margin-bottom: 16px; color: #374151; font-size: 24px; font-weight: 800;">No Categories Found</h3>
-                        <p style="font-size: 16px; opacity: 0.8;">Add categories from the Categories Manager</p>
+                        <h3 style="margin-bottom: 12px; color: #374151; font-size: 20px;">No Categories Found</h3>
+                        <p style="font-size: 15px;">Add categories from the Categories Manager</p>
                     </div>`;
                 return;
             }
@@ -1830,9 +2732,9 @@
                 const productsPreview = categoryProducts.slice(0, 3);
                 
                 return `
-                <div class="glass-draggable-item" draggable="true" data-index="${index}" data-type="category">
-                    <div class="glass-drag-handle">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <div class="draggable-item" draggable="true" data-index="${index}" data-type="category">
+                    <div class="drag-handle">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="9" cy="5" r="1"></circle>
                             <circle cx="9" cy="12" r="1"></circle>
                             <circle cx="9" cy="19" r="1"></circle>
@@ -1841,49 +2743,33 @@
                             <circle cx="15" cy="19" r="1"></circle>
                         </svg>
                     </div>
-                    <div class="glass-item-content">
-                        <div class="glass-item-title">${cat.name}</div>
-                        <div class="glass-item-subtitle">
-                            <span class="status-badge ${!cat.enabled ? 'hidden' : ''}">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    ${cat.enabled ? 
-                                        '<circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>' : 
-                                        '<circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/>'}
-                                </svg>
-                                ${cat.enabled ? 'Visible' : 'Hidden'}
-                            </span>
-                            <span style="color: #6b7280;">•</span>
-                            <span style="color: var(--brand-primary); font-weight: 600;">
-                                ${productsCount}/6 products
-                            </span>
+                    <div class="item-content">
+                        <div class="item-title">${cat.name}</div>
+                        <div class="item-subtitle" style="color: ${cat.enabled ? '#10B981' : '#9CA3AF'}; font-weight: 600;">
+                            ${cat.enabled ? 'Visible' : 'Hidden'} • ${productsCount}/6 products
                         </div>
                         ${productsCount > 0 ? `
-                            <div class="glass-products-preview">
+                            <div class="category-products-preview">
                                 ${productsPreview.map(p => `
-                                    <div class="glass-product-preview-item" title="${p.name || 'Unnamed Product'}">
-                                        <img src="${p.image}" class="glass-product-preview-image">
-                                        <span class="glass-product-preview-name">${(p.name || 'Unnamed').substring(0, 15)}${(p.name || '').length > 15 ? '...' : ''}</span>
-                                        <span style="color: var(--brand-primary); font-weight: 800; margin-left: auto;">₹${p.price || '0'}</span>
+                                    <div class="product-preview-item" title="${p.name || 'Unnamed Product'}">
+                                        <img src="${p.image}" class="product-preview-image">
+                                        <span class="product-preview-name">${(p.name || 'Unnamed').substring(0, 15)}${(p.name || '').length > 15 ? '...' : ''}</span>
                                     </div>
                                 `).join('')}
-                                ${productsCount > 3 ? `<div class="glass-product-preview-item" style="background: var(--brand-gradient); color: white; border: none;">
-                                    <span>+${productsCount - 3} more</span>
-                                </div>` : ''}
+                                ${productsCount > 3 ? `<div class="product-preview-item">+${productsCount - 3} more</div>` : ''}
                             </div>
                         ` : ''}
                     </div>
-                    <div class="glass-item-actions">
-                        <button class="add-products-btn" onclick="openCategoryProductSelector('${cat.id}', '${cat.name.replace(/'/g, "\\'")}')">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M5 12h14"/>
-                                <path d="M12 5v14"/>
-                            </svg>
-                            ${productsCount > 0 ? 'Edit Products' : 'Add Products'}
+                    <div class="item-actions">
+                        <button class="btn btn-sm" onclick="openCategoryProductSelector('${cat.id}', '${cat.name.replace(/'/g, "\\'")}')" style="margin-right: 12px;">
+                            ${productsCount > 0 ? 'Edit' : 'Add'} Products
                         </button>
-                        <div class="premium-toggle-switch">
-                            <input type="checkbox" id="toggle-${cat.id}" ${cat.enabled ? 'checked' : ''}>
-                            <span class="premium-toggle-slider"></span>
-                        </div>
+                        <div class="toggle-switch">
+    <input type="checkbox" ${cat.enabled ? 'checked' : ''} 
+           onchange="toggleCategory('${cat.id}')" 
+           ${cat.enabled ? '' : 'checked'}>
+    <span class="toggle-slider"></span>
+</div>
                     </div>
                 </div>
                 `;
@@ -1893,22 +2779,16 @@
             state.categories.forEach(cat => {
                 const toggle = document.getElementById(`toggle-${cat.id}`);
                 if (toggle) {
-                    toggle.onchange = () => {
-                        cat.enabled = toggle.checked;
-                        showToast(`${cat.name} ${cat.enabled ? 'enabled' : 'disabled'}`, 'success');
-                        renderCategories('categories-list');
-                        renderCategories('mobile-categories-list');
-                    };
+                    toggle.onchange = () => toggleCategory(cat.id);
                 }
             });
 
             attachDragEvents(container, 'category');
-            updateCounts();
         }
 
         // --- DRAG & DROP LOGIC ---
         function attachDragEvents(container, type) {
-            const items = container.querySelectorAll('.glass-draggable-item');
+            const items = container.querySelectorAll('.draggable-item');
             
             items.forEach(item => {
                 item.addEventListener('dragstart', (e) => {
@@ -1930,7 +2810,7 @@
                     e.preventDefault();
                     const sourceIndex = parseInt(e.dataTransfer.getData('text/plain'));
                     
-                    const targetRow = e.target.closest('.glass-draggable-item');
+                    const targetRow = e.target.closest('.draggable-item');
                     if (!targetRow) return;
                     
                     const targetIndex = parseInt(targetRow.dataset.index);
@@ -1956,6 +2836,20 @@
         }
 
         // --- INTERACTIONS ---
+function toggleCategory(catId) {
+    const catIndex = state.categories.findIndex(c => c.id === catId);
+    if (catIndex !== -1) {
+        state.categories[catIndex].enabled = !state.categories[catIndex].enabled;
+        // Re-render categories to update UI
+        renderCategories('categories-list');
+        renderCategories('mobile-categories-list');
+        
+        const catName = state.categories[catIndex].name;
+        const enabled = state.categories[catIndex].enabled;
+        showToast(`${catName} ${enabled ? 'enabled' : 'disabled'}`, 'success');
+    }
+}
+
         function removeProduct(id) {
             state.selectedProductIds = state.selectedProductIds.filter(pid => pid !== id);
             renderSelectedProducts('selected-products-list');
@@ -1976,7 +2870,6 @@
             
             // Update modal title
             document.getElementById('current-category-name').textContent = categoryName;
-            document.getElementById('current-category-display').textContent = categoryName;
             updateCategoryModalCount();
             
             // Show modal
@@ -1997,21 +2890,8 @@
             const searchVal = document.getElementById('category-modal-search').value.toLowerCase();
             const grid = document.getElementById('category-modal-product-grid');
             
-            // Get products ONLY for the current category
+            // Get products for the current category only
             const categoryProducts = state.productsByCategory[currentCategoryId] || [];
-            
-            if (categoryProducts.length === 0) {
-                grid.innerHTML = `
-                    <div class="empty-state" style="grid-column: 1/-1;">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 24px;">
-                            <circle cx="11" cy="11" r="8"></circle>
-                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                        </svg>
-                        <h3 style="margin-bottom: 16px; color: #374151; font-size: 20px;">No Products in This Category</h3>
-                        <p style="font-size: 16px; opacity: 0.8;">Add products to this category in the Inventory section</p>
-                    </div>`;
-                return;
-            }
             
             const filteredProducts = categoryProducts.filter(p => 
                 (p.name || '').toLowerCase().includes(searchVal) ||
@@ -2021,12 +2901,12 @@
             if (filteredProducts.length === 0) {
                 grid.innerHTML = `
                     <div class="empty-state" style="grid-column: 1/-1;">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 24px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 16px;">
                             <circle cx="11" cy="11" r="8"></circle>
                             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                         </svg>
-                        <h3 style="margin-bottom: 16px; color: #374151; font-size: 20px;">No Products Found</h3>
-                        <p style="font-size: 16px; opacity: 0.8;">${searchVal ? 'Try a different search term' : 'No products in this category yet'}</p>
+                        <h3 style="margin-bottom: 12px; color: #374151; font-size: 20px;">No Products Found</h3>
+                        <p style="font-size: 15px;">${searchVal ? 'Try a different search term' : 'No products in this category yet'}</p>
                     </div>`;
                 return;
             }
@@ -2109,12 +2989,12 @@
             if (filteredProducts.length === 0) {
                 grid.innerHTML = `
                     <div class="empty-state" style="grid-column: 1/-1;">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 24px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 16px;">
                             <circle cx="11" cy="11" r="8"></circle>
                             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                         </svg>
-                        <h3 style="margin-bottom: 16px; color: #374151; font-size: 20px;">No Products Found</h3>
-                        <p style="font-size: 16px; opacity: 0.8;">Try a different search term</p>
+                        <h3 style="margin-bottom: 12px; color: #374151; font-size: 20px;">No Products Found</h3>
+                        <p style="font-size: 15px;">Try a different search term</p>
                     </div>`;
                 return;
             }
@@ -2130,7 +3010,7 @@
                     <div class="product-content">
                         <div class="product-title">${p.name || 'Unnamed Product'}</div>
                         <div class="product-price">₹${p.price || '0'}</div>
-                        ${category ? `<div style="font-size: 12px; color: #6b7280; margin-top: 4px; font-weight: 500;">${category.name}</div>` : ''}
+                        ${category ? `<div style="font-size: 12px; color: #6b7280; margin-top: 4px;">${category.name}</div>` : ''}
                     </div>
                 </div>
                 `;
@@ -2173,7 +3053,7 @@
 
         // --- SAVING ---
         async function saveSections() {
-            const btn = document.querySelector('.page-desktop .glass-primary-btn') || document.querySelector('.mobile-save-btn');
+            const btn = document.querySelector('.page-desktop .btn-primary') || document.querySelector('.mobile-save-btn');
             const originalText = btn.innerHTML;
             btn.innerHTML = '<span class="loading-spinner"></span> Saving...';
             btn.disabled = true;
@@ -2194,7 +3074,7 @@
                 };
 
                 await db.collection('landingPage').doc('Sections').set(payload, { merge: true });
-                showToast("All changes saved successfully!", 'success');
+                showToast("Changes saved successfully!", 'success');
             } catch (error) {
                 console.error("Save error:", error);
                 showToast("Error saving changes", 'error');
