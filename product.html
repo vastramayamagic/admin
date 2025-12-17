@@ -1288,7 +1288,7 @@
         .m-drawer-close-icon {
             width: 14px;
             height: 14px;
-            position:relative;
+            position: relative;
         }
         .m-drawer-close-icon::before,
         .m-drawer-close-icon::after {
@@ -2660,863 +2660,797 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
 
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const mOverlay = document.getElementById('m-overlay');
-        const mMenuToggle = document.getElementById('m-menu-toggle');
-        const mDrawerClose = document.getElementById('m-drawer-close');
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const mOverlay = document.getElementById('m-overlay');
+            const mMenuToggle = document.getElementById('m-menu-toggle');
+            const mDrawerClose = document.getElementById('m-drawer-close');
 
-        if (mMenuToggle && mOverlay && mDrawerClose) {
-            mMenuToggle.addEventListener('click', () => {
-                mOverlay.classList.add('open');
-            });
+            if (mMenuToggle && mOverlay && mDrawerClose) {
+                mMenuToggle.addEventListener('click', () => {
+                    mOverlay.classList.add('open');
+                });
 
-            mDrawerClose.addEventListener('click', () => {
-                mOverlay.classList.remove('open');
-            });
-
-            mOverlay.addEventListener('click', (e) => {
-                if (e.target === mOverlay) {
+                mDrawerClose.addEventListener('click', () => {
                     mOverlay.classList.remove('open');
-                }
-            });
-        }
+                });
 
-        const dCustomizeToggle = document.getElementById('d-customize-toggle');
-        const dCustomizeSubmenu = document.getElementById('d-customize-submenu');
-
-        if (dCustomizeToggle && dCustomizeSubmenu) {
-            dCustomizeToggle.addEventListener('click', () => {
-                dCustomizeSubmenu.classList.toggle('open');
-                dCustomizeToggle.classList.toggle('dropdown-open');
-            });
-        }
-
-        const dOrdersToggle = document.getElementById('d-orders-toggle');
-        const dOrdersSubmenu = document.getElementById('d-orders-submenu');
-
-        if (dOrdersToggle && dOrdersSubmenu) {
-            dOrdersToggle.addEventListener('click', () => {
-                dOrdersSubmenu.classList.toggle('open');
-                dOrdersToggle.classList.toggle('dropdown-open');
-            });
-        }
-
-        const mCustomizeToggle = document.getElementById('m-customize-toggle');
-        const mCustomizeSubmenu = document.getElementById('m-customize-submenu');
-
-        if (mCustomizeToggle && mCustomizeSubmenu) {
-            mCustomizeToggle.addEventListener('click', () => {
-                mCustomizeSubmenu.classList.toggle('open');
-                mCustomizeToggle.classList.toggle('dropdown-open');
-            });
-        }
-
-        const mOrdersToggle = document.getElementById('m-orders-toggle');
-        const mOrdersSubmenu = document.getElementById('m-orders-submenu');
-
-        if (mOrdersToggle && mOrdersSubmenu) {
-            mOrdersToggle.addEventListener('click', () => {
-                mOrdersSubmenu.classList.toggle('open');
-                mOrdersToggle.classList.toggle('dropdown-open');
-            });
-        }
-
-        const profileSection = document.getElementById('profile-section');
-        const mobileProfileSection = document.getElementById('mobile-profile-section');
-        const profilePopup = document.getElementById('profile-popup');
-
-        if (profileSection) {
-            profileSection.addEventListener('click', e => {
-                e.stopPropagation();
-                
-                if (window.innerWidth >= 769) {
-                    const rect = profileSection.getBoundingClientRect();
-                    profilePopup.style.left = '30px';
-                    profilePopup.style.right = 'auto';
-                    profilePopup.style.bottom = '100px';
-                    profilePopup.style.top = 'auto';
-                }
-                
-                profilePopup.classList.toggle('active');
-            });
-            
-            document.addEventListener('click', e => {
-                if (!profileSection.contains(e.target) && !profilePopup.contains(e.target)) {
-                    profilePopup.classList.remove('active');
-                }
-            });
-        }
-
-        if (mobileProfileSection) {
-            mobileProfileSection.addEventListener('click', e => {
-                e.stopPropagation();
-                profilePopup.classList.toggle('active');
-            });
-        }
-
-        const coverUploadZone = document.getElementById('cover-upload-zone');
-        const coverInput = document.getElementById('cover-input');
-        const changeCoverBtn = document.getElementById('change-cover-btn');
-
-        if (coverUploadZone && coverInput) {
-            coverUploadZone.addEventListener('click', () => coverInput.click());
-        }
-
-        if (changeCoverBtn) {
-            changeCoverBtn.addEventListener('click', () => {
-                document.getElementById('cover-preview-container').style.display = 'none';
-                document.getElementById('cover-upload-zone').style.display = 'flex';
-                coverInput.value = '';
-            });
-        }
-
-        const mobileCoverUploadZone = document.getElementById('mobile-cover-upload-zone');
-        const mobileCoverInput = document.getElementById('mobile-cover-input');
-        const mobileChangeCoverBtn = document.getElementById('mobile-change-cover-btn');
-
-        if (mobileCoverUploadZone && mobileCoverInput) {
-            mobileCoverUploadZone.addEventListener('click', () => mobileCoverInput.click());
-        }
-
-        if (mobileChangeCoverBtn) {
-            mobileChangeCoverBtn.addEventListener('click', () => {
-                document.getElementById('mobile-cover-preview-container').style.display = 'none';
-                document.getElementById('mobile-cover-upload-zone').style.display = 'flex';
-                mobileCoverInput.value = '';
-            });
-        }
-
-        document.querySelectorAll('#star-rating svg').forEach(star => {
-            star.addEventListener('click', function() {
-                const rating = parseInt(this.getAttribute('data-val'));
-                document.getElementById('review-rating').value = rating;
-                
-                document.querySelectorAll('#star-rating svg').forEach(s => {
-                    const starVal = parseInt(s.getAttribute('data-val'));
-                    if (starVal <= rating) {
-                        s.classList.add('active');
-                    } else {
-                        s.classList.remove('active');
+                mOverlay.addEventListener('click', (e) => {
+                    if (e.target === mOverlay) {
+                        mOverlay.classList.remove('open');
                     }
                 });
-            });
-        });
-
-        window.addEventListener('resize', function() {
-            if (window.innerWidth <= 768) {
-                document.body.style.overflowX = 'hidden';
-                document.body.style.maxWidth = '100vw';
-            } else {
-                document.body.style.overflowX = '';
-                document.body.style.maxWidth = '';
             }
-        });
 
-        const SIZES = ['XS', 'S', 'M', 'L', 'XL', '2XL'];
-        const sizeSelection = document.getElementById('size-selection');
-        if (sizeSelection) {
-            sizeSelection.innerHTML = SIZES.map(size => `
-                <div class="size-option" data-size="${size}">
-                    <div class="size-name">${size}</div>
-                    <div class="size-status">Select</div>
-                    <input type="checkbox" style="display: none;">
-                </div>
-            `).join('');
+            const dCustomizeToggle = document.getElementById('d-customize-toggle');
+            const dCustomizeSubmenu = document.getElementById('d-customize-submenu');
 
-            sizeSelection.querySelectorAll('.size-option').forEach(option => {
-                option.addEventListener('click', function() {
-                    this.classList.toggle('selected');
-                    const checkbox = this.querySelector('input[type="checkbox"]');
-                    checkbox.checked = this.classList.contains('selected');
-                    this.querySelector('.size-status').textContent = 
-                        this.classList.contains('selected') ? 'Selected' : 'Select';
+            if (dCustomizeToggle && dCustomizeSubmenu) {
+                dCustomizeToggle.addEventListener('click', () => {
+                    dCustomizeSubmenu.classList.toggle('open');
+                    dCustomizeToggle.classList.toggle('dropdown-open');
                 });
-            });
-        }
-    });
+            }
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyCdeonH3VytC21F3X6x0rCVCn2xXrGPoug",
-        authDomain: "vastramaya---magic.firebaseapp.com",
-        projectId: "vastramaya---magic",
-        storageBucket: "vastramaya---magic.firebasestorage.app",
-        messagingSenderId: "543460072082",
-        appId: "1:543460072082:web:f3d1140e8f81ad338ae44b",
-        measurementId: "G-E39VNDCFVE"
-    };
-    const ADMIN_EMAIL = "harshavardhanjw@gmail.com";
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-    const storage = firebase.storage();
+            const dOrdersToggle = document.getElementById('d-orders-toggle');
+            const dOrdersSubmenu = document.getElementById('d-orders-submenu');
 
-    let allCategories = [];
-    let allFabrics = [];
-    let currentCategoryColors = []; // Colors for selected category
-    let coverImageFile = null;
-    let mobileCoverImageFile = null;
-    let colorVariants = [];
-    let productReviews = [];
-    let editingVariantIndex = null;
-    let editingReviewIndex = null;
-    let tempVariantFiles = [];
-    let tempSwatchFile = null;
-    let existingVariantImages = [];
-    let productId = null;
-    let currentCategoryId = null;
+            if (dOrdersToggle && dOrdersSubmenu) {
+                dOrdersToggle.addEventListener('click', () => {
+                    dOrdersSubmenu.classList.toggle('open');
+                    dOrdersToggle.classList.toggle('dropdown-open');
+                });
+            }
 
-    auth.onAuthStateChanged(user => {
-        if (!user || user.email !== ADMIN_EMAIL) {
-            window.location.href = 'index.html';
-            return;
-        }
-        initProfile(user);
-        loadEditor();
-    });
+            const mCustomizeToggle = document.getElementById('m-customize-toggle');
+            const mCustomizeSubmenu = document.getElementById('m-customize-submenu');
 
-    function initProfile(user) {
-        const name = user.displayName || 'Admin';
-        const avatar = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=5127ba&color=fff`;
-        
-        document.getElementById('sidebar-name').textContent = name;
-        document.getElementById('sidebar-email').textContent = user.email;
-        document.getElementById('sidebar-avatar').src = avatar;
-        
-        document.getElementById('mobile-sidebar-name').textContent = name;
-        document.getElementById('mobile-sidebar-email').textContent = user.email;
-        document.getElementById('mobile-sidebar-avatar').src = avatar;
-        
-        document.getElementById('popup-name').textContent = name;
-        document.getElementById('popup-email').textContent = user.email;
-        document.getElementById('popup-avatar').src = avatar;
-    }
+            if (mCustomizeToggle && mCustomizeSubmenu) {
+                mCustomizeToggle.addEventListener('click', () => {
+                    mCustomizeSubmenu.classList.toggle('open');
+                    mCustomizeToggle.classList.toggle('dropdown-open');
+                });
+            }
 
-    async function loadEditor() {
-        try {
-            // Load categories
-            const catSnap = await db.collection('categories').orderBy('name').get();
-            allCategories = catSnap.docs.map(d => ({ 
-                id: d.id, 
-                name: d.data().name,
-                colors: d.data().colors || [] // Load colors from category
-            }));
-            setupCategoryDropdown();
-            
-            // Load fabrics (now from categories)
-            const allFabricsSet = new Set();
-            allCategories.forEach(category => {
-                if (category.colors) {
-                    category.colors.forEach(color => {
-                        if (color.fabrics) {
-                            color.fabrics.forEach(fabric => allFabricsSet.add(fabric));
+            const mOrdersToggle = document.getElementById('m-orders-toggle');
+            const mOrdersSubmenu = document.getElementById('m-orders-submenu');
+
+            if (mOrdersToggle && mOrdersSubmenu) {
+                mOrdersToggle.addEventListener('click', () => {
+                    mOrdersSubmenu.classList.toggle('open');
+                    mOrdersToggle.classList.toggle('dropdown-open');
+                });
+            }
+
+            const profileSection = document.getElementById('profile-section');
+            const mobileProfileSection = document.getElementById('mobile-profile-section');
+            const profilePopup = document.getElementById('profile-popup');
+
+            if (profileSection) {
+                profileSection.addEventListener('click', e => {
+                    e.stopPropagation();
+                    
+                    if (window.innerWidth >= 769) {
+                        const rect = profileSection.getBoundingClientRect();
+                        profilePopup.style.left = '30px';
+                        profilePopup.style.right = 'auto';
+                        profilePopup.style.bottom = '100px';
+                        profilePopup.style.top = 'auto';
+                    }
+                    
+                    profilePopup.classList.toggle('active');
+                });
+                
+                document.addEventListener('click', e => {
+                    if (!profileSection.contains(e.target) && !profilePopup.contains(e.target)) {
+                        profilePopup.classList.remove('active');
+                    }
+                });
+            }
+
+            if (mobileProfileSection) {
+                mobileProfileSection.addEventListener('click', e => {
+                    e.stopPropagation();
+                    profilePopup.classList.toggle('active');
+                });
+            }
+
+            const coverUploadZone = document.getElementById('cover-upload-zone');
+            const coverInput = document.getElementById('cover-input');
+            const changeCoverBtn = document.getElementById('change-cover-btn');
+
+            if (coverUploadZone && coverInput) {
+                coverUploadZone.addEventListener('click', () => coverInput.click());
+            }
+
+            if (changeCoverBtn) {
+                changeCoverBtn.addEventListener('click', () => {
+                    document.getElementById('cover-preview-container').style.display = 'none';
+                    document.getElementById('cover-upload-zone').style.display = 'flex';
+                    coverInput.value = '';
+                });
+            }
+
+            const mobileCoverUploadZone = document.getElementById('mobile-cover-upload-zone');
+            const mobileCoverInput = document.getElementById('mobile-cover-input');
+            const mobileChangeCoverBtn = document.getElementById('mobile-change-cover-btn');
+
+            if (mobileCoverUploadZone && mobileCoverInput) {
+                mobileCoverUploadZone.addEventListener('click', () => mobileCoverInput.click());
+            }
+
+            if (mobileChangeCoverBtn) {
+                mobileChangeCoverBtn.addEventListener('click', () => {
+                    document.getElementById('mobile-cover-preview-container').style.display = 'none';
+                    document.getElementById('mobile-cover-upload-zone').style.display = 'flex';
+                    mobileCoverInput.value = '';
+                });
+            }
+
+            document.querySelectorAll('#star-rating svg').forEach(star => {
+                star.addEventListener('click', function() {
+                    const rating = parseInt(this.getAttribute('data-val'));
+                    document.getElementById('review-rating').value = rating;
+                    
+                    document.querySelectorAll('#star-rating svg').forEach(s => {
+                        const starVal = parseInt(s.getAttribute('data-val'));
+                        if (starVal <= rating) {
+                            s.classList.add('active');
+                        } else {
+                            s.classList.remove('active');
                         }
                     });
-                }
-            });
-            allFabrics = Array.from(allFabricsSet);
-            setupFabricDropdown();
-            
-            const params = new URLSearchParams(window.location.search);
-            const id = params.get('id');
-            productId = id;
-            
-            if (id) {
-                document.getElementById('editor-title').textContent = 'Edit Product';
-                document.getElementById('mobile-editor-title').textContent = 'Edit Product';
-                
-                const doc = await db.collection('products').doc(id).get();
-                if (doc.exists) {
-                    const data = { id: doc.id, ...doc.data() };
-                    populateForm(data);
-                    document.getElementById('breadcrumb-product').textContent = data.name;
-                    document.getElementById('mobile-breadcrumb-product').textContent = data.name;
-                } else {
-                    showToast('Product not found', 'error');
-                    setTimeout(() => window.history.back(), 2000);
-                }
-            } else {
-                document.getElementById('editor-title').textContent = 'New Product';
-                document.getElementById('mobile-editor-title').textContent = 'New Product';
-                
-                document.getElementById('product-form').style.display = 'block';
-                document.getElementById('loading-state').style.display = 'none';
-                document.getElementById('mobile-product-form').style.display = 'block';
-                document.getElementById('mobile-loading-state').style.display = 'none';
-            }
-        } catch (error) {
-            console.error('Error loading editor:', error);
-            showToast('Error loading data', 'error');
-        }
-    }
-
-    function setupCategoryDropdown() {
-        const desktopContainer = document.getElementById('category-select');
-        let desktopHtml = `
-            <div class="custom-select-trigger" id="desktop-category-trigger">
-                <span id="desktop-cat-display">Select Category</span>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="m6 9 6 6 6-6"/>
-                </svg>
-            </div>
-            <div class="custom-select-options" id="desktop-category-options">
-        `;
-        allCategories.forEach(cat => {
-            desktopHtml += `<div class="custom-option" data-value="${cat.id}" data-name="${cat.name}">${cat.name}</div>`;
-        });
-        desktopHtml += `</div>`;
-        desktopContainer.innerHTML = desktopHtml;
-
-        const mobileContainer = document.getElementById('mobile-category-select');
-        let mobileHtml = `
-            <div class="custom-select-trigger" id="mobile-category-trigger">
-                <span id="mobile-cat-display">Select Category</span>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="m6 9 6 6 6-6"/>
-                </svg>
-            </div>
-            <div class="custom-select-options" id="mobile-category-options">
-        `;
-        allCategories.forEach(cat => {
-            mobileHtml += `<div class="custom-option" data-value="${cat.id}" data-name="${cat.name}">${cat.name}</div>`;
-        });
-        mobileHtml += `</div>`;
-        mobileContainer.innerHTML = mobileHtml;
-
-        const desktopTrigger = document.getElementById('desktop-category-trigger');
-        const desktopOptions = document.getElementById('desktop-category-options');
-        
-        desktopTrigger.addEventListener('click', (e) => {
-            e.stopPropagation();
-            desktopOptions.classList.toggle('open');
-            desktopTrigger.classList.toggle('open');
-        });
-
-        desktopOptions.querySelectorAll('.custom-option').forEach(option => {
-            option.addEventListener('click', () => {
-                const value = option.getAttribute('data-value');
-                const name = option.getAttribute('data-name');
-                selectCategory(value, name, 'desktop');
-            });
-        });
-
-        const mobileTrigger = document.getElementById('mobile-category-trigger');
-        const mobileOptions = document.getElementById('mobile-category-options');
-        
-        mobileTrigger.addEventListener('click', (e) => {
-            e.stopPropagation();
-            mobileOptions.classList.toggle('open');
-            mobileTrigger.classList.toggle('open');
-        });
-
-        mobileOptions.querySelectorAll('.custom-option').forEach(option => {
-            option.addEventListener('click', () => {
-                const value = option.getAttribute('data-value');
-                const name = option.getAttribute('data-name');
-                selectCategory(value, name, 'mobile');
-            });
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!desktopContainer.contains(e.target)) {
-                desktopOptions.classList.remove('open');
-                desktopTrigger.classList.remove('open');
-            }
-            if (!mobileContainer.contains(e.target)) {
-                mobileOptions.classList.remove('open');
-                mobileTrigger.classList.remove('open');
-            }
-        });
-    }
-
-    async function selectCategory(categoryId, categoryName, platform = 'desktop') {
-        currentCategoryId = categoryId;
-        
-        // Load category colors
-        const categoryDoc = await db.collection('categories').doc(categoryId).get();
-        const categoryData = categoryDoc.data();
-        currentCategoryColors = categoryData.colors || [];
-        
-        if (platform === 'desktop') {
-            document.getElementById('selected-category').value = categoryId;
-            document.getElementById('desktop-cat-display').textContent = categoryName;
-            document.getElementById('desktop-category-options').classList.remove('open');
-            document.getElementById('desktop-category-trigger').classList.remove('open');
-            
-            document.querySelectorAll('#desktop-category-options .custom-option').forEach(option => {
-                option.classList.remove('selected');
-                if (option.getAttribute('data-value') === categoryId) {
-                    option.classList.add('selected');
-                }
-            });
-        } else {
-            document.getElementById('mobile-selected-category').value = categoryId;
-            document.getElementById('mobile-cat-display').textContent = categoryName;
-            document.getElementById('mobile-category-options').classList.remove('open');
-            document.getElementById('mobile-category-trigger').classList.remove('open');
-            
-            document.querySelectorAll('#mobile-category-options .custom-option').forEach(option => {
-                option.classList.remove('selected');
-                if (option.getAttribute('data-value') === categoryId) {
-                    option.classList.add('selected');
-                }
-            });
-        }
-        
-        // Update fabric dropdown with fabrics from this category
-        updateFabricDropdown();
-        showToast(`Loaded colors and fabrics for ${categoryName}`, 'success');
-    }
-
-    function updateFabricDropdown() {
-        // Get all unique fabrics from current category colors
-        const fabricsSet = new Set();
-        currentCategoryColors.forEach(color => {
-            if (color.fabrics) {
-                color.fabrics.forEach(fabric => fabricsSet.add(fabric));
-            }
-        });
-        allFabrics = Array.from(fabricsSet);
-        setupFabricDropdown();
-    }
-
-    function setupFabricDropdown() {
-        const desktopContainer = document.getElementById('fabric-select');
-        let desktopHtml = `
-            <div class="custom-select-trigger" id="desktop-fabric-trigger">
-                <span id="desktop-fabric-display">Select Fabric</span>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="m6 9 6 6 6-6"/>
-                </svg>
-            </div>
-            <div class="custom-select-options" id="desktop-fabric-options">
-        `;
-        allFabrics.forEach(fabric => {
-            desktopHtml += `<div class="custom-option" data-value="${fabric}">${fabric}</div>`;
-        });
-        desktopHtml += `<div class="custom-option add-new-option" onclick="openAddFabricModal('desktop')">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 5v14"/>
-                <path d="M5 12h14"/>
-            </svg>
-            Add New Fabric
-        </div>`;
-        desktopHtml += `</div>`;
-        desktopContainer.innerHTML = desktopHtml;
-
-        const mobileContainer = document.getElementById('mobile-fabric-select');
-        let mobileHtml = `
-            <div class="custom-select-trigger" id="mobile-fabric-trigger">
-                <span id="mobile-fabric-display">Select Fabric</span>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="m6 9 6 6 6-6"/>
-                </svg>
-            </div>
-            <div class="custom-select-options" id="mobile-fabric-options">
-        `;
-        allFabrics.forEach(fabric => {
-            mobileHtml += `<div class="custom-option" data-value="${fabric}">${fabric}</div>`;
-        });
-        mobileHtml += `<div class="custom-option add-new-option" onclick="openAddFabricModal('mobile')">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 5v14"/>
-                <path d="M5 12h14"/>
-            </svg>
-            Add New Fabric
-        </div>`;
-        mobileHtml += `</div>`;
-        mobileContainer.innerHTML = mobileHtml;
-
-        const desktopTrigger = document.getElementById('desktop-fabric-trigger');
-        const desktopOptions = document.getElementById('desktop-fabric-options');
-        
-        desktopTrigger.addEventListener('click', (e) => {
-            e.stopPropagation();
-            desktopOptions.classList.toggle('open');
-            desktopTrigger.classList.toggle('open');
-        });
-
-        desktopOptions.querySelectorAll('.custom-option:not(.add-new-option)').forEach(option => {
-            option.addEventListener('click', () => {
-                const value = option.getAttribute('data-value');
-                selectFabric(value, 'desktop');
-            });
-        });
-
-        const mobileTrigger = document.getElementById('mobile-fabric-trigger');
-        const mobileOptions = document.getElementById('mobile-fabric-options');
-        
-        mobileTrigger.addEventListener('click', (e) => {
-            e.stopPropagation();
-            mobileOptions.classList.toggle('open');
-            mobileTrigger.classList.toggle('open');
-        });
-
-        mobileOptions.querySelectorAll('.custom-option:not(.add-new-option)').forEach(option => {
-            option.addEventListener('click', () => {
-                const value = option.getAttribute('data-value');
-                selectFabric(value, 'mobile');
-            });
-        });
-
-        document.addEventListener('click', (e) => {
-            const desktopContainer = document.getElementById('fabric-select');
-            const mobileContainer = document.getElementById('mobile-fabric-select');
-            
-            if (desktopContainer && !desktopContainer.contains(e.target)) {
-                desktopOptions.classList.remove('open');
-                desktopTrigger.classList.remove('open');
-            }
-            if (mobileContainer && !mobileContainer.contains(e.target)) {
-                mobileOptions.classList.remove('open');
-                mobileTrigger.classList.remove('open');
-            }
-        });
-    }
-
-    function setupColorDropdown() {
-        const colorContainer = document.getElementById('color-name-select');
-        let colorHtml = `
-            <div class="custom-select-trigger" id="color-name-trigger">
-                <span id="color-name-display">Select Color</span>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="m6 9 6 6 6-6"/>
-                </svg>
-            </div>
-            <div class="custom-select-options" id="color-name-options">
-        `;
-        currentCategoryColors.forEach(color => {
-            colorHtml += `<div class="custom-option" data-value="${color.name}" data-hex="${color.hex}">
-                <div class="color-square" style="background-color: ${color.hex};"></div>
-                <span>${color.name}</span>
-            </div>`;
-        });
-        colorHtml += `<div class="custom-option add-new-option" onclick="openAddColorModal()">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 5v14"/>
-                <path d="M5 12h14"/>
-            </svg>
-            Add New Color
-        </div>`;
-        colorHtml += `</div>`;
-        colorContainer.innerHTML = colorHtml;
-
-        const colorTrigger = document.getElementById('color-name-trigger');
-        const colorOptions = document.getElementById('color-name-options');
-        
-        colorTrigger.addEventListener('click', (e) => {
-            e.stopPropagation();
-            colorOptions.classList.toggle('open');
-            colorTrigger.classList.toggle('open');
-        });
-
-        colorOptions.querySelectorAll('.custom-option:not(.add-new-option)').forEach(option => {
-            option.addEventListener('click', () => {
-                const name = option.getAttribute('data-value');
-                const hex = option.getAttribute('data-hex');
-                selectColor(name, hex);
-            });
-        });
-
-        document.addEventListener('click', (e) => {
-            const colorContainer = document.getElementById('color-name-select');
-            if (colorContainer && !colorContainer.contains(e.target)) {
-                colorOptions.classList.remove('open');
-                colorTrigger.classList.remove('open');
-            }
-        });
-    }
-
-    function selectFabric(fabric, platform = 'desktop') {
-        if (platform === 'desktop') {
-            document.getElementById('selected-fabric').value = fabric;
-            document.getElementById('desktop-fabric-display').textContent = fabric;
-            document.getElementById('desktop-fabric-options').classList.remove('open');
-            document.getElementById('desktop-fabric-trigger').classList.remove('open');
-            
-            document.querySelectorAll('#desktop-fabric-options .custom-option:not(.add-new-option)').forEach(option => {
-                option.classList.remove('selected');
-                if (option.getAttribute('data-value') === fabric) {
-                    option.classList.add('selected');
-                }
-            });
-        } else {
-            document.getElementById('mobile-selected-fabric').value = fabric;
-            document.getElementById('mobile-fabric-display').textContent = fabric;
-            document.getElementById('mobile-fabric-options').classList.remove('open');
-            document.getElementById('mobile-fabric-trigger').classList.remove('open');
-            
-            document.querySelectorAll('#mobile-fabric-options .custom-option:not(.add-new-option)').forEach(option => {
-                option.classList.remove('selected');
-                if (option.getAttribute('data-value') === fabric) {
-                    option.classList.add('selected');
-                }
-            });
-        }
-    }
-
-    function selectColor(name, hex) {
-        document.getElementById('selected-color-name').value = name;
-        document.getElementById('color-name-display').textContent = name;
-        document.getElementById('color-hex').value = hex;
-        document.getElementById('color-preview').style.backgroundColor = hex;
-        document.getElementById('color-name-options').classList.remove('open');
-        document.getElementById('color-name-trigger').classList.remove('open');
-        
-        document.querySelectorAll('#color-name-options .custom-option:not(.add-new-option)').forEach(option => {
-            option.classList.remove('selected');
-            if (option.getAttribute('data-value') === name) {
-                option.classList.add('selected');
-            }
-        });
-        
-        // Load sizes and fabrics for this color
-        const colorData = currentCategoryColors.find(c => c.name === name);
-        if (colorData) {
-            // Update size selection
-            const sizeSelection = document.getElementById('size-selection');
-            const sizes = colorData.sizes || [];
-            sizeSelection.innerHTML = sizes.map(size => `
-                <div class="size-option" data-size="${size}">
-                    <div class="size-name">${size}</div>
-                    <div class="size-status">Select</div>
-                    <input type="checkbox" style="display: none;">
-                </div>
-            `).join('');
-
-            sizeSelection.querySelectorAll('.size-option').forEach(option => {
-                option.addEventListener('click', function() {
-                    this.classList.toggle('selected');
-                    const checkbox = this.querySelector('input[type="checkbox"]');
-                    checkbox.checked = this.classList.contains('selected');
-                    this.querySelector('.size-status').textContent = 
-                        this.classList.contains('selected') ? 'Selected' : 'Select';
                 });
             });
-            
-            // Show color image if exists
-            if (colorData.imageURL) {
-                const swatchPreview = document.getElementById('swatch-preview');
-                const swatchContainer = document.getElementById('swatch-preview-container');
-                swatchPreview.src = colorData.imageURL;
-                swatchContainer.style.display = 'flex';
-            }
-        }
-    }
 
-    function populateForm(data) {
-        document.getElementById('name').value = data.name || '';
-        document.getElementById('mobile-name').value = data.name || '';
-        document.getElementById('description').value = data.description || '';
-        document.getElementById('mobile-description').value = data.description || '';
-        document.getElementById('price').value = data.price || '';
-        document.getElementById('mobile-price').value = data.price || '';
-        document.getElementById('oldPrice').value = data.oldPrice || '';
-        document.getElementById('mobile-oldPrice').value = data.oldPrice || '';
-        
-        if (data.categoryId && data.categoryName) {
-            selectCategory(data.categoryId, data.categoryName, 'desktop');
-            selectCategory(data.categoryId, data.categoryName, 'mobile');
-        }
-        
-        if (data.fabric) {
-            selectFabric(data.fabric, 'desktop');
-            selectFabric(data.fabric, 'mobile');
-        }
-        
-        const coverUrl = data.image || (data.images && data.images.length > 0 ? data.images[0] : null);
-        if (coverUrl) {
-            document.getElementById('cover-preview').src = coverUrl;
-            document.getElementById('cover-preview-container').style.display = 'flex';
-            document.getElementById('cover-upload-zone').style.display = 'none';
-            
-            document.getElementById('mobile-cover-preview').src = coverUrl;
-            document.getElementById('mobile-cover-preview-container').style.display = 'flex';
-            document.getElementById('mobile-cover-upload-zone').style.display = 'none';
-        }
-        
-        colorVariants = data.colorVariants || [];
-        renderVariants();
-        
-        productReviews = data.reviews || [];
-        renderReviews();
-        
-        
-        document.getElementById('product-form').style.display = 'block';
-        document.getElementById('loading-state').style.display = 'none';
-        document.getElementById('mobile-product-form').style.display = 'block';
-        document.getElementById('mobile-loading-state').style.display = 'none';
-    }
-
-    document.getElementById('cover-input').addEventListener('change', handleCoverImage);
-    document.getElementById('mobile-cover-input').addEventListener('change', handleCoverImage);
-
-    function handleCoverImage(e) {
-        const file = e.target.files[0];
-        if (!file) return;
-        
-        if (file.size > 5 * 1024 * 1024) {
-            showToast('Image too large (max 5MB)', 'error');
-            return;
-        }
-        
-        if (!file.type.match('image.*')) {
-            showToast('Please select an image file', 'error');
-            return;
-        }
-        
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            const imageUrl = event.target.result;
-            
-            document.getElementById('cover-preview').src = imageUrl;
-            document.getElementById('cover-preview-container').style.display = 'flex';
-            document.getElementById('cover-upload-zone').style.display = 'none';
-            
-            document.getElementById('mobile-cover-preview').src = imageUrl;
-            document.getElementById('mobile-cover-preview-container').style.display = 'flex';
-            document.getElementById('mobile-cover-upload-zone').style.display = 'none';
-            
-            if (e.target.id === 'cover-input') {
-                coverImageFile = file;
-            } else {
-                mobileCoverImageFile = file;
-            }
-        };
-        reader.readAsDataURL(file);
-    }
-
-    function openColorModal(index = null) {
-        if (!currentCategoryId) {
-            showToast('Please select a category first', 'error');
-            return;
-        }
-        
-        editingVariantIndex = index;
-        const isEdit = index !== null;
-        const data = isEdit ? colorVariants[index] : null;
-        
-        document.getElementById('color-modal-title').textContent = isEdit ? 'Edit Variant' : 'Add Variant';
-        
-        setupColorDropdown();
-        
-        if (data && data.name) {
-            const color = currentCategoryColors.find(c => c.name === data.name);
-            if (color) {
-                selectColor(color.name, color.hex);
-            }
-        } else {
-            document.getElementById('selected-color-name').value = '';
-            document.getElementById('color-name-display').textContent = 'Select Color';
-            document.getElementById('color-hex').value = '';
-            document.getElementById('color-preview').style.backgroundColor = '#ffffff';
-        }
-        
-        const swatchPreview = document.getElementById('swatch-preview');
-        const swatchContainer = document.getElementById('swatch-preview-container');
-        
-        if (data && data.hex) {
-            swatchPreview.src = data.hex;
-            swatchContainer.style.display = 'flex';
-        } else {
-            swatchContainer.style.display = 'none';
-        }
-        
-        const existingGallery = document.getElementById('existing-gallery');
-        existingGallery.innerHTML = '';
-        
-        if (data && data.images && data.images.length > 0) {
-            existingVariantImages = [...data.images];
-            data.images.forEach((url, i) => {
-                const galleryItem = document.createElement('div');
-                galleryItem.className = 'gallery-item';
-                galleryItem.innerHTML = `
-                    <img src="${url}" class="gallery-img">
-                    <div class="gallery-remove" onclick="removeGalleryImage(${i})">×</div>
-                `;
-                existingGallery.appendChild(galleryItem);
+            window.addEventListener('resize', function() {
+                if (window.innerWidth <= 768) {
+                    document.body.style.overflowX = 'hidden';
+                    document.body.style.maxWidth = '100vw';
+                } else {
+                    document.body.style.overflowX = '';
+                    document.body.style.maxWidth = '';
+                }
             });
-        } else {
-            existingVariantImages = [];
-        }
-        
-        document.getElementById('variant-image-previews').innerHTML = '';
-        tempVariantFiles = [];
-        
-        document.getElementById('color-modal').style.display = 'flex';
-        
-        document.getElementById('color-hex').addEventListener('input', function() {
-            const hex = this.value;
-            if (/^#[0-9A-F]{6}$/i.test(hex)) {
-                document.getElementById('color-preview').style.backgroundColor = hex;
+
+            const SIZES = ['XS', 'S', 'M', 'L', 'XL', '2XL'];
+            const sizeSelection = document.getElementById('size-selection');
+            if (sizeSelection) {
+                sizeSelection.innerHTML = SIZES.map(size => `
+                    <div class="size-option" data-size="${size}">
+                        <div class="size-name">${size}</div>
+                        <div class="size-status">Select</div>
+                        <input type="checkbox" style="display: none;">
+                    </div>
+                `).join('');
+
+                sizeSelection.querySelectorAll('.size-option').forEach(option => {
+                    option.addEventListener('click', function() {
+                        this.classList.toggle('selected');
+                        const checkbox = this.querySelector('input[type="checkbox"]');
+                        checkbox.checked = this.classList.contains('selected');
+                        this.querySelector('.size-status').textContent = 
+                            this.classList.contains('selected') ? 'Selected' : 'Select';
+                    });
+                });
             }
         });
-    }
 
-    function closeColorModal() {
-        document.getElementById('color-modal').style.display = 'none';
-        editingVariantIndex = null;
-        document.getElementById('color-form').reset();
-        document.getElementById('swatch-preview-container').style.display = 'none';
-        document.getElementById('existing-gallery').innerHTML = '';
-        document.getElementById('variant-image-previews').innerHTML = '';
-        tempVariantFiles = [];
-        tempSwatchFile = null;
-    }
-
-    document.getElementById('color-swatch-input').addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-        
-        if (file.size > 5 * 1024 * 1024) {
-            showToast('Image too large (max 5MB)', 'error');
-            return;
-        }
-        
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            const swatchPreview = document.getElementById('swatch-preview');
-            const swatchContainer = document.getElementById('swatch-preview-container');
-            
-            swatchPreview.src = event.target.result;
-            swatchContainer.style.display = 'flex';
-            tempSwatchFile = file;
+        const firebaseConfig = {
+            apiKey: "AIzaSyCdeonH3VytC21F3X6x0rCVCn2xXrGPoug",
+            authDomain: "vastramaya---magic.firebaseapp.com",
+            projectId: "vastramaya---magic",
+            storageBucket: "vastramaya---magic.firebasestorage.app",
+            messagingSenderId: "543460072082",
+            appId: "1:543460072082:web:f3d1140e8f81ad338ae44b",
+            measurementId: "G-E39VNDCFVE"
         };
-        reader.readAsDataURL(file);
-    });
+        const ADMIN_EMAIL = "harshavardhanjw@gmail.com";
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const storage = firebase.storage();
 
-    document.getElementById('variant-images-input').addEventListener('change', (e) => {
-        Array.from(e.target.files).forEach(file => {
-            if (!file.type.match('image.*')) return;
+        let allCategories = [];
+        let allFabrics = [];
+        let allColors = [];
+        let coverImageFile = null;
+        let mobileCoverImageFile = null;
+        let colorVariants = [];
+        let productReviews = [];
+        let editingVariantIndex = null;
+        let editingReviewIndex = null;
+        let tempVariantFiles = [];
+        let tempSwatchFile = null;
+        let existingVariantImages = [];
+        let productId = null;
+
+        auth.onAuthStateChanged(user => {
+            if (!user || user.email !== ADMIN_EMAIL) {
+                window.location.href = 'index.html';
+                return;
+            }
+            initProfile(user);
+            loadEditor();
+        });
+
+        function initProfile(user) {
+            const name = user.displayName || 'Admin';
+            const avatar = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=5127ba&color=fff`;
+            
+            document.getElementById('sidebar-name').textContent = name;
+            document.getElementById('sidebar-email').textContent = user.email;
+            document.getElementById('sidebar-avatar').src = avatar;
+            
+            document.getElementById('mobile-sidebar-name').textContent = name;
+            document.getElementById('mobile-sidebar-email').textContent = user.email;
+            document.getElementById('mobile-sidebar-avatar').src = avatar;
+            
+            document.getElementById('popup-name').textContent = name;
+            document.getElementById('popup-email').textContent = user.email;
+            document.getElementById('popup-avatar').src = avatar;
+        }
+
+        async function loadEditor() {
+            try {
+                const catSnap = await db.collection('categories').orderBy('name').get();
+                allCategories = catSnap.docs.map(d => d.data().name);
+                setupCategoryDropdown();
+                
+                const fabricSnap = await db.collection('fabrics').orderBy('name').get();
+                allFabrics = fabricSnap.docs.map(d => d.data().name);
+                setupFabricDropdown();
+                
+                const colorSnap = await db.collection('colors').orderBy('name').get();
+                allColors = colorSnap.docs.map(d => ({name: d.data().name, hex: d.data().hex}));
+                
+                const params = new URLSearchParams(window.location.search);
+                const id = params.get('id');
+                productId = id;
+                
+                if (id) {
+                    document.getElementById('editor-title').textContent = 'Edit Product';
+                    document.getElementById('mobile-editor-title').textContent = 'Edit Product';
+                    
+                    const doc = await db.collection('products').doc(id).get();
+                    if (doc.exists) {
+                        const data = { id: doc.id, ...doc.data() };
+                        populateForm(data);
+                        document.getElementById('breadcrumb-product').textContent = data.name;
+                        document.getElementById('mobile-breadcrumb-product').textContent = data.name;
+                    } else {
+                        showToast('Product not found', 'error');
+                        setTimeout(() => window.history.back(), 2000);
+                    }
+                } else {
+                    document.getElementById('editor-title').textContent = 'New Product';
+                    document.getElementById('mobile-editor-title').textContent = 'New Product';
+                    
+                    document.getElementById('product-form').style.display = 'block';
+                    document.getElementById('loading-state').style.display = 'none';
+                    document.getElementById('mobile-product-form').style.display = 'block';
+                    document.getElementById('mobile-loading-state').style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Error loading editor:', error);
+                showToast('Error loading data', 'error');
+            }
+        }
+
+        function setupCategoryDropdown() {
+            const desktopContainer = document.getElementById('category-select');
+            let desktopHtml = `
+                <div class="custom-select-trigger" id="desktop-category-trigger">
+                    <span id="desktop-cat-display">Select Category</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m6 9 6 6 6-6"/>
+                    </svg>
+                </div>
+                <div class="custom-select-options" id="desktop-category-options">
+            `;
+            allCategories.forEach(cat => {
+                desktopHtml += `<div class="custom-option" data-value="${cat}">${cat}</div>`;
+            });
+            desktopHtml += `</div>`;
+            desktopContainer.innerHTML = desktopHtml;
+
+            const mobileContainer = document.getElementById('mobile-category-select');
+            let mobileHtml = `
+                <div class="custom-select-trigger" id="mobile-category-trigger">
+                    <span id="mobile-cat-display">Select Category</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m6 9 6 6 6-6"/>
+                    </svg>
+                </div>
+                <div class="custom-select-options" id="mobile-category-options">
+            `;
+            allCategories.forEach(cat => {
+                mobileHtml += `<div class="custom-option" data-value="${cat}">${cat}</div>`;
+            });
+            mobileHtml += `</div>`;
+            mobileContainer.innerHTML = mobileHtml;
+
+            const desktopTrigger = document.getElementById('desktop-category-trigger');
+            const desktopOptions = document.getElementById('desktop-category-options');
+            
+            desktopTrigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                desktopOptions.classList.toggle('open');
+                desktopTrigger.classList.toggle('open');
+            });
+
+            desktopOptions.querySelectorAll('.custom-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    const value = option.getAttribute('data-value');
+                    selectCategory(value, 'desktop');
+                });
+            });
+
+            const mobileTrigger = document.getElementById('mobile-category-trigger');
+            const mobileOptions = document.getElementById('mobile-category-options');
+            
+            mobileTrigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                mobileOptions.classList.toggle('open');
+                mobileTrigger.classList.toggle('open');
+            });
+
+            mobileOptions.querySelectorAll('.custom-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    const value = option.getAttribute('data-value');
+                    selectCategory(value, 'mobile');
+                });
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!desktopContainer.contains(e.target)) {
+                    desktopOptions.classList.remove('open');
+                    desktopTrigger.classList.remove('open');
+                }
+                if (!mobileContainer.contains(e.target)) {
+                    mobileOptions.classList.remove('open');
+                    mobileTrigger.classList.remove('open');
+                }
+            });
+        }
+
+        function setupFabricDropdown() {
+            const desktopContainer = document.getElementById('fabric-select');
+            let desktopHtml = `
+                <div class="custom-select-trigger" id="desktop-fabric-trigger">
+                    <span id="desktop-fabric-display">Select Fabric</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m6 9 6 6 6-6"/>
+                    </svg>
+                </div>
+                <div class="custom-select-options" id="desktop-fabric-options">
+            `;
+            allFabrics.forEach(fabric => {
+                desktopHtml += `<div class="custom-option" data-value="${fabric}">${fabric}</div>`;
+            });
+            desktopHtml += `<div class="custom-option add-new-option" onclick="openAddFabricModal('desktop')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 5v14"/>
+                    <path d="M5 12h14"/>
+                </svg>
+                Add New Fabric
+            </div>`;
+            desktopHtml += `</div>`;
+            desktopContainer.innerHTML = desktopHtml;
+
+            const mobileContainer = document.getElementById('mobile-fabric-select');
+            let mobileHtml = `
+                <div class="custom-select-trigger" id="mobile-fabric-trigger">
+                    <span id="mobile-fabric-display">Select Fabric</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m6 9 6 6 6-6"/>
+                    </svg>
+                </div>
+                <div class="custom-select-options" id="mobile-fabric-options">
+            `;
+            allFabrics.forEach(fabric => {
+                mobileHtml += `<div class="custom-option" data-value="${fabric}">${fabric}</div>`;
+            });
+            mobileHtml += `<div class="custom-option add-new-option" onclick="openAddFabricModal('mobile')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 5v14"/>
+                    <path d="M5 12h14"/>
+                </svg>
+                Add New Fabric
+            </div>`;
+            mobileHtml += `</div>`;
+            mobileContainer.innerHTML = mobileHtml;
+
+            const desktopTrigger = document.getElementById('desktop-fabric-trigger');
+            const desktopOptions = document.getElementById('desktop-fabric-options');
+            
+            desktopTrigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                desktopOptions.classList.toggle('open');
+                desktopTrigger.classList.toggle('open');
+            });
+
+            desktopOptions.querySelectorAll('.custom-option:not(.add-new-option)').forEach(option => {
+                option.addEventListener('click', () => {
+                    const value = option.getAttribute('data-value');
+                    selectFabric(value, 'desktop');
+                });
+            });
+
+            const mobileTrigger = document.getElementById('mobile-fabric-trigger');
+            const mobileOptions = document.getElementById('mobile-fabric-options');
+            
+            mobileTrigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                mobileOptions.classList.toggle('open');
+                mobileTrigger.classList.toggle('open');
+            });
+
+            mobileOptions.querySelectorAll('.custom-option:not(.add-new-option)').forEach(option => {
+                option.addEventListener('click', () => {
+                    const value = option.getAttribute('data-value');
+                    selectFabric(value, 'mobile');
+                });
+            });
+
+            document.addEventListener('click', (e) => {
+                const desktopContainer = document.getElementById('fabric-select');
+                const mobileContainer = document.getElementById('mobile-fabric-select');
+                
+                if (desktopContainer && !desktopContainer.contains(e.target)) {
+                    desktopOptions.classList.remove('open');
+                    desktopTrigger.classList.remove('open');
+                }
+                if (mobileContainer && !mobileContainer.contains(e.target)) {
+                    mobileOptions.classList.remove('open');
+                    mobileTrigger.classList.remove('open');
+                }
+            });
+        }
+
+        function setupColorDropdown() {
+            const colorContainer = document.getElementById('color-name-select');
+            let colorHtml = `
+                <div class="custom-select-trigger" id="color-name-trigger">
+                    <span id="color-name-display">Select Color</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m6 9 6 6 6-6"/>
+                    </svg>
+                </div>
+                <div class="custom-select-options" id="color-name-options">
+            `;
+            allColors.forEach(color => {
+                colorHtml += `<div class="custom-option" data-value="${color.name}" data-hex="${color.hex}">
+                    <div class="color-square" style="background-color: ${color.hex};"></div>
+                    <span>${color.name}</span>
+                </div>`;
+            });
+            colorHtml += `<div class="custom-option add-new-option" onclick="openAddColorModal()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 5v14"/>
+                    <path d="M5 12h14"/>
+                </svg>
+                Add New Color
+            </div>`;
+            colorHtml += `</div>`;
+            colorContainer.innerHTML = colorHtml;
+
+            const colorTrigger = document.getElementById('color-name-trigger');
+            const colorOptions = document.getElementById('color-name-options');
+            
+            colorTrigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                colorOptions.classList.toggle('open');
+                colorTrigger.classList.toggle('open');
+            });
+
+            colorOptions.querySelectorAll('.custom-option:not(.add-new-option)').forEach(option => {
+                option.addEventListener('click', () => {
+                    const name = option.getAttribute('data-value');
+                    const hex = option.getAttribute('data-hex');
+                    selectColor(name, hex);
+                });
+            });
+
+            document.addEventListener('click', (e) => {
+                const colorContainer = document.getElementById('color-name-select');
+                if (colorContainer && !colorContainer.contains(e.target)) {
+                    colorOptions.classList.remove('open');
+                    colorTrigger.classList.remove('open');
+                }
+            });
+        }
+
+        function selectCategory(category, platform = 'desktop') {
+            if (platform === 'desktop') {
+                document.getElementById('selected-category').value = category;
+                document.getElementById('desktop-cat-display').textContent = category;
+                document.getElementById('desktop-category-options').classList.remove('open');
+                document.getElementById('desktop-category-trigger').classList.remove('open');
+                
+                document.querySelectorAll('#desktop-category-options .custom-option').forEach(option => {
+                    option.classList.remove('selected');
+                    if (option.getAttribute('data-value') === category) {
+                        option.classList.add('selected');
+                    }
+                });
+            } else {
+                document.getElementById('mobile-selected-category').value = category;
+                document.getElementById('mobile-cat-display').textContent = category;
+                document.getElementById('mobile-category-options').classList.remove('open');
+                document.getElementById('mobile-category-trigger').classList.remove('open');
+                
+                document.querySelectorAll('#mobile-category-options .custom-option').forEach(option => {
+                    option.classList.remove('selected');
+                    if (option.getAttribute('data-value') === category) {
+                        option.classList.add('selected');
+                    }
+                });
+            }
+        }
+
+        function selectFabric(fabric, platform = 'desktop') {
+            if (platform === 'desktop') {
+                document.getElementById('selected-fabric').value = fabric;
+                document.getElementById('desktop-fabric-display').textContent = fabric;
+                document.getElementById('desktop-fabric-options').classList.remove('open');
+                document.getElementById('desktop-fabric-trigger').classList.remove('open');
+                
+                document.querySelectorAll('#desktop-fabric-options .custom-option:not(.add-new-option)').forEach(option => {
+                    option.classList.remove('selected');
+                    if (option.getAttribute('data-value') === fabric) {
+                        option.classList.add('selected');
+                    }
+                });
+            } else {
+                document.getElementById('mobile-selected-fabric').value = fabric;
+                document.getElementById('mobile-fabric-display').textContent = fabric;
+                document.getElementById('mobile-fabric-options').classList.remove('open');
+                document.getElementById('mobile-fabric-trigger').classList.remove('open');
+                
+                document.querySelectorAll('#mobile-fabric-options .custom-option:not(.add-new-option)').forEach(option => {
+                    option.classList.remove('selected');
+                    if (option.getAttribute('data-value') === fabric) {
+                        option.classList.add('selected');
+                    }
+                });
+            }
+        }
+
+        function selectColor(name, hex) {
+            document.getElementById('selected-color-name').value = name;
+            document.getElementById('color-name-display').textContent = name;
+            document.getElementById('color-hex').value = hex;
+            document.getElementById('color-preview').style.backgroundColor = hex;
+            document.getElementById('color-name-options').classList.remove('open');
+            document.getElementById('color-name-trigger').classList.remove('open');
+            
+            document.querySelectorAll('#color-name-options .custom-option:not(.add-new-option)').forEach(option => {
+                option.classList.remove('selected');
+                if (option.getAttribute('data-value') === name) {
+                    option.classList.add('selected');
+                }
+            });
+        }
+
+        function populateForm(data) {
+            document.getElementById('name').value = data.name || '';
+            document.getElementById('mobile-name').value = data.name || '';
+            document.getElementById('description').value = data.description || '';
+            document.getElementById('mobile-description').value = data.description || '';
+            document.getElementById('price').value = data.price || '';
+            document.getElementById('mobile-price').value = data.price || '';
+            document.getElementById('oldPrice').value = data.oldPrice || '';
+            document.getElementById('mobile-oldPrice').value = data.oldPrice || '';
+            
+            if (data.category) {
+                selectCategory(data.category, 'desktop');
+                selectCategory(data.category, 'mobile');
+            }
+            
+            if (data.fabric) {
+                selectFabric(data.fabric, 'desktop');
+                selectFabric(data.fabric, 'mobile');
+            }
+            
+            const coverUrl = data.image || (data.images && data.images.length > 0 ? data.images[0] : null);
+            if (coverUrl) {
+                document.getElementById('cover-preview').src = coverUrl;
+                document.getElementById('cover-preview-container').style.display = 'flex';
+                document.getElementById('cover-upload-zone').style.display = 'none';
+                
+                document.getElementById('mobile-cover-preview').src = coverUrl;
+                document.getElementById('mobile-cover-preview-container').style.display = 'flex';
+                document.getElementById('mobile-cover-upload-zone').style.display = 'none';
+            }
+            
+            colorVariants = data.colorVariants || [];
+            renderVariants();
+            
+            productReviews = data.reviews || [];
+            renderReviews();
+            
+            
+            document.getElementById('product-form').style.display = 'block';
+            document.getElementById('loading-state').style.display = 'none';
+            document.getElementById('mobile-product-form').style.display = 'block';
+            document.getElementById('mobile-loading-state').style.display = 'none';
+        }
+
+        document.getElementById('cover-input').addEventListener('change', handleCoverImage);
+        document.getElementById('mobile-cover-input').addEventListener('change', handleCoverImage);
+
+        function handleCoverImage(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
             if (file.size > 5 * 1024 * 1024) {
                 showToast('Image too large (max 5MB)', 'error');
                 return;
             }
             
-            tempVariantFiles.push(file);
+            if (!file.type.match('image.*')) {
+                showToast('Please select an image file', 'error');
+                return;
+            }
             
             const reader = new FileReader();
             reader.onload = (event) => {
-                const previewContainer = document.getElementById('variant-image-previews');
-                const preview = document.createElement('div');
-                preview.className = 'gallery-item';
-                preview.innerHTML = `
-                    <img src="${event.target.result}" class="gallery-img">
-                    <div class="gallery-remove" onclick="removeTempGalleryImage(this)">×</div>
-                `;
-                previewContainer.appendChild(preview);
+                const imageUrl = event.target.result;
+                
+                document.getElementById('cover-preview').src = imageUrl;
+                document.getElementById('cover-preview-container').style.display = 'flex';
+                document.getElementById('cover-upload-zone').style.display = 'none';
+                
+                document.getElementById('mobile-cover-preview').src = imageUrl;
+                document.getElementById('mobile-cover-preview-container').style.display = 'flex';
+                document.getElementById('mobile-cover-upload-zone').style.display = 'none';
+                
+                if (e.target.id === 'cover-input') {
+                    coverImageFile = file;
+                } else {
+                    mobileCoverImageFile = file;
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function openColorModal(index = null) {
+            editingVariantIndex = index;
+            const isEdit = index !== null;
+            const data = isEdit ? colorVariants[index] : null;
+            
+            document.getElementById('color-modal-title').textContent = isEdit ? 'Edit Variant' : 'Add Variant';
+            
+            setupColorDropdown();
+            
+            if (data && data.name) {
+                const color = allColors.find(c => c.name === data.name);
+                if (color) {
+                    selectColor(color.name, color.hex);
+                }
+            } else {
+                document.getElementById('selected-color-name').value = '';
+                document.getElementById('color-name-display').textContent = 'Select Color';
+                document.getElementById('color-hex').value = '';
+                document.getElementById('color-preview').style.backgroundColor = '#ffffff';
+            }
+            
+            const swatchPreview = document.getElementById('swatch-preview');
+            const swatchContainer = document.getElementById('swatch-preview-container');
+            
+            if (data && data.hex) {
+                swatchPreview.src = data.hex;
+                swatchContainer.style.display = 'flex';
+            } else {
+                swatchContainer.style.display = 'none';
+            }
+            
+            const sizeOptions = document.querySelectorAll('#size-selection .size-option');
+            sizeOptions.forEach(option => {
+                const size = option.getAttribute('data-size');
+                const selected = data && data.sizes && data.sizes.some(s => s.name === size);
+                
+                option.classList.toggle('selected', selected);
+                option.querySelector('input[type="checkbox"]').checked = selected;
+                option.querySelector('.size-status').textContent = selected ? 'Selected' : 'Select';
+            });
+            
+            const existingGallery = document.getElementById('existing-gallery');
+            existingGallery.innerHTML = '';
+            
+            if (data && data.images && data.images.length > 0) {
+                existingVariantImages = [...data.images];
+                data.images.forEach((url, i) => {
+                    const galleryItem = document.createElement('div');
+                    galleryItem.className = 'gallery-item';
+                    galleryItem.innerHTML = `
+                        <img src="${url}" class="gallery-img">
+                        <div class="gallery-remove" onclick="removeGalleryImage(${i})">×</div>
+                    `;
+                    existingGallery.appendChild(galleryItem);
+                });
+            } else {
+                existingVariantImages = [];
+            }
+            
+            document.getElementById('variant-image-previews').innerHTML = '';
+            tempVariantFiles = [];
+            
+            document.getElementById('color-modal').style.display = 'flex';
+            
+            document.getElementById('color-hex').addEventListener('input', function() {
+                const hex = this.value;
+                if (/^#[0-9A-F]{6}$/i.test(hex)) {
+                    document.getElementById('color-preview').style.backgroundColor = hex;
+                }
+            });
+        }
+
+        function closeColorModal() {
+            document.getElementById('color-modal').style.display = 'none';
+            editingVariantIndex = null;
+            document.getElementById('color-form').reset();
+            document.getElementById('swatch-preview-container').style.display = 'none';
+            document.getElementById('existing-gallery').innerHTML = '';
+            document.getElementById('variant-image-previews').innerHTML = '';
+            tempVariantFiles = [];
+            tempSwatchFile = null;
+        }
+
+        document.getElementById('color-swatch-input').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            if (file.size > 5 * 1024 * 1024) {
+                showToast('Image too large (max 5MB)', 'error');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const swatchPreview = document.getElementById('swatch-preview');
+                const swatchContainer = document.getElementById('swatch-preview-container');
+                
+                swatchPreview.src = event.target.result;
+                swatchContainer.style.display = 'flex';
+                tempSwatchFile = file;
             };
             reader.readAsDataURL(file);
         });
-    });
 
-    function removeGalleryImage(index) {
-        existingVariantImages.splice(index, 1);
-        const existingGallery = document.getElementById('existing-gallery');
-        existingGallery.innerHTML = '';
-        
-        existingVariantImages.forEach((url, i) => {
-            const galleryItem = document.createElement('div');
+        document.getElementById('variant-images-input').addEventListener('change', (e) => {
+            Array.from(e.target.files).forEach(file => {
+                if (!file.type.match('image.*')) return;
+                if (file.size > 5 * 1024 * 1024) {
+                    showToast('Image too large (max 5MB)', 'error');
+                    return;
+                }
+                
+                tempVariantFiles.push(file);
+                
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const previewContainer = document.getElementById('variant-image-previews');
+                    const preview = document.createElement('div');
+                    preview.className = 'gallery-item';
+                    preview.innerHTML = `
+                        <img src="${event.target.result}" class="gallery-img">
+                        <div class="gallery-remove" onclick="removeTempGalleryImage(this)">×</div>
+                    `;
+                    previewContainer.appendChild(preview);
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+
+        function removeGalleryImage(index) {
+            existingVariantImages.splice(index, 1);
+            const existingGallery = document.getElementById('existing-gallery');
+            existingGallery.innerHTML = '';
+            
+            existingVariantImages.forEach((url, i) => {
+                const galleryItem = document.createElement('div');
                 galleryItem.className = 'gallery-item';
                 galleryItem.innerHTML = `
                     <img src="${url}" class="gallery-img">
@@ -3533,248 +3467,251 @@
             element.parentElement.remove();
         }
 
-    async function saveColorVariant() {
-        const name = document.getElementById('selected-color-name').value;
-        const hex = document.getElementById('color-hex').value.trim();
+async function saveColorVariant() {
+    const name = document.getElementById('selected-color-name').value;
+    const hex = document.getElementById('color-hex').value.trim();
+    
+    if (!name) {
+        showToast('Please select or add a color', 'error');
+        return;
+    }
+    
+    if (!hex || !/^#[0-9A-F]{6}$/i.test(hex)) {
+        showToast('Please enter a valid hex color code (e.g., #000000)', 'error');
+        return;
+    }
+    
+    showProgress('Saving variant...', 'Please wait');
+    
+    try {
+        let swatchImage = '';
         
-        if (!name) {
-            showToast('Please select or add a color', 'error');
-            return;
+        if (tempSwatchFile) {
+            swatchImage = await uploadFile(tempSwatchFile, 'swatches');
+        } else if (editingVariantIndex !== null && colorVariants[editingVariantIndex]) {
+            swatchImage = colorVariants[editingVariantIndex].hex;
         }
         
-        if (!hex || !/^#[0-9A-F]{6}$/i.test(hex)) {
-            showToast('Please enter a valid hex color code (e.g., #000000)', 'error');
-            return;
-        }
-        
-        showProgress('Saving variant...', 'Please wait');
-        
-        try {
-            let swatchImage = '';
-            
-            if (tempSwatchFile) {
-                swatchImage = await uploadFile(tempSwatchFile, 'swatches');
-            } else if (editingVariantIndex !== null && colorVariants[editingVariantIndex]) {
-                swatchImage = colorVariants[editingVariantIndex].hex;
-            }
-            
-            const sizes = [];
-            document.querySelectorAll('#size-selection .size-option.selected').forEach(option => {
-                const sizeName = option.getAttribute('data-size');
-                sizes.push({
-                    name: sizeName,
-                    available: true
-                });
+        const sizes = [];
+        document.querySelectorAll('#size-selection .size-option.selected').forEach(option => {
+            const sizeName = option.getAttribute('data-size');
+            sizes.push({
+                name: sizeName,
+                available: true
             });
-            
-            const newImages = [];
-            for (const file of tempVariantFiles) {
-                const url = await uploadFile(file, 'variants');
-                newImages.push(url);
-            }
-            
-            const allImages = [...existingVariantImages, ...newImages];
-            
-            const variant = {
-                name,
-                hex: swatchImage || hex,
-                colorHex: hex,
-                sizes,
-                images: allImages
-            };
-            
-            if (editingVariantIndex !== null) {
-                colorVariants[editingVariantIndex] = variant;
-            } else {
-                colorVariants.push(variant);
-            }
-            
-            renderVariants();
-            closeColorModal();
-            showToast('Variant saved successfully', 'success');
-        } catch (error) {
-            console.error('Error saving variant:', error);
-            showToast('Failed to save variant', 'error');
-        } finally {
-            hideProgress();
-        }
-    }
-
-    function renderVariants() {
-        const desktopContainer = document.getElementById('variants-list');
-        const mobileContainer = document.getElementById('mobile-variants-list');
-        
-        if (colorVariants.length === 0) {
-            desktopContainer.innerHTML = `
-                <div class="empty-state">
-                    <div class="empty-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="13.5" cy="6.5" r=".5"/>
-                            <circle cx="17.5" cy="10.5" r=".5"/>
-                            <circle cx="8.5" cy="7.5" r=".5"/>
-                            <circle cx="6.5" cy="12.5" r=".5"/>
-                            <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/>
-                        </svg>
-                    </div>
-                    <div class="empty-text">No variants added yet</div>
-                    <button type="button" class="btn btn-secondary btn-sm" onclick="openColorModal()">Add First Variant</button>
-                </div>
-            `;
-            
-            mobileContainer.innerHTML = `
-                <div style="text-align: center; padding: 20px; color: #6b7280; font-style: italic;">
-                    No variants added yet
-                </div>
-            `;
-            return;
-        }
-        
-        desktopContainer.innerHTML = colorVariants.map((variant, index) => `
-            <div class="variant-card">
-                <div class="variant-info">
-                    <img src="${variant.hex || (variant.colorHex || '#ffffff')}" 
-                         class="variant-swatch"
-                         onerror="this.src='https://via.placeholder.com/48x48?text=Swatch'"
-                         style="${variant.colorHex ? `background-color: ${variant.colorHex};` : ''}">
-                    <div class="variant-details">
-                        <div class="variant-name">${variant.name}</div>
-                        <div class="variant-sizes">${variant.sizes.length > 0 ? variant.sizes.length + ' sizes • ' : 'No sizes • '}${variant.images ? variant.images.length : 0} images</div>
-                    </div>
-                </div>
-                <div class="variant-actions">
-                    <button type="button" class="btn-icon" onclick="openColorModal(${index})">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M13 21h8"/>
-                            <path d="m15 5 4 4"/>
-                            <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
-                        </svg>
-                    </button>
-                    <button type="button" class="btn-icon" onclick="removeVariant(${index})" style="color: var(--danger-color);">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M3 6h18"/>
-                            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
-                            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
-                            <line x1="10" y1="11" x2="10" y2="17"/>
-                            <line x1="14" y1="11" x2="14" y2="17"/>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        `).join('');
-        
-        mobileContainer.innerHTML = colorVariants.map((variant, index) => `
-            <div class="variant-card">
-                <div class="variant-info">
-                    <img src="${variant.hex || (variant.colorHex || '#ffffff')}" 
-                         class="variant-swatch"
-                         onerror="this.src='https://via.placeholder.com/48x48?text=Swatch'"
-                         style="${variant.colorHex ? `background-color: ${variant.colorHex};` : ''}">
-                    <div class="variant-details">
-                        <div class="variant-name">${variant.name}</div>
-                        <div class="variant-sizes">${variant.sizes.length > 0 ? variant.sizes.length + ' sizes' : 'No sizes'}</div>
-                    </div>
-                </div>
-                <div class="variant-actions">
-                    <button type="button" class="btn-icon" onclick="openColorModal(${index})">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M13 21h8"/>
-                            <path d="m15 5 4 4"/>
-                            <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        `).join('');
-    }
-
-    function removeVariant(index) {
-        if (confirm('Are you sure you want to remove this variant?')) {
-            colorVariants.splice(index, 1);
-            renderVariants();
-            showToast('Variant removed', 'success');
-        }
-    }
-
-    function openReviewModal(index = null) {
-        editingReviewIndex = index;
-        const isEdit = index !== null;
-        const data = isEdit ? productReviews[index] : null;
-        
-        document.getElementById('review-modal-title').textContent = isEdit ? 'Edit Review' : 'Add Review';
-        document.getElementById('review-save-btn').textContent = isEdit ? 'Update Review' : 'Add Review';
-        document.getElementById('review-name').value = data ? data.name : '';
-        document.getElementById('review-text').value = data ? data.comment : '';
-        
-        const rating = data ? data.rating : 0;
-        document.getElementById('review-rating').value = rating;
-        
-        document.querySelectorAll('#star-rating svg').forEach(star => {
-            const starVal = parseInt(star.getAttribute('data-val'));
-            if (starVal <= rating) {
-                star.classList.add('active');
-            } else {
-                star.classList.remove('active');
-            }
         });
         
-        document.getElementById('review-modal').style.display = 'flex';
-    }
-
-    function closeReviewModal() {
-        document.getElementById('review-modal').style.display = 'none';
-        editingReviewIndex = null;
-        document.getElementById('review-name').value = '';
-        document.getElementById('review-text').value = '';
-        document.getElementById('review-rating').value = 0;
+        // REMOVED SIZE VALIDATION HERE
+        // Sizes can be empty array now
         
-        document.querySelectorAll('#star-rating svg').forEach(star => {
-            star.classList.remove('active');
-        });
-    }
-
-    function addReview() {
-        const name = document.getElementById('review-name').value.trim();
-        const rating = parseInt(document.getElementById('review-rating').value);
-        const comment = document.getElementById('review-text').value.trim();
-        
-        if (!name || rating === 0 || !comment) {
-            showToast('Please fill all fields', 'error');
-            return;
+        const newImages = [];
+        for (const file of tempVariantFiles) {
+            const url = await uploadFile(file, 'variants');
+            newImages.push(url);
         }
         
-        const reviewData = {
+        const allImages = [...existingVariantImages, ...newImages];
+        
+        const variant = {
             name,
-            rating,
-            comment,
-            date: new Date().toISOString()
+            hex: swatchImage || hex,
+            colorHex: hex,
+            sizes, // This can be empty array []
+            images: allImages
         };
         
-        if (editingReviewIndex !== null) {
-            productReviews[editingReviewIndex] = reviewData;
-            showToast('Review updated', 'success');
+        if (editingVariantIndex !== null) {
+            colorVariants[editingVariantIndex] = variant;
         } else {
-            productReviews.push(reviewData);
-            showToast('Review added', 'success');
+            colorVariants.push(variant);
         }
         
-        renderReviews();
-        closeReviewModal();
+        renderVariants();
+        closeColorModal();
+        showToast('Variant saved successfully', 'success');
+    } catch (error) {
+        console.error('Error saving variant:', error);
+        showToast('Failed to save variant', 'error');
+    } finally {
+        hideProgress();
     }
+}
 
-    function renderReviews() {
-        const desktopContainer = document.getElementById('reviews-list');
-        const mobileContainer = document.getElementById('mobile-reviews-list');
-        
-        if (productReviews.length === 0) {
-            desktopContainer.innerHTML = `
-                <div class="empty-state">
-                    <div class="empty-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                        </svg>
+        function renderVariants() {
+            const desktopContainer = document.getElementById('variants-list');
+            const mobileContainer = document.getElementById('mobile-variants-list');
+            
+            if (colorVariants.length === 0) {
+                desktopContainer.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="13.5" cy="6.5" r=".5"/>
+                                <circle cx="17.5" cy="10.5" r=".5"/>
+                                <circle cx="8.5" cy="7.5" r=".5"/>
+                                <circle cx="6.5" cy="12.5" r=".5"/>
+                                <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/>
+                            </svg>
+                        </div>
+                        <div class="empty-text">No variants added yet</div>
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="openColorModal()">Add First Variant</button>
                     </div>
-                    <div class="empty-text">No reviews added yet</div>
-                    <button type="button" class="btn btn-secondary btn-sm" onclick="openReviewModal()">Add First Review</button>
+                `;
+                
+                mobileContainer.innerHTML = `
+                    <div style="text-align: center; padding: 20px; color: #6b7280; font-style: italic;">
+                        No variants added yet
+                    </div>
+                `;
+                return;
+            }
+            
+            desktopContainer.innerHTML = colorVariants.map((variant, index) => `
+                <div class="variant-card">
+                    <div class="variant-info">
+                        <img src="${variant.hex || (variant.colorHex || '#ffffff')}" 
+                             class="variant-swatch"
+                             onerror="this.src='https://via.placeholder.com/48x48?text=Swatch'"
+                             style="${variant.colorHex ? `background-color: ${variant.colorHex};` : ''}">
+                        <div class="variant-details">
+                            <div class="variant-name">${variant.name}</div>
+                            <div class="variant-sizes">${variant.sizes.length > 0 ? variant.sizes.length + ' sizes • ' : 'No sizes • '}${variant.images ? variant.images.length : 0} images</div>
+                        </div>
+                    </div>
+                    <div class="variant-actions">
+                        <button type="button" class="btn-icon" onclick="openColorModal(${index})">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M13 21h8"/>
+                                <path d="m15 5 4 4"/>
+                                <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
+                            </svg>
+                        </button>
+                        <button type="button" class="btn-icon" onclick="removeVariant(${index})" style="color: var(--danger-color);">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 6h18"/>
+                                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+                                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+                                <line x1="10" y1="11" x2="10" y2="17"/>
+                                <line x1="14" y1="11" x2="14" y2="17"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+            
+            mobileContainer.innerHTML = colorVariants.map((variant, index) => `
+                <div class="variant-card">
+                    <div class="variant-info">
+                        <img src="${variant.hex || (variant.colorHex || '#ffffff')}" 
+                             class="variant-swatch"
+                             onerror="this.src='https://via.placeholder.com/48x48?text=Swatch'"
+                             style="${variant.colorHex ? `background-color: ${variant.colorHex};` : ''}">
+                        <div class="variant-details">
+                            <div class="variant-name">${variant.name}</div>
+                            <div class="variant-sizes">${variant.sizes.length > 0 ? variant.sizes.length + ' sizes' : 'No sizes'}</div>
+                        </div>
+                    </div>
+                    <div class="variant-actions">
+                        <button type="button" class="btn-icon" onclick="openColorModal(${index})">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M13 21h8"/>
+                                <path d="m15 5 4 4"/>
+                                <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function removeVariant(index) {
+            if (confirm('Are you sure you want to remove this variant?')) {
+                colorVariants.splice(index, 1);
+                renderVariants();
+                showToast('Variant removed', 'success');
+            }
+        }
+
+        function openReviewModal(index = null) {
+            editingReviewIndex = index;
+            const isEdit = index !== null;
+            const data = isEdit ? productReviews[index] : null;
+            
+            document.getElementById('review-modal-title').textContent = isEdit ? 'Edit Review' : 'Add Review';
+            document.getElementById('review-save-btn').textContent = isEdit ? 'Update Review' : 'Add Review';
+            document.getElementById('review-name').value = data ? data.name : '';
+            document.getElementById('review-text').value = data ? data.comment : '';
+            
+            const rating = data ? data.rating : 0;
+            document.getElementById('review-rating').value = rating;
+            
+            document.querySelectorAll('#star-rating svg').forEach(star => {
+                const starVal = parseInt(star.getAttribute('data-val'));
+                if (starVal <= rating) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
+            });
+            
+            document.getElementById('review-modal').style.display = 'flex';
+        }
+
+        function closeReviewModal() {
+            document.getElementById('review-modal').style.display = 'none';
+            editingReviewIndex = null;
+            document.getElementById('review-name').value = '';
+            document.getElementById('review-text').value = '';
+            document.getElementById('review-rating').value = 0;
+            
+            document.querySelectorAll('#star-rating svg').forEach(star => {
+                star.classList.remove('active');
+            });
+        }
+
+        function addReview() {
+            const name = document.getElementById('review-name').value.trim();
+            const rating = parseInt(document.getElementById('review-rating').value);
+            const comment = document.getElementById('review-text').value.trim();
+            
+            if (!name || rating === 0 || !comment) {
+                showToast('Please fill all fields', 'error');
+                return;
+            }
+            
+            const reviewData = {
+                name,
+                rating,
+                comment,
+                date: new Date().toISOString()
+            };
+            
+            if (editingReviewIndex !== null) {
+                productReviews[editingReviewIndex] = reviewData;
+                showToast('Review updated', 'success');
+            } else {
+                productReviews.push(reviewData);
+                showToast('Review added', 'success');
+            }
+            
+            renderReviews();
+            closeReviewModal();
+        }
+
+        function renderReviews() {
+            const desktopContainer = document.getElementById('reviews-list');
+            const mobileContainer = document.getElementById('mobile-reviews-list');
+            
+            if (productReviews.length === 0) {
+                desktopContainer.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                            </svg>
+                        </div>
+                        <div class="empty-text">No reviews added yet</div>
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="openReviewModal()">Add First Review</button>
                     </div>
                 `;
                 
@@ -3859,10 +3796,10 @@
             const name = document.getElementById('name').value.trim();
             const price = document.getElementById('price').value;
             const oldPrice = document.getElementById('oldPrice').value;
-            const categoryId = document.getElementById('selected-category').value;
+            const category = document.getElementById('selected-category').value;
             const fabric = document.getElementById('selected-fabric').value;
             
-            if (!name || !price || !oldPrice || !categoryId || !fabric) {
+            if (!name || !price || !oldPrice || !category || !fabric) {
                 showToast('Please fill all required fields', 'error');
                 return;
             }
@@ -3882,15 +3819,10 @@
                     coverUrl = await uploadFile(coverImageFile, 'products');
                 }
                 
-                // Get category name for display
-                const category = allCategories.find(cat => cat.id === categoryId);
-                const categoryName = category ? category.name : '';
-                
                 const productData = {
                     name,
                     description: document.getElementById('description').value.trim(),
-                    categoryId,
-                    categoryName,
+                    category,
                     fabric,
                     price: parseFloat(price),
                     oldPrice: parseFloat(oldPrice),
@@ -3902,46 +3834,11 @@
                 };
                 
                 if (productId) {
-                    // Update existing product
-                    const productRef = db.collection('products').doc(productId);
-                    
-                    // Get current product to check for category changes
-                    const currentProduct = await productRef.get();
-                    const currentData = currentProduct.data();
-                    
-                    // Update main product document
-                    await productRef.update(productData);
-                    
-                    // Update product in category's products subcollection
-                    await updateProductInCategory(productId, categoryId, {
-                        name: productData.name,
-                        price: productData.price,
-                        oldPrice: productData.oldPrice,
-                        image: productData.image,
-                        productId: productId
-                    });
-                    
-                    // If category changed, remove from old category
-                    if (currentData.categoryId && currentData.categoryId !== categoryId) {
-                        await removeProductFromCategory(productId, currentData.categoryId);
-                    }
-                    
+                    await db.collection('products').doc(productId).update(productData);
                     showToast('Product updated successfully', 'success');
                 } else {
-                    // Create new product
-                    const productRef = await db.collection('products').add(productData);
-                    const newProductId = productRef.id;
-                    
-                    // Add product to category's products subcollection
-                    await updateProductInCategory(newProductId, categoryId, {
-                        name: productData.name,
-                        price: productData.price,
-                        oldPrice: productData.oldPrice,
-                        image: productData.image,
-                        productId: newProductId
-                    });
-                    
-                    productId = newProductId;
+                    productData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                    await db.collection('products').add(productData);
                     showToast('Product created successfully', 'success');
                 }
                 
@@ -3957,34 +3854,6 @@
             }
         }
 
-        // Helper function to update product in category's products subcollection
-        async function updateProductInCategory(productId, categoryId, productData) {
-            try {
-                await db.collection('categories')
-                    .doc(categoryId)
-                    .collection('products')
-                    .doc(productId)
-                    .set(productData, { merge: true });
-            } catch (error) {
-                console.error('Error updating product in category:', error);
-                throw error;
-            }
-        }
-
-        // Helper function to remove product from category's products subcollection
-        async function removeProductFromCategory(productId, categoryId) {
-            try {
-                await db.collection('categories')
-                    .doc(categoryId)
-                    .collection('products')
-                    .doc(productId)
-                    .delete();
-            } catch (error) {
-                console.error('Error removing product from category:', error);
-                throw error;
-            }
-        }
-
         document.getElementById('save-btn').addEventListener('click', saveProduct);
         document.getElementById('mobile-save-btn').addEventListener('click', saveProduct);
         document.getElementById('mobile-save-btn-drawer').addEventListener('click', function() {
@@ -3993,11 +3862,6 @@
         });
 
         function openAddFabricModal(platform = 'desktop') {
-            if (!currentCategoryId) {
-                showToast('Please select a category first', 'error');
-                return;
-            }
-            
             document.getElementById('add-fabric-modal').style.display = 'flex';
             document.getElementById('add-fabric-modal').setAttribute('data-platform', platform);
             document.getElementById('new-fabric-name').value = '';
@@ -4017,37 +3881,19 @@
             }
             
             if (allFabrics.includes(fabricName)) {
-                showToast('Fabric already exists in this category', 'error');
+                showToast('Fabric already exists', 'error');
                 return;
             }
             
             showProgress('Adding fabric...', 'Please wait');
             
             try {
-                // Get current category data
-                const categoryRef = db.collection('categories').doc(currentCategoryId);
-                const categoryDoc = await categoryRef.get();
-                const categoryData = categoryDoc.data() || { colors: [] };
-                
-                // Add fabric to each color in the category
-                const updatedColors = categoryData.colors.map(color => {
-                    if (!color.fabrics) {
-                        color.fabrics = [fabricName];
-                    } else if (!color.fabrics.includes(fabricName)) {
-                        color.fabrics.push(fabricName);
-                    }
-                    return color;
+                await db.collection('fabrics').add({
+                    name: fabricName,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 
-                // Update category
-                await categoryRef.update({
-                    colors: updatedColors,
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                
-                // Update local data
                 allFabrics.push(fabricName);
-                currentCategoryColors = updatedColors;
                 setupFabricDropdown();
                 
                 if (platform === 'desktop') {
@@ -4057,7 +3903,7 @@
                 }
                 
                 closeAddFabricModal();
-                showToast('Fabric added successfully to all colors in category', 'success');
+                showToast('Fabric added successfully', 'success');
             } catch (error) {
                 console.error('Error saving fabric:', error);
                 showToast('Failed to add fabric', 'error');
@@ -4067,11 +3913,6 @@
         }
 
         function openAddColorModal() {
-            if (!currentCategoryId) {
-                showToast('Please select a category first', 'error');
-                return;
-            }
-            
             document.getElementById('add-color-modal').style.display = 'flex';
             document.getElementById('new-color-name').value = '';
             document.getElementById('new-color-hex').value = '';
@@ -4103,48 +3944,27 @@
                 return;
             }
             
-            if (currentCategoryColors.some(c => c.name === colorName)) {
-                showToast('Color already exists in this category', 'error');
+            if (allColors.some(c => c.name === colorName)) {
+                showToast('Color already exists', 'error');
                 return;
             }
             
             showProgress('Adding color...', 'Please wait');
             
             try {
-                // Upload color image if provided
-                let colorImageURL = '';
-                const colorImageInput = document.getElementById('color-swatch-input');
-                if (tempSwatchFile) {
-                    colorImageURL = await uploadFile(tempSwatchFile, 'color-swatches');
-                }
-                
-                // Get current category data
-                const categoryRef = db.collection('categories').doc(currentCategoryId);
-                const categoryDoc = await categoryRef.get();
-                const categoryData = categoryDoc.data() || { colors: [] };
-                
-                // Create new color object with default sizes and fabrics
-                const newColor = {
+                await db.collection('colors').add({
                     name: colorName,
                     hex: colorHex,
-                    imageURL: colorImageURL,
-                    sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL'], // Default sizes
-                    fabrics: allFabrics.length > 0 ? [allFabrics[0]] : [] // Default to first fabric
-                };
-                
-                // Update category with new color
-                await categoryRef.update({
-                    colors: firebase.firestore.FieldValue.arrayUnion(newColor),
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 
-                // Update local data
-                currentCategoryColors.push(newColor);
+                allColors.push({name: colorName, hex: colorHex});
+                
                 setupColorDropdown();
                 selectColor(colorName, colorHex);
                 
                 closeAddColorModal();
-                showToast('Color added successfully to category', 'success');
+                showToast('Color added successfully', 'success');
             } catch (error) {
                 console.error('Error saving color:', error);
                 showToast('Failed to add color', 'error');
