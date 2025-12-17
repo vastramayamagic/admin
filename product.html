@@ -1288,7 +1288,7 @@
         .m-drawer-close-icon {
             width: 14px;
             height: 14px;
-            position: relative;
+            position:relative;
         }
         .m-drawer-close-icon::before,
         .m-drawer-close-icon::after {
@@ -2894,7 +2894,7 @@
         async function loadEditor() {
             try {
                 const catSnap = await db.collection('categories').orderBy('name').get();
-                allCategories = catSnap.docs.map(d => d.data().name);
+                allCategories = catSnap.docs.map(d => ({ id: d.id, name: d.data().name }));
                 setupCategoryDropdown();
                 
                 const fabricSnap = await db.collection('fabrics').orderBy('name').get();
@@ -2949,7 +2949,7 @@
                 <div class="custom-select-options" id="desktop-category-options">
             `;
             allCategories.forEach(cat => {
-                desktopHtml += `<div class="custom-option" data-value="${cat}">${cat}</div>`;
+                desktopHtml += `<div class="custom-option" data-value="${cat.id}" data-name="${cat.name}">${cat.name}</div>`;
             });
             desktopHtml += `</div>`;
             desktopContainer.innerHTML = desktopHtml;
@@ -2965,7 +2965,7 @@
                 <div class="custom-select-options" id="mobile-category-options">
             `;
             allCategories.forEach(cat => {
-                mobileHtml += `<div class="custom-option" data-value="${cat}">${cat}</div>`;
+                mobileHtml += `<div class="custom-option" data-value="${cat.id}" data-name="${cat.name}">${cat.name}</div>`;
             });
             mobileHtml += `</div>`;
             mobileContainer.innerHTML = mobileHtml;
@@ -2982,7 +2982,8 @@
             desktopOptions.querySelectorAll('.custom-option').forEach(option => {
                 option.addEventListener('click', () => {
                     const value = option.getAttribute('data-value');
-                    selectCategory(value, 'desktop');
+                    const name = option.getAttribute('data-name');
+                    selectCategory(value, name, 'desktop');
                 });
             });
 
@@ -2998,7 +2999,8 @@
             mobileOptions.querySelectorAll('.custom-option').forEach(option => {
                 option.addEventListener('click', () => {
                     const value = option.getAttribute('data-value');
-                    selectCategory(value, 'mobile');
+                    const name = option.getAttribute('data-name');
+                    selectCategory(value, name, 'mobile');
                 });
             });
 
@@ -3161,28 +3163,28 @@
             });
         }
 
-        function selectCategory(category, platform = 'desktop') {
+        function selectCategory(categoryId, categoryName, platform = 'desktop') {
             if (platform === 'desktop') {
-                document.getElementById('selected-category').value = category;
-                document.getElementById('desktop-cat-display').textContent = category;
+                document.getElementById('selected-category').value = categoryId;
+                document.getElementById('desktop-cat-display').textContent = categoryName;
                 document.getElementById('desktop-category-options').classList.remove('open');
                 document.getElementById('desktop-category-trigger').classList.remove('open');
                 
                 document.querySelectorAll('#desktop-category-options .custom-option').forEach(option => {
                     option.classList.remove('selected');
-                    if (option.getAttribute('data-value') === category) {
+                    if (option.getAttribute('data-value') === categoryId) {
                         option.classList.add('selected');
                     }
                 });
             } else {
-                document.getElementById('mobile-selected-category').value = category;
-                document.getElementById('mobile-cat-display').textContent = category;
+                document.getElementById('mobile-selected-category').value = categoryId;
+                document.getElementById('mobile-cat-display').textContent = categoryName;
                 document.getElementById('mobile-category-options').classList.remove('open');
                 document.getElementById('mobile-category-trigger').classList.remove('open');
                 
                 document.querySelectorAll('#mobile-category-options .custom-option').forEach(option => {
                     option.classList.remove('selected');
-                    if (option.getAttribute('data-value') === category) {
+                    if (option.getAttribute('data-value') === categoryId) {
                         option.classList.add('selected');
                     }
                 });
@@ -3243,9 +3245,9 @@
             document.getElementById('oldPrice').value = data.oldPrice || '';
             document.getElementById('mobile-oldPrice').value = data.oldPrice || '';
             
-            if (data.category) {
-                selectCategory(data.category, 'desktop');
-                selectCategory(data.category, 'mobile');
+            if (data.categoryId && data.categoryName) {
+                selectCategory(data.categoryId, data.categoryName, 'desktop');
+                selectCategory(data.categoryId, data.categoryName, 'mobile');
             }
             
             if (data.fabric) {
@@ -3796,10 +3798,10 @@ async function saveColorVariant() {
             const name = document.getElementById('name').value.trim();
             const price = document.getElementById('price').value;
             const oldPrice = document.getElementById('oldPrice').value;
-            const category = document.getElementById('selected-category').value;
+            const categoryId = document.getElementById('selected-category').value;
             const fabric = document.getElementById('selected-fabric').value;
             
-            if (!name || !price || !oldPrice || !category || !fabric) {
+            if (!name || !price || !oldPrice || !categoryId || !fabric) {
                 showToast('Please fill all required fields', 'error');
                 return;
             }
@@ -3819,10 +3821,15 @@ async function saveColorVariant() {
                     coverUrl = await uploadFile(coverImageFile, 'products');
                 }
                 
+                // Get category name for display
+                const category = allCategories.find(cat => cat.id === categoryId);
+                const categoryName = category ? category.name : '';
+                
                 const productData = {
                     name,
                     description: document.getElementById('description').value.trim(),
-                    category,
+                    categoryId,
+                    categoryName,
                     fabric,
                     price: parseFloat(price),
                     oldPrice: parseFloat(oldPrice),
@@ -3834,11 +3841,46 @@ async function saveColorVariant() {
                 };
                 
                 if (productId) {
-                    await db.collection('products').doc(productId).update(productData);
+                    // Update existing product
+                    const productRef = db.collection('products').doc(productId);
+                    
+                    // Get current product to check for category changes
+                    const currentProduct = await productRef.get();
+                    const currentData = currentProduct.data();
+                    
+                    // Update main product document
+                    await productRef.update(productData);
+                    
+                    // Update product in category's products subcollection
+                    await updateProductInCategory(productId, categoryId, {
+                        name: productData.name,
+                        price: productData.price,
+                        oldPrice: productData.oldPrice,
+                        image: productData.image,
+                        productId: productId
+                    });
+                    
+                    // If category changed, remove from old category
+                    if (currentData.categoryId && currentData.categoryId !== categoryId) {
+                        await removeProductFromCategory(productId, currentData.categoryId);
+                    }
+                    
                     showToast('Product updated successfully', 'success');
                 } else {
-                    productData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-                    await db.collection('products').add(productData);
+                    // Create new product
+                    const productRef = await db.collection('products').add(productData);
+                    const newProductId = productRef.id;
+                    
+                    // Add product to category's products subcollection
+                    await updateProductInCategory(newProductId, categoryId, {
+                        name: productData.name,
+                        price: productData.price,
+                        oldPrice: productData.oldPrice,
+                        image: productData.image,
+                        productId: newProductId
+                    });
+                    
+                    productId = newProductId;
                     showToast('Product created successfully', 'success');
                 }
                 
@@ -3851,6 +3893,34 @@ async function saveColorVariant() {
                 showToast('Failed to save product', 'error');
             } finally {
                 hideProgress();
+            }
+        }
+
+        // Helper function to update product in category's products subcollection
+        async function updateProductInCategory(productId, categoryId, productData) {
+            try {
+                await db.collection('categories')
+                    .doc(categoryId)
+                    .collection('products')
+                    .doc(productId)
+                    .set(productData, { merge: true });
+            } catch (error) {
+                console.error('Error updating product in category:', error);
+                throw error;
+            }
+        }
+
+        // Helper function to remove product from category's products subcollection
+        async function removeProductFromCategory(productId, categoryId) {
+            try {
+                await db.collection('categories')
+                    .doc(categoryId)
+                    .collection('products')
+                    .doc(productId)
+                    .delete();
+            } catch (error) {
+                console.error('Error removing product from category:', error);
+                throw error;
             }
         }
 
