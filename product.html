@@ -3840,6 +3840,12 @@ async function saveColorVariant() {
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
                 
+await updateCategoryWithProductInfo(categoryId, {
+    fabric: fabric,
+    sizes: getAllSizesFromVariants(colorVariants),
+    colors: getAllColorsFromVariants(colorVariants)
+});
+
                 if (productId) {
                     // Update existing product
                     const productRef = db.collection('products').doc(productId);
@@ -3895,6 +3901,74 @@ async function saveColorVariant() {
                 hideProgress();
             }
         }
+// Helper function to extract all unique sizes from variants
+function getAllSizesFromVariants(colorVariants) {
+    const sizeSet = new Set();
+    colorVariants.forEach(variant => {
+        if (variant.sizes && variant.sizes.length > 0) {
+            variant.sizes.forEach(size => {
+                if (size.name) sizeSet.add(size.name);
+            });
+        }
+    });
+    return Array.from(sizeSet);
+}
+
+// Helper function to extract all colors from variants
+function getAllColorsFromVariants(colorVariants) {
+    return colorVariants.map(variant => ({
+        name: variant.name,
+        hex: variant.colorHex || '#000000',
+        image: variant.hex || variant.images?.[0] || ''
+    }));
+}
+
+// Function to update category with product info
+async function updateCategoryWithProductInfo(categoryId, productInfo) {
+    try {
+        const categoryRef = db.collection('categories').doc(categoryId);
+        
+        // Get current category data
+        const categoryDoc = await categoryRef.get();
+        const currentData = categoryDoc.exists ? categoryDoc.data() : {};
+        
+        // Merge existing data with new product info
+        const updatedData = {
+            ...currentData,
+            fabric: productInfo.fabric || currentData.fabric,
+            sizes: mergeArrays(currentData.sizes || [], productInfo.sizes || []),
+            colors: mergeColors(currentData.colors || [], productInfo.colors || [])
+        };
+        
+        await categoryRef.set(updatedData, { merge: true });
+        
+    } catch (error) {
+        console.error('Error updating category:', error);
+    }
+}
+
+// Helper function to merge arrays without duplicates
+function mergeArrays(existingArray, newArray) {
+    const mergedSet = new Set([...existingArray, ...newArray]);
+    return Array.from(mergedSet);
+}
+
+// Helper function to merge colors without duplicates
+function mergeColors(existingColors, newColors) {
+    const colorMap = new Map();
+    
+    // Add existing colors to map
+    existingColors.forEach(color => {
+        if (color.name) colorMap.set(color.name, color);
+    });
+    
+    // Add/update with new colors
+    newColors.forEach(color => {
+        if (color.name) colorMap.set(color.name, color);
+    });
+    
+    return Array.from(colorMap.values());
+}
 
         // Helper function to update product in category's products subcollection
         async function updateProductInCategory(productId, categoryId, productData) {
