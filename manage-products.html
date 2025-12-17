@@ -2933,21 +2933,43 @@
             window.location.href = `product.html?id=${id}`;
         }
 
-        function deleteProduct(id, name) {
-            closeAdvancedMenu();
-            if(confirm(`Delete "${name}"? This action cannot be undone.`)) {
-                // Delete logic here
-                db.collection('products').doc(id).delete()
-                    .then(() => {
-                        allProducts = allProducts.filter(p => p.id !== id);
-                        filterProducts(document.getElementById('search-products').value.toLowerCase());
-                        showToast("Product deleted successfully", "success");
-                    })
-                    .catch((error) => {
-                        showToast("Failed to delete product", "error");
-                    });
+async function deleteProduct(id, name) {
+    closeAdvancedMenu();
+    if(confirm(`Delete "${name}"? This action cannot be undone.`)) {
+        try {
+            // First get the product to know its categoryId
+            const productDoc = await db.collection('products').doc(id).get();
+            if (!productDoc.exists) {
+                showToast("Product not found", "error");
+                return;
             }
+            
+            const productData = productDoc.data();
+            const categoryId = productData.categoryId;
+            
+            // Delete from main products collection
+            await db.collection('products').doc(id).delete();
+            
+            // Also delete from category's products subcollection if categoryId exists
+            if (categoryId) {
+                await db.collection('categories')
+                    .doc(categoryId)
+                    .collection('products')
+                    .doc(id)
+                    .delete();
+            }
+            
+            // Update local state and UI
+            allProducts = allProducts.filter(p => p.id !== id);
+            filterProducts(document.getElementById('search-products').value.toLowerCase());
+            showToast("Product deleted successfully", "success");
+            
+        } catch (error) {
+            console.error("Error deleting product:", error);
+            showToast("Failed to delete product", "error");
         }
+    }
+}
 
         function openAdvancedMenu() {
             document.getElementById('advanced-menu').classList.add('open');
