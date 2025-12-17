@@ -2895,34 +2895,56 @@
             }
         }
 
-        async function toggleAvailability(id, status) {
-            try {
-                await db.collection('products').doc(id).update({ 
-                    isAvailable: status, 
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp() 
-                });
-                
-                // Update local state
-                const p = allProducts.find(x => x.id === id);
-                if (p) {
-                    p.isAvailable = status;
-                }
-                
-                // Re-render
-                filterProducts(document.getElementById('search-products').value.toLowerCase());
-                
-                showToast(status ? "Product visible" : "Product hidden", 'success');
-                
-                // Close any open desktop popups
-                document.querySelectorAll('.desktop-popup').forEach(popup => {
-                    popup.classList.remove('open');
-                });
-                
-            } catch (e) {
-                console.error(e);
-                showToast('Failed to update product status', 'error');
-            }
+async function toggleAvailability(id, status) {
+    try {
+        // Get the product to know its categoryId
+        const productDoc = await db.collection('products').doc(id).get();
+        if (!productDoc.exists) {
+            showToast("Product not found", "error");
+            return;
         }
+        
+        const productData = productDoc.data();
+        const categoryId = productData.categoryId;
+        
+        // Update main product document
+        await db.collection('products').doc(id).update({ 
+            isAvailable: status, 
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp() 
+        });
+        
+        // ALSO update the category subcollection document
+        if (categoryId) {
+            await db.collection('categories')
+                .doc(categoryId)
+                .collection('products')
+                .doc(id)
+                .update({
+                    isAvailable: status
+                });
+        }
+        
+        // Update local state
+        const p = allProducts.find(x => x.id === id);
+        if (p) {
+            p.isAvailable = status;
+        }
+        
+        // Re-render
+        filterProducts(document.getElementById('search-products').value.toLowerCase());
+        
+        showToast(status ? "Product visible" : "Product hidden", 'success');
+        
+        // Close any open desktop popups
+        document.querySelectorAll('.desktop-popup').forEach(popup => {
+            popup.classList.remove('open');
+        });
+        
+    } catch (e) {
+        console.error(e);
+        showToast('Failed to update product status', 'error');
+    }
+}
 
         function manageProduct(id) {
             // Navigate to product management page
