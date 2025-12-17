@@ -2813,27 +2813,7 @@
                 }
             });
 
-            const SIZES = ['XS', 'S', 'M', 'L', 'XL', '2XL'];
-            const sizeSelection = document.getElementById('size-selection');
-            if (sizeSelection) {
-                sizeSelection.innerHTML = SIZES.map(size => `
-                    <div class="size-option" data-size="${size}">
-                        <div class="size-name">${size}</div>
-                        <div class="size-status">Select</div>
-                        <input type="checkbox" style="display: none;">
-                    </div>
-                `).join('');
-
-                sizeSelection.querySelectorAll('.size-option').forEach(option => {
-                    option.addEventListener('click', function() {
-                        this.classList.toggle('selected');
-                        const checkbox = this.querySelector('input[type="checkbox"]');
-                        checkbox.checked = this.classList.contains('selected');
-                        this.querySelector('.size-status').textContent = 
-                            this.classList.contains('selected') ? 'Selected' : 'Select';
-                    });
-                });
-            }
+            // Size selection will now be populated dynamically from category
         });
 
         const firebaseConfig = {
@@ -2852,8 +2832,9 @@
         const storage = firebase.storage();
 
         let allCategories = [];
-        let allFabrics = [];
-        let allColors = [];
+        let currentCategoryColors = [];
+        let currentCategorySizes = [];
+        let currentCategoryFabrics = [];
         let coverImageFile = null;
         let mobileCoverImageFile = null;
         let colorVariants = [];
@@ -2864,6 +2845,7 @@
         let tempSwatchFile = null;
         let existingVariantImages = [];
         let productId = null;
+        let selectedCategoryId = null;
 
         auth.onAuthStateChanged(user => {
             if (!user || user.email !== ADMIN_EMAIL) {
@@ -2893,16 +2875,10 @@
 
         async function loadEditor() {
             try {
+                // Load categories
                 const catSnap = await db.collection('categories').orderBy('name').get();
-                allCategories = catSnap.docs.map(d => ({ id: d.id, name: d.data().name }));
+                allCategories = catSnap.docs.map(d => ({ id: d.id, ...d.data() }));
                 setupCategoryDropdown();
-                
-                const fabricSnap = await db.collection('fabrics').orderBy('name').get();
-                allFabrics = fabricSnap.docs.map(d => d.data().name);
-                setupFabricDropdown();
-                
-                const colorSnap = await db.collection('colors').orderBy('name').get();
-                allColors = colorSnap.docs.map(d => ({name: d.data().name, hex: d.data().hex}));
                 
                 const params = new URLSearchParams(window.location.search);
                 const id = params.get('id');
@@ -3016,6 +2992,76 @@
             });
         }
 
+        async function selectCategory(categoryId, categoryName, platform = 'desktop') {
+            selectedCategoryId = categoryId;
+            
+            if (platform === 'desktop') {
+                document.getElementById('selected-category').value = categoryId;
+                document.getElementById('desktop-cat-display').textContent = categoryName;
+                document.getElementById('desktop-category-options').classList.remove('open');
+                document.getElementById('desktop-category-trigger').classList.remove('open');
+                
+                document.querySelectorAll('#desktop-category-options .custom-option').forEach(option => {
+                    option.classList.remove('selected');
+                    if (option.getAttribute('data-value') === categoryId) {
+                        option.classList.add('selected');
+                    }
+                });
+            } else {
+                document.getElementById('mobile-selected-category').value = categoryId;
+                document.getElementById('mobile-cat-display').textContent = categoryName;
+                document.getElementById('mobile-category-options').classList.remove('open');
+                document.getElementById('mobile-category-trigger').classList.remove('open');
+                
+                document.querySelectorAll('#mobile-category-options .custom-option').forEach(option => {
+                    option.classList.remove('selected');
+                    if (option.getAttribute('data-value') === categoryId) {
+                        option.classList.add('selected');
+                    }
+                });
+            }
+            
+            // Load category-specific data
+            await loadCategoryData(categoryId);
+        }
+
+        async function loadCategoryData(categoryId) {
+            try {
+                // Load colors from category's colors subcollection
+                const colorsSnap = await db.collection('categories')
+                    .doc(categoryId)
+                    .collection('colors')
+                    .orderBy('name')
+                    .get();
+                currentCategoryColors = colorsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+                
+                // Load sizes from category's sizes subcollection
+                const sizesSnap = await db.collection('categories')
+                    .doc(categoryId)
+                    .collection('sizes')
+                    .orderBy('name')
+                    .get();
+                currentCategorySizes = sizesSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+                
+                // Load fabrics from category's fabrics subcollection
+                const fabricsSnap = await db.collection('categories')
+                    .doc(categoryId)
+                    .collection('fabrics')
+                    .orderBy('name')
+                    .get();
+                currentCategoryFabrics = fabricsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+                
+                // Setup dropdowns with category-specific data
+                setupFabricDropdown();
+                
+            } catch (error) {
+                console.error('Error loading category data:', error);
+                currentCategoryColors = [];
+                currentCategorySizes = [];
+                currentCategoryFabrics = [];
+            }
+        }
+
         function setupFabricDropdown() {
             const desktopContainer = document.getElementById('fabric-select');
             let desktopHtml = `
@@ -3027,8 +3073,8 @@
                 </div>
                 <div class="custom-select-options" id="desktop-fabric-options">
             `;
-            allFabrics.forEach(fabric => {
-                desktopHtml += `<div class="custom-option" data-value="${fabric}">${fabric}</div>`;
+            currentCategoryFabrics.forEach(fabric => {
+                desktopHtml += `<div class="custom-option" data-value="${fabric.name}">${fabric.name}</div>`;
             });
             desktopHtml += `<div class="custom-option add-new-option" onclick="openAddFabricModal('desktop')">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -3050,8 +3096,8 @@
                 </div>
                 <div class="custom-select-options" id="mobile-fabric-options">
             `;
-            allFabrics.forEach(fabric => {
-                mobileHtml += `<div class="custom-option" data-value="${fabric}">${fabric}</div>`;
+            currentCategoryFabrics.forEach(fabric => {
+                mobileHtml += `<div class="custom-option" data-value="${fabric.name}">${fabric.name}</div>`;
             });
             mobileHtml += `<div class="custom-option add-new-option" onclick="openAddFabricModal('mobile')">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -3121,9 +3167,9 @@
                 </div>
                 <div class="custom-select-options" id="color-name-options">
             `;
-            allColors.forEach(color => {
-                colorHtml += `<div class="custom-option" data-value="${color.name}" data-hex="${color.hex}">
-                    <div class="color-square" style="background-color: ${color.hex};"></div>
+            currentCategoryColors.forEach(color => {
+                colorHtml += `<div class="custom-option" data-value="${color.name}" data-hex="${color.hex || ''}" data-image="${color.image || ''}">
+                    <div class="color-square" style="background-color: ${color.hex || '#ffffff'}; ${color.image ? 'background-image: url(' + color.image + '); background-size: cover;' : ''}"></div>
                     <span>${color.name}</span>
                 </div>`;
             });
@@ -3150,7 +3196,8 @@
                 option.addEventListener('click', () => {
                     const name = option.getAttribute('data-value');
                     const hex = option.getAttribute('data-hex');
-                    selectColor(name, hex);
+                    const image = option.getAttribute('data-image');
+                    selectColor(name, hex, image);
                 });
             });
 
@@ -3163,32 +3210,30 @@
             });
         }
 
-        function selectCategory(categoryId, categoryName, platform = 'desktop') {
-            if (platform === 'desktop') {
-                document.getElementById('selected-category').value = categoryId;
-                document.getElementById('desktop-cat-display').textContent = categoryName;
-                document.getElementById('desktop-category-options').classList.remove('open');
-                document.getElementById('desktop-category-trigger').classList.remove('open');
+        function setupSizeSelection() {
+            const sizeSelection = document.getElementById('size-selection');
+            sizeSelection.innerHTML = '';
+            
+            currentCategorySizes.forEach(size => {
+                const sizeOption = document.createElement('div');
+                sizeOption.className = 'size-option';
+                sizeOption.setAttribute('data-size', size.name);
+                sizeOption.innerHTML = `
+                    <div class="size-name">${size.name}</div>
+                    <div class="size-status">Select</div>
+                    <input type="checkbox" style="display: none;">
+                `;
                 
-                document.querySelectorAll('#desktop-category-options .custom-option').forEach(option => {
-                    option.classList.remove('selected');
-                    if (option.getAttribute('data-value') === categoryId) {
-                        option.classList.add('selected');
-                    }
+                sizeOption.addEventListener('click', function() {
+                    this.classList.toggle('selected');
+                    const checkbox = this.querySelector('input[type="checkbox"]');
+                    checkbox.checked = this.classList.contains('selected');
+                    this.querySelector('.size-status').textContent = 
+                        this.classList.contains('selected') ? 'Selected' : 'Select';
                 });
-            } else {
-                document.getElementById('mobile-selected-category').value = categoryId;
-                document.getElementById('mobile-cat-display').textContent = categoryName;
-                document.getElementById('mobile-category-options').classList.remove('open');
-                document.getElementById('mobile-category-trigger').classList.remove('open');
                 
-                document.querySelectorAll('#mobile-category-options .custom-option').forEach(option => {
-                    option.classList.remove('selected');
-                    if (option.getAttribute('data-value') === categoryId) {
-                        option.classList.add('selected');
-                    }
-                });
-            }
+                sizeSelection.appendChild(sizeOption);
+            });
         }
 
         function selectFabric(fabric, platform = 'desktop') {
@@ -3219,11 +3264,20 @@
             }
         }
 
-        function selectColor(name, hex) {
+        function selectColor(name, hex, image = '') {
             document.getElementById('selected-color-name').value = name;
             document.getElementById('color-name-display').textContent = name;
             document.getElementById('color-hex').value = hex;
             document.getElementById('color-preview').style.backgroundColor = hex;
+            
+            // If color has an image, show it in the swatch preview
+            if (image) {
+                const swatchPreview = document.getElementById('swatch-preview');
+                const swatchContainer = document.getElementById('swatch-preview-container');
+                swatchPreview.src = image;
+                swatchContainer.style.display = 'flex';
+            }
+            
             document.getElementById('color-name-options').classList.remove('open');
             document.getElementById('color-name-trigger').classList.remove('open');
             
@@ -3272,7 +3326,6 @@
             productReviews = data.reviews || [];
             renderReviews();
             
-            
             document.getElementById('product-form').style.display = 'block';
             document.getElementById('loading-state').style.display = 'none';
             document.getElementById('mobile-product-form').style.display = 'block';
@@ -3318,6 +3371,11 @@
         }
 
         function openColorModal(index = null) {
+            if (!selectedCategoryId) {
+                showToast('Please select a category first', 'error');
+                return;
+            }
+            
             editingVariantIndex = index;
             const isEdit = index !== null;
             const data = isEdit ? colorVariants[index] : null;
@@ -3325,11 +3383,12 @@
             document.getElementById('color-modal-title').textContent = isEdit ? 'Edit Variant' : 'Add Variant';
             
             setupColorDropdown();
+            setupSizeSelection();
             
             if (data && data.name) {
-                const color = allColors.find(c => c.name === data.name);
+                const color = currentCategoryColors.find(c => c.name === data.name);
                 if (color) {
-                    selectColor(color.name, color.hex);
+                    selectColor(color.name, color.hex || data.colorHex, color.image || data.hex);
                 }
             } else {
                 document.getElementById('selected-color-name').value = '';
@@ -3348,15 +3407,17 @@
                 swatchContainer.style.display = 'none';
             }
             
-            const sizeOptions = document.querySelectorAll('#size-selection .size-option');
-            sizeOptions.forEach(option => {
-                const size = option.getAttribute('data-size');
-                const selected = data && data.sizes && data.sizes.some(s => s.name === size);
-                
-                option.classList.toggle('selected', selected);
-                option.querySelector('input[type="checkbox"]').checked = selected;
-                option.querySelector('.size-status').textContent = selected ? 'Selected' : 'Select';
-            });
+            // Select sizes
+            if (data && data.sizes) {
+                document.querySelectorAll('#size-selection .size-option').forEach(option => {
+                    const sizeName = option.getAttribute('data-size');
+                    const selected = data.sizes.some(s => s.name === sizeName);
+                    
+                    option.classList.toggle('selected', selected);
+                    option.querySelector('input[type="checkbox"]').checked = selected;
+                    option.querySelector('.size-status').textContent = selected ? 'Selected' : 'Select';
+                });
+            }
             
             const existingGallery = document.getElementById('existing-gallery');
             existingGallery.innerHTML = '';
@@ -3469,75 +3530,94 @@
             element.parentElement.remove();
         }
 
-async function saveColorVariant() {
-    const name = document.getElementById('selected-color-name').value;
-    const hex = document.getElementById('color-hex').value.trim();
-    
-    if (!name) {
-        showToast('Please select or add a color', 'error');
-        return;
-    }
-    
-    if (!hex || !/^#[0-9A-F]{6}$/i.test(hex)) {
-        showToast('Please enter a valid hex color code (e.g., #000000)', 'error');
-        return;
-    }
-    
-    showProgress('Saving variant...', 'Please wait');
-    
-    try {
-        let swatchImage = '';
-        
-        if (tempSwatchFile) {
-            swatchImage = await uploadFile(tempSwatchFile, 'swatches');
-        } else if (editingVariantIndex !== null && colorVariants[editingVariantIndex]) {
-            swatchImage = colorVariants[editingVariantIndex].hex;
+        async function saveColorVariant() {
+            const name = document.getElementById('selected-color-name').value;
+            const hex = document.getElementById('color-hex').value.trim();
+            
+            if (!name) {
+                showToast('Please select or add a color', 'error');
+                return;
+            }
+            
+            if (!hex || !/^#[0-9A-F]{6}$/i.test(hex)) {
+                showToast('Please enter a valid hex color code (e.g., #000000)', 'error');
+                return;
+            }
+            
+            if (!selectedCategoryId) {
+                showToast('Please select a category first', 'error');
+                return;
+            }
+            
+            showProgress('Saving variant...', 'Please wait');
+            
+            try {
+                let swatchImage = '';
+                
+                if (tempSwatchFile) {
+                    swatchImage = await uploadFile(tempSwatchFile, 'colors');
+                } else if (editingVariantIndex !== null && colorVariants[editingVariantIndex]) {
+                    swatchImage = colorVariants[editingVariantIndex].hex;
+                }
+                
+                const sizes = [];
+                document.querySelectorAll('#size-selection .size-option.selected').forEach(option => {
+                    const sizeName = option.getAttribute('data-size');
+                    sizes.push({
+                        name: sizeName,
+                        available: true
+                    });
+                });
+                
+                // Save color to category's colors subcollection if it doesn't exist
+                const existingColor = currentCategoryColors.find(c => c.name === name);
+                if (!existingColor) {
+                    await db.collection('categories')
+                        .doc(selectedCategoryId)
+                        .collection('colors')
+                        .add({
+                            name: name,
+                            hex: hex,
+                            image: swatchImage || '',
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                    
+                    // Refresh category colors
+                    await loadCategoryData(selectedCategoryId);
+                }
+                
+                const newImages = [];
+                for (const file of tempVariantFiles) {
+                    const url = await uploadFile(file, 'variants');
+                    newImages.push(url);
+                }
+                
+                const allImages = [...existingVariantImages, ...newImages];
+                
+                const variant = {
+                    name,
+                    hex: swatchImage || hex,
+                    colorHex: hex,
+                    sizes, // Can be empty array
+                    images: allImages
+                };
+                
+                if (editingVariantIndex !== null) {
+                    colorVariants[editingVariantIndex] = variant;
+                } else {
+                    colorVariants.push(variant);
+                }
+                
+                renderVariants();
+                closeColorModal();
+                showToast('Variant saved successfully', 'success');
+            } catch (error) {
+                console.error('Error saving variant:', error);
+                showToast('Failed to save variant', 'error');
+            } finally {
+                hideProgress();
+            }
         }
-        
-        const sizes = [];
-        document.querySelectorAll('#size-selection .size-option.selected').forEach(option => {
-            const sizeName = option.getAttribute('data-size');
-            sizes.push({
-                name: sizeName,
-                available: true
-            });
-        });
-        
-        // REMOVED SIZE VALIDATION HERE
-        // Sizes can be empty array now
-        
-        const newImages = [];
-        for (const file of tempVariantFiles) {
-            const url = await uploadFile(file, 'variants');
-            newImages.push(url);
-        }
-        
-        const allImages = [...existingVariantImages, ...newImages];
-        
-        const variant = {
-            name,
-            hex: swatchImage || hex,
-            colorHex: hex,
-            sizes, // This can be empty array []
-            images: allImages
-        };
-        
-        if (editingVariantIndex !== null) {
-            colorVariants[editingVariantIndex] = variant;
-        } else {
-            colorVariants.push(variant);
-        }
-        
-        renderVariants();
-        closeColorModal();
-        showToast('Variant saved successfully', 'success');
-    } catch (error) {
-        console.error('Error saving variant:', error);
-        showToast('Failed to save variant', 'error');
-    } finally {
-        hideProgress();
-    }
-}
 
         function renderVariants() {
             const desktopContainer = document.getElementById('variants-list');
@@ -3840,12 +3920,6 @@ async function saveColorVariant() {
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
                 
-await updateCategoryWithProductInfo(categoryId, {
-    fabric: fabric,
-    sizes: getAllSizesFromVariants(colorVariants),
-    colors: getAllColorsFromVariants(colorVariants)
-});
-
                 if (productId) {
                     // Update existing product
                     const productRef = db.collection('products').doc(productId);
@@ -3901,74 +3975,6 @@ await updateCategoryWithProductInfo(categoryId, {
                 hideProgress();
             }
         }
-// Helper function to extract all unique sizes from variants
-function getAllSizesFromVariants(colorVariants) {
-    const sizeSet = new Set();
-    colorVariants.forEach(variant => {
-        if (variant.sizes && variant.sizes.length > 0) {
-            variant.sizes.forEach(size => {
-                if (size.name) sizeSet.add(size.name);
-            });
-        }
-    });
-    return Array.from(sizeSet);
-}
-
-// Helper function to extract all colors from variants
-function getAllColorsFromVariants(colorVariants) {
-    return colorVariants.map(variant => ({
-        name: variant.name,
-        hex: variant.colorHex || '#000000',
-        image: variant.hex || variant.images?.[0] || ''
-    }));
-}
-
-// Function to update category with product info
-async function updateCategoryWithProductInfo(categoryId, productInfo) {
-    try {
-        const categoryRef = db.collection('categories').doc(categoryId);
-        
-        // Get current category data
-        const categoryDoc = await categoryRef.get();
-        const currentData = categoryDoc.exists ? categoryDoc.data() : {};
-        
-        // Merge existing data with new product info
-        const updatedData = {
-            ...currentData,
-            fabric: productInfo.fabric || currentData.fabric,
-            sizes: mergeArrays(currentData.sizes || [], productInfo.sizes || []),
-            colors: mergeColors(currentData.colors || [], productInfo.colors || [])
-        };
-        
-        await categoryRef.set(updatedData, { merge: true });
-        
-    } catch (error) {
-        console.error('Error updating category:', error);
-    }
-}
-
-// Helper function to merge arrays without duplicates
-function mergeArrays(existingArray, newArray) {
-    const mergedSet = new Set([...existingArray, ...newArray]);
-    return Array.from(mergedSet);
-}
-
-// Helper function to merge colors without duplicates
-function mergeColors(existingColors, newColors) {
-    const colorMap = new Map();
-    
-    // Add existing colors to map
-    existingColors.forEach(color => {
-        if (color.name) colorMap.set(color.name, color);
-    });
-    
-    // Add/update with new colors
-    newColors.forEach(color => {
-        if (color.name) colorMap.set(color.name, color);
-    });
-    
-    return Array.from(colorMap.values());
-}
 
         // Helper function to update product in category's products subcollection
         async function updateProductInCategory(productId, categoryId, productData) {
@@ -4006,6 +4012,11 @@ function mergeColors(existingColors, newColors) {
         });
 
         function openAddFabricModal(platform = 'desktop') {
+            if (!selectedCategoryId) {
+                showToast('Please select a category first', 'error');
+                return;
+            }
+            
             document.getElementById('add-fabric-modal').style.display = 'flex';
             document.getElementById('add-fabric-modal').setAttribute('data-platform', platform);
             document.getElementById('new-fabric-name').value = '';
@@ -4024,21 +4035,29 @@ function mergeColors(existingColors, newColors) {
                 return;
             }
             
-            if (allFabrics.includes(fabricName)) {
-                showToast('Fabric already exists', 'error');
+            if (!selectedCategoryId) {
+                showToast('Please select a category first', 'error');
+                return;
+            }
+            
+            if (currentCategoryFabrics.some(f => f.name === fabricName)) {
+                showToast('Fabric already exists in this category', 'error');
                 return;
             }
             
             showProgress('Adding fabric...', 'Please wait');
             
             try {
-                await db.collection('fabrics').add({
-                    name: fabricName,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
+                await db.collection('categories')
+                    .doc(selectedCategoryId)
+                    .collection('fabrics')
+                    .add({
+                        name: fabricName,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
                 
-                allFabrics.push(fabricName);
-                setupFabricDropdown();
+                // Refresh category fabrics
+                await loadCategoryData(selectedCategoryId);
                 
                 if (platform === 'desktop') {
                     selectFabric(fabricName, 'desktop');
@@ -4057,6 +4076,11 @@ function mergeColors(existingColors, newColors) {
         }
 
         function openAddColorModal() {
+            if (!selectedCategoryId) {
+                showToast('Please select a category first', 'error');
+                return;
+            }
+            
             document.getElementById('add-color-modal').style.display = 'flex';
             document.getElementById('new-color-name').value = '';
             document.getElementById('new-color-hex').value = '';
@@ -4088,22 +4112,33 @@ function mergeColors(existingColors, newColors) {
                 return;
             }
             
-            if (allColors.some(c => c.name === colorName)) {
-                showToast('Color already exists', 'error');
+            if (!selectedCategoryId) {
+                showToast('Please select a category first', 'error');
+                return;
+            }
+            
+            if (currentCategoryColors.some(c => c.name === colorName)) {
+                showToast('Color already exists in this category', 'error');
                 return;
             }
             
             showProgress('Adding color...', 'Please wait');
             
             try {
-                await db.collection('colors').add({
-                    name: colorName,
-                    hex: colorHex,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
+                await db.collection('categories')
+                    .doc(selectedCategoryId)
+                    .collection('colors')
+                    .add({
+                        name: colorName,
+                        hex: colorHex,
+                        image: '', // Image can be added later
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
                 
-                allColors.push({name: colorName, hex: colorHex});
+                // Refresh category colors
+                await loadCategoryData(selectedCategoryId);
                 
+                // Refresh color dropdown
                 setupColorDropdown();
                 selectColor(colorName, colorHex);
                 
