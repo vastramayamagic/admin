@@ -2854,9 +2854,6 @@
     let allCategories = [];
     let allFabrics = [];
     let allColors = [];
-    let categoryColorVariants = []; // NEW: Color variants from selected category
-    let categoryFabrics = []; // NEW: Fabrics from selected category
-    let categorySizes = []; // NEW: Sizes from selected category
     let coverImageFile = null;
     let mobileCoverImageFile = null;
     let colorVariants = [];
@@ -2867,7 +2864,6 @@
     let tempSwatchFile = null;
     let existingVariantImages = [];
     let productId = null;
-    let selectedCategoryId = null;
 
     auth.onAuthStateChanged(user => {
         if (!user || user.email !== ADMIN_EMAIL) {
@@ -2897,16 +2893,14 @@
 
     async function loadEditor() {
         try {
-            // Load categories
             const catSnap = await db.collection('categories').orderBy('name').get();
             allCategories = catSnap.docs.map(d => ({ id: d.id, name: d.data().name }));
             setupCategoryDropdown();
             
-            // Load global fabrics (for fallback)
             const fabricSnap = await db.collection('fabrics').orderBy('name').get();
             allFabrics = fabricSnap.docs.map(d => d.data().name);
+            setupFabricDropdown();
             
-            // Load global colors
             const colorSnap = await db.collection('colors').orderBy('name').get();
             allColors = colorSnap.docs.map(d => ({name: d.data().name, hex: d.data().hex}));
             
@@ -2922,13 +2916,6 @@
                 if (doc.exists) {
                     const data = { id: doc.id, ...doc.data() };
                     populateForm(data);
-                    
-                    // Load category-specific data if category is selected
-                    if (data.categoryId) {
-                        selectedCategoryId = data.categoryId;
-                        await loadCategoryData(data.categoryId);
-                    }
-                    
                     document.getElementById('breadcrumb-product').textContent = data.name;
                     document.getElementById('mobile-breadcrumb-product').textContent = data.name;
                 } else {
@@ -2948,62 +2935,6 @@
             console.error('Error loading editor:', error);
             showToast('Error loading data', 'error');
         }
-    }
-
-    // NEW: Load category-specific data (colors, fabrics, sizes)
-    async function loadCategoryData(categoryId) {
-        try {
-            // Reset category data
-            categoryColorVariants = [];
-            categoryFabrics = [];
-            categorySizes = [];
-            
-            // Load category document
-            const categoryDoc = await db.collection('categories').doc(categoryId).get();
-            if (categoryDoc.exists) {
-                const categoryData = categoryDoc.data();
-                
-                // Load colors from category's colorVariants subcollection
-                const colorsRef = db.collection('categories').doc(categoryId).collection('colorVariants');
-                const colorsSnap = await colorsRef.orderBy('name').get();
-                colorsSnap.forEach(doc => {
-                    categoryColorVariants.push({ id: doc.id, ...doc.data() });
-                });
-                
-                // Load fabrics from category's fabrics subcollection
-                const fabricsRef = db.collection('categories').doc(categoryId).collection('fabrics');
-                const fabricsSnap = await fabricsRef.orderBy('name').get();
-                fabricsSnap.forEach(doc => {
-                    categoryFabrics.push(doc.data().name);
-                });
-                
-                // Load sizes from category's sizes subcollection
-                const sizesRef = db.collection('categories').doc(categoryId).collection('sizes');
-                const sizesSnap = await sizesRef.orderBy('order').get();
-                sizesSnap.forEach(doc => {
-                    categorySizes.push(doc.data().name);
-                });
-                
-                // Update UI
-                updateCategorySpecificUI();
-            }
-        } catch (error) {
-            console.error('Error loading category data:', error);
-        }
-    }
-
-    // NEW: Update UI with category-specific data
-    function updateCategorySpecificUI() {
-        // Update fabric dropdown with category fabrics (or global as fallback)
-        const fabricsToUse = categoryFabrics.length > 0 ? categoryFabrics : allFabrics;
-        setupFabricDropdown(fabricsToUse);
-        
-        // Update size selection with category sizes (or global as fallback)
-        const sizesToUse = categorySizes.length > 0 ? categorySizes : ['XS', 'S', 'M', 'L', 'XL', '2XL'];
-        updateSizeSelection(sizesToUse);
-        
-        // Update variants list
-        renderVariants();
     }
 
     function setupCategoryDropdown() {
@@ -3085,7 +3016,7 @@
         });
     }
 
-    function setupFabricDropdown(fabricsList) {
+    function setupFabricDropdown() {
         const desktopContainer = document.getElementById('fabric-select');
         let desktopHtml = `
             <div class="custom-select-trigger" id="desktop-fabric-trigger">
@@ -3096,7 +3027,7 @@
             </div>
             <div class="custom-select-options" id="desktop-fabric-options">
         `;
-        fabricsList.forEach(fabric => {
+        allFabrics.forEach(fabric => {
             desktopHtml += `<div class="custom-option" data-value="${fabric}">${fabric}</div>`;
         });
         desktopHtml += `<div class="custom-option add-new-option" onclick="openAddFabricModal('desktop')">
@@ -3119,7 +3050,7 @@
             </div>
             <div class="custom-select-options" id="mobile-fabric-options">
         `;
-        fabricsList.forEach(fabric => {
+        allFabrics.forEach(fabric => {
             mobileHtml += `<div class="custom-option" data-value="${fabric}">${fabric}</div>`;
         });
         mobileHtml += `<div class="custom-option add-new-option" onclick="openAddFabricModal('mobile')">
@@ -3179,29 +3110,6 @@
         });
     }
 
-    function updateSizeSelection(sizesList) {
-        const sizeSelection = document.getElementById('size-selection');
-        if (sizeSelection) {
-            sizeSelection.innerHTML = sizesList.map(size => `
-                <div class="size-option" data-size="${size}">
-                    <div class="size-name">${size}</div>
-                    <div class="size-status">Select</div>
-                    <input type="checkbox" style="display: none;">
-                </div>
-            `).join('');
-
-            sizeSelection.querySelectorAll('.size-option').forEach(option => {
-                option.addEventListener('click', function() {
-                    this.classList.toggle('selected');
-                    const checkbox = this.querySelector('input[type="checkbox"]');
-                    checkbox.checked = this.classList.contains('selected');
-                    this.querySelector('.size-status').textContent = 
-                        this.classList.contains('selected') ? 'Selected' : 'Select';
-                });
-            });
-        }
-    }
-
     function setupColorDropdown() {
         const colorContainer = document.getElementById('color-name-select');
         let colorHtml = `
@@ -3213,18 +3121,12 @@
             </div>
             <div class="custom-select-options" id="color-name-options">
         `;
-        
-        // Use category colors if available, otherwise global colors
-        const colorsToUse = categoryColorVariants.length > 0 ? categoryColorVariants : allColors;
-        
-        colorsToUse.forEach(color => {
-            const colorHex = color.hex || color.hexCode || color.colorHex || '#000000';
-            colorHtml += `<div class="custom-option" data-value="${color.name}" data-hex="${colorHex}">
-                <div class="color-square" style="background-color: ${colorHex};"></div>
+        allColors.forEach(color => {
+            colorHtml += `<div class="custom-option" data-value="${color.name}" data-hex="${color.hex}">
+                <div class="color-square" style="background-color: ${color.hex};"></div>
                 <span>${color.name}</span>
             </div>`;
         });
-        
         colorHtml += `<div class="custom-option add-new-option" onclick="openAddColorModal()">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M12 5v14"/>
@@ -3261,7 +3163,7 @@
         });
     }
 
-    async function selectCategory(categoryId, categoryName, platform = 'desktop') {
+    function selectCategory(categoryId, categoryName, platform = 'desktop') {
         if (platform === 'desktop') {
             document.getElementById('selected-category').value = categoryId;
             document.getElementById('desktop-cat-display').textContent = categoryName;
@@ -3287,10 +3189,6 @@
                 }
             });
         }
-        
-        // NEW: Load category-specific data
-        selectedCategoryId = categoryId;
-        await loadCategoryData(categoryId);
     }
 
     function selectFabric(fabric, platform = 'desktop') {
@@ -3374,6 +3272,20 @@
         productReviews = data.reviews || [];
         renderReviews();
         
+        if (data.colors && data.colors.length > 0) {
+            colorVariants.forEach((variant, index) => {
+                const colorData = data.colors.find(c => c.name === variant.name);
+                if (colorData) {
+                    colorVariants[index] = {
+                        ...colorVariants[index],
+                        colorHex: colorData.hex || variant.colorHex,
+                        hex: colorData.image_url || variant.hex
+                    };
+                }
+            });
+            renderVariants();
+        }
+        
         document.getElementById('product-form').style.display = 'block';
         document.getElementById('loading-state').style.display = 'none';
         document.getElementById('mobile-product-form').style.display = 'block';
@@ -3428,11 +3340,9 @@
         setupColorDropdown();
         
         if (data && data.name) {
-            const color = categoryColorVariants.find(c => c.name === data.name) || 
-                         allColors.find(c => c.name === data.name);
+            const color = allColors.find(c => c.name === data.name);
             if (color) {
-                const colorHex = color.hex || color.hexCode || color.colorHex;
-                selectColor(color.name, colorHex);
+                selectColor(color.name, color.hex);
             }
         } else {
             document.getElementById('selected-color-name').value = '';
@@ -3451,26 +3361,15 @@
             swatchContainer.style.display = 'none';
         }
         
-        // Update size selection with category sizes
-        const sizesToUse = categorySizes.length > 0 ? categorySizes : ['XS', 'S', 'M', 'L', 'XL', '2XL'];
-        updateSizeSelection(sizesToUse);
-        
-        // Pre-select sizes if editing
-        if (data && data.sizes) {
-            setTimeout(() => {
-                const sizeOptions = document.querySelectorAll('#size-selection .size-option');
-                sizeOptions.forEach(option => {
-                    const size = option.getAttribute('data-size');
-                    const selected = data.sizes.some(s => s.name === size);
-                    
-                    if (selected) {
-                        option.classList.add('selected');
-                        option.querySelector('input[type="checkbox"]').checked = true;
-                        option.querySelector('.size-status').textContent = 'Selected';
-                    }
-                });
-            }, 100);
-        }
+        const sizeOptions = document.querySelectorAll('#size-selection .size-option');
+        sizeOptions.forEach(option => {
+            const size = option.getAttribute('data-size');
+            const selected = data && data.sizes && data.sizes.some(s => s.name === size);
+            
+            option.classList.toggle('selected', selected);
+            option.querySelector('input[type="checkbox"]').checked = selected;
+            option.querySelector('.size-status').textContent = selected ? 'Selected' : 'Select';
+        });
         
         const existingGallery = document.getElementById('existing-gallery');
         existingGallery.innerHTML = '';
@@ -3935,6 +3834,29 @@
             const category = allCategories.find(cat => cat.id === categoryId);
             const categoryName = category ? category.name : '';
             
+            const allSizes = [];
+            if (colorVariants && colorVariants.length > 0) {
+                const sizeSet = new Set();
+                colorVariants.forEach(variant => {
+                    if (variant.sizes && variant.sizes.length > 0) {
+                        variant.sizes.forEach(size => {
+                            if (size.name) {
+                                sizeSet.add(size.name);
+                            }
+                        });
+                    }
+                });
+                allSizes = Array.from(sizeSet);
+            }
+            
+            const colors = colorVariants ? colorVariants.map(variant => ({
+                name: variant.name,
+                hex: variant.colorHex,
+                image_url: variant.hex
+            })) : [];
+            
+            const colorSwatchImageUrl = colors.length > 0 ? colors[0].image_url : '';
+            
             const productData = {
                 name,
                 description: document.getElementById('description').value.trim(),
@@ -3946,24 +3868,35 @@
                 image: coverUrl,
                 images: [coverUrl],
                 colorVariants,
+                colors,
+                color_swatch_image_url: colorSwatchImageUrl,
+                sizes: allSizes,
+                fabric,
                 reviews: productReviews,
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             };
             
             if (productId) {
                 const productRef = db.collection('products').doc(productId);
+                
                 const currentProduct = await productRef.get();
                 const currentData = currentProduct.data();
                 
                 await productRef.update(productData);
                 
-                await updateProductInCategory(productId, categoryId, {
+                const categoryProductData = {
                     name: productData.name,
                     price: productData.price,
                     oldPrice: productData.oldPrice,
                     image: productData.image,
-                    productId: productId
-                });
+                    productId: productId,
+                    colors: productData.colors,
+                    color_swatch_image_url: productData.color_swatch_image_url,
+                    sizes: productData.sizes,
+                    fabric: productData.fabric
+                };
+                
+                await updateProductInCategory(productId, categoryId, categoryProductData);
                 
                 if (currentData.categoryId && currentData.categoryId !== categoryId) {
                     await removeProductFromCategory(productId, currentData.categoryId);
@@ -3974,13 +3907,19 @@
                 const productRef = await db.collection('products').add(productData);
                 const newProductId = productRef.id;
                 
-                await updateProductInCategory(newProductId, categoryId, {
+                const categoryProductData = {
                     name: productData.name,
                     price: productData.price,
                     oldPrice: productData.oldPrice,
                     image: productData.image,
-                    productId: newProductId
-                });
+                    productId: newProductId,
+                    colors: productData.colors,
+                    color_swatch_image_url: productData.color_swatch_image_url,
+                    sizes: productData.sizes,
+                    fabric: productData.fabric
+                };
+                
+                await updateProductInCategory(newProductId, categoryId, categoryProductData);
                 
                 productId = newProductId;
                 showToast('Product created successfully', 'success');
@@ -4000,11 +3939,23 @@
 
     async function updateProductInCategory(productId, categoryId, productData) {
         try {
+            const categoryProductData = {
+                name: productData.name,
+                price: productData.price,
+                oldPrice: productData.oldPrice,
+                image: productData.image,
+                productId: productId,
+                colors: productData.colors || [],
+                color_swatch_image_url: productData.color_swatch_image_url || '',
+                sizes: productData.sizes || [],
+                fabric: productData.fabric || ''
+            };
+            
             await db.collection('categories')
                 .doc(categoryId)
                 .collection('products')
                 .doc(productId)
-                .set(productData, { merge: true });
+                .set(categoryProductData, { merge: true });
         } catch (error) {
             console.error('Error updating product in category:', error);
             throw error;
@@ -4050,31 +4001,21 @@
             return;
         }
         
+        if (allFabrics.includes(fabricName)) {
+            showToast('Fabric already exists', 'error');
+            return;
+        }
+        
         showProgress('Adding fabric...', 'Please wait');
         
         try {
-            // Save to global fabrics collection
             await db.collection('fabrics').add({
                 name: fabricName,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             });
             
             allFabrics.push(fabricName);
-            
-            // Also save to category's fabrics subcollection if a category is selected
-            if (selectedCategoryId) {
-                await db.collection('categories')
-                    .doc(selectedCategoryId)
-                    .collection('fabrics')
-                    .add({
-                        name: fabricName,
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                
-                categoryFabrics.push(fabricName);
-            }
-            
-            setupFabricDropdown(categoryFabrics.length > 0 ? categoryFabrics : allFabrics);
+            setupFabricDropdown();
             
             if (platform === 'desktop') {
                 selectFabric(fabricName, 'desktop');
@@ -4124,10 +4065,14 @@
             return;
         }
         
+        if (allColors.some(c => c.name === colorName)) {
+            showToast('Color already exists', 'error');
+            return;
+        }
+        
         showProgress('Adding color...', 'Please wait');
         
         try {
-            // Save to global colors collection
             await db.collection('colors').add({
                 name: colorName,
                 hex: colorHex,
@@ -4135,28 +4080,6 @@
             });
             
             allColors.push({name: colorName, hex: colorHex});
-            
-            // Also save to category's colorVariants subcollection if a category is selected
-            if (selectedCategoryId) {
-                await db.collection('categories')
-                    .doc(selectedCategoryId)
-                    .collection('colorVariants')
-                    .add({
-                        name: colorName,
-                        hexCode: colorHex,
-                        swatchImage: '', // Will be added separately
-                        galleryImages: [],
-                        availableSizes: categorySizes.length > 0 ? categorySizes : ['XS', 'S', 'M', 'L', 'XL', '2XL'],
-                        fabric: categoryFabrics.length > 0 ? categoryFabrics[0] : allFabrics[0],
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                
-                categoryColorVariants.push({
-                    name: colorName,
-                    hexCode: colorHex,
-                    availableSizes: categorySizes.length > 0 ? categorySizes : ['XS', 'S', 'M', 'L', 'XL', '2XL']
-                });
-            }
             
             setupColorDropdown();
             selectColor(colorName, colorHex);
@@ -4207,6 +4130,6 @@
             }, 300);
         }, 3000);
     }
-                                                                                                     </script>
+        </script>
 </body>
 </html>
