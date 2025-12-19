@@ -14,10 +14,10 @@
     <style>
         :root {
             --brand: #4f46e5;
-            --brand-soft: rgba(79, 70, 229, 0.08);
+            --brand-soft: rgba(79, 70, 229, 0.1);
             --bg: #f8fafc;
-            --card: rgba(255, 255, 255, 0.9);
-            --border: rgba(226, 232, 240, 0.8);
+            --card: rgba(255, 255, 255, 0.95);
+            --border: rgba(226, 232, 240, 0.9);
             --text: #0f172a;
             --text-sub: #64748b;
             --success: #10b981;
@@ -28,8 +28,8 @@
 
         body.dark-mode {
             --bg: #020617;
-            --card: rgba(15, 23, 42, 0.95);
-            --border: rgba(30, 41, 59, 0.7);
+            --card: rgba(15, 23, 42, 0.98);
+            --border: rgba(30, 41, 59, 0.8);
             --text: #f1f5f9;
             --text-sub: #94a3b8;
         }
@@ -40,122 +40,154 @@
         .glass-nav {
             position: sticky; top: 0; z-index: 1000;
             background: var(--card); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            border-bottom: 1px solid var(--border); padding: 12px 24px;
+            border-bottom: 1px solid var(--border); padding: 14px 24px;
             display: flex; justify-content: space-between; align-items: center;
         }
-        .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.1rem; }
-        .logo-box { background: var(--brand); color: white; width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+        .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.2rem; }
+        .logo-box { background: var(--brand); color: white; width: 32px; height: 32px; border-radius: 9px; display: flex; align-items: center; justify-content: center; }
 
-        .container { max-width: 1400px; margin: 20px auto; padding: 0 16px; }
+        .container { max-width: 1400px; margin: 24px auto; padding: 0 16px; }
 
-        /* --- STAT CARDS (UPDATED FOR MOBILE) --- */
-        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 24px; }
+        /* --- STAT CARDS (ICON LEFT, TEXT RIGHT) --- */
+        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 30px; }
         @media (min-width: 1024px) { .stats-grid { grid-template-columns: repeat(4, 1fr); gap: 24px; } }
         
         .stat-card {
             background: var(--card); border: 1px solid var(--border);
-            padding: 12px; border-radius: 18px; box-shadow: var(--shadow);
-            display: flex; align-items: center; gap: 10px;
+            padding: 16px; border-radius: 22px; box-shadow: var(--shadow);
+            display: flex; align-items: center; gap: 15px;
         }
-        .stat-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+        .stat-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
         .stat-info { display: flex; flex-direction: column; }
-        .stat-card h3 { font-size: 1.1rem; font-weight: 800; line-height: 1.2; }
-        .stat-card p { font-size: 0.6rem; font-weight: 700; color: var(--text-sub); text-transform: uppercase; }
+        .stat-card h3 { font-size: 1.4rem; font-weight: 800; line-height: 1.1; }
+        .stat-card p { font-size: 0.65rem; font-weight: 700; color: var(--text-sub); text-transform: uppercase; letter-spacing: 0.5px; }
 
-        @media (min-width: 1024px) {
-            .stat-card { padding: 20px; gap: 15px; }
-            .stat-icon { width: 48px; height: 48px; font-size: 1.2rem; }
-            .stat-card h3 { font-size: 1.6rem; }
-            .stat-card p { font-size: 0.75rem; }
+        /* --- PREMIUM CONTROL ROW --- */
+        .control-row { 
+            background: var(--card); border: 1px solid var(--border); padding: 10px; 
+            border-radius: 22px; display: flex; flex-direction: column; gap: 16px; margin-bottom: 25px;
+            box-shadow: var(--shadow);
         }
+        @media (min-width: 768px) { .control-row { flex-direction: row; justify-content: space-between; align-items: center; padding: 12px 16px; } }
 
-        /* --- CONTROLS --- */
-        .control-row { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
-        @media (min-width: 768px) { .control-row { flex-direction: row; justify-content: space-between; align-items: center; } }
-
-        .tabs-wrapper { display: flex; background: var(--brand-soft); padding: 4px; border-radius: 12px; gap: 4px; }
+        .tabs-wrapper { display: flex; background: var(--bg); padding: 5px; border-radius: 16px; gap: 6px; }
         @media (max-width: 767px) { .tabs-wrapper { display: none; } }
-        .tab-btn { padding: 8px 16px; border-radius: 8px; border: none; background: transparent; font-weight: 700; color: var(--text-sub); font-size: 0.8rem; cursor: pointer; }
-        .tab-btn.active { background: var(--brand); color: white; }
+        .tab-btn { padding: 12px 24px; border-radius: 12px; border: none; background: transparent; font-weight: 800; color: var(--text-sub); font-size: 0.9rem; cursor: pointer; transition: 0.3s; }
+        .tab-btn.active { background: var(--brand); color: white; box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.2); }
 
-        .search-container { position: relative; flex: 1; }
-        @media (min-width: 768px) { .search-container { width: 320px; } }
-        .search-container input { width: 100%; padding: 12px 14px 12px 42px; border-radius: 14px; border: 1px solid var(--border); background: var(--card); outline: none; font-size: 0.85rem; }
-        .search-container i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-sub); }
+        /* UPGRADED SEARCH BAR */
+        .search-container { position: relative; flex: 1; max-width: 100%; }
+        @media (min-width: 768px) { .search-container { max-width: 400px; } }
+        .search-container input { 
+            width: 100%; padding: 16px 20px 16px 54px; border-radius: 18px; 
+            border: 1px solid var(--border); background: var(--bg); outline: none; 
+            font-size: 1rem; font-weight: 500; transition: 0.3s; 
+        }
+        .search-container input:focus { border-color: var(--brand); background: white; box-shadow: 0 0 0 5px var(--brand-soft); }
+        .search-container i { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: var(--text-sub); font-size: 1.1rem; }
 
-        .mobile-filter-dropdown { display: none; position: relative; }
-        @media (max-width: 767px) { .mobile-filter-dropdown { display: block; } .control-inner { display: flex; align-items: center; gap: 10px; } }
-        .filter-trigger { background: var(--brand-soft); color: var(--brand); border: 1px solid var(--brand); padding: 10px 14px; border-radius: 14px; font-size: 0.85rem; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+        /* UPGRADED MOBILE FILTER */
+        .mobile-filter-dropdown { display: none; position: relative; width: 100%; }
+        @media (max-width: 767px) { 
+            .mobile-filter-dropdown { display: block; } 
+            .control-inner { display: flex; flex-direction: column; gap: 12px; width: 100%; }
+        }
+        .filter-trigger { 
+            background: white; color: var(--text); border: 1px solid var(--border); 
+            padding: 16px 20px; border-radius: 18px; font-size: 0.95rem; font-weight: 800; 
+            display: flex; align-items: center; justify-content: space-between; cursor: pointer;
+            box-shadow: var(--shadow);
+        }
+        .mobile-filter-menu {
+            position: absolute; bottom: calc(100% + 12px); left: 0; right: 0;
+            background: var(--card); backdrop-filter: blur(20px); border: 1px solid var(--border);
+            border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); display: none; z-index: 2000;
+            padding: 8px;
+        }
+        .mobile-filter-dropdown.open .mobile-filter-menu { display: block; animation: slideInUp 0.3s ease; }
 
-        /* --- DATA VIEWS --- */
-        .content-card { background: var(--card); border: 1px solid var(--border); border-radius: 24px; box-shadow: var(--shadow); overflow: visible; }
+        /* --- CONTENT CARD (Overflow Fixed) --- */
+        .content-card { background: var(--card); border: 1px solid var(--border); border-radius: 28px; box-shadow: var(--shadow); overflow: visible; }
+        
         @media (min-width: 768px) {
             table { width: 100%; border-collapse: separate; border-spacing: 0; }
-            th { text-align: left; padding: 18px 20px; font-size: 0.7rem; text-transform: uppercase; color: var(--text-sub); border-bottom: 1px solid var(--border); }
-            td { padding: 14px 20px; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+            th { text-align: left; padding: 22px 20px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-sub); border-bottom: 1px solid var(--border); }
+            td { padding: 18px 20px; border-bottom: 1px solid var(--border); font-size: 1rem; }
             .mobile-only { display: none; }
         }
 
         @media (max-width: 767px) {
             .content-card { background: transparent; border: none; box-shadow: none; }
             .desktop-only { display: none; }
-            .order-card { background: var(--card); border: 1px solid var(--border); border-radius: 22px; padding: 16px; margin-bottom: 12px; box-shadow: var(--shadow); }
-            .card-body { display: flex; gap: 12px; margin-bottom: 12px; }
-            .card-img { width: 50px; height: 65px; border-radius: 10px; object-fit: cover; }
-            .card-actions { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 12px; }
+            .order-card { background: var(--card); border: 1px solid var(--border); border-radius: 24px; padding: 18px; margin-bottom: 15px; box-shadow: var(--shadow); }
+            .card-body { display: flex; gap: 15px; margin-bottom: 15px; }
+            .card-img { width: 60px; height: 80px; border-radius: 12px; object-fit: cover; }
+            .card-actions { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 15px; }
         }
 
-        /* --- DROPDOWNS --- */
-        .status-dropdown { position: relative; width: 145px; }
-        .status-trigger { padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); cursor: pointer; display: flex; align-items: center; justify-content: space-between; font-size: 0.75rem; font-weight: 700; }
-        .status-menu { position: absolute; bottom: calc(100% + 8px); left: 0; width: 160px; background: var(--card); backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 14px; box-shadow: 0 15px 30px rgba(0,0,0,0.1); display: none; z-index: 100; }
-        .status-dropdown.open .status-menu { display: block; animation: slideUp 0.2s ease; }
-        .status-item { padding: 10px 14px; display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 0.8rem; font-weight: 600; }
-        .mobile-filter-menu { position: absolute; top: calc(100% + 8px); right: 0; width: 180px; background: var(--card); backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 14px; box-shadow: var(--shadow); display: none; z-index: 200; }
-        .mobile-filter-dropdown.open .mobile-filter-menu { display: block; animation: slideUp 0.2s ease; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* --- SEPARATE ACTION LINKS (DROPDOWN UPGRADE) --- */
+        .status-dropdown { position: relative; width: 170px; }
+        .status-trigger { 
+            padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); 
+            background: var(--bg); cursor: pointer; display: flex; align-items: center; 
+            justify-content: space-between; font-size: 0.85rem; font-weight: 800; transition: 0.2s;
+        }
+        .status-trigger:hover { border-color: var(--brand); }
+        
+        .status-menu {
+            position: absolute; bottom: calc(100% + 10px); left: 0; width: 200px; 
+            background: var(--card); backdrop-filter: blur(20px); border: 1px solid var(--border);
+            border-radius: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.15); display: none; 
+            z-index: 5000; padding: 8px;
+        }
+        .status-dropdown.open .status-menu { display: block; animation: slideInUp 0.2s ease; }
 
-        /* Colors */
+        /* The "Separate Link" UI */
+        .status-item { 
+            padding: 12px; display: flex; align-items: center; gap: 12px; 
+            cursor: pointer; font-size: 0.9rem; font-weight: 700; border-radius: 12px;
+            margin-bottom: 4px; transition: 0.2s; background: transparent;
+            border: 1px solid transparent;
+        }
+        .status-item:last-child { margin-bottom: 0; }
+        .status-item:hover { 
+            background: var(--bg); border-color: var(--border); transform: translateX(5px);
+            color: var(--brand);
+        }
+        .status-item i { width: 24px; text-align: center; }
+
         .st-Ordered { color: var(--warning); }
         .st-Shipped { color: var(--brand); }
         .st-Delivered { color: var(--success); }
         .st-Cancelled { color: var(--danger); }
 
-        /* --- PREMIUM DRAWER (UPDATED) --- */
-        .drawer-overlay { position: fixed; inset: 0; background: rgba(2, 6, 23, 0.4); backdrop-filter: blur(8px); display: none; justify-content: flex-end; z-index: 2000; }
+        /* --- EMPTY STATE --- */
+        .empty-state { padding: 80px 20px; text-align: center; color: var(--text-sub); }
+        .empty-state i { font-size: 3rem; margin-bottom: 15px; opacity: 0.2; }
+        .empty-state h4 { font-size: 1.2rem; font-weight: 800; color: var(--text); }
+
+        /* --- DRAWER --- */
+        .drawer-overlay { position: fixed; inset: 0; background: rgba(2, 6, 23, 0.4); backdrop-filter: blur(8px); display: none; justify-content: flex-end; z-index: 6000; }
         .drawer-overlay.active { display: flex; }
-        .drawer { 
-            width: 100%; max-width: 500px; background: var(--bg); height: 100%; 
-            display: flex; flex-direction: column; position: relative;
-            animation: drawerIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
+        .drawer { width: 100%; max-width: 550px; background: var(--bg); height: 100%; display: flex; flex-direction: column; animation: drawerIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
         @keyframes drawerIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
 
         .drawer-header { padding: 25px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--card); }
         .drawer-body { flex: 1; overflow-y: auto; padding: 20px; }
         .drawer-footer { padding: 20px 25px; border-top: 1px solid var(--border); background: var(--card); }
 
-        .drawer-section-label { font-size: 0.65rem; font-weight: 800; color: var(--brand); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; display: block; }
-        .drawer-card { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 18px; margin-bottom: 20px; }
-
-        .item-row { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
-        .item-row:last-child { border-bottom: none; }
-        .item-img { width: 45px; height: 60px; border-radius: 8px; object-fit: cover; }
-
-        /* Confirm Modal */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(2, 6, 23, 0.4); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 5000; padding: 20px; }
+        /* Modal */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(2, 6, 23, 0.4); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 7000; padding: 20px; }
         .modal-overlay.active { display: flex; }
-        .confirm-box { background: var(--card); width: 100%; max-width: 360px; padding: 25px; border-radius: 24px; text-align: center; }
-        .flow-viz { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 20px 0; }
-        .tag { padding: 8px 12px; border-radius: 10px; font-size: 0.75rem; font-weight: 800; border: 1px solid var(--border); background: var(--bg); }
-        .btn-confirm { background: var(--brand); color: white; border: none; padding: 14px; border-radius: 14px; font-weight: 700; width: 100%; cursor: pointer; }
+        .confirm-box { background: var(--card); width: 100%; max-width: 400px; padding: 30px; border-radius: 28px; text-align: center; }
+        .btn-confirm { background: var(--brand); color: white; border: none; padding: 16px; border-radius: 16px; font-weight: 700; width: 100%; cursor: pointer; }
     </style>
 </head>
 <body>
 
     <nav class="glass-nav">
-        <div class="logo"><div class="logo-box">V</div><span>Vastramaya</span></div>
-        <button onclick="toggleTheme()" style="border:none; background:var(--brand-soft); color:var(--brand); width:36px; height:36px; border-radius:50%;"><i class="fa-solid fa-moon"></i></button>
+        <div class="logo"><div class="logo-box">V</div><span>Vastramaya Admin</span></div>
+        <button onclick="toggleTheme()" style="border:none; background:var(--brand-soft); color:var(--brand); width:42px; height:42px; border-radius:50%; cursor:pointer;"><i class="fa-solid fa-moon"></i></button>
     </nav>
 
     <div class="container">
@@ -181,24 +213,28 @@
 
         <div class="control-row">
             <div class="tabs-wrapper">
-                <button class="tab-btn active" onclick="switchTab('Today', this)">Today</button>
+                <button class="tab-btn active" onclick="switchTab('Today', this)">Today's Arrivals</button>
                 <button class="tab-btn" onclick="switchTab('Ordered', this)">Pending</button>
                 <button class="tab-btn" onclick="switchTab('Shipped', this)">Shipped</button>
-                <button class="tab-btn" onclick="switchTab('All', this)">History</button>
+                <button class="tab-btn" onclick="switchTab('All', this)">Full History</button>
             </div>
 
             <div class="control-inner">
                 <div class="search-container">
                     <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" id="orderSearch" placeholder="Search..." onkeyup="renderUI()">
+                    <input type="text" id="orderSearch" placeholder="Search customer or order ID..." onkeyup="renderUI()">
                 </div>
+                <!-- Upgraded Mobile Filter Dropdown -->
                 <div class="mobile-filter-dropdown" id="mobFilter">
-                    <div class="filter-trigger" onclick="toggleMobFilter()"><span id="activeFilterLabel">Today</span> <i class="fa-solid fa-chevron-down"></i></div>
+                    <div class="filter-trigger" onclick="toggleMobFilter()">
+                        <span id="activeFilterLabel">Today's Arrivals</span> 
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
                     <div class="mobile-filter-menu">
-                        <div class="status-item" onclick="switchTab('Today', this, true)">Today</div>
-                        <div class="status-item" onclick="switchTab('Ordered', this, true)">Pending</div>
-                        <div class="status-item" onclick="switchTab('Shipped', this, true)">Shipped</div>
-                        <div class="status-item" onclick="switchTab('All', this, true)">Full History</div>
+                        <div class="status-item" onclick="switchTab('Today', this, true)"><i class="fa-solid fa-calendar-day"></i> Today's Arrivals</div>
+                        <div class="status-item" onclick="switchTab('Ordered', this, true)"><i class="fa-solid fa-clock"></i> Pending Orders</div>
+                        <div class="status-item" onclick="switchTab('Shipped', this, true)"><i class="fa-solid fa-truck-fast"></i> Shipped Orders</div>
+                        <div class="status-item" onclick="switchTab('All', this, true)"><i class="fa-solid fa-list"></i> Full History</div>
                     </div>
                 </div>
             </div>
@@ -206,7 +242,7 @@
 
         <div id="mainDisplay" class="content-card">
             <table class="desktop-only">
-                <thead><tr><th>Order Info</th><th>Customer</th><th>Total</th><th>Status</th><th>Action</th></tr></thead>
+                <thead><tr><th>Order Details</th><th>Customer</th><th>Total</th><th>Status</th><th>Action</th></tr></thead>
                 <tbody id="ordersBodyDesktop"></tbody>
             </table>
             <div id="ordersBodyMobile" class="mobile-only"></div>
@@ -216,23 +252,23 @@
     <!-- UPDATE MODAL -->
     <div class="modal-overlay" id="confirmModal">
         <div class="confirm-box">
-            <h3 style="font-size:1.1rem; font-weight:800;">Change Status?</h3>
-            <div class="flow-viz">
-                <div class="tag" id="flowFrom">...</div>
+            <h3 style="font-weight:800;">Change Status?</h3>
+            <div style="display:flex; align-items:center; justify-content:center; gap:12px; margin:25px 0;">
+                <div id="flowFrom" style="padding:12px 18px; border-radius:14px; background:var(--bg); font-weight:800; font-size:0.85rem;">...</div>
                 <i class="fa-solid fa-arrow-right" style="color:var(--brand); opacity:0.5;"></i>
-                <div class="tag" id="flowTo" style="border-color:var(--brand); color:var(--brand);">...</div>
+                <div id="flowTo" style="padding:12px 18px; border-radius:14px; border:1px solid var(--brand); color:var(--brand); font-weight:800; font-size:0.85rem;">...</div>
             </div>
-            <button class="btn-confirm" onclick="executeStatusUpdate()">Update Status</button>
-            <button onclick="closeConfirmModal()" style="background:none; border:none; color:var(--text-sub); margin-top:15px; font-weight:700;">Cancel</button>
+            <button class="btn-confirm" onclick="executeStatusUpdate()">Confirm Update</button>
+            <button onclick="closeConfirmModal()" style="background:none; border:none; color:var(--text-sub); margin-top:15px; font-weight:700; cursor:pointer;">Cancel</button>
         </div>
     </div>
 
-    <!-- PREMIUM DRAWER -->
+    <!-- DRAWER -->
     <div class="drawer-overlay" id="orderDrawer">
         <div class="drawer">
             <div class="drawer-header">
-                <div><h2 id="dOrderId" style="font-size:1.1rem; font-weight:800;">Order Details</h2><p id="dOrderDate" style="font-size:0.7rem; color:var(--text-sub);"></p></div>
-                <button onclick="closeDrawer()" style="border:none; background:var(--brand-soft); color:var(--brand); width:35px; height:35px; border-radius:50%; font-size:1rem;">&times;</button>
+                <div><h2 id="dOrderId" style="font-weight:800; font-size:1.1rem;">Details</h2><p id="dOrderDate" style="font-size:0.75rem; color:var(--text-sub);"></p></div>
+                <button onclick="closeDrawer()" style="border:none; background:var(--brand-soft); color:var(--brand); width:38px; height:38px; border-radius:50%; font-size:1.2rem; cursor:pointer;">&times;</button>
             </div>
             <div class="drawer-body" id="dContent"></div>
             <div class="drawer-footer" id="dFooter"></div>
@@ -240,6 +276,7 @@
     </div>
 
     <script>
+        // FIREBASE SETUP
         const firebaseConfig = {
             apiKey: "AIzaSyCdeonH3VytC21F3X6x0rCVCn2xXrGPoug",
             authDomain: "vastramaya---magic.firebaseapp.com",
@@ -277,6 +314,7 @@
             const today = new Date().toDateString();
             dBody.innerHTML = ''; mBody.innerHTML = '';
             let stats = { live: 0, done: 0, pending: 0, cancel: 0 };
+            let count = 0;
 
             ordersData.forEach(order => {
                 const s = order.status || 'Ordered';
@@ -290,12 +328,13 @@
                 let matches = (order.address?.name || "").toLowerCase().includes(search) || (order.orderId || "").toLowerCase().includes(search);
 
                 if (show && matches) {
+                    count++;
                     const ui = config[s];
                     const dd = (ctx) => `
                         <div class="status-dropdown" id="dd-${ctx}-${order.fireId}">
                             <div class="status-trigger" onclick="toggleDD('${ctx}-${order.fireId}')">
                                 <span><i class="fa-solid ${ui.icon} st-${s}"></i> ${ui.label}</span>
-                                <i class="fa-solid fa-chevron-down" style="font-size:0.6rem;"></i>
+                                <i class="fa-solid fa-chevron-down"></i>
                             </div>
                             <div class="status-menu">
                                 ${Object.keys(config).map(k => `<div class="status-item" onclick="askUpdate('${order.fireId}', '${s}', '${k}')"><i class="fa-solid ${config[k].icon} st-${k}"></i> ${config[k].label}</div>`).join('')}
@@ -303,17 +342,24 @@
                         </div>`;
 
                     dBody.innerHTML += `<tr>
-                        <td><div style="display:flex; gap:10px;"><img src="${order.items[0]?.image}" style="width:35px;height:45px;border-radius:6px;object-fit:cover;"><div><b>${order.items[0]?.name}</b><br><small>#${order.orderId}</small></div></div></td>
-                        <td><b>${order.address?.name}</b></td><td style="color:var(--brand); font-weight:800;">₹${order.amount}</td>
-                        <td>${dd('d')}</td><td><button class="tab-btn" style="border:1px solid var(--brand); color:var(--brand); padding:5px 12px;" onclick="openDrawer('${order.fireId}')">View</button></td>
+                        <td><div style="display:flex; gap:12px;"><img src="${order.items[0]?.image}" style="width:45px;height:60px;border-radius:10px;object-fit:cover;"><div><b style="font-weight:800;">${order.items[0]?.name}</b><br><small>#${order.orderId}</small></div></div></td>
+                        <td><b style="font-weight:700;">${order.address?.name}</b></td><td style="color:var(--brand); font-weight:900;">₹${order.amount}</td>
+                        <td>${dd('d')}</td><td><button class="tab-btn" style="border:1px solid var(--brand); color:var(--brand); padding:8px 16px;" onclick="openDrawer('${order.fireId}')">View</button></td>
                     </tr>`;
 
                     mBody.innerHTML += `<div class="order-card">
-                        <div class="card-body"><img src="${order.items[0]?.image}" class="card-img"><div><div style="font-weight:800; font-size:0.85rem;">${order.items[0]?.name}</div><small>#${order.orderId} • ${order.address?.name}</small></div></div>
-                        <div class="card-actions"><b style="color:var(--brand);">₹${order.amount}</b><div style="display:flex;gap:8px;">${dd('m')}<button onclick="openDrawer('${order.fireId}')" style="background:var(--brand-soft);border:none;border-radius:10px;padding:8px;"><i class="fa-solid fa-arrow-right"></i></button></div></div>
+                        <div class="card-body"><img src="${order.items[0]?.image}" class="card-img"><div><div style="font-weight:800; font-size:1rem;">${order.items[0]?.name}</div><small>#${order.orderId} • ${order.address?.name}</small></div></div>
+                        <div class="card-actions"><b style="color:var(--brand); font-size:1.1rem;">₹${order.amount}</b><div style="display:flex;gap:10px;">${dd('m')}<button onclick="openDrawer('${order.fireId}')" style="background:var(--brand-soft);border:none;border-radius:14px;padding:12px;color:var(--brand);"><i class="fa-solid fa-arrow-right"></i></button></div></div>
                     </div>`;
                 }
             });
+
+            if(count === 0) {
+                const emptyHtml = `<div class="empty-state"><i class="fa-solid fa-box-open"></i><h4>No orders found</h4><p>Try searching something else.</p></div>`;
+                mBody.innerHTML = emptyHtml;
+                dBody.innerHTML = `<tr><td colspan="5">${emptyHtml}</td></tr>`;
+            }
+
             ['Live','Done','Pending','Cancel'].forEach(k => document.getElementById(`kpi${k}`).innerText = stats[k.toLowerCase()]);
         }
 
@@ -356,43 +402,17 @@
             const order = ordersData.find(o => o.fireId === id);
             document.getElementById('dOrderId').innerText = `Order #${order.orderId}`;
             document.getElementById('dOrderDate').innerText = new Date(order.createdAt.toMillis()).toLocaleString();
-            
             document.getElementById('dContent').innerHTML = `
-                <span class="drawer-section-label">Shipping Address</span>
-                <div class="drawer-card">
-                    <h4 style="font-weight:700;">${order.address.name}</h4>
-                    <p style="font-size:0.8rem; line-height:1.5; opacity:0.8; margin-top:5px;">
-                        ${order.address.street}, ${order.address.locality}<br>
-                        ${order.address.city}, ${order.address.state} - ${order.address.zip}<br>
-                        <b>Phone:</b> ${order.address.phone}
-                    </p>
+                <p style="font-size:0.65rem; font-weight:800; color:var(--brand); letter-spacing:1px; text-transform:uppercase; margin-bottom:10px;">Delivery Address</p>
+                <div style="background:var(--card); border:1px solid var(--border); border-radius:18px; padding:15px; margin-bottom:20px;">
+                    <h4 style="font-weight:800;">${order.address.name}</h4>
+                    <p style="font-size:0.85rem; line-height:1.5; opacity:0.8; margin-top:5px;">${order.address.street}, ${order.address.locality}<br>${order.address.city}, ${order.address.state} - ${order.address.zip}<br><b>Phone:</b> ${order.address.phone}</p>
                 </div>
-                <span class="drawer-section-label">Order Items</span>
-                <div class="drawer-card" style="padding:5px 15px;">
-                    ${order.items.map(item => `
-                        <div class="item-row">
-                            <img src="${item.image}" class="item-img">
-                            <div style="flex:1;">
-                                <div style="font-weight:700; font-size:0.8rem;">${item.name}</div>
-                                <div style="font-size:0.7rem; color:var(--text-sub);">${item.size} • Qty: ${item.quantity}</div>
-                            </div>
-                            <div style="font-weight:700; font-size:0.85rem;">₹${item.price * item.quantity}</div>
-                        </div>`).join('')}
-                </div>
-                <span class="drawer-section-label">Payment info</span>
-                <div class="drawer-card" style="margin-bottom:0;">
-                    <div style="display:flex; justify-content:space-between; font-size:0.85rem;">
-                        <span style="color:var(--text-sub);">Method</span>
-                        <span style="font-weight:700;">${order.paymentMethod}</span>
-                    </div>
+                <p style="font-size:0.65rem; font-weight:800; color:var(--brand); letter-spacing:1px; text-transform:uppercase; margin-bottom:10px;">Ordered Items</p>
+                <div style="background:var(--card); border:1px solid var(--border); border-radius:18px; padding:5px 15px; margin-bottom:20px;">
+                    ${order.items.map(item => `<div style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--border);"><div style="display:flex; gap:12px;"><img src="${item.image}" style="width:45px;height:60px;border-radius:10px;object-fit:cover;"><div><b style="font-weight:700; font-size:0.85rem;">${item.name}</b><br><small>${item.size} • Qty: ${item.quantity}</small></div></div><b style="font-weight:800; font-size:0.9rem;">₹${item.price * item.quantity}</b></div>`).join('')}
                 </div>`;
-            
-            document.getElementById('dFooter').innerHTML = `
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <span style="font-weight:700; color:var(--text-sub);">Grand Total</span>
-                    <span style="font-weight:800; font-size:1.4rem; color:var(--brand);">₹${order.amount.toLocaleString()}</span>
-                </div>`;
-            
+            document.getElementById('dFooter').innerHTML = `<div style="display:flex; justify-content:space-between; align-items:center;"><b>Grand Total</b><b style="font-size:1.6rem; color:var(--brand); font-weight:900;">₹${order.amount.toLocaleString()}</b></div>`;
             document.getElementById('orderDrawer').classList.add('active');
         }
 
