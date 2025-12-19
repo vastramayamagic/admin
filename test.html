@@ -3,1871 +3,410 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sections Manager - Vastramaya</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Vastramaya | Premium Admin Dashboard</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
     <style>
         :root {
-            --header-height-desktop: 70px;
-            --sidebar-width: 260px;
-            --row-height: 48px;
-            --sidebar-bg: #ffffff;
-            --header-bg: #ffffff;
-            --page-bg: #f4f5f7;
-            --text-color: rgb(24, 24, 26);
-            --icon-color: #6b7280;
-            --icon-active: #5127ba;
-            --active-bg: #f3f4f6;
-            --hover-bg: #f3f4f6;
-            --border-subtle: #e5e7eb;
-            --brand-primary: #5127ba;
-            --brand-gradient: linear-gradient(135deg, #5127ba 0%, #673de6 100%);
-            --danger-color: #ef4444;
-            --success-color: #10B981;
-            --switch-on: #5127ba;
-            --switch-off: #9CA3AF;
-            --shadow-premium: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            --radius-md: 8px;
-            --radius-lg: 12px;
-            --skeleton-color: #f0f0f0;
-            --skeleton-highlight: #f8f8f8;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            min-height: 100vh;
-            background: var(--page-bg);
-            font-family: "DM Sans", Roboto, sans-serif;
-            font-weight: 500;
-            font-size: 14px;
-            line-height: 20px;
-            color: var(--text-color);
-            overflow-x: hidden;
-            width: 100%;
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            -khtml-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-
-        /* ============= DESKTOP LAYOUT ============= */
-        .page-desktop {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-        }
-
-        /* Desktop header - FIXED */
-        .d-topbar {
-            height: var(--header-height-desktop);
-            background: var(--header-bg);
-            border-bottom: 1px solid var(--border-subtle);
-            border-top: 1px solid var(--border-subtle);
-            display: flex;
-            align-items: center;
-            padding-left: 40px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 100;
-            width: 100%;
-        }
-
-        .d-topbar-logo {
-            height: 52px;
-            width: auto;
-            object-fit: contain;
-        }
-
-        /* Desktop main area */
-        .d-app {
-            flex: 1;
-            display: flex;
-            width: 100%;
-            margin-top: var(--header-height-desktop);
-        }
-
-        /* Desktop sidebar - FIXED */
-        .d-sidebar {
-            width: var(--sidebar-width);
-            background: var(--sidebar-bg);
-            border-right: 1px solid var(--border-subtle);
-            display: flex;
-            flex-direction: column;
-            position: fixed;
-            top: var(--header-height-desktop);
-            left: 0;
-            bottom: 0;
-            z-index: 90;
-            overflow-y: auto;
-        }
-
-        .d-sidebar-inner {
-            padding: 32px 16px 16px 12px;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-
-        /* Desktop content - FIXED with margins */
-        .d-content {
-            flex: 1;
-            background: var(--page-bg);
-            overflow-y: auto;
-            width: 100%;
-            margin-left: var(--sidebar-width);
-            height: calc(100vh - var(--header-height-desktop));
-        }
-
-        .content-inner {
-            max-width: 1110px;
-            margin: 0 auto;
-            padding: 24px 24px 40px;
-            width: 100%;
-        }
-
-        /* Premium Card - ENHANCED */
-        .premium-card {
-            background: #ffffff;
-            border-radius: 16px;
-            border: 1px solid #e5e7eb;
-            overflow: hidden;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            margin-bottom: 24px;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .premium-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--brand-gradient);
-            border-radius: 16px 16px 0 0;
-        }
-
-        .premium-card:hover {
-            box-shadow: 0 10px 25px -5px rgba(81, 39, 186, 0.1), 0 10px 10px -5px rgba(81, 39, 186, 0.04);
-            transform: translateY(-2px);
-        }
-
-        .card-header {
-            padding: 24px 32px;
-            border-bottom: 1px solid #e5e7eb;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #fff;
-        }
-
-        .card-title {
-            font-weight: 700;
-            font-size: 20px;
-            line-height: 28px;
-            color: rgb(29, 30, 32);
-            background: linear-gradient(135deg, #5127ba 0%, #673de6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .card-subtitle {
-            font-size: 14px;
-            color: #6b7280;
-            margin-top: 4px;
-        }
-
-        .card-body {
-            padding: 24px 32px;
-        }
-
-        /* Draggable List - ENHANCED */
-        .draggable-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .draggable-item {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            padding: 16px 20px;
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            cursor: grab;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            user-select: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .draggable-item::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 4px;
-            background: linear-gradient(135deg, #5127ba 0%, #673de6 100%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .draggable-item:hover::before {
-            opacity: 1;
-        }
-
-        .draggable-item:hover {
-            border-color: #d1d5db;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            transform: translateX(4px);
-        }
-
-        .draggable-item.dragging {
-            opacity: 0.5;
-            background: #f9fafb;
-            border: 1px dashed var(--brand-primary);
-            transform: rotate(1deg);
-        }
-
-        .drag-handle {
-            color: #9ca3af;
-            cursor: grab;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 24px;
-            height: 24px;
-            flex-shrink: 0;
-            transition: color 0.2s ease;
-        }
-
-        .draggable-item:hover .drag-handle {
-            color: var(--brand-primary);
-        }
-
-        .drag-handle:active {
-            cursor: grabbing;
-        }
-
-        .item-image {
-            width: 48px;
-            height: 48px;
-            border-radius: 10px;
-            object-fit: cover;
-            border: 2px solid white;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            flex-shrink: 0;
-        }
-
-        .item-content {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .item-title {
-            font-weight: 600;
-            font-size: 15px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            color: #1f2937;
-        }
-
-        .item-subtitle {
-            font-size: 13px;
-            color: #6b7280;
-            margin-top: 4px;
-        }
-
-        .item-actions {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .btn-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            border: 1px solid #e5e7eb;
-            background: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            color: #6b7280;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            flex-shrink: 0;
-        }
-
-        .btn-icon:hover {
-            background: #f9fafb;
-            color: var(--text-color);
-            border-color: #d1d5db;
-            transform: translateY(-1px);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .btn-icon.delete:hover {
-            color: var(--danger-color);
-            border-color: #fecaca;
-            background: #fef2f2;
-        }
-
-        /* Category Products Preview - ENHANCED */
-        .category-products-preview {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 12px;
-            max-height: 80px;
-            overflow-y: auto;
-            padding: 12px;
-            border-radius: 10px;
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-            border: 1px solid #e2e8f0;
-        }
-
-        .product-preview-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 10px;
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            font-size: 12px;
-            max-width: 140px;
-            transition: all 0.2s ease;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-        }
-
-        .product-preview-item:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-            border-color: var(--brand-primary);
-        }
-
-        .product-preview-image {
-            width: 24px;
-            height: 24px;
-            border-radius: 6px;
-            object-fit: cover;
-            border: 1px solid #e5e7eb;
-        }
-
-        .product-preview-name {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 80px;
-            font-weight: 500;
-        }
-
-        /* Toggle Switch - FIXED */
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 52px;
-            height: 28px;
-            flex-shrink: 0;
-        }
-
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .toggle-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: var(--switch-off);
-            transition: .3s;
-            border-radius: 34px;
-        }
-
-        .toggle-slider:before {
-            position: absolute;
-            content: "";
-            height: 20px;
-            width: 20px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: .3s;
-            border-radius: 50%;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-
-        input:checked + .toggle-slider {
-            background-color: var(--brand-primary);
-        }
-
-        input:checked + .toggle-slider:before {
-            transform: translateX(24px);
-        }
-
-        /* Buttons - ENHANCED */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.75rem;
-            padding: 12px 24px;
-            font-weight: 600;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border: none;
-            font-size: 14px;
-            white-space: nowrap;
-            min-width: 120px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .btn:hover::before {
-            left: 100%;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #5127ba 0%, #673de6 100%);
-            color: white;
-            box-shadow: 0 4px 12px rgba(81, 39, 186, 0.25);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(81, 39, 186, 0.35);
-        }
-
-        .btn-secondary {
-            background: white;
-            border: 1px solid #e5e7eb;
-            color: var(--text-color);
-        }
-
-        .btn-secondary:hover {
-            background: #F8FAFC;
-            border-color: #CBD5E1;
-            transform: translateY(-1px);
-        }
-
-        /* Category Products Section - NEW PREMIUM DESIGN */
-        .category-products-section {
-            margin-top: 20px;
-            padding: 20px;
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-            border-radius: 12px;
-            border: 1px solid #e2e8f0;
-        }
-
-        .category-products-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 16px;
-        }
-
-        .category-products-title {
-            font-weight: 600;
-            font-size: 16px;
-            color: #1e293b;
-        }
-
-        .category-products-count {
-            background: var(--brand-primary);
-            color: white;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 600;
-        }
-
-        .category-products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-
-        .category-product-card {
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 10px;
-            padding: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .category-product-card:hover {
-            border-color: var(--brand-primary);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        .category-product-card.selected {
-            border: 2px solid var(--brand-primary);
-            background: linear-gradient(135deg, #f9f7ff 0%, #f3f0ff 100%);
-        }
-
-        .category-product-image {
-            width: 100%;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 8px;
-        }
-
-        .category-product-name {
-            font-size: 13px;
-            font-weight: 600;
-            color: #1f2937;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .category-product-price {
-            font-size: 12px;
-            color: var(--brand-primary);
-            font-weight: 700;
-            margin-top: 4px;
-        }
-
-        /* Keep the rest of the existing styles... */
-        /* (All other existing CSS remains the same, just adding the enhanced parts) */
+            --brand: #4f46e5;
+            --brand-soft: rgba(79, 70, 229, 0.08);
+            --bg: #f8fafc;
+            --card: rgba(255, 255, 255, 0.9);
+            --border: rgba(226, 232, 240, 0.8);
+            --text: #0f172a;
+            --text-sub: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05);
+        }
+
+        body.dark-mode {
+            --bg: #020617;
+            --card: rgba(15, 23, 42, 0.95);
+            --border: rgba(30, 41, 59, 0.7);
+            --text: #f1f5f9;
+            --text-sub: #94a3b8;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg); color: var(--text); transition: background 0.4s ease; min-height: 100vh; padding-bottom: 40px; }
+
+        .glass-nav {
+            position: sticky; top: 0; z-index: 1000;
+            background: var(--card); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border); padding: 12px 24px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.1rem; }
+        .logo-box { background: var(--brand); color: white; width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+
+        .container { max-width: 1400px; margin: 20px auto; padding: 0 16px; }
+
+        /* --- STAT CARDS (UPDATED FOR MOBILE) --- */
+        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 24px; }
+        @media (min-width: 1024px) { .stats-grid { grid-template-columns: repeat(4, 1fr); gap: 24px; } }
+        
+        .stat-card {
+            background: var(--card); border: 1px solid var(--border);
+            padding: 12px; border-radius: 18px; box-shadow: var(--shadow);
+            display: flex; align-items: center; gap: 10px;
+        }
+        .stat-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+        .stat-info { display: flex; flex-direction: column; }
+        .stat-card h3 { font-size: 1.1rem; font-weight: 800; line-height: 1.2; }
+        .stat-card p { font-size: 0.6rem; font-weight: 700; color: var(--text-sub); text-transform: uppercase; }
+
+        @media (min-width: 1024px) {
+            .stat-card { padding: 20px; gap: 15px; }
+            .stat-icon { width: 48px; height: 48px; font-size: 1.2rem; }
+            .stat-card h3 { font-size: 1.6rem; }
+            .stat-card p { font-size: 0.75rem; }
+        }
+
+        /* --- CONTROLS --- */
+        .control-row { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+        @media (min-width: 768px) { .control-row { flex-direction: row; justify-content: space-between; align-items: center; } }
+
+        .tabs-wrapper { display: flex; background: var(--brand-soft); padding: 4px; border-radius: 12px; gap: 4px; }
+        @media (max-width: 767px) { .tabs-wrapper { display: none; } }
+        .tab-btn { padding: 8px 16px; border-radius: 8px; border: none; background: transparent; font-weight: 700; color: var(--text-sub); font-size: 0.8rem; cursor: pointer; }
+        .tab-btn.active { background: var(--brand); color: white; }
+
+        .search-container { position: relative; flex: 1; }
+        @media (min-width: 768px) { .search-container { width: 320px; } }
+        .search-container input { width: 100%; padding: 12px 14px 12px 42px; border-radius: 14px; border: 1px solid var(--border); background: var(--card); outline: none; font-size: 0.85rem; }
+        .search-container i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-sub); }
+
+        .mobile-filter-dropdown { display: none; position: relative; }
+        @media (max-width: 767px) { .mobile-filter-dropdown { display: block; } .control-inner { display: flex; align-items: center; gap: 10px; } }
+        .filter-trigger { background: var(--brand-soft); color: var(--brand); border: 1px solid var(--brand); padding: 10px 14px; border-radius: 14px; font-size: 0.85rem; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+
+        /* --- DATA VIEWS --- */
+        .content-card { background: var(--card); border: 1px solid var(--border); border-radius: 24px; box-shadow: var(--shadow); overflow: visible; }
+        @media (min-width: 768px) {
+            table { width: 100%; border-collapse: separate; border-spacing: 0; }
+            th { text-align: left; padding: 18px 20px; font-size: 0.7rem; text-transform: uppercase; color: var(--text-sub); border-bottom: 1px solid var(--border); }
+            td { padding: 14px 20px; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+            .mobile-only { display: none; }
+        }
+
+        @media (max-width: 767px) {
+            .content-card { background: transparent; border: none; box-shadow: none; }
+            .desktop-only { display: none; }
+            .order-card { background: var(--card); border: 1px solid var(--border); border-radius: 22px; padding: 16px; margin-bottom: 12px; box-shadow: var(--shadow); }
+            .card-body { display: flex; gap: 12px; margin-bottom: 12px; }
+            .card-img { width: 50px; height: 65px; border-radius: 10px; object-fit: cover; }
+            .card-actions { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 12px; }
+        }
+
+        /* --- DROPDOWNS --- */
+        .status-dropdown { position: relative; width: 145px; }
+        .status-trigger { padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); cursor: pointer; display: flex; align-items: center; justify-content: space-between; font-size: 0.75rem; font-weight: 700; }
+        .status-menu { position: absolute; bottom: calc(100% + 8px); left: 0; width: 160px; background: var(--card); backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 14px; box-shadow: 0 15px 30px rgba(0,0,0,0.1); display: none; z-index: 100; }
+        .status-dropdown.open .status-menu { display: block; animation: slideUp 0.2s ease; }
+        .status-item { padding: 10px 14px; display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 0.8rem; font-weight: 600; }
+        .mobile-filter-menu { position: absolute; top: calc(100% + 8px); right: 0; width: 180px; background: var(--card); backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 14px; box-shadow: var(--shadow); display: none; z-index: 200; }
+        .mobile-filter-dropdown.open .mobile-filter-menu { display: block; animation: slideUp 0.2s ease; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Colors */
+        .st-Ordered { color: var(--warning); }
+        .st-Shipped { color: var(--brand); }
+        .st-Delivered { color: var(--success); }
+        .st-Cancelled { color: var(--danger); }
+
+        /* --- PREMIUM DRAWER (UPDATED) --- */
+        .drawer-overlay { position: fixed; inset: 0; background: rgba(2, 6, 23, 0.4); backdrop-filter: blur(8px); display: none; justify-content: flex-end; z-index: 2000; }
+        .drawer-overlay.active { display: flex; }
+        .drawer { 
+            width: 100%; max-width: 500px; background: var(--bg); height: 100%; 
+            display: flex; flex-direction: column; position: relative;
+            animation: drawerIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes drawerIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+
+        .drawer-header { padding: 25px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--card); }
+        .drawer-body { flex: 1; overflow-y: auto; padding: 20px; }
+        .drawer-footer { padding: 20px 25px; border-top: 1px solid var(--border); background: var(--card); }
+
+        .drawer-section-label { font-size: 0.65rem; font-weight: 800; color: var(--brand); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; display: block; }
+        .drawer-card { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 18px; margin-bottom: 20px; }
+
+        .item-row { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+        .item-row:last-child { border-bottom: none; }
+        .item-img { width: 45px; height: 60px; border-radius: 8px; object-fit: cover; }
+
+        /* Confirm Modal */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(2, 6, 23, 0.4); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 5000; padding: 20px; }
+        .modal-overlay.active { display: flex; }
+        .confirm-box { background: var(--card); width: 100%; max-width: 360px; padding: 25px; border-radius: 24px; text-align: center; }
+        .flow-viz { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 20px 0; }
+        .tag { padding: 8px 12px; border-radius: 10px; font-size: 0.75rem; font-weight: 800; border: 1px solid var(--border); background: var(--bg); }
+        .btn-confirm { background: var(--brand); color: white; border: none; padding: 14px; border-radius: 14px; font-weight: 700; width: 100%; cursor: pointer; }
     </style>
 </head>
 <body>
-    <!-- ================= DESKTOP VIEW ================= -->
-    <div class="page-desktop">
-        <header class="d-topbar">
-            <img class="d-topbar-logo"
-                 src="https://product-ecommerces.netlify.app/vastramaya.png"
-                 alt="Vastramaya Logo" />
-        </header>
 
-        <div class="d-app">
-            <aside class="d-sidebar">
-                <div class="d-sidebar-inner">
-                    <nav class="d-nav">
-                        <div class="d-nav-group">
-                            <!-- Dashboard -->
-                            <div class="d-nav-item" onclick="window.location.href='index.html'">
-                                <span class="icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                         fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <rect width="7" height="7" x="3" y="3" rx="1"/>
-                                        <rect width="7" height="7" x="14" y="3" rx="1"/>
-                                        <rect width="7" height="7" x="14" y="14" rx="1"/>
-                                        <rect width="7" height="7" x="3" y="14" rx="1"/>
-                                    </svg>
-                                </span>
-                                <span class="label">Dashboard</span>
-                            </div>
+    <nav class="glass-nav">
+        <div class="logo"><div class="logo-box">V</div><span>Vastramaya</span></div>
+        <button onclick="toggleTheme()" style="border:none; background:var(--brand-soft); color:var(--brand); width:36px; height:36px; border-radius:50%;"><i class="fa-solid fa-moon"></i></button>
+    </nav>
 
-                            <!-- Inventory -->
-                            <div class="d-nav-item" onclick="window.location.href='manage-products.html'">
-                                <span class="icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                         fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M2 7v10"/>
-                                        <path d="M6 5v14"/>
-                                        <rect width="12" height="18" x="10" y="3" rx="2"/>
-                                    </svg>
-                                </span>
-                                <span class="label">Inventory</span>
-                            </div>
-
-                            <!-- Customize Site (Active) -->
-                            <div class="d-nav-item d-nav-item--active" id="d-customize-toggle">
-                                <span class="icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                         fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M12.034 12.681a.498.498 0 0 1 .647-.647l9 3.5a.5.5 0 0 1-.033.943l-3.444 1.068a1 1 0 0 0-.66.66l-1.067 3.443a.5.5 0 0 1-.943.033z"/>
-                                        <path d="M21 11V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6"/>
-                                    </svg>
-                                </span>
-                                <span class="label">Customize Site</span>
-                                <span class="chevron">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                         fill="none" stroke="currentColor" stroke-width="2"
-                                         stroke-linecap="round" stroke-linejoin="round"
-                                         class="chevron-icon">
-                                        <path d="m9 18 6-6-6-6"/>
-                                    </svg>
-                                </span>
-                            </div>
-
-                            <!-- Desktop Customize Site submenu -->
-                            <div class="d-submenu open" id="d-customize-submenu">
-                                <div class="d-submenu-item" onclick="window.location.href='hero-section.html'">
-                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
-                                        <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
-                                        <path d="M4 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/>
-                                        <path d="M9.5 12.5 11 14"/>
-                                        <path d="M14 10l-3.5 4"/>
-                                        <path d="m5 15 4.5-4"/>
-                                    </svg>
-                                    <span>Theme & Layout</span>
-                                </div>
-                                <div class="d-submenu-item active">
-                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <rect width="18" height="18" x="3" y="3" rx="2"/>
-                                        <path d="M3 9h18"/>
-                                        <path d="M9 21V9"/>
-                                    </svg>
-                                    <span>Sections Manager</span>
-                                </div>
-                                <div class="d-submenu-item" onclick="window.location.href='popup-manager.html'">
-                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <circle cx="18" cy="5" r="3"/>
-                                        <circle cx="6" cy="12" r="3"/>
-                                        <circle cx="18" cy="19" r="3"/>
-                                        <line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/>
-                                        <line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/>
-                                    </svg>
-                                    <span>Popup Manager</span>
-                                </div>
-                            </div>
-
-                            <!-- MANAGE ORDERS -->
-                            <div class="d-nav-item" id="d-orders-toggle">
-                                <span class="icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                         fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
-                                        <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
-                                        <path d="M8 14v2.2l1.6 1"/>
-                                        <circle cx="8" cy="16" r="6"/>
-                                    </svg>
-                                </span>
-                                <span class="label">MANAGE ORDERS</span>
-                                <span class="chevron">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                         fill="none" stroke="currentColor" stroke-width="2"
-                                         stroke-linecap="round" stroke-linejoin="round"
-                                         class="chevron-icon">
-                                        <path d="m9 18 6-6-6-6"/>
-                                    </svg>
-                                </span>
-                            </div>
-
-                            <!-- Desktop MANAGE ORDERS submenu -->
-                            <div class="d-submenu" id="d-orders-submenu">
-                                <div class="d-submenu-item">
-                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M12 6v6l4 2"/>
-                                        <path d="M22 12a10 10 0 1 0-11 9.95"/>
-                                        <path d="m22 16-5.5 5.5L14 19"/>
-                                    </svg>
-                                    <span>Today</span>
-                                </div>
-                                <div class="d-submenu-item">
-                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M8 2v4"/>
-                                        <path d="M16 2v4"/>
-                                        <rect width="18" height="18" x="3" y="4" rx="2"/>
-                                        <path d="M3 10h18"/>
-                                        <path d="M8 14h.01"/>
-                                        <path d="M12 14h.01"/>
-                                        <path d="M16 14h.01"/>
-                                        <path d="M8 18h.01"/>
-                                        <path d="M12 18h.01"/>
-                                        <path d="M16 18h.01"/>
-                                    </svg>
-                                    <span>This Month</span>
-                                </div>
-                                <div class="d-submenu-item">
-                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M12 2v2"/>
-                                        <path d="M15.726 21.01A2 2 0 0 1 14 22H4a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2"/>
-                                        <path d="M18 2v2"/>
-                                        <path d="M2 13h2"/>
-                                        <path d="M8 8h14"/>
-                                        <rect x="8" y="3" width="14" height="14" rx="2"/>
-                                    </svg>
-                                    <span>All Orders</span>
-                                </div>
-                            </div>
-                        </div>
-                    </nav>
-
-                    <!-- Desktop Account section -->
-                    <div class="d-account-section" id="profile-section">
-                        <div class="account-card">
-                            <img id="sidebar-avatar" class="account-avatar"
-                                 src="https://bpb-us-w2.wpmucdn.com/wp.wpi.edu/dist/e/505/files/2024/06/unknown-person-icon-3.png"
-                                 alt="Profile" />
-                            <div class="account-text">
-                                <div class="account-name" id="sidebar-name">Loading...</div>
-                                <div class="account-email" id="sidebar-email">Admin</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </aside>
-
-            <main class="d-content">
-                <div class="content-inner">
-                    <!-- PAGE HEADER -->
-                    <div class="page-header">
-                        <div class="page-title-wrap">
-                            <div class="page-title">Sections Manager</div>
-                            <div class="breadcrumb">
-                                <span class="breadcrumb-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                         fill="none" stroke="currentColor" stroke-width="2"
-                                         stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/>
-                                        <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                                    </svg>
-                                </span>
-                                <span>Home</span>
-                                <span class="breadcrumb-divider">/</span>
-                                <span>Customize Site</span>
-                                <span class="breadcrumb-divider">/</span>
-                                <span>Sections Manager</span>
-                            </div>
-                        </div>
-
-                        <div style="display: flex; gap: 12px;">
-                            <button class="btn btn-secondary" onclick="resetChanges()">
-                                Reset
-                            </button>
-                            <button class="btn btn-primary" onclick="saveSections()">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
-                                    <polyline points="17 21 17 13 7 13 7 21"></polyline>
-                                    <polyline points="7 3 7 8 15 8"></polyline>
-                                </svg>
-                                Save Changes
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Best Sellers Section -->
-                    <div class="premium-card">
-                        <div class="card-header">
-                            <div>
-                                <div class="card-title">Best Sellers Products</div>
-                                <div class="card-subtitle">Drag to reorder best-selling products</div>
-                            </div>
-                            <button class="btn btn-primary" onclick="openProductSelector()">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M5 12h14"/>
-                                    <path d="M12 5v14"/>
-                                </svg>
-                                Add Products
-                            </button>
-                        </div>
-                        <div class="card-body">
-                            <div id="selected-products-list" class="draggable-list">
-                                <div class="empty-state">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 12px;">
-                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                                        <line x1="3" y1="9" x2="21" y2="9"></line>
-                                        <line x1="9" y1="21" x2="9" y2="9"></line>
-                                    </svg>
-                                    <h3 style="margin-bottom: 8px; color: #374151;">No Products Selected</h3>
-                                    <p>Click "Add Products" to select best-selling products</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Categories Order Section -->
-                    <div class="premium-card">
-                        <div class="card-header">
-                            <div>
-                                <div class="card-title">Categories Order</div>
-                                <div class="card-subtitle">Drag to rearrange display order, toggle to show/hide, add up to 6 products per category</div>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div id="categories-list" class="draggable-list">
-                                <div class="empty-state">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 12px;">
-                                        <circle cx="12" cy="12" r="10"></circle>
-                                        <line x1="12" y1="8" x2="12" y2="12"></line>
-                                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                                    </svg>
-                                    <h3 style="margin-bottom: 8px; color: #374151;">Loading Categories</h3>
-                                    <p>Please wait while we load your categories...</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </main>
+    <div class="container">
+        <!-- KPI GRID -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon" style="background:#eef2ff; color:#6366f1;"><i class="fa-solid fa-bolt"></i></div>
+                <div class="stat-info"><p>Live</p><h3 id="kpiLive">0</h3></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background:#ecfdf5; color:#10b981;"><i class="fa-solid fa-check"></i></div>
+                <div class="stat-info"><p>Done</p><h3 id="kpiDone">0</h3></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background:#fff7ed; color:#f59e0b;"><i class="fa-solid fa-clock"></i></div>
+                <div class="stat-info"><p>Pending</p><h3 id="kpiPending">0</h3></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background:#fef2f2; color:#ef4444;"><i class="fa-solid fa-ban"></i></div>
+                <div class="stat-info"><p>Cancel</p><h3 id="kpiCancel">0</h3></div>
+            </div>
         </div>
-    </div>
 
-    <!-- ================= MOBILE VIEW ================= -->
-    <div class="page-mobile">
-        <!-- Mobile header: menu left, logo right -->
-        <header class="m-header">
-            <button class="m-menu-btn" id="m-menu-toggle" aria-label="Open menu">
-                <div class="m-menu-lines"><span></span></div>
-            </button>
-
-            <img
-              class="m-logo"
-              src="https://product-ecommerces.netlify.app/vastramaya.png"
-              alt="Vastramaya Logo" />
-        </header>
-
-        <main class="m-main">
-            <div class="m-card">
-                <div class="m-card-title">Best Sellers</div>
-                <div class="m-card-subtitle">Drag to reorder best-selling products</div>
-                <div id="mobile-selected-products" class="draggable-list"></div>
-                <button class="btn btn-secondary" style="width: 100%; margin-top: 16px;" onclick="openProductSelector()">
-                    Edit Selection
-                </button>
+        <div class="control-row">
+            <div class="tabs-wrapper">
+                <button class="tab-btn active" onclick="switchTab('Today', this)">Today</button>
+                <button class="tab-btn" onclick="switchTab('Ordered', this)">Pending</button>
+                <button class="tab-btn" onclick="switchTab('Shipped', this)">Shipped</button>
+                <button class="tab-btn" onclick="switchTab('All', this)">History</button>
             </div>
 
-            <div class="m-card">
-                <div class="m-card-title">Categories Order</div>
-                <div class="m-card-subtitle">Long press & drag to reorder, add up to 6 products per category</div>
-                <div id="mobile-categories-list" class="draggable-list"></div>
-            </div>
-        </main>
-
-        <!-- FIXED: Save button moved here - outside main content -->
-        <button class="btn btn-primary mobile-save-btn" onclick="saveSections()">
-            Save All Changes
-        </button>
-
-        <!-- Overlay & drawer -->
-        <div class="m-overlay" id="m-overlay">
-            <div class="m-drawer">
-                <div class="m-drawer-header">
-                    <img
-                      class="m-drawer-logo"
-                      src="https://product-ecommerces.netlify.app/vastramaya.png"
-                      alt="Vastramaya Logo" />
-                    <button class="m-drawer-close" id="m-drawer-close" aria-label="Close menu">
-                        <div class="m-drawer-close-icon"></div>
-                    </button>
+            <div class="control-inner">
+                <div class="search-container">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="orderSearch" placeholder="Search..." onkeyup="renderUI()">
                 </div>
-
-                <nav class="m-drawer-nav">
-                    <!-- Dashboard -->
-                    <div class="m-nav-item" onclick="window.location.href='index.html'">
-                        <span class="icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <rect width="7" height="7" x="3" y="3" rx="1"/>
-                                <rect width="7" height="7" x="14" y="3" rx="1"/>
-                                <rect width="7" height="7" x="14" y="14" rx="1"/>
-                                <rect width="7" height="7" x="3" y="14" rx="1"/>
-                            </svg>
-                        </span>
-                        <span class="label">Dashboard</span>
-                    </div>
-
-                    <!-- Inventory -->
-                    <div class="m-nav-item" onclick="window.location.href='manage-products.html'">
-                        <span class="icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M2 7v10"/>
-                                <path d="M6 5v14"/>
-                                <rect width="12" height="18" x="10" y="3" rx="2"/>
-                            </svg>
-                        </span>
-                        <span class="label">Inventory</span>
-                    </div>
-
-                    <!-- Customize Site with dropdown -->
-                    <div class="m-nav-item active" id="m-customize-toggle">
-                        <span class="icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M12.034 12.681a.498.498 0 0 1 .647-.647l9 3.5a.5.5 0 0 1-.033.943l-3.444 1.068a1 1 0 0 0-.66.66l-1.067 3.443a.5.5 0 0 1-.943.033z"/>
-                                <path d="M21 11V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6"/>
-                            </svg>
-                        </span>
-                        <span class="label">Customize Site</span>
-                        <span class="chevron">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                 fill="none" stroke="currentColor" stroke-width="2"
-                                 stroke-linecap="round" stroke-linejoin="round"
-                                 class="chevron-icon">
-                                <path d="m9 18 6-6-6-6"/>
-                            </svg>
-                        </span>
-                    </div>
-
-                    <!-- Mobile Customize Site submenu -->
-                    <div class="m-submenu open" id="m-customize-submenu">
-                        <div class="m-submenu-item" onclick="window.location.href='hero-section.html'">
-                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
-                                <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
-                                <path d="M4 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/>
-                                <path d="M9.5 12.5 11 14"/>
-                                <path d="M14 10l-3.5 4"/>
-                                <path d="m5 15 4.5-4"/>
-                            </svg>
-                            <span>Theme & Layout</span>
-                        </div>
-                        <div class="m-submenu-item active">
-                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <rect width="18" height="18" x="3" y="3" rx="2"/>
-                                <path d="M3 9h18"/>
-                                <path d="M9 21V9"/>
-                            </svg>
-                            <span>Sections Manager</span>
-                        </div>
-                        <div class="m-submenu-item" onclick="window.location.href='popup-manager.html'">
-                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="18" cy="5" r="3"/>
-                                <circle cx="6" cy="12" r="3"/>
-                                <circle cx="18" cy="19" r="3"/>
-                                <line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/>
-                                <line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/>
-                            </svg>
-                            <span>Popup Manager</span>
-                        </div>
-                    </div>
-
-                    <!-- MANAGE ORDERS with dropdown -->
-                    <div class="m-nav-item" id="m-orders-toggle">
-                        <span class="icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
-                                <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
-                                <path d="M8 14v2.2l1.6 1"/>
-                                <circle cx="8" cy="16" r="6"/>
-                            </svg>
-                        </span>
-                        <span class="label">MANAGE ORDERS</span>
-                        <span class="chevron">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                 fill="none" stroke="currentColor" stroke-width="2"
-                                 stroke-linecap="round" stroke-linejoin="round"
-                                 class="chevron-icon">
-                                <path d="m9 18 6-6-6-6"/>
-                            </svg>
-                        </span>
-                    </div>
-
-                    <!-- Mobile MANAGE ORDERS submenu -->
-                    <div class="m-submenu" id="m-orders-submenu">
-                        <div class="m-submenu-item">
-                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M12 6v6l4 2"/>
-                                <path d="M22 12a10 10 0 1 0-11 9.95"/>
-                                <path d="m22 16-5.5 5.5L14 19"/>
-                            </svg>
-                            <span>Today</span>
-                        </div>
-                        <div class="m-submenu-item">
-                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M8 2v4"/>
-                                <path d="M16 2v4"/>
-                                <rect width="18" height="18" x="3" y="4" rx="2"/>
-                                <path d="M3 10h18"/>
-                                <path d="M8 14h.01"/>
-                                <path d="M12 14h.01"/>
-                                <path d="M16 14h.01"/>
-                                <path d="M8 18h.01"/>
-                                <path d="M12 18h.01"/>
-                                <path d="M16 18h.01"/>
-                            </svg>
-                            <span>This Month</span>
-                        </div>
-                        <div class="m-submenu-item">
-                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M12 2v2"/>
-                                <path d="M15.726 21.01A2 2 0 0 1 14 22H4a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2"/>
-                                <path d="M18 2v2"/>
-                                <path d="M2 13h2"/>
-                                <path d="M8 8h14"/>
-                                <rect x="8" y="3" width="14" height="14" rx="2"/>
-                            </svg>
-                            <span>All Orders</span>
-                        </div>
-                    </div>
-                </nav>
-
-                <!-- Mobile account sharing -->
-                <div class="m-account-section" id="mobile-profile-section">
-                    <div class="account-card">
-                        <img id="mobile-sidebar-avatar" class="account-avatar"
-                             src="https://bpb-us-w2.wpmucdn.com/wp.wpi.edu/dist/e/505/files/2024/06/unknown-person-icon-3.png"
-                             alt="Profile" />
-                        <div class="account-text">
-                            <div class="account-name" id="mobile-sidebar-name">Loading...</div>
-                            <div class="account-email" id="mobile-sidebar-email">Admin</div>
-                        </div>
+                <div class="mobile-filter-dropdown" id="mobFilter">
+                    <div class="filter-trigger" onclick="toggleMobFilter()"><span id="activeFilterLabel">Today</span> <i class="fa-solid fa-chevron-down"></i></div>
+                    <div class="mobile-filter-menu">
+                        <div class="status-item" onclick="switchTab('Today', this, true)">Today</div>
+                        <div class="status-item" onclick="switchTab('Ordered', this, true)">Pending</div>
+                        <div class="status-item" onclick="switchTab('Shipped', this, true)">Shipped</div>
+                        <div class="status-item" onclick="switchTab('All', this, true)">Full History</div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- ============= MODAL: PRODUCT SELECTOR ============= -->
-    <div class="modal-overlay" id="product-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-title">Select Best Sellers</div>
-                <button class="btn-icon" onclick="closeProductSelector()">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M18 6 6 18"/>
-                        <path d="m6 6 12 12"/>
-                    </svg>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="search-input-wrap">
-                    <svg class="search-icon" xmlns="http://www.w3.org/2000/svg"
-                         viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="11" cy="11" r="7"></circle>
-                        <line x1="16.65" y1="16.65" x2="21" y2="21"></line>
-                    </svg>
-                    <input type="text" id="modal-search" placeholder="Search products..." onkeyup="filterModalProducts()">
-                </div>
-                <div id="modal-product-grid" class="product-grid"></div>
-            </div>
-            <div class="modal-footer">
-                <div style="margin-right: auto; color: #6b7280; font-size: 13px;">
-                    <span id="modal-selected-count">0</span> selected
-                </div>
-                <button class="btn btn-secondary" onclick="closeProductSelector()">Cancel</button>
-                <button class="btn btn-primary" onclick="confirmProductSelection()">Apply Selection</button>
-            </div>
+        <div id="mainDisplay" class="content-card">
+            <table class="desktop-only">
+                <thead><tr><th>Order Info</th><th>Customer</th><th>Total</th><th>Status</th><th>Action</th></tr></thead>
+                <tbody id="ordersBodyDesktop"></tbody>
+            </table>
+            <div id="ordersBodyMobile" class="mobile-only"></div>
         </div>
     </div>
 
-    <!-- ============= MODAL: CATEGORY PRODUCT SELECTOR ============= -->
-    <div class="modal-overlay" id="category-product-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div>
-                    <div class="modal-title">Select Products for Category</div>
-                    <div class="category-modal-header">
-                        <div class="category-modal-title" id="current-category-name">Category Name</div>
-                        <div class="selected-count" id="category-selected-count">0/6</div>
-                    </div>
-                </div>
-                <button class="btn-icon" onclick="closeCategoryProductSelector()">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M18 6 6 18"/>
-                        <path d="m6 6 12 12"/>
-                    </svg>
-                </button>
+    <!-- UPDATE MODAL -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="confirm-box">
+            <h3 style="font-size:1.1rem; font-weight:800;">Change Status?</h3>
+            <div class="flow-viz">
+                <div class="tag" id="flowFrom">...</div>
+                <i class="fa-solid fa-arrow-right" style="color:var(--brand); opacity:0.5;"></i>
+                <div class="tag" id="flowTo" style="border-color:var(--brand); color:var(--brand);">...</div>
             </div>
-            <div class="modal-body">
-                <div style="margin-bottom: 16px;">
-                    <div style="font-size: 13px; color: #6b7280; margin-bottom: 8px;">
-                        Showing products from: <strong id="category-display-name">Sarees</strong>
-                    </div>
-                </div>
-                <div class="search-input-wrap">
-                    <svg class="search-icon" xmlns="http://www.w3.org/2000/svg"
-                         viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="11" cy="11" r="7"></circle>
-                        <line x1="16.65" y1="16.65" x2="21" y2="21"></line>
-                    </svg>
-                    <input type="text" id="category-modal-search" placeholder="Search products..." onkeyup="filterCategoryModalProducts()">
-                </div>
-                <div id="category-modal-product-grid" class="product-grid"></div>
-            </div>
-            <div class="modal-footer">
-                <div style="margin-right: auto; color: #6b7280; font-size: 13px;">
-                    Maximum 6 products per category
-                </div>
-                <button class="btn btn-secondary" onclick="closeCategoryProductSelector()">Cancel</button>
-                <button class="btn btn-primary" onclick="confirmCategoryProductSelection()">Save Products</button>
-            </div>
+            <button class="btn-confirm" onclick="executeStatusUpdate()">Update Status</button>
+            <button onclick="closeConfirmModal()" style="background:none; border:none; color:var(--text-sub); margin-top:15px; font-weight:700;">Cancel</button>
         </div>
     </div>
 
-    <!-- Profile Popup -->
-    <div class="profile-popup" id="profile-popup">
-        <div class="popup-header">
-            <img id="popup-avatar" src="" class="account-avatar">
-            <div class="account-text">
-                <span class="account-name" id="popup-name">Loading...</span>
-                <span class="account-email" id="popup-email">Admin</span>
+    <!-- PREMIUM DRAWER -->
+    <div class="drawer-overlay" id="orderDrawer">
+        <div class="drawer">
+            <div class="drawer-header">
+                <div><h2 id="dOrderId" style="font-size:1.1rem; font-weight:800;">Order Details</h2><p id="dOrderDate" style="font-size:0.7rem; color:var(--text-sub);"></p></div>
+                <button onclick="closeDrawer()" style="border:none; background:var(--brand-soft); color:var(--brand); width:35px; height:35px; border-radius:50%; font-size:1rem;">&times;</button>
             </div>
+            <div class="drawer-body" id="dContent"></div>
+            <div class="drawer-footer" id="dFooter"></div>
         </div>
-        <ul class="popup-list">
-            <li>
-                <a href="#">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="popup-icon">
-                        <circle cx="12" cy="8" r="5"/>
-                        <path d="M20 21a8 8 0 0 0-16 0"/>
-                    </svg>
-                    <span>Profile</span>
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="popup-icon">
-                        <path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/>
-                        <circle cx="12" cy="12" r="3"/>
-                    </svg>
-                    <span>Settings</span>
-                </a>
-            </li>
-            <li>
-                <a href="#" onclick="auth.signOut()" class="logout">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="popup-icon logout-icon">
-                        <path d="m16 17 5-5-5-5"/>
-                        <path d="M21 12H9"/>
-                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                    </svg>
-                    <span>Logout</span>
-                </a>
-            </li>
-        </ul>
     </div>
-
-    <div id="toast-container"></div>
-
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 
     <script>
-        // --- CONFIGURATION ---
         const firebaseConfig = {
             apiKey: "AIzaSyCdeonH3VytC21F3X6x0rCVCn2xXrGPoug",
             authDomain: "vastramaya---magic.firebaseapp.com",
             projectId: "vastramaya---magic",
             storageBucket: "vastramaya---magic.firebasestorage.app",
             messagingSenderId: "543460072082",
-            appId: "1:543460072082:web:f3d1140e8f81ad338ae44b",
-            measurementId: "G-E39VNDCFVE"
+            appId: "1:543460072082:web:f3d1140e8f81ad338ae44b"
         };
-        const ADMIN_EMAIL = "harshavardhanjw@gmail.com";
-
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
-        const auth = firebase.auth();
+        firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // --- STATE ---
-        let state = {
-            allProducts: [],
-            selectedProductIds: [],
-            categories: [],
-            categoryProducts: {} // Store products for each category {categoryId: [productIds]}
+        let ordersData = [];
+        let currentFilter = 'Today';
+        let updateData = {};
+
+        const config = {
+            'Ordered': { label: 'Pending', icon: 'fa-clock' },
+            'Shipped': { label: 'Shipped', icon: 'fa-truck-fast' },
+            'Delivered': { label: 'Delivered', icon: 'fa-circle-check' },
+            'Cancelled': { label: 'Cancelled', icon: 'fa-circle-xmark' }
         };
 
-        // Variables for category product selection
-        let currentCategoryId = null;
-        let currentCategoryName = '';
-        let tempCategoryProductIds = [];
-
-        // --- UI INITIALIZATION ---
-        document.addEventListener('DOMContentLoaded', () => {
-            // Mobile drawer behaviour
-            const mOverlay = document.getElementById('m-overlay');
-            const mMenuToggle = document.getElementById('m-menu-toggle');
-            const mDrawerClose = document.getElementById('m-drawer-close');
-
-            if (mMenuToggle && mOverlay && mDrawerClose) {
-                mMenuToggle.addEventListener('click', () => {
-                    mOverlay.classList.add('open');
-                });
-
-                mDrawerClose.addEventListener('click', () => {
-                    mOverlay.classList.remove('open');
-                });
-
-                mOverlay.addEventListener('click', (e) => {
-                    if (e.target === mOverlay) {
-                        mOverlay.classList.remove('open');
-                    }
-                });
-            }
-
-            // Desktop dropdowns
-            const dCustomizeToggle = document.getElementById('d-customize-toggle');
-            const dCustomizeSubmenu = document.getElementById('d-customize-submenu');
-            const dOrdersToggle = document.getElementById('d-orders-toggle');
-            const dOrdersSubmenu = document.getElementById('d-orders-submenu');
-
-            if (dCustomizeToggle && dCustomizeSubmenu) {
-                dCustomizeToggle.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    dCustomizeSubmenu.classList.toggle('open');
-                    dCustomizeToggle.classList.toggle('dropdown-open');
-                });
-            }
-
-            if (dOrdersToggle && dOrdersSubmenu) {
-                dOrdersToggle.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    dOrdersSubmenu.classList.toggle('open');
-                    dOrdersToggle.classList.toggle('dropdown-open');
-                });
-            }
-
-            // Mobile dropdowns
-            const mCustomizeToggle = document.getElementById('m-customize-toggle');
-            const mCustomizeSubmenu = document.getElementById('m-customize-submenu');
-            const mOrdersToggle = document.getElementById('m-orders-toggle');
-            const mOrdersSubmenu = document.getElementById('m-orders-submenu');
-
-            if (mCustomizeToggle && mCustomizeSubmenu) {
-                mCustomizeToggle.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    mCustomizeSubmenu.classList.toggle('open');
-                    mCustomizeToggle.classList.toggle('dropdown-open');
-                });
-            }
-
-            if (mOrdersToggle && mOrdersSubmenu) {
-                mOrdersToggle.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    mOrdersSubmenu.classList.toggle('open');
-                    mOrdersToggle.classList.toggle('dropdown-open');
-                });
-            }
-
-            // Profile section functionality
-            const profileSection = document.getElementById('profile-section');
-            const mobileProfileSection = document.getElementById('mobile-profile-section');
-            const profilePopup = document.getElementById('profile-popup');
-
-            if (profileSection) {
-                profileSection.addEventListener('click', e => {
-                    e.stopPropagation();
-                    
-                    // Position the popup at the bottom left of the account section for desktop
-                    if (window.innerWidth >= 769) {
-                        const rect = profileSection.getBoundingClientRect();
-                        profilePopup.style.left = '30px';
-                        profilePopup.style.right = 'auto';
-                        profilePopup.style.bottom = '100px';
-                        profilePopup.style.top = 'auto';
-                    }
-                    
-                    profilePopup.classList.toggle('active');
-                });
-                
-                document.addEventListener('click', e => {
-                    if (!profileSection.contains(e.target) && !profilePopup.contains(e.target)) {
-                        profilePopup.classList.remove('active');
-                    }
-                });
-            }
-
-            if (mobileProfileSection) {
-                mobileProfileSection.addEventListener('click', e => {
-                    e.stopPropagation();
-                    profilePopup.classList.toggle('active');
-                });
-            }
-
-            // Prevent context menu on drag handles
-            document.addEventListener('contextmenu', function(e) {
-                if (e.target.closest('.drag-handle') || e.target.closest('.draggable-item')) {
-                    e.preventDefault();
-                    return false;
-                }
+        function startApp() {
+            db.collection('orders').orderBy('createdAt', 'desc').onSnapshot(snap => {
+                ordersData = [];
+                snap.forEach(doc => ordersData.push({ fireId: doc.id, ...doc.data() }));
+                renderUI();
             });
-
-            // Close dropdowns when clicking outside
-            document.addEventListener('click', (e) => {
-                if (!e.target.closest('.d-nav-item') && !e.target.closest('.d-submenu')) {
-                    dCustomizeSubmenu?.classList.remove('open');
-                    dOrdersSubmenu?.classList.remove('open');
-                    dCustomizeToggle?.classList.remove('dropdown-open');
-                    dOrdersToggle?.classList.remove('dropdown-open');
-                }
-                
-                // Close profile popup when clicking outside
-                if (profilePopup && profilePopup.classList.contains('active')) {
-                    if (!profilePopup.contains(e.target) && 
-                        !profileSection?.contains(e.target) && 
-                        !mobileProfileSection?.contains(e.target)) {
-                        profilePopup.classList.remove('active');
-                    }
-                }
-            });
-
-            // Prevent drag handle context menu with touch events
-            document.querySelectorAll('.drag-handle').forEach(handle => {
-                handle.addEventListener('touchstart', function(e) {
-                    e.preventDefault();
-                }, { passive: false });
-                
-                handle.addEventListener('touchend', function(e) {
-                    e.preventDefault();
-                }, { passive: false });
-            });
-        });
-
-        // --- AUTH & INIT ---
-        auth.onAuthStateChanged(user => {
-            if (user && user.email === ADMIN_EMAIL) {
-                initProfile(user);
-                loadData();
-            } else {
-                window.location.href = 'index.html';
-            }
-        });
-
-        function initProfile(user) {
-            const name = user.displayName || 'Admin User';
-            const avatar = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=5127ba&color=fff`;
-            
-            // Desktop
-            document.getElementById('sidebar-name').textContent = name;
-            document.getElementById('sidebar-email').textContent = user.email;
-            document.getElementById('sidebar-avatar').src = avatar;
-            
-            // Mobile
-            document.getElementById('mobile-sidebar-name').textContent = name;
-            document.getElementById('mobile-sidebar-email').textContent = user.email;
-            document.getElementById('mobile-sidebar-avatar').src = avatar;
-            
-            // Popup
-            document.getElementById('popup-name').textContent = name;
-            document.getElementById('popup-email').textContent = user.email;
-            document.getElementById('popup-avatar').src = avatar;
         }
 
-        // --- LOAD DATA ---
-        async function loadData() {
-            showToast('Loading data...', 'success');
-            try {
-                // 1. Fetch Products
-                const prodsSnap = await db.collection('products').get();
-                state.allProducts = prodsSnap.docs.map(doc => ({ 
-                    id: doc.id, 
-                    ...doc.data(),
-                    // Ensure we have image URL
-                    image: doc.data().image || doc.data().images?.[0] || 'https://via.placeholder.com/150x120?text=No+Image'
-                }));
+        function renderUI() {
+            const dBody = document.getElementById('ordersBodyDesktop');
+            const mBody = document.getElementById('ordersBodyMobile');
+            const search = document.getElementById('orderSearch').value.toLowerCase();
+            const today = new Date().toDateString();
+            dBody.innerHTML = ''; mBody.innerHTML = '';
+            let stats = { live: 0, done: 0, pending: 0, cancel: 0 };
 
-                // 2. Fetch DB Categories
-                const catsSnap = await db.collection('categories').get();
-                const dbCategories = catsSnap.docs.map(doc => ({ 
-                    id: doc.id, 
-                    name: doc.data().name 
-                }));
+            ordersData.forEach(order => {
+                const s = order.status || 'Ordered';
+                const ts = order.createdAt ? new Date(order.createdAt.toMillis()) : new Date();
+                if (s === 'Ordered' || s === 'Shipped') stats.live++;
+                if (s === 'Ordered') stats.pending++;
+                if (s === 'Delivered') stats.done++;
+                if (s === 'Cancelled') stats.cancel++;
 
-                // 3. Fetch Saved Config
-                const configDoc = await db.collection('landingPage').doc('Sections').get();
-                
-                if (configDoc.exists) {
-                    const data = configDoc.data();
-                    state.selectedProductIds = data.bestSellers || [];
-                    
-                    // Load category products if they exist
-                    state.categoryProducts = data.categoryProducts || {};
-                    
-                    // Merge saved order with current DB categories
-                    const savedCats = data.categories || [];
-                    state.categories = dbCategories.map(dbCat => {
-                        const saved = savedCats.find(sc => sc.id === dbCat.id);
-                        return {
-                            id: dbCat.id,
-                            name: dbCat.name,
-                            enabled: saved ? saved.enabled : true,
-                            order: saved ? saved.order : 999
-                        };
-                    }).sort((a, b) => a.order - b.order);
-                } else {
-                    state.categories = dbCategories.map((c, i) => ({ 
-                        id: c.id, 
-                        name: c.name, 
-                        enabled: true, 
-                        order: i + 1 
-                    }));
-                    state.categoryProducts = {};
-                }
+                let show = (currentFilter === 'All' || (currentFilter === 'Today' && ts.toDateString() === today) || (s === currentFilter));
+                let matches = (order.address?.name || "").toLowerCase().includes(search) || (order.orderId || "").toLowerCase().includes(search);
 
-                renderAll();
-                showToast('Data loaded successfully!', 'success');
-            } catch (error) {
-                console.error("Error:", error);
-                showToast("Failed to load data", 'error');
-            }
-        }
-
-        function renderAll() {
-            renderSelectedProducts('selected-products-list');
-            renderSelectedProducts('mobile-selected-products');
-            renderCategories('categories-list');
-            renderCategories('mobile-categories-list');
-        }
-
-        // --- RENDER PRODUCTS LIST ---
-        function renderSelectedProducts(containerId) {
-            const container = document.getElementById(containerId);
-            if (!container) return;
-
-            const selectedObjs = state.selectedProductIds
-                .map(id => state.allProducts.find(p => p.id === id))
-                .filter(p => p);
-
-            if (selectedObjs.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 12px;">
-                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                            <line x1="3" y1="9" x2="21" y2="9"></line>
-                            <line x1="9" y1="21" x2="9" y2="9"></line>
-                        </svg>
-                        <h3 style="margin-bottom: 8px; color: #374151;">No Products Selected</h3>
-                        <p>Click "Add Products" to select best-selling products</p>
-                    </div>`;
-                return;
-            }
-
-            container.innerHTML = selectedObjs.map((p, index) => `
-                <div class="draggable-item" draggable="true" data-index="${index}" data-type="product">
-                    <div class="drag-handle">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="9" cy="5" r="1"></circle>
-                            <circle cx="9" cy="12" r="1"></circle>
-                            <circle cx="9" cy="19" r="1"></circle>
-                            <circle cx="15" cy="5" r="1"></circle>
-                            <circle cx="15" cy="12" r="1"></circle>
-                            <circle cx="15" cy="19" r="1"></circle>
-                        </svg>
-                    </div>
-                    <img src="${p.image || p.images?.[0] || 'https://via.placeholder.com/40'}" class="item-image">
-                    <div class="item-content">
-                        <div class="item-title">${p.name || 'Unnamed Product'}</div>
-                        <div class="item-subtitle">₹${p.price || '0'}</div>
-                    </div>
-                    <button class="btn-icon delete" onclick="removeProduct('${p.id}')" title="Remove">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M18 6 6 18"/>
-                            <path d="m6 6 12 12"/>
-                        </svg>
-                    </button>
-                </div>
-            `).join('');
-
-            attachDragEvents(container, 'product');
-        }
-
-        // --- RENDER CATEGORIES LIST ---
-        function renderCategories(containerId) {
-            const container = document.getElementById(containerId);
-            if (!container) return;
-
-            if (state.categories.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 12px;">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <line x1="12" y1="8" x2="12" y2="12"></line>
-                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                        </svg>
-                        <h3 style="margin-bottom: 8px; color: #374151;">No Categories Found</h3>
-                        <p>Add categories from the Categories Manager</p>
-                    </div>`;
-                return;
-            }
-
-            container.innerHTML = state.categories.map((cat, index) => {
-                const categoryProductIds = state.categoryProducts[cat.id] || [];
-                const categoryProducts = categoryProductIds
-                    .map(id => state.allProducts.find(p => p.id === id))
-                    .filter(p => p);
-                
-                const productsCount = categoryProducts.length;
-                const productsPreview = categoryProducts.slice(0, 3); // Show max 3 previews
-                
-                return `
-                <div class="draggable-item" draggable="true" data-index="${index}" data-type="category">
-                    <div class="drag-handle">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="9" cy="5" r="1"></circle>
-                            <circle cx="9" cy="12" r="1"></circle>
-                            <circle cx="9" cy="19" r="1"></circle>
-                            <circle cx="15" cy="5" r="1"></circle>
-                            <circle cx="15" cy="12" r="1"></circle>
-                            <circle cx="15" cy="19" r="1"></circle>
-                        </svg>
-                    </div>
-                    <div class="item-content">
-                        <div class="item-title">${cat.name}</div>
-                        <div class="item-subtitle" style="color: ${cat.enabled ? '#10B981' : '#9CA3AF'}">
-                            ${cat.enabled ? 'Visible' : 'Hidden'} • ${productsCount}/6 products
-                        </div>
-                        ${productsCount > 0 ? `
-                            <div class="category-products-preview">
-                                ${productsPreview.map(p => `
-                                    <div class="product-preview-item" title="${p.name || 'Unnamed Product'}">
-                                        <img src="${p.image || p.images?.[0] || 'https://via.placeholder.com/20'}" class="product-preview-image">
-                                        <span class="product-preview-name">${(p.name || 'Unnamed').substring(0, 15)}${(p.name || '').length > 15 ? '...' : ''}</span>
-                                    </div>
-                                `).join('')}
-                                ${productsCount > 3 ? `<div class="product-preview-item">+${productsCount - 3} more</div>` : ''}
+                if (show && matches) {
+                    const ui = config[s];
+                    const dd = (ctx) => `
+                        <div class="status-dropdown" id="dd-${ctx}-${order.fireId}">
+                            <div class="status-trigger" onclick="toggleDD('${ctx}-${order.fireId}')">
+                                <span><i class="fa-solid ${ui.icon} st-${s}"></i> ${ui.label}</span>
+                                <i class="fa-solid fa-chevron-down" style="font-size:0.6rem;"></i>
                             </div>
-                        ` : ''}
-                    </div>
-                    <div class="item-actions">
-                        <button class="btn btn-sm" onclick="openCategoryProductSelector('${cat.id}', '${cat.name.replace(/'/g, "\\'")}')" style="margin-right: 8px;">
-                            ${productsCount > 0 ? 'Edit' : 'Add'} Products
-                        </button>
-                        <div class="toggle-switch">
-                            <input type="checkbox" ${cat.enabled ? 'checked' : ''} id="toggle-${cat.id}" onclick="toggleCategory('${cat.id}')">
-                            <span class="toggle-slider"></span>
-                        </div>
-                    </div>
-                </div>
-                `;
-            }).join('');
+                            <div class="status-menu">
+                                ${Object.keys(config).map(k => `<div class="status-item" onclick="askUpdate('${order.fireId}', '${s}', '${k}')"><i class="fa-solid ${config[k].icon} st-${k}"></i> ${config[k].label}</div>`).join('')}
+                            </div>
+                        </div>`;
 
-            attachDragEvents(container, 'category');
-        }
+                    dBody.innerHTML += `<tr>
+                        <td><div style="display:flex; gap:10px;"><img src="${order.items[0]?.image}" style="width:35px;height:45px;border-radius:6px;object-fit:cover;"><div><b>${order.items[0]?.name}</b><br><small>#${order.orderId}</small></div></div></td>
+                        <td><b>${order.address?.name}</b></td><td style="color:var(--brand); font-weight:800;">₹${order.amount}</td>
+                        <td>${dd('d')}</td><td><button class="tab-btn" style="border:1px solid var(--brand); color:var(--brand); padding:5px 12px;" onclick="openDrawer('${order.fireId}')">View</button></td>
+                    </tr>`;
 
-        // --- DRAG & DROP LOGIC ---
-        function attachDragEvents(container, type) {
-            const items = container.querySelectorAll('.draggable-item');
-            
-            items.forEach(item => {
-                item.addEventListener('dragstart', (e) => {
-                    item.classList.add('dragging');
-                    e.dataTransfer.setData('text/plain', item.dataset.index);
-                    e.dataTransfer.effectAllowed = 'move';
-                });
-
-                item.addEventListener('dragend', () => {
-                    item.classList.remove('dragging');
-                });
-
-                item.addEventListener('dragover', (e) => {
-                    e.preventDefault();
-                    e.dataTransfer.dropEffect = 'move';
-                });
-
-                item.addEventListener('drop', (e) => {
-                    e.preventDefault();
-                    const sourceIndex = parseInt(e.dataTransfer.getData('text/plain'));
-                    
-                    const targetRow = e.target.closest('.draggable-item');
-                    if (!targetRow) return;
-                    
-                    const targetIndex = parseInt(targetRow.dataset.index);
-
-                    if (sourceIndex === targetIndex) return;
-
-                    // Execute Swap Logic
-                    if (type === 'product') {
-                        const itemToMove = state.selectedProductIds.splice(sourceIndex, 1)[0];
-                        state.selectedProductIds.splice(targetIndex, 0, itemToMove);
-                        renderSelectedProducts('selected-products-list');
-                        renderSelectedProducts('mobile-selected-products');
-                    } else if (type === 'category') {
-                        const itemToMove = state.categories.splice(sourceIndex, 1)[0];
-                        state.categories.splice(targetIndex, 0, itemToMove);
-                        // Update order properties
-                        state.categories.forEach((c, i) => c.order = i + 1);
-                        renderCategories('categories-list');
-                        renderCategories('mobile-categories-list');
-                    }
-                });
-            });
-        }
-
-        // --- INTERACTIONS ---
-        function toggleCategory(catId) {
-            const cat = state.categories.find(c => c.id === catId);
-            if (cat) {
-                cat.enabled = !cat.enabled;
-                renderCategories('categories-list');
-                renderCategories('mobile-categories-list');
-                showToast(`Category ${cat.name} ${cat.enabled ? 'enabled' : 'disabled'}`, 'success');
-            }
-        }
-
-        function removeProduct(id) {
-            state.selectedProductIds = state.selectedProductIds.filter(pid => pid !== id);
-            renderSelectedProducts('selected-products-list');
-            renderSelectedProducts('mobile-selected-products');
-            showToast('Product removed', 'success');
-        }
-
-        function resetChanges() {
-            if(confirm("Discard all changes and reload from server?")) {
-                loadData();
-            }
-        }
-
-        // --- CATEGORY PRODUCT SELECTION FUNCTIONS ---
-        function openCategoryProductSelector(categoryId, categoryName) {
-            currentCategoryId = categoryId;
-            currentCategoryName = categoryName;
-            tempCategoryProductIds = [...(state.categoryProducts[categoryId] || [])];
-            
-            // Update modal title
-            document.getElementById('current-category-name').textContent = categoryName;
-            document.getElementById('category-display-name').textContent = categoryName;
-            updateCategoryModalCount();
-            
-            // Show modal
-            document.getElementById('category-product-modal').style.display = 'flex';
-            renderCategoryProductGrid();
-        }
-
-        function closeCategoryProductSelector() {
-            document.getElementById('category-product-modal').style.display = 'none';
-            currentCategoryId = null;
-            currentCategoryName = '';
-            tempCategoryProductIds = [];
-        }
-
-        function renderCategoryProductGrid() {
-            const searchVal = document.getElementById('category-modal-search').value.toLowerCase();
-            const grid = document.getElementById('category-modal-product-grid');
-            
-            // FILTER: Only show products from the selected category
-            const filteredProducts = state.allProducts.filter(p => {
-                // Check if product belongs to current category
-                const isInCategory = p.categoryId === currentCategoryId;
-                if (!isInCategory) return false;
-                
-                // Apply search filter
-                return (p.name || '').toLowerCase().includes(searchVal) ||
-                       (p.description || '').toLowerCase().includes(searchVal);
-            });
-
-            if (filteredProducts.length === 0) {
-                grid.innerHTML = `
-                    <div class="empty-state" style="grid-column: 1/-1;">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 12px;">
-                            <circle cx="11" cy="11" r="8"></circle>
-                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                        </svg>
-                        <h3 style="margin-bottom: 8px; color: #374151;">No Products Found</h3>
-                        <p>No products available in this category. Try adding products from the Inventory.</p>
+                    mBody.innerHTML += `<div class="order-card">
+                        <div class="card-body"><img src="${order.items[0]?.image}" class="card-img"><div><div style="font-weight:800; font-size:0.85rem;">${order.items[0]?.name}</div><small>#${order.orderId} • ${order.address?.name}</small></div></div>
+                        <div class="card-actions"><b style="color:var(--brand);">₹${order.amount}</b><div style="display:flex;gap:8px;">${dd('m')}<button onclick="openDrawer('${order.fireId}')" style="background:var(--brand-soft);border:none;border-radius:10px;padding:8px;"><i class="fa-solid fa-arrow-right"></i></button></div></div>
                     </div>`;
-                return;
-            }
-
-            grid.innerHTML = filteredProducts.map(p => {
-                const isSelected = tempCategoryProductIds.includes(p.id);
-                const img = p.image || p.images?.[0] || 'https://via.placeholder.com/150x120?text=No+Image';
-                return `
-                <div class="product-card ${isSelected ? 'selected' : ''}" onclick="toggleCategoryProduct('${p.id}')">
-                    <div class="product-select-checkbox ${isSelected ? 'checked' : ''}"></div>
-                    <img src="${img}" class="product-image">
-                    <div class="product-content">
-                        <div class="product-title">${p.name || 'Unnamed Product'}</div>
-                        <div class="product-price">₹${p.price || '0'}</div>
-                    </div>
-                </div>
-                `;
-            }).join('');
-        }
-
-        function toggleCategoryProduct(productId) {
-            if (tempCategoryProductIds.includes(productId)) {
-                // Remove if already selected
-                tempCategoryProductIds = tempCategoryProductIds.filter(id => id !== productId);
-            } else {
-                // Add if less than 6
-                if (tempCategoryProductIds.length < 6) {
-                    tempCategoryProductIds.push(productId);
-                } else {
-                    showToast('Maximum 6 products per category', 'error');
-                    return;
                 }
-            }
-            renderCategoryProductGrid();
-            updateCategoryModalCount();
+            });
+            ['Live','Done','Pending','Cancel'].forEach(k => document.getElementById(`kpi${k}`).innerText = stats[k.toLowerCase()]);
         }
 
-        function filterCategoryModalProducts() { 
-            renderCategoryProductGrid(); 
-        }
-        
-        function updateCategoryModalCount() { 
-            document.getElementById('category-selected-count').innerText = `${tempCategoryProductIds.length}/6`; 
-        }
-
-        function confirmCategoryProductSelection() {
-            if (currentCategoryId) {
-                state.categoryProducts[currentCategoryId] = [...tempCategoryProductIds];
-                renderCategories('categories-list');
-                renderCategories('mobile-categories-list');
-                closeCategoryProductSelector();
-                showToast(`${tempCategoryProductIds.length} products saved for ${currentCategoryName}!`, 'success');
-            }
+        function toggleDD(id) {
+            const el = document.getElementById(`dd-${id}`);
+            const open = el.classList.contains('open');
+            document.querySelectorAll('.status-dropdown').forEach(d => d.classList.remove('open'));
+            if (!open) el.classList.add('open');
         }
 
-        // --- MODAL LOGIC (FOR BEST SELLERS) ---
-        let tempSelectedIds = [];
+        function toggleMobFilter() { document.getElementById('mobFilter').classList.toggle('open'); }
 
-        function openProductSelector() {
-            tempSelectedIds = [...state.selectedProductIds];
-            document.getElementById('product-modal').style.display = 'flex';
-            renderModalGrid();
-            updateModalCount();
+        function askUpdate(id, oldS, newS) {
+            if (oldS === newS) return;
+            updateData = { id, old: oldS, new: newS };
+            document.getElementById('flowFrom').innerText = config[oldS].label;
+            document.getElementById('flowTo').innerText = config[newS].label;
+            document.getElementById('confirmModal').classList.add('active');
+            document.querySelectorAll('.status-dropdown').forEach(d => d.classList.remove('open'));
         }
 
-        function closeProductSelector() {
-            document.getElementById('product-modal').style.display = 'none';
-        }
-
-        function renderModalGrid() {
-            const searchVal = document.getElementById('modal-search').value.toLowerCase();
-            const grid = document.getElementById('modal-product-grid');
-            
-            const filteredProducts = state.allProducts.filter(p => 
-                (p.name || '').toLowerCase().includes(searchVal) ||
-                (p.description || '').toLowerCase().includes(searchVal)
-            );
-
-            if (filteredProducts.length === 0) {
-                grid.innerHTML = `
-                    <div class="empty-state" style="grid-column: 1/-1;">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 12px;">
-                            <circle cx="11" cy="11" r="8"></circle>
-                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                        </svg>
-                        <h3 style="margin-bottom: 8px; color: #374151;">No Products Found</h3>
-                        <p>Try a different search term</p>
-                    </div>`;
-                return;
-            }
-
-            grid.innerHTML = filteredProducts.map(p => {
-                const isSelected = tempSelectedIds.includes(p.id);
-                const img = p.image || p.images?.[0] || 'https://via.placeholder.com/150x120?text=No+Image';
-                return `
-                <div class="product-card ${isSelected ? 'selected' : ''}" onclick="toggleTempProduct('${p.id}')">
-                    <div class="product-select-checkbox ${isSelected ? 'checked' : ''}"></div>
-                    <img src="${img}" class="product-image">
-                    <div class="product-content">
-                        <div class="product-title">${p.name || 'Unnamed Product'}</div>
-                        <div class="product-price">₹${p.price || '0'}</div>
-                    </div>
-                </div>
-                `;
-            }).join('');
-        }
-
-        function toggleTempProduct(id) {
-            if (tempSelectedIds.includes(id)) {
-                tempSelectedIds = tempSelectedIds.filter(pid => pid !== id);
-            } else {
-                tempSelectedIds.push(id);
-            }
-            renderModalGrid();
-            updateModalCount();
-        }
-
-        function filterModalProducts() { 
-            renderModalGrid(); 
-        }
-        
-        function updateModalCount() { 
-            document.getElementById('modal-selected-count').innerText = tempSelectedIds.length; 
-        }
-
-        function confirmProductSelection() {
-            state.selectedProductIds = [...tempSelectedIds];
-            renderSelectedProducts('selected-products-list');
-            renderSelectedProducts('mobile-selected-products');
-            closeProductSelector();
-            showToast('Product selection updated!', 'success');
-        }
-
-        // --- SAVING ---
-        async function saveSections() {
-            const btn = document.querySelector('.page-desktop .btn-primary') || document.querySelector('.mobile-save-btn');
-            const originalText = btn.innerText;
-            btn.innerText = "Saving...";
-            btn.disabled = true;
-
+        async function executeStatusUpdate() {
             try {
-                const categoriesPayload = state.categories.map((c, idx) => ({
-                    id: c.id,
-                    order: idx + 1,
-                    enabled: c.enabled
-                }));
+                await db.collection('orders').doc(updateData.id).update({ status: updateData.new });
+                const order = ordersData.find(o => o.fireId === updateData.id);
+                if (order && order.userId !== 'guest') await db.collection('users').doc(order.userId).collection('orders').doc(order.orderId).update({ status: updateData.new });
+                closeConfirmModal();
+            } catch (err) { alert(err.message); }
+        }
 
-                const payload = {
-                    bestSellers: state.selectedProductIds,
-                    categories: categoriesPayload,
-                    categoryProducts: state.categoryProducts, // Save category products
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                };
+        function switchTab(tab, btn, isMob = false) {
+            currentFilter = tab;
+            document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
+            if (!isMob) btn.classList.add('active');
+            else { document.getElementById('activeFilterLabel').innerText = btn.innerText; document.getElementById('mobFilter').classList.remove('open'); }
+            renderUI();
+        }
 
-                await db.collection('landingPage').doc('Sections').set(payload, { merge: true });
-                showToast("Changes saved successfully!", 'success');
-            } catch (error) {
-                console.error("Save error:", error);
-                showToast("Error saving changes", 'error');
-            } finally {
-                btn.innerText = originalText;
-                btn.disabled = false;
+        function openDrawer(id) {
+            const order = ordersData.find(o => o.fireId === id);
+            document.getElementById('dOrderId').innerText = `Order #${order.orderId}`;
+            document.getElementById('dOrderDate').innerText = new Date(order.createdAt.toMillis()).toLocaleString();
+            
+            document.getElementById('dContent').innerHTML = `
+                <span class="drawer-section-label">Shipping Address</span>
+                <div class="drawer-card">
+                    <h4 style="font-weight:700;">${order.address.name}</h4>
+                    <p style="font-size:0.8rem; line-height:1.5; opacity:0.8; margin-top:5px;">
+                        ${order.address.street}, ${order.address.locality}<br>
+                        ${order.address.city}, ${order.address.state} - ${order.address.zip}<br>
+                        <b>Phone:</b> ${order.address.phone}
+                    </p>
+                </div>
+                <span class="drawer-section-label">Order Items</span>
+                <div class="drawer-card" style="padding:5px 15px;">
+                    ${order.items.map(item => `
+                        <div class="item-row">
+                            <img src="${item.image}" class="item-img">
+                            <div style="flex:1;">
+                                <div style="font-weight:700; font-size:0.8rem;">${item.name}</div>
+                                <div style="font-size:0.7rem; color:var(--text-sub);">${item.size} • Qty: ${item.quantity}</div>
+                            </div>
+                            <div style="font-weight:700; font-size:0.85rem;">₹${item.price * item.quantity}</div>
+                        </div>`).join('')}
+                </div>
+                <span class="drawer-section-label">Payment info</span>
+                <div class="drawer-card" style="margin-bottom:0;">
+                    <div style="display:flex; justify-content:space-between; font-size:0.85rem;">
+                        <span style="color:var(--text-sub);">Method</span>
+                        <span style="font-weight:700;">${order.paymentMethod}</span>
+                    </div>
+                </div>`;
+            
+            document.getElementById('dFooter').innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <span style="font-weight:700; color:var(--text-sub);">Grand Total</span>
+                    <span style="font-weight:800; font-size:1.4rem; color:var(--brand);">₹${order.amount.toLocaleString()}</span>
+                </div>`;
+            
+            document.getElementById('orderDrawer').classList.add('active');
+        }
+
+        function closeConfirmModal() { document.getElementById('confirmModal').classList.remove('active'); }
+        function closeDrawer() { document.getElementById('orderDrawer').classList.remove('active'); }
+        function toggleTheme() { document.body.classList.toggle('dark-mode'); }
+        window.onclick = function(e) { 
+            if(e.target.id === 'orderDrawer') closeDrawer(); 
+            if(!e.target.closest('.status-dropdown') && !e.target.closest('.mobile-filter-dropdown')) {
+                document.querySelectorAll('.status-dropdown').forEach(d => d.classList.remove('open'));
+                document.getElementById('mobFilter').classList.remove('open');
             }
         }
-
-        function showToast(msg, type = 'success') {
-            const container = document.getElementById('toast-container');
-            const el = document.createElement('div');
-            el.className = `toast ${type}`;
-            el.innerHTML = `
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    ${type === 'success' ? 
-                        '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>' : 
-                        '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>'}
-                </svg>
-                <span>${msg}</span>`;
-            container.appendChild(el);
-            setTimeout(() => el.remove(), 3000);
-        }
+        document.addEventListener('DOMContentLoaded', startApp);
     </script>
 </body>
 </html>
