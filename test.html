@@ -344,7 +344,27 @@
             display: flex; 
             align-items: center; 
             gap: 14px;
+            position: relative;
+            overflow: hidden;
         }
+        
+        .pulse-card {
+            border: 2px solid var(--brand-primary);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(81, 39, 186, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(81, 39, 186, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(81, 39, 186, 0);
+            }
+        }
+        
         .stat-icon { 
             width: 44px; 
             height: 44px; 
@@ -354,11 +374,32 @@
             justify-content: center; 
             font-size: 1.2rem; 
             flex-shrink: 0; 
+            position: relative;
+            z-index: 2;
         }
+        
+        .pulse-icon {
+            animation: iconPulse 2s infinite;
+        }
+        
+        @keyframes iconPulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
         .stat-card h3 { 
             font-size: 1.3rem; 
             font-weight: 800; 
             color: var(--text-color); 
+            position: relative;
+            z-index: 2;
         }
         .stat-card p { 
             font-size: 0.65rem; 
@@ -366,6 +407,27 @@
             color: var(--text-sub); 
             text-transform: uppercase; 
             letter-spacing: 0.5px; 
+            position: relative;
+            z-index: 2;
+        }
+        
+        .today-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: var(--brand-primary);
+            color: white;
+            font-size: 0.6rem;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: 700;
+            animation: badgePulse 1.5s infinite;
+        }
+        
+        @keyframes badgePulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
         }
 
         /* --- CONTROL ROW --- */
@@ -486,13 +548,17 @@
             display: flex; 
             align-items: center; 
             justify-content: space-between; 
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+            z-index: 2;
         }
         
         .status-menu, .mobile-filter-menu {
             position: absolute; 
-            bottom: calc(100% + 10px); 
+            top: calc(100% + 10px); 
             left: 0; 
-            width: 180px;
+            width: 100%;
             background: #ffffff; 
             border: 1px solid var(--border-subtle);
             border-radius: 16px; 
@@ -501,15 +567,19 @@
             z-index: 1000; 
             padding: 6px;
         }
-        .mobile-filter-menu { 
-            top: calc(100% + 10px); 
-            bottom: auto; 
-            width: 100%; 
-        }
-        .status-dropdown.open .status-menu, 
+        
         .mobile-filter-dropdown.open .mobile-filter-menu { 
             display: block; 
             animation: slideUp 0.2s ease; 
+        }
+        
+        .status-dropdown {
+            position: relative;
+        }
+        
+        .status-dropdown.open .status-menu {
+            display: block;
+            animation: slideUp 0.2s ease;
         }
 
         .status-item { 
@@ -536,6 +606,7 @@
             border-radius: 20px; 
             box-shadow: var(--shadow-premium); 
             overflow: visible; 
+            min-height: 300px;
         }
         
         @media (min-width: 768px) {
@@ -569,6 +640,7 @@
                 border: none; 
                 box-shadow: none; 
                 overflow: visible; 
+                min-height: auto;
             }
             .desktop-only { 
                 display: none; 
@@ -617,10 +689,6 @@
             color: white; 
         }
 
-        .status-dropdown { 
-            position: relative; 
-            width: 155px; 
-        }
         .status-trigger { 
             padding: 10px 14px; 
             border-radius: 10px; 
@@ -1105,6 +1173,10 @@
                 max-width: 100%;
                 overflow-x: hidden;
             }
+            
+            .stats-grid {
+                margin-bottom: 20px;
+            }
         }
 
         @media (min-width: 769px) {
@@ -1411,12 +1483,49 @@
                         </div>
                     </div>
 
-                    <!-- STATS -->
+                    <!-- STATS - UPDATED WITH TODAY'S ORDERS FIRST -->
                     <div class="stats-grid">
-                        <div class="stat-card"><div class="stat-icon" style="background:#f3f0ff; color:#5127ba;"><i class="fa-solid fa-bolt"></i></div><div class="stat-info"><p>Live</p><h3 id="kpiLive">0</h3></div></div>
-                        <div class="stat-card"><div class="stat-icon" style="background:#ecfdf5; color:#10b981;"><i class="fa-solid fa-check"></i></div><div class="stat-info"><p>Done</p><h3 id="kpiDone">0</h3></div></div>
-                        <div class="stat-card"><div class="stat-icon" style="background:#fffbeb; color:#f59e0b;"><i class="fa-solid fa-clock"></i></div><div class="stat-info"><p>Pending</p><h3 id="kpiPending">0</h3></div></div>
-                        <div class="stat-card"><div class="stat-icon" style="background:#fef2f2; color:#ef4444;"><i class="fa-solid fa-ban"></i></div><div class="stat-info"><p>Cancel</p><h3 id="kpiCancel">0</h3></div></div>
+                        <!-- Today's Orders Card (with pulse effect) -->
+                        <div class="stat-card pulse-card" id="today-stat-card">
+                            <div class="today-badge" id="today-badge">LIVE</div>
+                            <div class="stat-icon pulse-icon" style="background:#f3f0ff; color:#5127ba;">
+                                <i class="fa-solid fa-calendar-day"></i>
+                            </div>
+                            <div class="stat-info">
+                                <p>Today's Orders</p>
+                                <h3 id="kpiToday">0</h3>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background:#ecfdf5; color:#10b981;">
+                                <i class="fa-solid fa-check"></i>
+                            </div>
+                            <div class="stat-info">
+                                <p>Delivered</p>
+                                <h3 id="kpiDone">0</h3>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background:#fffbeb; color:#f59e0b;">
+                                <i class="fa-solid fa-clock"></i>
+                            </div>
+                            <div class="stat-info">
+                                <p>Pending</p>
+                                <h3 id="kpiPending">0</h3>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background:#fef2f2; color:#ef4444;">
+                                <i class="fa-solid fa-ban"></i>
+                            </div>
+                            <div class="stat-info">
+                                <p>Cancelled</p>
+                                <h3 id="kpiCancel">0</h3>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- CONTROLS -->
@@ -1432,15 +1541,6 @@
                             <div class="search-container">
                                 <i class="fa-solid fa-magnifying-glass"></i>
                                 <input type="text" id="orderSearch" placeholder="Search customer or ID..." onkeyup="renderUI()">
-                            </div>
-                            <div class="mobile-filter-dropdown" id="mobFilter">
-                                <div class="filter-trigger" onclick="toggleMobFilter()"><span id="activeFilterLabel">Today</span> <i class="fa-solid fa-chevron-down"></i></div>
-                                <div class="mobile-filter-menu">
-                                    <div class="status-item" onclick="switchTab('Today', this, true)"><i class="fa-solid fa-calendar-day"></i> Today's Arrivals</div>
-                                    <div class="status-item" onclick="switchTab('Ordered', this, true)"><i class="fa-solid fa-clock"></i> Pending Orders</div>
-                                    <div class="status-item" onclick="switchTab('Shipped', this, true)"><i class="fa-solid fa-truck-fast"></i> Shipped Orders</div>
-                                    <div class="status-item" onclick="switchTab('All', this, true)"><i class="fa-solid fa-database"></i> Full History</div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -1494,29 +1594,82 @@
                     </div>
                 </div>
 
-                <!-- STATS -->
+                <!-- STATS - UPDATED WITH TODAY'S ORDERS FIRST -->
                 <div class="stats-grid">
-                    <div class="stat-card"><div class="stat-icon" style="background:#f3f0ff; color:#5127ba;"><i class="fa-solid fa-bolt"></i></div><div class="stat-info"><p>Live</p><h3 id="mobile-kpiLive">0</h3></div></div>
-                    <div class="stat-card"><div class="stat-icon" style="background:#ecfdf5; color:#10b981;"><i class="fa-solid fa-check"></i></div><div class="stat-info"><p>Done</p><h3 id="mobile-kpiDone">0</h3></div></div>
-                    <div class="stat-card"><div class="stat-icon" style="background:#fffbeb; color:#f59e0b;"><i class="fa-solid fa-clock"></i></div><div class="stat-info"><p>Pending</p><h3 id="mobile-kpiPending">0</h3></div></div>
-                    <div class="stat-card"><div class="stat-icon" style="background:#fef2f2; color:#ef4444;"><i class="fa-solid fa-ban"></i></div><div class="stat-info"><p>Cancel</p><h3 id="mobile-kpiCancel">0</h3></div></div>
+                    <!-- Today's Orders Card (with pulse effect) -->
+                    <div class="stat-card pulse-card" id="mobile-today-stat-card">
+                        <div class="today-badge" id="mobile-today-badge">LIVE</div>
+                        <div class="stat-icon pulse-icon" style="background:#f3f0ff; color:#5127ba;">
+                            <i class="fa-solid fa-calendar-day"></i>
+                        </div>
+                        <div class="stat-info">
+                            <p>Today's Orders</p>
+                            <h3 id="mobile-kpiToday">0</h3>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background:#ecfdf5; color:#10b981;">
+                            <i class="fa-solid fa-check"></i>
+                        </div>
+                        <div class="stat-info">
+                            <p>Delivered</p>
+                            <h3 id="mobile-kpiDone">0</h3>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background:#fffbeb; color:#f59e0b;">
+                            <i class="fa-solid fa-clock"></i>
+                        </div>
+                        <div class="stat-info">
+                            <p>Pending</p>
+                            <h3 id="mobile-kpiPending">0</h3>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background:#fef2f2; color:#ef4444;">
+                            <i class="fa-solid fa-ban"></i>
+                        </div>
+                        <div class="stat-info">
+                            <p>Cancelled</p>
+                            <h3 id="mobile-kpiCancel">0</h3>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- CONTROLS -->
                 <div class="control-row">
                     <div class="control-inner">
+                        <div class="mobile-filter-dropdown" id="mobile-mobFilter">
+                            <div class="filter-trigger" onclick="toggleMobFilter()">
+                                <span id="mobile-activeFilterLabel">Today</span> 
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </div>
+                            <div class="mobile-filter-menu">
+                                <div class="status-item" onclick="switchTab('Today', this, true)">
+                                    <i class="fa-solid fa-calendar-day"></i> 
+                                    <span>Today's Arrivals</span>
+                                </div>
+                                <div class="status-item" onclick="switchTab('Ordered', this, true)">
+                                    <i class="fa-solid fa-clock"></i> 
+                                    <span>Pending Orders</span>
+                                </div>
+                                <div class="status-item" onclick="switchTab('Shipped', this, true)">
+                                    <i class="fa-solid fa-truck-fast"></i> 
+                                    <span>Shipped Orders</span>
+                                </div>
+                                <div class="status-item" onclick="switchTab('All', this, true)">
+                                    <i class="fa-solid fa-database"></i> 
+                                    <span>Full History</span>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <div class="search-container">
                             <i class="fa-solid fa-magnifying-glass"></i>
                             <input type="text" id="mobile-orderSearch" placeholder="Search customer or ID..." onkeyup="renderUI()">
-                        </div>
-                        <div class="mobile-filter-dropdown" id="mobile-mobFilter">
-                            <div class="filter-trigger" onclick="toggleMobFilter()"><span id="mobile-activeFilterLabel">Today</span> <i class="fa-solid fa-chevron-down"></i></div>
-                            <div class="mobile-filter-menu">
-                                <div class="status-item" onclick="switchTab('Today', this, true)"><i class="fa-solid fa-calendar-day"></i> Today's Arrivals</div>
-                                <div class="status-item" onclick="switchTab('Ordered', this, true)"><i class="fa-solid fa-clock"></i> Pending Orders</div>
-                                <div class="status-item" onclick="switchTab('Shipped', this, true)"><i class="fa-solid fa-truck-fast"></i> Shipped Orders</div>
-                                <div class="status-item" onclick="switchTab('All', this, true)"><i class="fa-solid fa-database"></i> Full History</div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -1821,11 +1974,16 @@
             const mBody = document.getElementById('ordersBodyMobile');
             const search = document.getElementById('orderSearch')?.value.toLowerCase() || 
                          document.getElementById('mobile-orderSearch')?.value.toLowerCase() || '';
-            const today = new Date().toDateString();
-            dBody.innerHTML = ''; 
-            mBody.innerHTML = '';
+            const today = new Date();
+            const todayString = today.toDateString();
             
-            let stats = { live: 0, done: 0, pending: 0, cancel: 0 };
+            // Initialize stats
+            let stats = { today: 0, done: 0, pending: 0, cancel: 0, live: 0 };
+            
+            // Clear existing content
+            if (dBody) dBody.innerHTML = '';
+            if (mBody) mBody.innerHTML = '';
+            
             let count = 0;
 
             ordersData.forEach(order => {
@@ -1833,14 +1991,26 @@
                 const ts = order.createdAt ? new Date(order.createdAt.toMillis()) : new Date();
                 const isCod = order.paymentMethod === 'COD';
 
+                // Count stats
+                const isToday = ts.toDateString() === todayString;
+                if (isToday) stats.today++;
+                
                 if (s === 'Ordered' || s === 'Shipped') stats.live++;
                 if (s === 'Ordered') stats.pending++;
                 if (s === 'Delivered') stats.done++;
                 if (s === 'Cancelled') stats.cancel++;
 
-                let show = (currentFilter === 'All' || 
-                          (currentFilter === 'Today' && ts.toDateString() === today) || 
-                          (s === currentFilter));
+                // Filter logic
+                let show = false;
+                if (currentFilter === 'All') {
+                    show = true;
+                } else if (currentFilter === 'Today') {
+                    show = isToday;
+                } else {
+                    show = (s === currentFilter);
+                }
+                
+                // Search logic
                 let matches = (order.address?.name || "").toLowerCase().includes(search) || 
                             (order.orderId || "").toLowerCase().includes(search);
 
@@ -1869,7 +2039,7 @@
                         dBody.innerHTML += `<tr>
                             <td>
                                 <div style="display:flex; gap:12px;">
-                                    <img src="${order.items[0]?.image || 'https://via.placeholder.com/45x60'}" 
+                                    <img src="${order.items[0]?.image || 'https://via.placeholder.com/45x60?text=No+Image'}" 
                                          style="width:45px;height:60px;border-radius:10px;border:1px solid var(--border-subtle);object-fit:cover;">
                                     <div>
                                         <b style="font-weight:800;">${order.items[0]?.name || 'No item name'}</b>
@@ -1891,7 +2061,7 @@
                     if (mBody) {
                         mBody.innerHTML += `<div class="order-card">
                             <div class="card-body">
-                                <img src="${order.items[0]?.image || 'https://via.placeholder.com/60x80'}" class="card-img">
+                                <img src="${order.items[0]?.image || 'https://via.placeholder.com/60x80?text=No+Image'}" class="card-img">
                                 <div>
                                     <div style="font-weight:800; font-size:1rem;">${order.items[0]?.name || 'No item name'}</div>
                                     <small>#${order.orderId} • ${order.address?.name || 'No name'}</small>
@@ -1921,24 +2091,59 @@
             }
 
             // Update stats
-            ['Live','Done','Pending','Cancel'].forEach(k => {
-                const desktopEl = document.getElementById(`kpi${k}`);
-                const mobileEl = document.getElementById(`mobile-kpi${k}`);
-                const value = stats[k.toLowerCase()].toLocaleString();
-                if (desktopEl) desktopEl.innerText = value;
-                if (mobileEl) mobileEl.innerText = value;
+            const statElements = {
+                'Today': ['kpiToday', 'mobile-kpiToday'],
+                'Done': ['kpiDone', 'mobile-kpiDone'],
+                'Pending': ['kpiPending', 'mobile-kpiPending'],
+                'Cancel': ['kpiCancel', 'mobile-kpiCancel'],
+                'Live': ['kpiLive', 'mobile-kpiLive']
+            };
+            
+            Object.keys(statElements).forEach(key => {
+                const value = stats[key.toLowerCase()].toLocaleString();
+                statElements[key].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.innerText = value;
+                });
             });
+            
+            // Update filter labels
+            const filterLabels = {
+                'Today': "Today",
+                'Ordered': "Pending",
+                'Shipped': "Shipped", 
+                'All': "All Orders"
+            };
+            
+            const activeFilterLabel = document.getElementById('mobile-activeFilterLabel');
+            if (activeFilterLabel) activeFilterLabel.innerText = filterLabels[currentFilter] || currentFilter;
+            
+            // Update badge text based on today's count
+            const todayCount = stats.today;
+            const todayBadge = document.getElementById('today-badge');
+            const mobileTodayBadge = document.getElementById('mobile-today-badge');
+            
+            if (todayBadge) todayBadge.textContent = todayCount > 0 ? `${todayCount} NEW` : 'TODAY';
+            if (mobileTodayBadge) mobileTodayBadge.textContent = todayCount > 0 ? `${todayCount} NEW` : 'TODAY';
         }
 
         function toggleDD(id) {
+            // Close all other dropdowns first
+            document.querySelectorAll('.status-dropdown').forEach(d => {
+                if (d.id !== `dd-${id}`) {
+                    d.classList.remove('open');
+                }
+            });
+            
             const el = document.getElementById(`dd-${id}`);
-            const open = el?.classList.contains('open');
-            document.querySelectorAll('.status-dropdown').forEach(d => d.classList.remove('open'));
-            if (el && !open) el.classList.add('open');
+            if (el) el.classList.toggle('open');
         }
 
         function toggleMobFilter() { 
-            const filter = document.getElementById('mobFilter') || document.getElementById('mobile-mobFilter');
+            // Close all other dropdowns
+            document.querySelectorAll('.status-dropdown').forEach(d => d.classList.remove('open'));
+            
+            const filter = document.getElementById('mobile-mobFilter');
             if (filter) filter.classList.toggle('open'); 
         }
 
@@ -1953,10 +2158,16 @@
 
         async function executeStatusUpdate() {
             try {
-                await db.collection('orders').doc(updateData.id).update({ status: updateData.new });
+                await db.collection('orders').doc(updateData.id).update({ 
+                    status: updateData.new,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
                 const order = ordersData.find(o => o.fireId === updateData.id);
                 if (order && order.userId !== 'guest') {
-                    await db.collection('users').doc(order.userId).collection('orders').doc(order.orderId).update({ status: updateData.new });
+                    await db.collection('users').doc(order.userId).collection('orders').doc(order.orderId).update({ 
+                        status: updateData.new 
+                    });
                 }
                 closeConfirmModal();
             } catch (err) { 
@@ -1969,12 +2180,8 @@
             document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
             if (!isMob && btn) btn.classList.add('active');
             
-            const activeFilterLabel = document.getElementById('activeFilterLabel') || 
-                                    document.getElementById('mobile-activeFilterLabel');
-            if (activeFilterLabel) activeFilterLabel.innerText = tab;
-            
-            const mobFilter = document.getElementById('mobFilter') || 
-                            document.getElementById('mobile-mobFilter');
+            // Close mobile filter if open
+            const mobFilter = document.getElementById('mobile-mobFilter');
             if (mobFilter) mobFilter.classList.remove('open');
             
             renderUI();
@@ -2161,10 +2368,14 @@
                 }
                 
                 // Close status dropdowns when clicking outside
-                if (!e.target.closest('.status-dropdown') && !e.target.closest('.mobile-filter-dropdown')) {
+                if (!e.target.closest('.status-dropdown') && 
+                    !e.target.closest('.status-trigger') &&
+                    !e.target.closest('.mobile-filter-dropdown') &&
+                    !e.target.closest('.filter-trigger')) {
+                    
                     document.querySelectorAll('.status-dropdown').forEach(d => d.classList.remove('open'));
-                    document.getElementById('mobFilter')?.classList.remove('open');
-                    document.getElementById('mobile-mobFilter')?.classList.remove('open');
+                    const mobFilter = document.getElementById('mobile-mobFilter');
+                    if (mobFilter) mobFilter.classList.remove('open');
                 }
             });
 
@@ -2173,6 +2384,8 @@
                 if (e.key === 'Escape') {
                     document.getElementById('profile-popup')?.classList.remove('active');
                     document.querySelectorAll('.status-dropdown').forEach(d => d.classList.remove('open'));
+                    const mobFilter = document.getElementById('mobile-mobFilter');
+                    if (mobFilter) mobFilter.classList.remove('open');
                     closeConfirmModal();
                     closeDrawer();
                 }
