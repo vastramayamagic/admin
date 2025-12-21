@@ -10,52 +10,41 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
     <style>
-        /* ============= GLOBAL VARIABLES ============= */
         :root {
+            --brand-primary: #5127ba;
+            --brand-soft: rgba(81, 39, 186, 0.08);
+            --bg-page: #f4f5f7;
+            --card-bg: #ffffff;
+            --border-subtle: #e5e7eb;
+            --text-main: rgb(24, 24, 26);
+            --text-sub: #6b7280;
+            --success: #10B981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --shadow-premium: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --radius-lg: 14px;
+            
+            /* New navbar variables */
             --header-height-desktop: 70px;
             --sidebar-width: 260px;
             --row-height: 48px;
             --sidebar-bg: #ffffff;
             --header-bg: #ffffff;
-            --page-bg: #f4f5f7;
-            --text-color: rgb(24, 24, 26);
             --icon-color: #6b7280;
             --icon-active: #5127ba;
             --active-bg: #f3f4f6;
             --hover-bg: #f3f4f6;
-            --border-subtle: #e5e7eb;
-            --brand-primary: #5127ba;
-            --brand-gradient: linear-gradient(135deg, #5127ba 0%, #673de6 100%);
-            --danger-color: #ef4444;
-            --success-color: #10B981;
-            --warning-color: #f59e0b;
-            --switch-on: #5127ba;
-            --switch-off: #9CA3AF;
-            --shadow-premium: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
             --radius-md: 8px;
             --radius-lg: 12px;
-            --brand-soft: rgba(81, 39, 186, 0.08);
-            --card-bg: #ffffff;
-            --text-main: rgb(24, 24, 26);
-            --text-sub: #6b7280;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'DM Sans', sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            min-height: 100vh;
-            background: var(--page-bg);
-            color: var(--text-color);
-            overflow-x: hidden;
-            width: 100%;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'DM Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg-page); color: var(--text-main); min-height: 100vh; overflow-x: hidden; width: 100%; }
 
         /* ============= DESKTOP LAYOUT ============= */
         .page-desktop {
@@ -130,7 +119,6 @@
             color: var(--text-color);
             line-height: 20px;
             transition: background 0.15s ease;
-            text-decoration: none;
         }
 
         .d-nav-item .label {
@@ -189,8 +177,6 @@
             gap: 12px;
             font-size: 15px;
             font-weight: 500;
-            text-decoration: none;
-            color: inherit;
         }
         .d-submenu-item:hover {
             background: var(--hover-bg);
@@ -203,6 +189,11 @@
             width: 18px;
             height: 18px;
             stroke: #6b7280;
+        }
+        .d-submenu a,
+        .m-submenu a {
+            text-decoration: none !important;
+            color: inherit !important;
         }
 
         /* Desktop account section */
@@ -254,443 +245,118 @@
         /* Desktop content */
         .d-content {
             flex: 1;
-            background: var(--page-bg);
+            background: var(--bg-page);
             overflow-y: auto;
-            width: 100%;
-            padding: 24px;
-        }
-
-        /* ============= ORDERS PAGE SPECIFIC STYLES ============= */
-        .container { 
-            max-width: 1400px; 
-            margin: 0 auto; 
             width: 100%;
         }
 
         /* --- STAT CARDS --- */
-        .stats-grid { 
-            display: grid; 
-            grid-template-columns: repeat(2, 1fr); 
-            gap: 14px; 
-            margin-bottom: 30px; 
-        }
-        @media (min-width: 1024px) { 
-            .stats-grid { 
-                grid-template-columns: repeat(4, 1fr); 
-                gap: 24px; 
-            } 
-        }
+        .container { max-width: 1400px; margin: 30px auto; padding: 0 16px; }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 30px; }
+        @media (min-width: 1024px) { .stats-grid { grid-template-columns: repeat(4, 1fr); gap: 24px; } }
         
         .stat-card {
-            background: var(--card-bg); 
-            border: 1px solid var(--border-subtle);
-            padding: 16px; 
-            border-radius: var(--radius-lg); 
-            box-shadow: var(--shadow-premium);
-            display: flex; 
-            align-items: center; 
-            gap: 14px;
+            background: var(--card-bg); border: 1px solid var(--border-subtle);
+            padding: 16px; border-radius: var(--radius-lg); box-shadow: var(--shadow-premium);
+            display: flex; align-items: center; gap: 14px;
         }
-        .stat-icon { 
-            width: 44px; 
-            height: 44px; 
-            border-radius: 12px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            font-size: 1.2rem; 
-            flex-shrink: 0; 
-        }
-        .stat-card h3 { 
-            font-size: 1.3rem; 
-            font-weight: 800; 
-            color: var(--text-main); 
-        }
-        .stat-card p { 
-            font-size: 0.65rem; 
-            font-weight: 700; 
-            color: var(--text-sub); 
-            text-transform: uppercase; 
-            letter-spacing: 0.5px; 
-        }
+        .stat-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+        .stat-card h3 { font-size: 1.3rem; font-weight: 800; color: var(--text-main); }
+        .stat-card p { font-size: 0.65rem; font-weight: 700; color: var(--text-sub); text-transform: uppercase; letter-spacing: 0.5px; }
 
         /* --- CONTROL ROW --- */
         .control-row { 
-            background: var(--card-bg); 
-            border: 1px solid var(--border-subtle); 
-            padding: 12px; 
-            border-radius: var(--radius-lg); 
-            display: flex; 
-            flex-direction: column; 
-            gap: 16px; 
-            margin-bottom: 25px;
+            background: var(--card-bg); border: 1px solid var(--border-subtle); padding: 12px; 
+            border-radius: var(--radius-lg); display: flex; flex-direction: column; gap: 16px; margin-bottom: 25px;
             box-shadow: var(--shadow-premium);
         }
-        @media (min-width: 768px) { 
-            .control-row { 
-                flex-direction: row; 
-                justify-content: space-between; 
-                align-items: center; 
-            } 
-        }
+        @media (min-width: 768px) { .control-row { flex-direction: row; justify-content: space-between; align-items: center; } }
 
-        .tabs-wrapper { 
-            display: flex; 
-            background: var(--page-bg); 
-            padding: 4px; 
-            border-radius: 10px; 
-            gap: 4px; 
-        }
-        @media (max-width: 767px) { 
-            .tabs-wrapper { 
-                display: none; 
-            } 
-        }
-        .tab-btn { 
-            padding: 10px 20px; 
-            border-radius: 8px; 
-            border: none; 
-            background: transparent; 
-            font-weight: 700; 
-            color: var(--text-sub); 
-            font-size: 0.85rem; 
-            cursor: pointer; 
-            transition: 0.2s; 
-        }
-        .tab-btn.active { 
-            background: var(--brand-primary); 
-            color: white; 
-        }
+        .tabs-wrapper { display: flex; background: var(--bg-page); padding: 4px; border-radius: 10px; gap: 4px; }
+        @media (max-width: 767px) { .tabs-wrapper { display: none; } }
+        .tab-btn { padding: 10px 20px; border-radius: 8px; border: none; background: transparent; font-weight: 700; color: var(--text-sub); font-size: 0.85rem; cursor: pointer; transition: 0.2s; }
+        .tab-btn.active { background: var(--brand-primary); color: white; }
 
-        .search-container { 
-            position: relative; 
-            flex: 1; 
-            max-width: 100%; 
-        }
-        @media (min-width: 768px) { 
-            .search-container { 
-                max-width: 400px; 
-            } 
-        }
+        .search-container { position: relative; flex: 1; max-width: 100%; }
+        @media (min-width: 768px) { .search-container { max-width: 400px; } }
         .search-container input { 
-            width: 100%; 
-            padding: 16px 16px 16px 54px; 
-            border-radius: 999px; 
-            border: 1px solid var(--border-subtle); 
-            background: var(--page-bg); 
-            outline: none; 
-            font-size: 0.95rem; 
-            font-weight: 500; 
-            transition: 0.3s; 
+            width: 100%; padding: 16px 16px 16px 54px; border-radius: 999px; 
+            border: 1px solid var(--border-subtle); background: var(--bg-page); outline: none; 
+            font-size: 0.95rem; font-weight: 500; transition: 0.3s; 
         }
-        .search-container input:focus { 
-            border-color: var(--brand-primary); 
-            background: white; 
-        }
-        .search-container i { 
-            position: absolute; 
-            left: 22px; 
-            top: 50%; 
-            transform: translateY(-50%); 
-            color: var(--text-sub); 
-        }
+        .search-container input:focus { border-color: var(--brand-primary); background: white; }
+        .search-container i { position: absolute; left: 22px; top: 50%; transform: translateY(-50%); color: var(--text-sub); }
 
         /* --- COD & FEE BADGES --- */
         .cod-badge { 
-            display: block; 
-            font-size: 0.65rem; 
-            color: var(--danger-color); 
-            font-weight: 800; 
-            margin-top: 2px; 
-            text-transform: uppercase;
+            display: block; font-size: 0.65rem; color: var(--danger); font-weight: 800; 
+            margin-top: 2px; text-transform: uppercase;
         }
 
         /* --- MOBILE DROPDOWN --- */
-        .mobile-filter-dropdown { 
-            display: none; 
-            position: relative; 
-            width: 100%; 
-        }
-        @media (max-width: 767px) { 
-            .mobile-filter-dropdown { 
-                display: block; 
-            } 
-            .control-inner { 
-                display: flex; 
-                flex-direction: column; 
-                gap: 12px; 
-                width: 100%; 
-            } 
-        }
-        .filter-trigger { 
-            background: white; 
-            border: 1px solid var(--border-subtle); 
-            padding: 16px 20px; 
-            border-radius: 18px; 
-            font-size: 0.95rem; 
-            font-weight: 800; 
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between; 
-        }
+        .mobile-filter-dropdown { display: none; position: relative; width: 100%; }
+        @media (max-width: 767px) { .mobile-filter-dropdown { display: block; } .control-inner { display: flex; flex-direction: column; gap: 12px; width: 100%; } }
+        .filter-trigger { background: white; border: 1px solid var(--border-subtle); padding: 16px 20px; border-radius: 18px; font-size: 0.95rem; font-weight: 800; display: flex; align-items: center; justify-content: space-between; }
         
         .status-menu, .mobile-filter-menu {
-            position: absolute; 
-            bottom: calc(100% + 10px); 
-            left: 0; 
-            width: 180px;
-            background: var(--card-bg); 
-            border: 1px solid var(--border-subtle);
-            border-radius: 16px; 
-            box-shadow: 0 15px 40px rgba(0,0,0,0.15); 
-            display: none; 
-            z-index: 1000; 
-            padding: 6px;
+            position: absolute; bottom: calc(100% + 10px); left: 0; width: 180px;
+            background: var(--card-bg); border: 1px solid var(--border-subtle);
+            border-radius: 16px; box-shadow: 0 15px 40px rgba(0,0,0,0.15); display: none; z-index: 1000; padding: 6px;
         }
-        .mobile-filter-menu { 
-            top: calc(100% + 10px); 
-            bottom: auto; 
-            width: 100%; 
-        }
-        .status-dropdown.open .status-menu, .mobile-filter-dropdown.open .mobile-filter-menu { 
-            display: block; 
-            animation: slideUp 0.2s ease; 
-        }
+        .mobile-filter-menu { top: calc(100% + 10px); bottom: auto; width: 100%; }
+        .status-dropdown.open .status-menu, .mobile-filter-dropdown.open .mobile-filter-menu { display: block; animation: slideUp 0.2s ease; }
 
-        .status-item { 
-            padding: 10px 12px; 
-            border-radius: 8px; 
-            display: flex; 
-            align-items: center; 
-            gap: 10px; 
-            cursor: pointer; 
-            font-size: 0.85rem; 
-            font-weight: 700; 
-            transition: 0.2s; 
-            margin-bottom: 2px; 
-        }
-        .status-item:hover { 
-            background: var(--page-bg); 
-            color: var(--brand-primary); 
-        }
+        .status-item { padding: 10px 12px; border-radius: 8px; display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 0.85rem; font-weight: 700; transition: 0.2s; margin-bottom: 2px; }
+        .status-item:hover { background: var(--bg-page); color: var(--brand-primary); }
 
         /* --- DATA VIEWS --- */
-        .content-card { 
-            background: var(--card-bg); 
-            border: 1px solid var(--border-subtle); 
-            border-radius: 20px; 
-            box-shadow: var(--shadow-premium); 
-            overflow: visible; 
-        }
+        .content-card { background: var(--card-bg); border: 1px solid var(--border-subtle); border-radius: 20px; box-shadow: var(--shadow-premium); overflow: visible; }
         
         @media (min-width: 768px) {
-            table { 
-                width: 100%; 
-                border-collapse: separate; 
-                border-spacing: 0; 
-            }
-            th { 
-                text-align: left; 
-                padding: 22px 20px; 
-                font-size: 0.75rem; 
-                text-transform: uppercase; 
-                letter-spacing: 1.5px; 
-                color: var(--text-sub); 
-                border-bottom: 1px solid var(--border-subtle); 
-            }
-            td { 
-                padding: 16px 20px; 
-                border-bottom: 1px solid var(--page-bg); 
-                font-size: 0.95rem; 
-            }
-            .mobile-only { 
-                display: none; 
-            }
+            table { width: 100%; border-collapse: separate; border-spacing: 0; }
+            th { text-align: left; padding: 22px 20px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-sub); border-bottom: 1px solid var(--border-subtle); }
+            td { padding: 16px 20px; border-bottom: 1px solid var(--bg-page); font-size: 0.95rem; }
+            .mobile-only { display: none; }
         }
 
         @media (max-width: 767px) {
-            .content-card { 
-                background: transparent; 
-                border: none; 
-                box-shadow: none; 
-                overflow: visible; 
-            }
-            .desktop-only { 
-                display: none; 
-            }
-            .order-card { 
-                background: var(--card-bg); 
-                border: 1px solid var(--border-subtle); 
-                border-radius: 24px; 
-                padding: 18px; 
-                margin-bottom: 15px; 
-                box-shadow: var(--shadow-premium); 
-            }
-            .card-body { 
-                display: flex; 
-                gap: 15px; 
-                margin-bottom: 15px; 
-            }
-            .card-img { 
-                width: 60px; 
-                height: 80px; 
-                border-radius: 12px; 
-                object-fit: cover; 
-                border: 1px solid var(--border-subtle); 
-            }
-            .card-actions { 
-                display: flex; 
-                justify-content: space-between; 
-                align-items: center; 
-                border-top: 1px solid var(--border-subtle); 
-                padding-top: 15px; 
-            }
+            .content-card { background: transparent; border: none; box-shadow: none; overflow: visible; }
+            .desktop-only { display: none; }
+            .order-card { background: var(--card-bg); border: 1px solid var(--border-subtle); border-radius: 24px; padding: 18px; margin-bottom: 15px; box-shadow: var(--shadow-premium); }
+            .card-body { display: flex; gap: 15px; margin-bottom: 15px; }
+            .card-img { width: 60px; height: 80px; border-radius: 12px; object-fit: cover; border: 1px solid var(--border-subtle); }
+            .card-actions { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-subtle); padding-top: 15px; }
         }
 
-        .btn-view { 
-            padding: 10px 18px; 
-            border-radius: 12px; 
-            border: 1.5px solid var(--brand-primary); 
-            background: transparent; 
-            color: var(--brand-primary); 
-            font-weight: 800; 
-            cursor: pointer; 
-            font-size: 0.8rem; 
-        }
-        .btn-view:hover { 
-            background: var(--brand-primary); 
-            color: white; 
-        }
+        .btn-view { padding: 10px 18px; border-radius: 12px; border: 1.5px solid var(--brand-primary); background: transparent; color: var(--brand-primary); font-weight: 800; cursor: pointer; font-size: 0.8rem; }
+        .btn-view:hover { background: var(--brand-primary); color: white; }
 
-        .status-dropdown { 
-            position: relative; 
-            width: 155px; 
-        }
-        .status-trigger { 
-            padding: 10px 14px; 
-            border-radius: 10px; 
-            border: 1px solid var(--border-subtle); 
-            background: var(--page-bg); 
-            cursor: pointer; 
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between; 
-            font-size: 0.8rem; 
-            font-weight: 700; 
-        }
+        .status-dropdown { position: relative; width: 155px; }
+        .status-trigger { padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border-subtle); background: var(--bg-page); cursor: pointer; display: flex; align-items: center; justify-content: space-between; font-size: 0.8rem; font-weight: 700; }
 
-        .st-Ordered { color: var(--warning-color); }
+        .st-Ordered { color: var(--warning); }
         .st-Shipped { color: var(--brand-primary); }
-        .st-Delivered { color: var(--success-color); }
-        .st-Cancelled { color: var(--danger-color); }
+        .st-Delivered { color: var(--success); }
+        .st-Cancelled { color: var(--danger); }
 
-        .empty-state { 
-            padding: 100px 20px; 
-            text-align: center; 
-            grid-column: 1/-1; 
-            width: 100%;
-        }
-        .empty-state i { 
-            font-size: 3.5rem; 
-            color: var(--text-sub); 
-            opacity: 0.2; 
-            margin-bottom: 20px; 
-            display: block; 
-        }
+        .empty-state { padding: 100px 20px; text-align: center; }
+        .empty-state i { font-size: 3.5rem; color: var(--text-sub); opacity: 0.2; margin-bottom: 20px; display: block; }
         
         /* --- DRAWER --- */
-        .drawer-overlay { 
-            position: fixed; 
-            inset: 0; 
-            background: rgba(15, 23, 42, 0.45); 
-            backdrop-filter: blur(4px); 
-            display: none; 
-            justify-content: flex-end; 
-            z-index: 2000; 
-        }
-        .drawer-overlay.active { 
-            display: flex; 
-        }
-        .drawer { 
-            width: 100%; 
-            max-width: 500px; 
-            background: #fff; 
-            height: 100%; 
-            display: flex; 
-            flex-direction: column; 
-            animation: drawerIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
-        }
-        @keyframes drawerIn { 
-            from { 
-                transform: translateX(100%); 
-            } 
-            to { 
-                transform: translateX(0); 
-            } 
-        }
-        .drawer-header { 
-            padding: 25px; 
-            border-bottom: 1px solid var(--border-subtle); 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            background: white; 
-        }
-        .drawer-body { 
-            flex: 1; 
-            overflow-y: auto; 
-            padding: 20px; 
-            background: #f8fafc; 
-        }
-        .drawer-footer { 
-            padding: 20px 25px; 
-            border-top: 1px solid var(--border-subtle); 
-            background: white; 
-        }
+        .drawer-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.45); backdrop-filter: blur(4px); display: none; justify-content: flex-end; z-index: 2000; }
+        .drawer-overlay.active { display: flex; }
+        .drawer { width: 100%; max-width: 500px; background: #fff; height: 100%; display: flex; flex-direction: column; animation: drawerIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes drawerIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+        .drawer-header { padding: 25px; border-bottom: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center; background: white; }
+        .drawer-body { flex: 1; overflow-y: auto; padding: 20px; background: #f8fafc; }
+        .drawer-footer { padding: 20px 25px; border-top: 1px solid var(--border-subtle); background: white; }
 
-        .modal-overlay { 
-            position: fixed; 
-            inset: 0; 
-            background: rgba(15, 23, 42, 0.6); 
-            backdrop-filter: blur(4px); 
-            display: none; 
-            align-items: center; 
-            justify-content: center; 
-            z-index: 5000; 
-            padding: 20px; 
-        }
-        .modal-overlay.active { 
-            display: flex; 
-        }
-        .confirm-box { 
-            background: white; 
-            width: 100%; 
-            max-width: 380px; 
-            padding: 30px; 
-            border-radius: 24px; 
-            text-align: center; 
-            box-shadow: var(--shadow-premium); 
-        }
-        .btn-confirm { 
-            background: var(--brand-primary); 
-            color: white; 
-            border: none; 
-            padding: 16px; 
-            border-radius: 12px; 
-            font-weight: 700; 
-            width: 100%; 
-            cursor: pointer; 
-        }
-        @keyframes slideUp { 
-            from { 
-                opacity: 0; 
-                transform: translateY(10px); 
-            } 
-            to { 
-                opacity: 1; 
-                transform: translateY(0); 
-            } 
-        }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 5000; padding: 20px; }
+        .modal-overlay.active { display: flex; }
+        .confirm-box { background: white; width: 100%; max-width: 380px; padding: 30px; border-radius: 24px; text-align: center; box-shadow: var(--shadow-premium); }
+        .btn-confirm { background: var(--brand-primary); color: white; border: none; padding: 16px; border-radius: 12px; font-weight: 700; width: 100%; cursor: pointer; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* ============= MOBILE LAYOUT ============= */
         .page-mobile {
@@ -769,7 +435,14 @@
         /* Mobile main bg */
         .m-main {
             flex: 1;
-            background: var(--page-bg);
+            background: var(--bg-page);
+            padding-bottom: 20px;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* Mobile content */
+        .mobile-content-inner {
             padding: 16px;
             width: 100%;
             overflow-x: hidden;
@@ -889,7 +562,6 @@
             transition: background 0.15s ease;
             font-size: 16px;
             font-weight: 600;
-            text-decoration: none;
         }
 
         .m-nav-item .label {
@@ -935,8 +607,6 @@
             gap: 12px;
             font-size: 15px;
             font-weight: 500;
-            text-decoration: none;
-            color: inherit;
         }
         .m-submenu-item:hover {
             background: var(--hover-bg);
@@ -960,7 +630,7 @@
             position: relative;
         }
 
-        /* ============= PROFILE POPUP ============= */
+        /* Profile Popup */
         .profile-popup {
             position: fixed;
             background-color: #ffffff;
@@ -984,7 +654,7 @@
             transform: translateY(0);
         }
 
-        /* Desktop positioning */
+        /* Desktop positioning - Show on LEFT side */
         @media (min-width: 769px) {
             .profile-popup {
                 left: 30px !important;
@@ -1079,55 +749,11 @@
         @media (max-width: 768px) {
             .page-desktop { display: none; }
             .page-mobile  { display: flex; }
-            
-            .d-content {
-                padding: 0;
-            }
         }
 
         @media (min-width: 769px) {
             .page-desktop { display: flex; }
             .page-mobile { display: none; }
-        }
-
-        /* Toast */
-        #toast-container {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 3000;
-            pointer-events: none;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .toast {
-            padding: 1rem 1.5rem;
-            background: white;
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-premium);
-            animation: slideUp 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            border-left: 4px solid var(--brand-primary);
-            min-width: 300px;
-            pointer-events: auto;
-            max-width: 90vw;
-        }
-
-        .toast.success {
-            border-left-color: var(--success-color);
-        }
-
-        .toast.error {
-            border-left-color: var(--danger-color);
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
@@ -1146,7 +772,7 @@
                     <nav class="d-nav">
                         <div class="d-nav-group">
                             <!-- Dashboard (Active) -->
-                            <a href="index.html" class="d-nav-item d-nav-item--active">
+                            <div class="d-nav-item d-nav-item--active" onclick="window.location.href='index.html'">
                                 <span class="icon">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                                          fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1157,10 +783,10 @@
                                     </svg>
                                 </span>
                                 <span class="label">Dashboard</span>
-                            </a>
+                            </div>
 
                             <!-- Inventory -->
-                            <a href="manage-categories.html" class="d-nav-item">
+                            <div class="d-nav-item" onclick="window.location.href='manage-categories.html'">
                                 <span class="icon">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                                          fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1170,7 +796,7 @@
                                     </svg>
                                 </span>
                                 <span class="label">Inventory</span>
-                            </a>
+                            </div>
 
                             <!-- Customize Site -->
                             <div class="d-nav-item" id="d-customize-toggle">
@@ -1194,15 +820,15 @@
 
                             <!-- Desktop Customize Site submenu -->
                             <div class="d-submenu" id="d-customize-submenu">
-                                <a href="manage-hero.html" class="d-submenu-item">
+                                <a href="/manage-hero.html" class="d-submenu-item">
                                     <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8h20"/><rect width="20" height="16" x="2" y="4" rx="2"/><path d="M6 16h12"/></svg>
                                     <span>Hero Section</span>
                                 </a>
-                                <a href="manage-sections.html" class="d-submenu-item">
+                                <a href="/manage-sections.html" class="d-submenu-item">
                                     <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/><path d="M14 4h7"/><path d="M14 9h7"/><path d="M14 15h7"/><path d="M14 20h7"/></svg>
                                     <span>Sections</span>
                                 </a>
-                                <a href="manage-hero-popup.html" class="d-submenu-item">
+                                <a href="/manage-hero-popup.html" class="d-submenu-item">
                                     <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 21h10"/><rect width="20" height="14" x="2" y="3" rx="2"/></svg>
                                     <span>Popup</span>
                                 </a>
@@ -1232,7 +858,7 @@
 
                             <!-- Desktop MANAGE ORDERS submenu -->
                             <div class="d-submenu" id="d-orders-submenu">
-                                <div class="d-submenu-item" onclick="switchTab('Today', null, false)">
+                                <div class="d-submenu-item active">
                                     <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M12 6v6l4 2"/>
                                         <path d="M22 12a10 10 0 1 0-11 9.95"/>
@@ -1240,7 +866,7 @@
                                     </svg>
                                     <span>Today</span>
                                 </div>
-                                <div class="d-submenu-item" onclick="switchTab('Ordered', null, false)">
+                                <div class="d-submenu-item">
                                     <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M8 2v4"/>
                                         <path d="M16 2v4"/>
@@ -1253,9 +879,9 @@
                                         <path d="M12 18h.01"/>
                                         <path d="M16 18h.01"/>
                                     </svg>
-                                    <span>Pending Orders</span>
+                                    <span>This Month</span>
                                 </div>
-                                <div class="d-submenu-item" onclick="switchTab('Shipped', null, false)">
+                                <div class="d-submenu-item">
                                     <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M12 2v2"/>
                                         <path d="M15.726 21.01A2 2 0 0 1 14 22H4a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2"/>
@@ -1264,7 +890,7 @@
                                         <path d="M8 8h14"/>
                                         <rect x="8" y="3" width="14" height="14" rx="2"/>
                                     </svg>
-                                    <span>Shipped Orders</span>
+                                    <span>All Orders</span>
                                 </div>
                             </div>
                         </div>
@@ -1342,35 +968,31 @@
                 <div class="m-menu-lines"><span></span></div>
             </button>
 
-            <img class="m-logo" src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Vastramaya Logo" />
+            <img
+              class="m-logo"
+              src="https://product-ecommerces.netlify.app/vastramaya.png"
+              alt="Vastramaya Logo" />
         </header>
 
         <main class="m-main">
-            <div class="container">
+            <div class="mobile-content-inner">
                 <!-- STATS -->
                 <div class="stats-grid">
-                    <div class="stat-card"><div class="stat-icon" style="background:#f3f0ff; color:#5127ba;"><i class="fa-solid fa-bolt"></i></div><div class="stat-info"><p>Live</p><h3 id="kpiLiveMob">0</h3></div></div>
-                    <div class="stat-card"><div class="stat-icon" style="background:#ecfdf5; color:#10b981;"><i class="fa-solid fa-check"></i></div><div class="stat-info"><p>Done</p><h3 id="kpiDoneMob">0</h3></div></div>
-                    <div class="stat-card"><div class="stat-icon" style="background:#fffbeb; color:#f59e0b;"><i class="fa-solid fa-clock"></i></div><div class="stat-info"><p>Pending</p><h3 id="kpiPendingMob">0</h3></div></div>
-                    <div class="stat-card"><div class="stat-icon" style="background:#fef2f2; color:#ef4444;"><i class="fa-solid fa-ban"></i></div><div class="stat-info"><p>Cancel</p><h3 id="kpiCancelMob">0</h3></div></div>
+                    <div class="stat-card"><div class="stat-icon" style="background:#f3f0ff; color:#5127ba;"><i class="fa-solid fa-bolt"></i></div><div class="stat-info"><p>Live</p><h3 id="kpiLiveMobile">0</h3></div></div>
+                    <div class="stat-card"><div class="stat-icon" style="background:#ecfdf5; color:#10b981;"><i class="fa-solid fa-check"></i></div><div class="stat-info"><p>Done</p><h3 id="kpiDoneMobile">0</h3></div></div>
+                    <div class="stat-card"><div class="stat-icon" style="background:#fffbeb; color:#f59e0b;"><i class="fa-solid fa-clock"></i></div><div class="stat-info"><p>Pending</p><h3 id="kpiPendingMobile">0</h3></div></div>
+                    <div class="stat-card"><div class="stat-icon" style="background:#fef2f2; color:#ef4444;"><i class="fa-solid fa-ban"></i></div><div class="stat-info"><p>Cancel</p><h3 id="kpiCancelMobile">0</h3></div></div>
                 </div>
 
                 <!-- CONTROLS -->
                 <div class="control-row">
-                    <div class="tabs-wrapper">
-                        <button class="tab-btn active" onclick="switchTab('Today', this)">Today</button>
-                        <button class="tab-btn" onclick="switchTab('Ordered', this)">Pending</button>
-                        <button class="tab-btn" onclick="switchTab('Shipped', this)">Shipped</button>
-                        <button class="tab-btn" onclick="switchTab('All', this)">History</button>
-                    </div>
-
                     <div class="control-inner">
                         <div class="search-container">
                             <i class="fa-solid fa-magnifying-glass"></i>
-                            <input type="text" id="orderSearchMob" placeholder="Search customer or ID..." onkeyup="renderUI()">
+                            <input type="text" id="orderSearchMobile" placeholder="Search customer or ID..." onkeyup="renderUI()">
                         </div>
-                        <div class="mobile-filter-dropdown" id="mobFilterMob">
-                            <div class="filter-trigger" onclick="toggleMobFilter()"><span id="activeFilterLabelMob">Today</span> <i class="fa-solid fa-chevron-down"></i></div>
+                        <div class="mobile-filter-dropdown" id="mobFilterMobile">
+                            <div class="filter-trigger" onclick="toggleMobFilter()"><span id="activeFilterLabelMobile">Today</span> <i class="fa-solid fa-chevron-down"></i></div>
                             <div class="mobile-filter-menu">
                                 <div class="status-item" onclick="switchTab('Today', this, true)"><i class="fa-solid fa-calendar-day"></i> Today's Arrivals</div>
                                 <div class="status-item" onclick="switchTab('Ordered', this, true)"><i class="fa-solid fa-clock"></i> Pending Orders</div>
@@ -1382,8 +1004,8 @@
                 </div>
 
                 <!-- MAIN VIEW -->
-                <div id="mainDisplayMob" class="content-card">
-                    <div id="ordersBodyMobile"></div>
+                <div id="mainDisplayMobile" class="content-card">
+                    <div id="ordersBodyMobileContent" class="mobile-only"></div>
                 </div>
             </div>
         </main>
@@ -1392,7 +1014,10 @@
         <div class="m-overlay" id="m-overlay">
             <div class="m-drawer">
                 <div class="m-drawer-header">
-                    <img class="m-drawer-logo" src="https://product-ecommerces.netlify.app/vastramaya.png" alt="Vastramaya Logo" />
+                    <img
+                      class="m-drawer-logo"
+                      src="https://product-ecommerces.netlify.app/vastramaya.png"
+                      alt="Vastramaya Logo" />
                     <button class="m-drawer-close" id="m-drawer-close" aria-label="Close menu">
                         <div class="m-drawer-close-icon"></div>
                     </button>
@@ -1400,7 +1025,7 @@
 
                 <nav class="m-drawer-nav">
                     <!-- Dashboard (Active) -->
-                    <a href="index.html" class="m-nav-item active">
+                    <div class="m-nav-item active" onclick="window.location.href='index.html'; closeMobileDrawer();">
                         <span class="icon">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                                  fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1411,10 +1036,10 @@
                             </svg>
                         </span>
                         <span class="label">Dashboard</span>
-                    </a>
+                    </div>
 
                     <!-- Inventory -->
-                    <a href="manage-categories.html" class="m-nav-item">
+                    <div class="m-nav-item" onclick="window.location.href='manage-categories.html'; closeMobileDrawer();">
                         <span class="icon">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                                  fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1424,7 +1049,7 @@
                             </svg>
                         </span>
                         <span class="label">Inventory</span>
-                    </a>
+                    </div>
 
                     <!-- Customize Site with dropdown -->
                     <div class="m-nav-item" id="m-customize-toggle">
@@ -1448,15 +1073,15 @@
 
                     <!-- Mobile Customize Site submenu -->
                     <div class="m-submenu" id="m-customize-submenu">
-                        <a href="manage-hero.html" class="m-submenu-item">
+                        <a href="/manage-hero.html" class="m-submenu-item" onclick="closeMobileDrawer();">
                             <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8h20"/><rect width="20" height="16" x="2" y="4" rx="2"/><path d="M6 16h12"/></svg>
                             <span>Hero Section</span>
                         </a>
-                        <a href="manage-sections.html" class="m-submenu-item">
+                        <a href="/manage-sections.html" class="m-submenu-item" onclick="closeMobileDrawer();">
                             <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/><path d="M14 4h7"/><path d="M14 9h7"/><path d="M14 15h7"/><path d="M14 20h7"/></svg>
                             <span>Sections</span>
                         </a>
-                        <a href="manage-hero-popup.html" class="m-submenu-item">
+                        <a href="/manage-hero-popup.html" class="m-submenu-item" onclick="closeMobileDrawer();">
                             <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 21h10"/><rect width="20" height="14" x="2" y="3" rx="2"/></svg>
                             <span>Popup</span>
                         </a>
@@ -1486,7 +1111,7 @@
 
                     <!-- Mobile MANAGE ORDERS submenu -->
                     <div class="m-submenu" id="m-orders-submenu">
-                        <div class="m-submenu-item" onclick="switchTab('Today', null, false)">
+                        <div class="m-submenu-item active" onclick="closeMobileDrawer();">
                             <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M12 6v6l4 2"/>
                                 <path d="M22 12a10 10 0 1 0-11 9.95"/>
@@ -1494,7 +1119,7 @@
                             </svg>
                             <span>Today</span>
                         </div>
-                        <div class="m-submenu-item" onclick="switchTab('Ordered', null, false)">
+                        <div class="m-submenu-item" onclick="closeMobileDrawer();">
                             <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M8 2v4"/>
                                 <path d="M16 2v4"/>
@@ -1507,9 +1132,9 @@
                                 <path d="M12 18h.01"/>
                                 <path d="M16 18h.01"/>
                             </svg>
-                            <span>Pending Orders</span>
+                            <span>This Month</span>
                         </div>
-                        <div class="m-submenu-item" onclick="switchTab('Shipped', null, false)">
+                        <div class="m-submenu-item" onclick="closeMobileDrawer();">
                             <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M12 2v2"/>
                                 <path d="M15.726 21.01A2 2 0 0 1 14 22H4a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2"/>
@@ -1518,7 +1143,7 @@
                                 <path d="M8 8h14"/>
                                 <rect x="8" y="3" width="14" height="14" rx="2"/>
                             </svg>
-                            <span>Shipped Orders</span>
+                            <span>All Orders</span>
                         </div>
                     </div>
                 </nav>
@@ -1539,7 +1164,33 @@
         </div>
     </div>
 
-    <!-- Profile Popup -->
+    <!-- UPDATE MODAL -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="confirm-box">
+            <h3 style="font-weight:800; margin-bottom:15px;">Update Status?</h3>
+            <div style="display:flex; align-items:center; justify-content:center; gap:12px; margin-bottom:25px;">
+                <div id="flowFrom" style="padding:10px; border-radius:8px; background:#f4f5f7; font-weight:700; font-size:0.8rem;">...</div>
+                <i class="fa-solid fa-arrow-right" style="color:var(--brand-primary); opacity:0.5;"></i>
+                <div id="flowTo" style="padding:10px; border-radius:8px; border:1px solid var(--brand-primary); color:var(--brand-primary); font-weight:700; font-size:0.8rem;">...</div>
+            </div>
+            <button class="btn-confirm" onclick="executeStatusUpdate()">Confirm Change</button>
+            <button onclick="closeConfirmModal()" style="background:none; border:none; color:var(--text-sub); margin-top:15px; font-weight:700; cursor:pointer;">Cancel</button>
+        </div>
+    </div>
+
+    <!-- DRAWER -->
+    <div class="drawer-overlay" id="orderDrawer">
+        <div class="drawer">
+            <div class="drawer-header">
+                <div><h2 id="dOrderId" style="font-weight:800; font-size:1.1rem;">Details</h2><p id="dOrderDate" style="font-size:0.75rem; color:var(--text-sub);"></p></div>
+                <button onclick="closeDrawer()" style="border:none; background:var(--brand-soft); color:var(--brand-primary); width:35px; height:35px; border-radius:50%; font-size:1.2rem; cursor:pointer;">&times;</button>
+            </div>
+            <div class="drawer-body" id="dContent"></div>
+            <div class="drawer-footer" id="dFooter"></div>
+        </div>
+    </div>
+
+    <!-- Profile Popup with updated SVG icons -->
     <div class="profile-popup" id="profile-popup">
         <div class="popup-header">
             <img id="popup-avatar" src="" class="account-avatar">
@@ -1580,57 +1231,8 @@
         </ul>
     </div>
 
-    <!-- UPDATE MODAL -->
-    <div class="modal-overlay" id="confirmModal">
-        <div class="confirm-box">
-            <h3 style="font-weight:800; margin-bottom:15px;">Update Status?</h3>
-            <div style="display:flex; align-items:center; justify-content:center; gap:12px; margin-bottom:25px;">
-                <div id="flowFrom" style="padding:10px; border-radius:8px; background:#f4f5f7; font-weight:700; font-size:0.8rem;">...</div>
-                <i class="fa-solid fa-arrow-right" style="color:var(--brand-primary); opacity:0.5;"></i>
-                <div id="flowTo" style="padding:10px; border-radius:8px; border:1px solid var(--brand-primary); color:var(--brand-primary); font-weight:700; font-size:0.8rem;">...</div>
-            </div>
-            <button class="btn-confirm" onclick="executeStatusUpdate()">Confirm Change</button>
-            <button onclick="closeConfirmModal()" style="background:none; border:none; color:var(--text-sub); margin-top:15px; font-weight:700; cursor:pointer;">Cancel</button>
-        </div>
-    </div>
-
-    <!-- DRAWER -->
-    <div class="drawer-overlay" id="orderDrawer">
-        <div class="drawer">
-            <div class="drawer-header">
-                <div><h2 id="dOrderId" style="font-weight:800; font-size:1.1rem;">Details</h2><p id="dOrderDate" style="font-size:0.75rem; color:var(--text-sub);"></p></div>
-                <button onclick="closeDrawer()" style="border:none; background:var(--brand-soft); color:var(--brand-primary); width:35px; height:35px; border-radius:50%; font-size:1.2rem; cursor:pointer;">&times;</button>
-            </div>
-            <div class="drawer-body" id="dContent"></div>
-            <div class="drawer-footer" id="dFooter"></div>
-        </div>
-    </div>
-
-    <div id="toast-container"></div>
-
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
-
     <script>
-        // --- FIREBASE CONFIG ---
-        const firebaseConfig = {
-            apiKey: "AIzaSyCdeonH3VytC21F3X6x0rCVCn2xXrGPoug",
-            authDomain: "vastramaya---magic.firebaseapp.com",
-            projectId: "vastramaya---magic",
-            storageBucket: "vastramaya---magic.firebasestorage.app",
-            messagingSenderId: "543460072082",
-            appId: "1:543460072082:web:f3d1140e8f81ad338ae44b",
-            measurementId: "G-E39VNDCFVE"
-        };
-        const ADMIN_EMAIL = "harshavardhanjw@gmail.com";
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-        const storage = firebase.storage();
-
-        // --- UI INTERACTIONS ---
+        // --- NAVBAR & SIDEBAR INTERACTIONS ---
         document.addEventListener('DOMContentLoaded', () => {
             // Mobile drawer behaviour
             const mOverlay = document.getElementById('m-overlay');
@@ -1658,9 +1260,7 @@
             const dCustomizeSubmenu = document.getElementById('d-customize-submenu');
 
             if (dCustomizeToggle && dCustomizeSubmenu) {
-                dCustomizeToggle.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
+                dCustomizeToggle.addEventListener('click', () => {
                     dCustomizeSubmenu.classList.toggle('open');
                     dCustomizeToggle.classList.toggle('dropdown-open');
                 });
@@ -1671,9 +1271,7 @@
             const dOrdersSubmenu = document.getElementById('d-orders-submenu');
 
             if (dOrdersToggle && dOrdersSubmenu) {
-                dOrdersToggle.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
+                dOrdersToggle.addEventListener('click', () => {
                     dOrdersSubmenu.classList.toggle('open');
                     dOrdersToggle.classList.toggle('dropdown-open');
                 });
@@ -1684,9 +1282,7 @@
             const mCustomizeSubmenu = document.getElementById('m-customize-submenu');
 
             if (mCustomizeToggle && mCustomizeSubmenu) {
-                mCustomizeToggle.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
+                mCustomizeToggle.addEventListener('click', () => {
                     mCustomizeSubmenu.classList.toggle('open');
                     mCustomizeToggle.classList.toggle('dropdown-open');
                 });
@@ -1697,9 +1293,7 @@
             const mOrdersSubmenu = document.getElementById('m-orders-submenu');
 
             if (mOrdersToggle && mOrdersSubmenu) {
-                mOrdersToggle.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
+                mOrdersToggle.addEventListener('click', () => {
                     mOrdersSubmenu.classList.toggle('open');
                     mOrdersToggle.classList.toggle('dropdown-open');
                 });
@@ -1726,6 +1320,12 @@
                     
                     profilePopup.classList.toggle('active');
                 });
+                
+                document.addEventListener('click', e => {
+                    if (!profileSection.contains(e.target) && !profilePopup.contains(e.target)) {
+                        profilePopup.classList.remove('active');
+                    }
+                });
             }
 
             if (mobileProfileSection) {
@@ -1735,27 +1335,32 @@
                 });
             }
 
-            // Close profile popup when clicking outside
-            document.addEventListener('click', e => {
-                if (!profileSection?.contains(e.target) && 
-                    !mobileProfileSection?.contains(e.target) && 
-                    !profilePopup.contains(e.target)) {
-                    profilePopup.classList.remove('active');
-                }
-            });
-
             // Prevent horizontal scrolling on mobile
             if (window.innerWidth <= 768) {
                 document.body.style.overflowX = 'hidden';
                 document.body.style.maxWidth = '100vw';
             }
 
+            // Close popups when clicking outside
+            document.addEventListener('click', function(e) {
+                // Close profile popup when clicking outside
+                const profilePopup = document.getElementById('profile-popup');
+                const profileSection = document.getElementById('profile-section');
+                const mobileProfileSection = document.getElementById('mobile-profile-section');
+                
+                if (profilePopup && profilePopup.classList.contains('active')) {
+                    if (!profilePopup.contains(e.target) && 
+                        !profileSection?.contains(e.target) && 
+                        !mobileProfileSection?.contains(e.target)) {
+                        profilePopup.classList.remove('active');
+                    }
+                }
+            });
+
             // Close popups when pressing Escape key
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape') {
                     document.getElementById('profile-popup')?.classList.remove('active');
-                    closeConfirmModal();
-                    closeDrawer();
                 }
             });
         });
@@ -1774,19 +1379,31 @@
             document.getElementById('profile-popup')?.classList.remove('active');
         });
 
-        // --- ORDERS APP LOGIC ---
+        // --- ORDERS ADMIN FUNCTIONALITY ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyCdeonH3VytC21F3X6x0rCVCn2xXrGPoug",
+            authDomain: "vastramaya---magic.firebaseapp.com",
+            projectId: "vastramaya---magic",
+            storageBucket: "vastramaya---magic.firebasestorage.app",
+            messagingSenderId: "543460072082",
+            appId: "1:543460072082:web:f3d1140e8f81ad338ae44b"
+        };
+        const ADMIN_EMAIL = "harshavardhanjw@gmail.com";
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
         let ordersData = [];
         let currentFilter = 'Today';
         let updateData = {};
 
         const config = {
-            'Ordered': { label: 'Pending', icon: 'fa-clock', color: 'var(--warning-color)' },
-            'Shipped': { label: 'Shipped', icon: 'fa-truck-fast', color: 'var(--brand-primary)' },
-            'Delivered': { label: 'Delivered', icon: 'fa-circle-check', color: 'var(--success-color)' },
-            'Cancelled': { label: 'Cancelled', icon: 'fa-circle-xmark', color: 'var(--danger-color)' }
+            'Ordered': { label: 'Pending', icon: 'fa-clock' },
+            'Shipped': { label: 'Shipped', icon: 'fa-truck-fast' },
+            'Delivered': { label: 'Delivered', icon: 'fa-circle-check' },
+            'Cancelled': { label: 'Cancelled', icon: 'fa-circle-xmark' }
         };
 
-        // Admin check
         auth.onAuthStateChanged(user => {
             if (!user || user.email !== ADMIN_EMAIL) {
                 window.location.href = 'index.html';
@@ -1816,46 +1433,32 @@
             document.getElementById('popup-avatar').src = avatar;
         }
 
+        function closeMobileDrawer() {
+            document.getElementById('m-overlay').classList.remove('open');
+        }
+
         function startApp() {
             db.collection('orders').orderBy('createdAt', 'desc').onSnapshot(snap => {
                 ordersData = [];
-                snap.forEach(doc => {
-                    const data = doc.data();
-                    ordersData.push({ 
-                        fireId: doc.id, 
-                        ...data,
-                        status: data.status || 'Ordered',
-                        paymentMethod: data.paymentMethod || 'Online',
-                        amount: data.amount || 0,
-                        orderId: data.orderId || `ORD-${doc.id.substring(0, 8)}`,
-                        createdAt: data.createdAt || new Date(),
-                        address: data.address || { name: 'Unknown', street: '', city: '', state: '' },
-                        items: data.items || []
-                    });
-                });
+                snap.forEach(doc => ordersData.push({ fireId: doc.id, ...doc.data() }));
                 renderUI();
-            }, error => {
-                console.error('Firestore error:', error);
-                showToast('Error loading orders', 'error');
             });
         }
 
         function renderUI() {
             const dBody = document.getElementById('ordersBodyDesktop');
-            const mBody = document.getElementById('ordersBodyMobile');
+            const mBody = document.getElementById('ordersBodyMobileContent');
             const search = document.getElementById('orderSearch')?.value.toLowerCase() || 
-                         document.getElementById('orderSearchMob')?.value.toLowerCase() || '';
+                          document.getElementById('orderSearchMobile')?.value.toLowerCase() || '';
             const today = new Date().toDateString();
-            
             if (dBody) dBody.innerHTML = '';
             if (mBody) mBody.innerHTML = '';
-            
             let stats = { live: 0, done: 0, pending: 0, cancel: 0 };
             let count = 0;
 
             ordersData.forEach(order => {
                 const s = order.status || 'Ordered';
-                const ts = order.createdAt ? (order.createdAt.toDate ? order.createdAt.toDate() : new Date(order.createdAt)) : new Date();
+                const ts = order.createdAt ? new Date(order.createdAt.toMillis()) : new Date();
                 const isCod = order.paymentMethod === 'COD';
 
                 if (s === 'Ordered' || s === 'Shipped') stats.live++;
@@ -1863,85 +1466,39 @@
                 if (s === 'Delivered') stats.done++;
                 if (s === 'Cancelled') stats.cancel++;
 
-                let show = false;
-                if (currentFilter === 'All') show = true;
-                else if (currentFilter === 'Today') show = (ts.toDateString() === today);
-                else show = (s === currentFilter);
-                
-                let matches = true;
-                if (search) {
-                    matches = (
-                        (order.address?.name || "").toLowerCase().includes(search) || 
-                        (order.orderId || "").toLowerCase().includes(search) ||
-                        (order.address?.phone || "").includes(search)
-                    );
-                }
+                let show = (currentFilter === 'All' || (currentFilter === 'Today' && ts.toDateString() === today) || (s === currentFilter));
+                let matches = (order.address?.name || "").toLowerCase().includes(search) || (order.orderId || "").toLowerCase().includes(search);
 
                 if (show && matches) {
                     count++;
-                    const ui = config[s] || config['Ordered'];
+                    const ui = config[s];
                     const codHtml = isCod ? `<span class="cod-badge"><i class="fa-solid fa-wallet"></i> COD • ₹100 Fee Applied</span>` : '';
                     
                     const dd = (ctx) => `
                         <div class="status-dropdown" id="dd-${ctx}-${order.fireId}">
                             <div class="status-trigger" onclick="toggleDD('${ctx}-${order.fireId}')">
-                                <span><i class="fa-solid ${ui.icon} st-${s}" style="color:${ui.color}"></i> ${ui.label}</span>
+                                <span><i class="fa-solid ${ui.icon} st-${s}"></i> ${ui.label}</span>
                                 <i class="fa-solid fa-chevron-down" style="font-size:0.6rem;"></i>
                             </div>
                             <div class="status-menu">
-                                ${Object.keys(config).map(k => `
-                                    <div class="status-item" onclick="askUpdate('${order.fireId}', '${s}', '${k}')">
-                                        <i class="fa-solid ${config[k].icon} st-${k}" style="color:${config[k].color}"></i> ${config[k].label}
-                                    </div>
-                                `).join('')}
+                                ${Object.keys(config).map(k => `<div class="status-item" onclick="askUpdate('${order.fireId}', '${s}', '${k}')"><i class="fa-solid ${config[k].icon} st-${k}"></i> ${config[k].label}</div>`).join('')}
                             </div>
                         </div>`;
 
-                    // Desktop row
                     if (dBody) {
                         dBody.innerHTML += `<tr>
-                            <td>
-                                <div style="display:flex; gap:12px;">
-                                    <img src="${order.items[0]?.image || 'https://via.placeholder.com/45x60?text=No+Image'}" 
-                                         style="width:45px;height:60px;border-radius:10px;border:1px solid var(--border-subtle);object-fit:cover;">
-                                    <div>
-                                        <b style="font-weight:800; font-size:0.9rem;">${order.items[0]?.name || 'No Product Name'}</b>
-                                        <br><small>#${order.orderId}</small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td><b style="font-weight:700;">${order.address?.name || 'Unknown'}</b></td>
-                            <td>
-                                <div style="color:var(--brand-primary); font-weight:900;">₹${order.amount.toLocaleString()}</div>
-                                ${codHtml}
-                            </td>
+                            <td><div style="display:flex; gap:12px;"><img src="${order.items[0]?.image}" style="width:45px;height:60px;border-radius:10px;border:1px solid var(--border-subtle);object-fit:cover;"><div><b style="font-weight:800;">${order.items[0]?.name}</b><br><small>#${order.orderId}</small></div></div></td>
+                            <td><b style="font-weight:700;">${order.address?.name}</b></td>
+                            <td><div style="color:var(--brand-primary); font-weight:900;">₹${order.amount.toLocaleString()}</div>${codHtml}</td>
                             <td>${dd('d')}</td>
                             <td><button class="btn-view" onclick="openDrawer('${order.fireId}')">Details</button></td>
                         </tr>`;
                     }
 
-                    // Mobile card
                     if (mBody) {
                         mBody.innerHTML += `<div class="order-card">
-                            <div class="card-body">
-                                <img src="${order.items[0]?.image || 'https://via.placeholder.com/60x80?text=No+Image'}" class="card-img">
-                                <div>
-                                    <div style="font-weight:800; font-size:1rem;">${order.items[0]?.name || 'No Product Name'}</div>
-                                    <small>#${order.orderId} • ${order.address?.name || 'Unknown'}</small>
-                                </div>
-                            </div>
-                            <div class="card-actions">
-                                <div>
-                                    <b style="color:var(--brand-primary); font-size:1.1rem;">₹${order.amount.toLocaleString()}</b>
-                                    ${codHtml}
-                                </div>
-                                <div style="display:flex;gap:8px;">
-                                    ${dd('m')}
-                                    <button onclick="openDrawer('${order.fireId}')" style="background:var(--brand-soft);border:none;border-radius:12px;padding:12px;color:var(--brand-primary);">
-                                        <i class="fa-solid fa-arrow-right"></i>
-                                    </button>
-                                </div>
-                            </div>
+                            <div class="card-body"><img src="${order.items[0]?.image}" class="card-img"><div><div style="font-weight:800; font-size:1rem;">${order.items[0]?.name}</div><small>#${order.orderId} • ${order.address?.name}</small></div></div>
+                            <div class="card-actions"><div><b style="color:var(--brand-primary); font-size:1.1rem;">₹${order.amount.toLocaleString()}</b>${codHtml}</div><div style="display:flex;gap:8px;">${dd('m')}<button onclick="openDrawer('${order.fireId}')" style="background:var(--brand-soft);border:none;border-radius:12px;padding:12px;color:var(--brand-primary);"><i class="fa-solid fa-arrow-right"></i></button></div></div>
                         </div>`;
                     }
                 }
@@ -1955,188 +1512,92 @@
 
             // Update stats for both desktop and mobile
             ['Live','Done','Pending','Cancel'].forEach(k => {
-                const value = stats[k.toLowerCase()];
-                document.getElementById(`kpi${k}`)?.innerText = value.toLocaleString();
-                document.getElementById(`kpi${k}Mob`)?.innerText = value.toLocaleString();
+                const desktopEl = document.getElementById(`kpi${k}`);
+                const mobileEl = document.getElementById(`kpi${k}Mobile`);
+                const statValue = stats[k.toLowerCase()].toLocaleString();
+                if (desktopEl) desktopEl.innerText = statValue;
+                if (mobileEl) mobileEl.innerText = statValue;
             });
         }
 
         function toggleDD(id) {
             const el = document.getElementById(`dd-${id}`);
-            const open = el?.classList.contains('open');
+            const open = el.classList.contains('open');
             document.querySelectorAll('.status-dropdown').forEach(d => d.classList.remove('open'));
-            if (el && !open) el.classList.add('open');
+            if (!open) el.classList.add('open');
         }
 
         function toggleMobFilter() { 
-            const mobFilter = document.getElementById('mobFilter') || document.getElementById('mobFilterMob');
+            const mobFilter = document.getElementById('mobFilter') || document.getElementById('mobFilterMobile');
             if (mobFilter) mobFilter.classList.toggle('open'); 
         }
 
         function askUpdate(id, oldS, newS) {
             if (oldS === newS) return;
             updateData = { id, old: oldS, new: newS };
-            document.getElementById('flowFrom').innerText = (config[oldS] || config['Ordered']).label;
-            document.getElementById('flowTo').innerText = (config[newS] || config['Ordered']).label;
+            document.getElementById('flowFrom').innerText = config[oldS].label;
+            document.getElementById('flowTo').innerText = config[newS].label;
             document.getElementById('confirmModal').classList.add('active');
             document.querySelectorAll('.status-dropdown').forEach(d => d.classList.remove('open'));
         }
 
         async function executeStatusUpdate() {
             try {
-                if (!updateData.id) return;
-                
-                await db.collection('orders').doc(updateData.id).update({ 
-                    status: updateData.new,
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                
+                await db.collection('orders').doc(updateData.id).update({ status: updateData.new });
                 const order = ordersData.find(o => o.fireId === updateData.id);
-                if (order && order.userId !== 'guest' && order.userId) {
-                    try {
-                        await db.collection('users').doc(order.userId).collection('orders').doc(order.orderId).update({ 
-                            status: updateData.new 
-                        });
-                    } catch (err) {
-                        console.log('User order update failed (might not exist):', err);
-                    }
-                }
-                
-                showToast(`Order status updated to ${(config[updateData.new] || config['Ordered']).label}`, 'success');
+                if (order && order.userId !== 'guest') await db.collection('users').doc(order.userId).collection('orders').doc(order.orderId).update({ status: updateData.new });
                 closeConfirmModal();
-            } catch (err) { 
-                showToast('Failed to update order: ' + err.message, 'error'); 
-            }
+            } catch (err) { alert(err.message); }
         }
 
         function switchTab(tab, btn, isMob = false) {
             currentFilter = tab;
-            const label = tab === 'Today' ? 'Today' : 
-                         tab === 'Ordered' ? 'Pending' : 
-                         tab === 'Shipped' ? 'Shipped' : 'History';
-            
-            // Update desktop tabs
             document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
-            if (btn) btn.classList.add('active');
-            
-            // Update mobile filter label
-            document.getElementById('activeFilterLabel')?.textContent = label;
-            document.getElementById('activeFilterLabelMob')?.textContent = label;
-            
-            // Close mobile filter dropdown
-            document.getElementById('mobFilter')?.classList.remove('open');
-            document.getElementById('mobFilterMob')?.classList.remove('open');
-            
+            if (!isMob && btn) btn.classList.add('active');
+            else { 
+                const activeLabel = document.getElementById('activeFilterLabel') || document.getElementById('activeFilterLabelMobile');
+                if (activeLabel) activeLabel.innerText = btn.innerText; 
+                const mobFilter = document.getElementById('mobFilter') || document.getElementById('mobFilterMobile');
+                if (mobFilter) mobFilter.classList.remove('open'); 
+            }
             renderUI();
         }
 
         function openDrawer(id) {
             const order = ordersData.find(o => o.fireId === id);
-            if (!order) return;
-            
             document.getElementById('dOrderId').innerText = `Order #${order.orderId}`;
-            document.getElementById('dOrderDate').innerText = new Date(
-                order.createdAt?.toDate ? order.createdAt.toDate() : order.createdAt
-            ).toLocaleString();
-            
+            document.getElementById('dOrderDate').innerText = new Date(order.createdAt.toMillis()).toLocaleString();
             const isCod = order.paymentMethod === 'COD';
-            const ui = config[order.status] || config['Ordered'];
             
             document.getElementById('dContent').innerHTML = `
-                <div style="margin-bottom: 20px;">
-                    <p style="font-size:0.65rem; font-weight:800; color:var(--brand-primary); text-transform:uppercase; margin-bottom:10px;">Status</p>
-                    <div style="background:white; border:1px solid var(--border-subtle); border-radius:12px; padding:15px; display:flex; align-items:center; gap:10px;">
-                        <i class="fa-solid ${ui.icon}" style="color:${ui.color}; font-size:1.2rem;"></i>
-                        <div>
-                            <h4 style="font-weight:800; margin:0;">${ui.label}</h4>
-                            <p style="font-size:0.8rem; color:var(--text-sub); margin:0;">Order placed on ${new Date(order.createdAt?.toDate ? order.createdAt.toDate() : order.createdAt).toLocaleDateString()}</p>
-                        </div>
-                    </div>
-                </div>
                 <p style="font-size:0.65rem; font-weight:800; color:var(--brand-primary); text-transform:uppercase; margin-bottom:10px;">Address</p>
                 <div style="background:white; border:1px solid var(--border-subtle); border-radius:12px; padding:15px; margin-bottom:20px;">
-                    <h4 style="font-weight:800;">${order.address?.name || 'Unknown'}</h4>
-                    <p style="font-size:0.85rem; line-height:1.5; opacity:0.8; margin-top:5px;">
-                        ${order.address?.street || ''}, ${order.address?.locality || ''}<br>
-                        ${order.address?.city || ''}, ${order.address?.state || ''} - ${order.address?.zip || ''}<br>
-                        <b>Phone:</b> ${order.address?.phone || 'Not provided'}
-                    </p>
+                    <h4 style="font-weight:800;">${order.address.name}</h4>
+                    <p style="font-size:0.85rem; line-height:1.5; opacity:0.8; margin-top:5px;">${order.address.street}, ${order.address.locality}<br>${order.address.city}, ${order.address.state} - ${order.address.zip}<br><b>Phone:</b> ${order.address.phone}</p>
                 </div>
-                <p style="font-size:0.65rem; font-weight:800; color:var(--brand-primary); text-transform:uppercase; margin-bottom:10px;">Items (${order.items?.length || 0})</p>
+                <p style="font-size:0.65rem; font-weight:800; color:var(--brand-primary); text-transform:uppercase; margin-bottom:10px;">Items</p>
                 <div style="background:white; border:1px solid var(--border-subtle); border-radius:12px; padding:5px 15px; margin-bottom:20px;">
-                    ${(order.items || []).map(item => `
-                        <div style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--border-subtle);">
-                            <div style="display:flex; gap:12px;">
-                                <img src="${item.image || 'https://via.placeholder.com/45x60?text=No+Image'}" 
-                                     style="width:45px;height:60px;border-radius:10px;object-fit:cover;">
-                                <div>
-                                    <b style="font-weight:700; font-size:0.85rem;">${item.name || 'Unknown Item'}</b><br>
-                                    <small>${item.size || 'One Size'} • Qty: ${item.quantity || 1}</small>
-                                </div>
-                            </div>
-                            <b style="font-weight:800; font-size:0.9rem;">₹${((item.price || 0) * (item.quantity || 1)).toLocaleString()}</b>
-                        </div>
-                    `).join('')}
+                    ${order.items.map(item => `<div style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--border-subtle);"><div style="display:flex; gap:12px;"><img src="${item.image}" style="width:45px;height:60px;border-radius:10px;object-fit:cover;"><div><b style="font-weight:700; font-size:0.85rem;">${item.name}</b><br><small>${item.size} • Qty: ${item.quantity}</small></div></div><b style="font-weight:800; font-size:0.9rem;">₹${(item.price * item.quantity).toLocaleString()}</b></div>`).join('')}
                 </div>
                 <div style="background:white; border:1px solid var(--border-subtle); border-radius:12px; padding:15px;">
-                    <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:5px;">
-                        <span>Payment Method</span>
-                        <b>${order.paymentMethod || 'Online'}</b>
-                    </div>
-                    ${isCod ? `<div style="display:flex; justify-content:space-between; font-size:0.85rem; color:var(--danger-color); margin-bottom:5px;"><span>Handling Fee</span><b>+ ₹100</b></div>` : ''}
-                    <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-top:10px; padding-top:10px; border-top:1px solid var(--border-subtle);">
-                        <span>Subtotal</span>
-                        <b>₹${(order.amount - (isCod ? 100 : 0)).toLocaleString()}</b>
-                    </div>
+                    <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:5px;"><span>Payment</span><b>${order.paymentMethod}</b></div>
+                    ${isCod ? `<div style="display:flex; justify-content:space-between; font-size:0.85rem; color:var(--danger);"><span>Handling Fee</span><b>+ ₹100</b></div>` : ''}
                 </div>`;
             
-            document.getElementById('dFooter').innerHTML = `
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <b>Grand Total</b>
-                    <b style="font-size:1.6rem; color:var(--brand-primary); font-weight:900;">₹${order.amount.toLocaleString()}</b>
-                </div>`;
-            
+            document.getElementById('dFooter').innerHTML = `<div style="display:flex; justify-content:space-between; align-items:center;"><b>Grand Total</b><b style="font-size:1.6rem; color:var(--brand-primary); font-weight:900;">₹${order.amount.toLocaleString()}</b></div>`;
             document.getElementById('orderDrawer').classList.add('active');
         }
 
-        function closeConfirmModal() { 
-            document.getElementById('confirmModal').classList.remove('active'); 
-            updateData = {};
-        }
-        
-        function closeDrawer() { 
-            document.getElementById('orderDrawer').classList.remove('active'); 
-        }
-        
+        function closeConfirmModal() { document.getElementById('confirmModal').classList.remove('active'); }
+        function closeDrawer() { document.getElementById('orderDrawer').classList.remove('active'); }
         window.onclick = function(e) { 
             if(e.target.id === 'orderDrawer') closeDrawer(); 
             if(!e.target.closest('.status-dropdown') && !e.target.closest('.mobile-filter-dropdown')) {
                 document.querySelectorAll('.status-dropdown').forEach(d => d.classList.remove('open'));
-                document.getElementById('mobFilter')?.classList.remove('open');
-                document.getElementById('mobFilterMob')?.classList.remove('open');
+                const mobFilter = document.getElementById('mobFilter') || document.getElementById('mobFilterMobile');
+                if (mobFilter) mobFilter.classList.remove('open');
             }
         }
-
-        function showToast(msg, type='success') {
-            const container = document.getElementById('toast-container');
-            if (!container) return;
-            
-            const el = document.createElement('div');
-            el.className = `toast ${type}`;
-            el.innerHTML = `
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    ${type === 'success' ? 
-                        '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>' : 
-                        '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>'}
-                </svg>
-                <span>${msg}</span>`;
-            container.appendChild(el);
-            setTimeout(() => el.remove(), 3000);
-        }
-
-        // Initialize search inputs
-        document.getElementById('orderSearch')?.addEventListener('input', renderUI);
-        document.getElementById('orderSearchMob')?.addEventListener('input', renderUI);
     </script>
 </body>
 </html>
