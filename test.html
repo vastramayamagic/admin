@@ -3,1844 +3,261 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Vastramaya | Orders Admin</title>
+    <title>My Archive | Vastramaya</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
-
     <style>
         :root {
-            --header-height-desktop: 70px;
-            --sidebar-width: 260px;
-            --row-height: 48px;
-            --sidebar-bg: #ffffff;
-            --header-bg: #ffffff;
-            --page-bg: #f4f5f7;
-            --text-color: rgb(24, 24, 26);
-            --icon-color: #6b7280;
-            --icon-active: #5127ba;
-            --active-bg: #f3f4f6;
-            --hover-bg: #f3f4f6;
-            --border-subtle: #e5e7eb;
-            --brand-primary: #5127ba;
-            --brand-gradient: linear-gradient(135deg, #5127ba 0%, #673de6 100%);
-            --danger-color: #ef4444;
-            --success-color: #10B981;
-            --warning-color: #f59e0b;
-            --switch-on: #5127ba;
-            --switch-off: #9CA3AF;
-            --shadow-premium: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            --radius-md: 8px;
-            --radius-lg: 12px;
-            --skeleton-color: #f0f0f0;
-            --skeleton-highlight: #f8f8f8;
-            --brand-soft: rgba(81, 39, 186, 0.08);
+            --page-bg: #fefcf3;
+            --text-primary: #3f0b17;
+            --text-secondary: #6b422a;
+            --brand-primary: #8b2635;
+            --brand-gold: #c5a059;
+            --border-tan: #e8d5c4;
+            --surface: #ffffff;
+            --surface-alt: #fffbf7;
+            --font-main: 'DM Sans', sans-serif;
+            --green-success: #4a9c7d;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'DM Sans', sans-serif;
-            -webkit-tap-highlight-color: transparent;
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        body { 
+            background: var(--page-bg); 
+            color: var(--text-primary); 
+            font-family: var(--font-main); 
+            -webkit-font-smoothing: antialiased;
+            padding-bottom: 60px;
         }
 
-        body {
-            min-height: 100vh;
-            background: var(--page-bg);
-            font-family: "DM Sans", Roboto, sans-serif;
-            font-weight: 500;
-            font-size: 14px;
-            line-height: 20px;
-            color: var(--text-color);
-            overflow-x: hidden;
-            width: 100%;
-        }
-
-        /* ============= DESKTOP LAYOUT ============= */
-        .page-desktop {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            overflow: hidden;
-        }
-
-        /* Desktop header */
-        .d-topbar {
-            height: var(--header-height-desktop);
-            background: var(--header-bg);
-            border-bottom: 1px solid var(--border-subtle);
-            border-top: 1px solid var(--border-subtle);
-            display: flex;
-            align-items: center;
-            padding-left: 40px;
-        }
-
-        .d-topbar-logo {
-            height: 52px;
-            width: auto;
-            object-fit: contain;
-        }
-
-        /* Desktop main area */
-        .d-app {
-            flex: 1;
-            display: flex;
-            width: 100%;
-        }
-
-        /* Desktop sidebar */
-        .d-sidebar {
-            width: var(--sidebar-width);
-            background: var(--sidebar-bg);
-            border-right: 1px solid var(--border-subtle);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .d-sidebar-inner {
-            padding: 32px 16px 16px 12px;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-
-        /* Desktop nav */
-        .d-nav {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .d-nav-group + .d-nav-group {
-            margin-top: 6px;
-        }
-
-        .d-nav-item {
-            display: flex;
-            align-items: center;
-            height: var(--row-height);
-            padding: 0 20px 0 12px;
-            margin: 2px 0;
-            border-radius: 8px;
-            gap: 12px;
-            cursor: pointer;
-            font-weight: 500;
-            font-size: 14px;
-            color: var(--text-color);
-            line-height: 20px;
-            transition: background 0.15s ease;
-        }
-
-        .d-nav-item .label {
-            flex: 1;
-        }
-
-        .d-nav-item .icon svg {
-            width: 22px;
-            height: 22px;
-            stroke: var(--icon-color);
-        }
-
-        .chevron-icon {
-            width: 18px;
-            height: 18px;
-            stroke: var(--icon-color);
-            transition: transform 0.2s ease;
-        }
-
-        .dropdown-open .chevron-icon {
-            transform: rotate(90deg);
-        }
-
-        /* Desktop active */
-        .d-nav-item--active {
-            background: var(--active-bg);
-        }
-        .d-nav-item--active .icon svg {
-            stroke: var(--icon-active);
-        }
-
-        /* Desktop hover */
-        .d-nav-item:hover {
-            background: var(--hover-bg);
-        }
-
-        /* Desktop submenus */
-        .d-submenu {
-            display: none;
-            margin-left: 28px;
-            padding-left: 16px;
-            border-left: 1px solid var(--border-subtle);
-            margin-top: 4px;
-        }
-        .d-submenu.open {
-            display: block;
-        }
-        .d-submenu-item {
-            height: 44px;
-            display: flex;
-            align-items: center;
-            padding: 0 16px;
-            border-radius: 8px;
-            margin: 2px 0;
-            cursor: pointer;
-            gap: 12px;
-            font-size: 15px;
-            font-weight: 500;
-        }
-        .d-submenu-item:hover {
-            background: var(--hover-bg);
-        }
-        .d-submenu-item.active {
-            background: var(--active-bg);
-        }
-
-        .d-submenu-item .submenu-icon {
-            width: 18px;
-            height: 18px;
-            stroke: #6b7280;
-        }
-        .d-submenu a,
-        .m-submenu a {
-            text-decoration: none !important;
-            color: inherit !important;
-        }
-
-        /* Desktop account section */
-        .d-account-section {
-            margin-top: auto;
-            padding: 16px;
-            border-top: 1px solid var(--border-subtle);
-            cursor: pointer;
-            position: relative;
-        }
-
-        .account-card {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .account-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .account-text {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-
-        .account-name {
-            font-size: 14px;
-            font-weight: 500;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 150px;
-        }
-
-        .account-email {
-            font-size: 12px;
-            color: #6b7280;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 150px;
-        }
-
-        /* Desktop content */
-        .d-content {
-            flex: 1;
-            background: var(--page-bg);
-            overflow-y: auto;
-            width: 100%;
-        }
-
-        /* ============= BODY CONTENT ============= */
-        .content-inner {
-            max-width: 1400px;
+        /* --- Header Section --- */
+        .header-minimal {
+            padding: 50px 20px 30px;
+            text-align: center;
+            max-width: 650px;
             margin: 0 auto;
-            padding: 24px 24px 40px;
-            width: 100%;
         }
 
-        .page-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 24px;
-            width: 100%;
-        }
-
-        .page-title-wrap {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            min-width: 0;
-        }
-
-        .page-title {
+        .header-minimal h1 {
+            font-size: 32px;
             font-weight: 700;
-            font-size: 20px;
-            line-height: 32px;
-            color: rgb(29, 30, 32);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            letter-spacing: -1px;
+            color: var(--text-primary);
         }
 
-        .breadcrumb {
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        .header-minimal p {
             font-size: 13px;
-            line-height: 20px;
-            color: #6b7280;
-            flex-wrap: wrap;
-        }
-
-        .breadcrumb-icon svg {
-            width: 16px;
-            height: 16px;
-            stroke: #9ca3af;
-        }
-
-        .breadcrumb-divider {
-            color: #d1d5db;
-        }
-
-        /* --- STAT CARDS --- */
-        .stats-grid { 
-            display: grid; 
-            grid-template-columns: repeat(2, 1fr); 
-            gap: 14px; 
-            margin-bottom: 30px; 
-        }
-        @media (min-width: 1024px) { 
-            .stats-grid { 
-                grid-template-columns: repeat(4, 1fr); 
-                gap: 24px; 
-            } 
-        }
-        
-        .stat-card {
-            background: #ffffff; 
-            border: 1px solid var(--border-subtle);
-            padding: 16px; 
-            border-radius: var(--radius-lg); 
-            box-shadow: var(--shadow-premium);
-            display: flex; 
-            align-items: center; 
-            gap: 14px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* Pulse effect for Today's orders card */
-        .stat-card.today-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, #5127ba 0%, #673de6 100%);
-            opacity: 0;
-            z-index: 0;
-            animation: pulseBackground 2s infinite;
-        }
-
-        .stat-card.today-card {
-            border-color: var(--brand-primary);
-            box-shadow: 0 0 0 1px var(--brand-primary), 0 10px 25px -5px rgba(81, 39, 186, 0.2);
-        }
-
-        @keyframes pulseBackground {
-            0% { opacity: 0.05; }
-            50% { opacity: 0.1; }
-            100% { opacity: 0.05; }
-        }
-
-        .stat-card-inner {
-            display: flex; 
-            align-items: center; 
-            gap: 14px;
-            position: relative;
-            z-index: 1;
-            width: 100%;
-        }
-
-        .stat-icon { 
-            width: 44px; 
-            height: 44px; 
-            border-radius: 12px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            font-size: 1.2rem; 
-            flex-shrink: 0; 
-        }
-        .stat-card h3 { 
-            font-size: 1.3rem; 
-            font-weight: 800; 
-            color: var(--text-color); 
-        }
-        .stat-card p { 
-            font-size: 0.65rem; 
-            font-weight: 700; 
-            color: var(--text-sub); 
-            text-transform: uppercase; 
-            letter-spacing: 0.5px; 
-        }
-
-        /* --- CONTROL ROW --- */
-        .control-row { 
-            background: #ffffff; 
-            border: 1px solid var(--border-subtle); 
-            padding: 12px; 
-            border-radius: var(--radius-lg); 
-            display: flex; 
-            flex-direction: column; 
-            gap: 16px; 
-            margin-bottom: 25px;
-            box-shadow: var(--shadow-premium);
-        }
-        @media (min-width: 768px) { 
-            .control-row { 
-                flex-direction: row; 
-                justify-content: space-between; 
-                align-items: center; 
-            } 
-        }
-
-        .tabs-wrapper { 
-            display: flex; 
-            background: var(--page-bg); 
-            padding: 4px; 
-            border-radius: 10px; 
-            gap: 4px; 
-        }
-        @media (max-width: 767px) { 
-            .tabs-wrapper { 
-                display: none; 
-            } 
-        }
-        .tab-btn { 
-            padding: 10px 20px; 
-            border-radius: 8px; 
-            border: none; 
-            background: transparent; 
-            font-weight: 700; 
-            color: var(--text-sub); 
-            font-size: 0.85rem; 
-            cursor: pointer; 
-            transition: 0.2s; 
-        }
-        .tab-btn.active { 
-            background: var(--brand-primary); 
-            color: white; 
-        }
-
-        .search-container { 
-            position: relative; 
-            flex: 1; 
-            max-width: 100%; 
-        }
-        @media (min-width: 768px) { 
-            .search-container { 
-                max-width: 400px; 
-            } 
-        }
-        .search-container input { 
-            width: 100%; 
-            padding: 16px 16px 16px 54px; 
-            border-radius: 999px; 
-            border: 1px solid var(--border-subtle); 
-            background: var(--page-bg); 
-            outline: none; 
-            font-size: 0.95rem; 
-            font-weight: 500; 
-            transition: 0.3s; 
-        }
-        .search-container input:focus { 
-            border-color: var(--brand-primary); 
-            background: white; 
-        }
-        .search-container i { 
-            position: absolute; 
-            left: 22px; 
-            top: 50%; 
-            transform: translateY(-50%); 
-            color: var(--text-sub); 
-        }
-
-        /* --- COD & FEE BADGES --- */
-        .cod-badge { 
-            display: block; 
-            font-size: 0.65rem; 
-            color: var(--danger-color); 
-            font-weight: 800; 
-            margin-top: 2px; 
+            color: var(--text-secondary);
             text-transform: uppercase;
-        }
-
-        /* --- MOBILE DROPDOWN --- */
-        .mobile-filter-dropdown { 
-            position: relative; 
-            width: 100%; 
-        }
-        .filter-trigger { 
-            background: white; 
-            border: 1px solid var(--border-subtle); 
-            padding: 16px 20px; 
-            border-radius: 18px; 
-            font-size: 0.95rem; 
-            font-weight: 800; 
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between;
-            cursor: pointer;
-            width: 100%;
-        }
-        
-        .status-menu, .mobile-filter-menu {
-            position: absolute; 
-            top: calc(100% + 10px); 
-            left: 0; 
-            width: 180px;
-            background: #ffffff; 
-            border: 1px solid var(--border-subtle);
-            border-radius: 16px; 
-            box-shadow: 0 15px 40px rgba(0,0,0,0.15); 
-            display: none; 
-            z-index: 1000; 
-            padding: 6px;
-        }
-        .mobile-filter-menu { 
-            width: 100%; 
-            z-index: 1001;
-        }
-        .status-dropdown.open .status-menu, 
-        .mobile-filter-dropdown.open .mobile-filter-menu { 
-            display: block; 
-            animation: slideUp 0.2s ease; 
-        }
-
-        .status-item { 
-            padding: 10px 12px; 
-            border-radius: 8px; 
-            display: flex; 
-            align-items: center; 
-            gap: 10px; 
-            cursor: pointer; 
-            font-size: 0.85rem; 
-            font-weight: 700; 
-            transition: 0.2s; 
-            margin-bottom: 2px; 
-        }
-        .status-item:hover { 
-            background: var(--page-bg); 
-            color: var(--brand-primary); 
-        }
-
-        /* --- DATA VIEWS --- */
-        .content-card { 
-            background: #ffffff; 
-            border: 1px solid var(--border-subtle); 
-            border-radius: 20px; 
-            box-shadow: var(--shadow-premium); 
-            overflow: visible; 
-            width: 100%;
-        }
-        
-        @media (min-width: 768px) {
-            table { 
-                width: 100%; 
-                border-collapse: separate; 
-                border-spacing: 0; 
-            }
-            th { 
-                text-align: left; 
-                padding: 22px 20px; 
-                font-size: 0.75rem; 
-                text-transform: uppercase; 
-                letter-spacing: 1.5px; 
-                color: var(--text-sub); 
-                border-bottom: 1px solid var(--border-subtle); 
-            }
-            td { 
-                padding: 16px 20px; 
-                border-bottom: 1px solid var(--page-bg); 
-                font-size: 0.95rem; 
-            }
-            .mobile-only { 
-                display: none; 
-            }
-        }
-
-        @media (max-width: 767px) {
-            .content-card { 
-                background: transparent; 
-                border: none; 
-                box-shadow: none; 
-                overflow: visible; 
-                padding: 0;
-            }
-            .desktop-only { 
-                display: none; 
-            }
-            .order-card { 
-                background: #ffffff; 
-                border: 1px solid var(--border-subtle); 
-                border-radius: 24px; 
-                padding: 18px; 
-                margin-bottom: 15px; 
-                box-shadow: var(--shadow-premium); 
-                width: 100%;
-            }
-            .card-body { 
-                display: flex; 
-                gap: 15px; 
-                margin-bottom: 15px; 
-            }
-            .card-img { 
-                width: 60px; 
-                height: 80px; 
-                border-radius: 12px; 
-                object-fit: cover; 
-                border: 1px solid var(--border-subtle); 
-            }
-            .card-actions { 
-                display: flex; 
-                justify-content: space-between; 
-                align-items: center; 
-                border-top: 1px solid var(--border-subtle); 
-                padding-top: 15px; 
-            }
-        }
-
-        .btn-view { 
-            padding: 10px 18px; 
-            border-radius: 12px; 
-            border: 1.5px solid var(--brand-primary); 
-            background: transparent; 
-            color: var(--brand-primary); 
-            font-weight: 800; 
-            cursor: pointer; 
-            font-size: 0.8rem; 
-        }
-        .btn-view:hover { 
-            background: var(--brand-primary); 
-            color: white; 
-        }
-
-        .status-dropdown { 
-            position: relative; 
-            width: 155px; 
-        }
-        .status-trigger { 
-            padding: 10px 14px; 
-            border-radius: 10px; 
-            border: 1px solid var(--border-subtle); 
-            background: var(--page-bg); 
-            cursor: pointer; 
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between; 
-            font-size: 0.8rem; 
-            font-weight: 700; 
-        }
-
-        .st-Ordered { 
-            color: var(--warning-color); 
-        }
-        .st-Shipped { 
-            color: var(--brand-primary); 
-        }
-        .st-Delivered { 
-            color: var(--success-color); 
-        }
-        .st-Cancelled { 
-            color: var(--danger-color); 
-        }
-
-        .empty-state { 
-            padding: 100px 20px; 
-            text-align: center; 
-            color: #6b7280;
-        }
-        .empty-state i { 
-            font-size: 3.5rem; 
-            color: var(--text-sub); 
-            opacity: 0.2; 
-            margin-bottom: 20px; 
-            display: block; 
-        }
-        
-        /* --- DRAWER --- */
-        .drawer-overlay { 
-            position: fixed; 
-            inset: 0; 
-            background: rgba(15, 23, 42, 0.45); 
-            backdrop-filter: blur(4px); 
-            display: none; 
-            justify-content: flex-end; 
-            z-index: 2000; 
-        }
-        .drawer-overlay.active { 
-            display: flex; 
-        }
-        .drawer { 
-            width: 100%; 
-            max-width: 500px; 
-            background: #fff; 
-            height: 100%; 
-            display: flex; 
-            flex-direction: column; 
-            animation: drawerIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
-        }
-        @keyframes drawerIn { 
-            from { transform: translateX(100%); } 
-            to { transform: translateX(0); } 
-        }
-        .drawer-header { 
-            padding: 25px; 
-            border-bottom: 1px solid var(--border-subtle); 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            background: white; 
-        }
-        .drawer-body { 
-            flex: 1; 
-            overflow-y: auto; 
-            padding: 20px; 
-            background: #f8fafc; 
-        }
-        .drawer-footer { 
-            padding: 20px 25px; 
-            border-top: 1px solid var(--border-subtle); 
-            background: white; 
-        }
-
-        /* Modal */
-        .modal-overlay { 
-            position: fixed; 
-            inset: 0; 
-            background: rgba(15, 23, 42, 0.6); 
-            backdrop-filter: blur(4px); 
-            display: none; 
-            align-items: center; 
-            justify-content: center; 
-            z-index: 5000; 
-            padding: 20px; 
-        }
-        .modal-overlay.active { 
-            display: flex; 
-        }
-        .confirm-box { 
-            background: white; 
-            width: 100%; 
-            max-width: 380px; 
-            padding: 30px; 
-            border-radius: 24px; 
-            text-align: center; 
-            box-shadow: var(--shadow-premium); 
-        }
-        .btn-confirm { 
-            background: var(--brand-primary); 
-            color: white; 
-            border: none; 
-            padding: 16px; 
-            border-radius: 12px; 
-            font-weight: 700; 
-            width: 100%; 
-            cursor: pointer; 
-        }
-        
-        @keyframes slideUp { 
-            from { opacity: 0; transform: translateY(10px); } 
-            to { opacity: 1; transform: translateY(0); } 
-        }
-
-        /* ============= MOBILE LAYOUT ============= */
-        .page-mobile {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            display: none;
-            width: 100%;
-            overflow-x: hidden;
-        }
-
-        /* Mobile header */
-        .m-header {
-            height: 72px;
-            background: var(--header-bg);
-            border-bottom: 1px solid var(--border-subtle);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 16px;
-            width: 100%;
-        }
-
-        /* Mobile menu button */
-        .m-menu-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            border: 1px solid #e5e7eb;
-            background: #f9fafb;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            flex-shrink: 0;
-            transition: all 0.2s ease;
-        }
-
-        .m-menu-btn:hover {
-            background: #f3f4f6;
-        }
-
-        .m-menu-lines {
-            width: 18px;
-            height: 14px;
-            position: relative;
-        }
-        .m-menu-lines::before,
-        .m-menu-lines::after,
-        .m-menu-lines span {
-            content: "";
-            position: absolute;
-            left: 0;
-            right: 0;
-            height: 2px;
-            border-radius: 999px;
-            background: #111827;
-        }
-        .m-menu-lines::before {
-            top: 0;
-        }
-        .m-menu-lines span {
-            top: 6px;
-        }
-        .m-menu-lines::after {
-            bottom: 0;
-        }
-
-        .m-logo {
-            height: 48px;
-            width: auto;
-            object-fit: contain;
-            max-width: 200px;
-        }
-
-        /* Mobile main bg */
-        .m-main {
-            flex: 1;
-            background: var(--page-bg);
-            padding-bottom: 20px;
-            width: 100%;
-            overflow-x: hidden;
-        }
-
-        /* Overlay & drawer */
-        .m-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(15, 23, 42, 0.45);
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.25s ease-out;
-            z-index: 40;
-        }
-
-        .m-overlay.open {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .m-drawer {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 320px;
-            max-width: 90vw;
-            height: 100%;
-            background: #ffffff;
-            display: flex;
-            flex-direction: column;
-            transform: translateX(-100%);
-            transition: transform 0.25s ease-out;
-            overflow-y: auto;
-        }
-
-        .m-overlay.open .m-drawer {
-            transform: translateX(0);
-        }
-
-        /* Drawer header */
-        .m-drawer-header {
-            height: 72px;
-            border-bottom: 1px solid var(--border-subtle);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 16px;
-        }
-
-        .m-drawer-logo {
-            height: 48px;
-            width: auto;
-            object-fit: contain;
-            max-width: 200px;
-        }
-
-        /* Drawer close button */
-        .m-drawer-close {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            border: 1px solid #e5e7eb;
-            background: #f9fafb;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            flex-shrink: 0;
-            transition: all 0.2s ease;
-        }
-        
-        .m-drawer-close:hover {
-            background: #f3f4f6;
-        }
-        
-        .m-drawer-close-icon {
-            width: 14px;
-            height: 14px;
-            position: relative;
-        }
-        .m-drawer-close-icon::before,
-        .m-drawer-close-icon::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            margin: auto;
-            width: 14px;
-            height: 2px;
-            border-radius: 999px;
-            background: #111827;
-        }
-        .m-drawer-close-icon::before {
-            transform: rotate(45deg);
-        }
-        .m-drawer-close-icon::after {
-            transform: rotate(-45deg);
-        }
-
-        /* Drawer nav */
-        .m-drawer-nav {
-            padding: 32px 8px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .m-nav-item {
-            display: flex;
-            align-items: center;
-            height: 52px;
-            padding: 0 16px;
-            margin: 2px 0;
-            border-radius: 8px;
-            gap: 12px;
-            cursor: pointer;
-            color: var(--text-color);
-            transition: background 0.15s ease;
-            font-size: 16px;
-            font-weight: 600;
-        }
-
-        .m-nav-item .label {
-            flex: 1;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .m-nav-item .icon svg {
-            width: 22px;
-            height: 22px;
-            stroke: var(--icon-color);
-        }
-
-        /* active mobile */
-        .m-nav-item.active {
-            background: var(--active-bg);
-        }
-        .m-nav-item.active .icon svg {
-            stroke: var(--icon-active);
-        }
-
-        /* Mobile submenu */
-        .m-submenu {
-            display: none;
-            margin-left: 28px;
-            padding-left: 16px;
-            border-left: 1px solid var(--border-subtle);
-            margin-top: 4px;
-        }
-        .m-submenu.open {
-            display: block;
-        }
-        .m-submenu-item {
-            height: 48px;
-            display: flex;
-            align-items: center;
-            padding: 0 16px;
-            border-radius: 8px;
-            margin: 2px 0;
-            cursor: pointer;
-            gap: 12px;
-            font-size: 15px;
+            letter-spacing: 3px;
+            margin-top: 8px;
             font-weight: 500;
-        }
-        .m-submenu-item:hover {
-            background: var(--hover-bg);
-        }
-        .m-submenu-item.active {
-            background: var(--active-bg);
+            opacity: 0.8;
         }
 
-        .m-submenu-item .submenu-icon {
-            width: 18px;
-            height: 18px;
-            stroke: #6b7280;
+        .container {
+            max-width: 650px;
+            margin: 0 auto;
+            padding: 10px 15px;
         }
 
-        /* Drawer footer account */
-        .m-account-section {
-            margin-top: auto;
-            padding: 16px;
-            border-top: 1px solid var(--border-subtle);
-            cursor: pointer;
-            position: relative;
+        /* --- ORDER CARD --- */
+        .order-card {
+            background: var(--surface);
+            border: 1.5px solid var(--border-tan);
+            border-radius: 20px;
+            margin-bottom: 24px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(59, 11, 23, 0.04);
         }
 
-        /* Mobile content layout */
-        .mobile-content-inner {
-            padding: 16px;
-            width: 100%;
-            overflow-x: hidden;
-        }
-
-        /* Mobile page header */
-        .mobile-page-header {
-            margin-bottom: 20px;
-            width: 100%;
-        }
-
-        .mobile-page-title-wrap {
+        .card-head {
+            padding: 15px 20px;
             display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-bottom: 16px;
-            width: 100%;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--surface-alt);
+            border-bottom: 1.5px solid var(--border-tan);
         }
 
-        .mobile-page-title {
+        .ref-no { font-size: 11px; font-weight: 700; color: var(--text-secondary); letter-spacing: 1px; }
+        
+        .status-badge {
+            font-size: 10px;
             font-weight: 700;
-            font-size: 22px;
-            line-height: 32px;
-            color: rgb(29, 30, 32);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            text-transform: uppercase;
+            padding: 5px 12px;
+            border-radius: 100px;
         }
+        .st-ordered { background: #fdf6e9; color: var(--brand-gold); }
+        .st-shipped { background: #eef2f8; color: #5a7da3; }
+        .st-delivered { background: #eafaf1; color: var(--green-success); }
+        .st-cancelled { background: #f8eeee; color: var(--brand-primary); }
 
-        .mobile-breadcrumb {
+        .card-body { padding: 20px; }
+
+        .product-boxed-row {
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 14px;
-            line-height: 20px;
-            color: #6b7280;
-            flex-wrap: wrap;
+            gap: 15px;
+            padding: 12px;
+            margin-bottom: 12px;
+            border: 1.5px solid var(--border-tan);
+            border-radius: 16px;
+            background: #fff;
         }
+        .product-boxed-row:last-child { margin-bottom: 0; }
 
-        .mobile-breadcrumb-icon svg {
-            width: 16px;
-            height: 16px;
-            stroke: #9ca3af;
-        }
-
-        .mobile-breadcrumb-divider {
-            color: #d1d5db;
-        }
-
-        /* Responsive switch */
-        @media (max-width: 768px) {
-            .page-desktop { display: none; }
-            .page-mobile  { display: flex; }
-            
-            .content-inner {
-                padding: 0;
-            }
-            
-            .page-header {
-                display: none;
-            }
-
-            .modal-overlay {
-                align-items: flex-end;
-                padding: 0;
-            }
-            
-            .confirm-box {
-                width: 100%;
-                border-radius: 24px 24px 0 0;
-                animation: slideUpModal 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-                max-height: 90vh;
-                overflow-y: auto;
-                max-width: 100%;
-            }
-            
-            @keyframes slideUpModal {
-                from { transform: translateY(100%); }
-                to { transform: translateY(0); }
-            }
-            
-            /* Prevent horizontal scrolling */
-            body, html {
-                overflow-x: hidden;
-                position: relative;
-                width: 100%;
-            }
-            
-            .mobile-content-inner {
-                padding: 16px;
-                max-width: 100%;
-                overflow-x: hidden;
-            }
-        }
-
-        @media (min-width: 769px) {
-            .page-desktop { display: flex; }
-            .page-mobile { display: none; }
-        }
-
-        /* Profile Popup */
-        .profile-popup {
-            position: fixed;
-            background-color: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            border: 1px solid #e5e7eb;
-            padding: 0;
-            z-index: 1000;
-            opacity: 0;
-            pointer-events: none;
-            transform: translateY(10px);
-            transition: all 0.2s ease;
-            width: 280px;
-            max-width: 90vw;
-            overflow: hidden;
-        }
-
-        .profile-popup.active {
-            opacity: 1;
-            pointer-events: all;
-            transform: translateY(0);
-        }
-
-        /* Desktop positioning */
-        @media (min-width: 769px) {
-            .profile-popup {
-                left: 30px !important;
-                right: auto !important;
-                bottom: 100px !important;
-                top: auto !important;
-            }
-        }
-
-        /* Mobile positioning */
-        @media (max-width: 768px) {
-            .profile-popup {
-                left: 50% !important;
-                right: auto !important;
-                bottom: 100px !important;
-                top: auto !important;
-                transform: translateX(-50%) translateY(10px);
-            }
-            
-            .profile-popup.active {
-                transform: translateX(-50%) translateY(0);
-            }
-        }
-
-        .popup-header {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 1rem;
-            border-bottom: 1px solid #e5e7eb;
-            background: #f9fafb;
-        }
-
-        .popup-list {
-            list-style: none;
-            padding: 0.5rem;
-        }
-
-        .popup-list li {
-            margin: 0;
-            padding: 0;
-        }
-
-        .popup-list a {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.75rem;
+        .prod-img {
+            width: 60px;
+            height: 75px;
+            object-fit: cover;
             border-radius: 8px;
-            text-decoration: none;
-            color: var(--text-color);
-            transition: background 0.15s ease;
-            cursor: pointer;
-            font-size: 14px;
-            white-space: nowrap;
-            width: 100%;
-            background: none;
-            border: none;
-            text-align: left;
-        }
-
-        .popup-list a:hover {
-            background: #f3f4f6;
-        }
-
-        .popup-list a i {
-            font-size: 1.2rem;
-            color: #6b7280;
-            min-width: 20px;
-        }
-
-        .popup-list a.logout {
-            color: var(--danger-color);
-        }
-
-        .popup-list a.logout i {
-            color: var(--danger-color);
-        }
-
-        .popup-icon {
-            width: 18px;
-            height: 18px;
-            stroke: #6b7280;
+            border: 1px solid var(--border-tan);
             flex-shrink: 0;
         }
 
-        .logout-icon {
-            stroke: var(--danger-color) !important;
+        .prod-meta { flex: 1; }
+        .prod-meta h4 { font-size: 15px; font-weight: 600; color: var(--text-primary); }
+        .prod-meta p { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+        .prod-price { font-size: 15px; font-weight: 700; color: var(--brand-primary); }
+
+        /* --- TRACKER --- */
+        .tracker-wrapper {
+            padding: 25px 40px;
+            background: #fff;
+            border-top: 1.5px solid #f9f4f0;
         }
 
-        /* Text truncation fixes */
-        .text-truncate {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+        .tracker-line-container {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            align-items: center;
         }
 
-        /* Loading skeleton */
-        .skeleton {
-            background: linear-gradient(
-                90deg,
-                var(--skeleton-color) 25%,
-                var(--skeleton-highlight) 50%,
-                var(--skeleton-color) 75%
-            );
-            background-size: 200% 100%;
-            animation: skeleton-loading 1.5s infinite;
-            border-radius: 4px;
+        .tracker-line-bg {
+            position: absolute;
+            top: 17px;
+            left: 5%;
+            width: 90%;
+            height: 2px;
+            background: #f0f0f0;
+            z-index: 1;
         }
 
-        @keyframes skeleton-loading {
-            0% {
-                background-position: 200% 0;
-            }
-            100% {
-                background-position: -200% 0;
-            }
+        .tracker-line-fill {
+            position: absolute;
+            top: 17px;
+            left: 5%;
+            height: 2px;
+            background: var(--brand-primary);
+            z-index: 2;
+            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 0%;
         }
 
-        .skeleton-stat-card {
-            height: 80px;
+        .step-item {
+            position: relative;
+            z-index: 3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
         }
 
-        .skeleton-order-card {
-            height: 120px;
-            margin-bottom: 15px;
+        .step-icon-circle {
+            width: 36px;
+            height: 36px;
+            background: #fff;
+            border: 2px solid #f0f0f0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s ease;
+            color: #ccc;
+        }
+
+        .step-item.active .step-icon-circle {
+            border-color: var(--brand-primary);
+            background: var(--brand-primary);
+            color: #fff;
+        }
+
+        .step-icon-circle svg { width: 18px; height: 18px; }
+
+        .step-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #ccc;
+            letter-spacing: 0.5px;
+        }
+
+        .step-item.active .step-label { color: var(--brand-primary); }
+
+        .pulse-active {
+            animation: pulse-ring 2s infinite;
+        }
+
+        @keyframes pulse-ring {
+            0% { box-shadow: 0 0 0 0 rgba(139, 38, 53, 0.4); }
+            70% { box-shadow: 0 0 0 12px rgba(139, 38, 53, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(139, 38, 53, 0); }
+        }
+
+        .card-foot {
+            padding: 18px 20px;
+            border-top: 1.5px dashed var(--border-tan);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--surface-alt);
+        }
+
+        .foot-date { font-size: 11px; color: var(--text-secondary); font-style: italic; }
+        .total-group { text-align: right; }
+        .total-lbl { font-size: 9px; font-weight: 700; color: var(--text-secondary); letter-spacing: 1px; }
+        .total-val { font-size: 22px; font-weight: 700; color: var(--brand-primary); }
+        .cod-tag { font-size: 9px; color: var(--brand-primary); font-weight: 700; margin-top: 2px; display: block; }
+
+        .loader-spinner {
+            width: 35px; height: 35px;
+            border: 3px solid rgba(139, 38, 53, 0.1);
+            border-top: 3px solid var(--brand-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 60px auto;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        @media (max-width: 500px) {
+            .tracker-wrapper { padding: 25px 20px; }
+            .step-label { font-size: 8px; }
         }
     </style>
 </head>
 <body>
-    <!-- ================= DESKTOP VIEW ================= -->
-    <div class="page-desktop">
-        <header class="d-topbar">
-            <img class="d-topbar-logo"
-                 src="https://product-ecommerces.netlify.app/vastramaya.png"
-                 alt="Vastramaya Logo" />
-        </header>
 
-        <div class="d-app">
-            <aside class="d-sidebar">
-                <div class="d-sidebar-inner">
-                    <nav class="d-nav">
-                        <div class="d-nav-group">
-                            <!-- Dashboard (Active) -->
-                            <div class="d-nav-item d-nav-item--active" onclick="window.location.href='index.html'">
-                                <span class="icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                         fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <rect width="7" height="7" x="3" y="3" rx="1"/>
-                                        <rect width="7" height="7" x="14" y="3" rx="1"/>
-                                        <rect width="7" height="7" x="14" y="14" rx="1"/>
-                                        <rect width="7" height="7" x="3" y="14" rx="1"/>
-                                    </svg>
-                                </span>
-                                <span class="label">Dashboard</span>
-                            </div>
+    <header class="header-minimal">
+        <h1>The Archive</h1>
+        <p>Order History & Logistics</p>
+    </header>
 
-                            <!-- Inventory -->
-                            <div class="d-nav-item" onclick="window.location.href='manage-categories.html'">
-                                <span class="icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                         fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M2 7v10"/>
-                                        <path d="M6 5v14"/>
-                                        <rect width="12" height="18" x="10" y="3" rx="2"/>
-                                    </svg>
-                                </span>
-                                <span class="label">Inventory</span>
-                            </div>
-
-                            <!-- Customize Site -->
-                            <div class="d-nav-item" id="d-customize-toggle">
-                                <span class="icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                         fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M12.034 12.681a.498.498 0 0 1 .647-.647l9 3.5a.5.5 0 0 1-.033.943l-3.444 1.068a1 1 0 0 0-.66.66l-1.067 3.443a.5.5 0 0 1-.943.033z"/>
-                                        <path d="M21 11V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6"/>
-                                    </svg>
-                                </span>
-                                <span class="label">Customize Site</span>
-                                <span class="chevron">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                         fill="none" stroke="currentColor" stroke-width="2"
-                                         stroke-linecap="round" stroke-linejoin="round"
-                                         class="chevron-icon">
-                                        <path d="m9 18 6-6-6-6"/>
-                                    </svg>
-                                </span>
-                            </div>
-
-                            <!-- Desktop Customize Site submenu -->
-                            <div class="d-submenu" id="d-customize-submenu">
-                                <a href="/manage-hero.html" class="d-submenu-item">
-                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8h20"/><rect width="20" height="16" x="2" y="4" rx="2"/><path d="M6 16h12"/></svg>
-                                    <span>Hero Section</span>
-                                </a>
-                                <a href="/manage-sections.html" class="d-submenu-item">
-                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/><path d="M14 4h7"/><path d="M14 9h7"/><path d="M14 15h7"/><path d="M14 20h7"/></svg>
-                                    <span>Sections</span>
-                                </a>
-                                <a href="/manage-hero-popup.html" class="d-submenu-item">
-                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 21h10"/><rect width="20" height="14" x="2" y="3" rx="2"/></svg>
-                                    <span>Popup</span>
-                                </a>
-                            </div>
-
-                            <!-- MANAGE ORDERS (Current Page) -->
-                            <div class="d-nav-item" id="d-orders-toggle">
-                                <span class="icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                         fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
-                                        <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
-                                        <path d="M8 14v2.2l1.6 1"/>
-                                        <circle cx="8" cy="16" r="6"/>
-                                    </svg>
-                                </span>
-                                <span class="label">MANAGE ORDERS</span>
-                                <span class="chevron">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                         fill="none" stroke="currentColor" stroke-width="2"
-                                         stroke-linecap="round" stroke-linejoin="round"
-                                         class="chevron-icon">
-                                        <path d="m9 18 6-6-6-6"/>
-                                    </svg>
-                                </span>
-                            </div>
-
-                            <!-- Desktop MANAGE ORDERS submenu -->
-                            <div class="d-submenu" id="d-orders-submenu">
-                                <div class="d-submenu-item" onclick="switchTab('Today', this, false)">
-                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M12 6v6l4 2"/>
-                                        <path d="M22 12a10 10 0 1 0-11 9.95"/>
-                                        <path d="m22 16-5.5 5.5L14 19"/>
-                                    </svg>
-                                    <span>Today</span>
-                                </div>
-                                <div class="d-submenu-item" onclick="switchTab('Ordered', this, false)">
-                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M8 2v4"/>
-                                        <path d="M16 2v4"/>
-                                        <rect width="18" height="18" x="3" y="4" rx="2"/>
-                                        <path d="M3 10h18"/>
-                                        <path d="M8 14h.01"/>
-                                        <path d="M12 14h.01"/>
-                                        <path d="M16 14h.01"/>
-                                        <path d="M8 18h.01"/>
-                                        <path d="M12 18h.01"/>
-                                        <path d="M16 18h.01"/>
-                                    </svg>
-                                    <span>This Month</span>
-                                </div>
-                                <div class="d-submenu-item" onclick="switchTab('All', this, false)">
-                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M12 2v2"/>
-                                        <path d="M15.726 21.01A2 2 0 0 1 14 22H4a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2"/>
-                                        <path d="M18 2v2"/>
-                                        <path d="M2 13h2"/>
-                                        <path d="M8 8h14"/>
-                                        <rect x="8" y="3" width="14" height="14" rx="2"/>
-                                    </svg>
-                                    <span>All Orders</span>
-                                </div>
-                            </div>
-                        </div>
-                    </nav>
-
-                    <!-- Desktop Account section -->
-                    <div class="d-account-section" id="profile-section">
-                        <div class="account-card">
-                            <img id="sidebar-avatar" class="account-avatar"
-                                 src="https://bpb-us-w2.wpmucdn.com/wp.wpi.edu/dist/e/505/files/2024/06/unknown-person-icon-3.png"
-                                 alt="Profile" />
-                            <div class="account-text">
-                                <div class="account-name" id="sidebar-name">Loading...</div>
-                                <div class="account-email" id="sidebar-email">Admin</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </aside>
-
-            <main class="d-content">
-                <div class="content-inner">
-                    <!-- PAGE HEADER -->
-                    <div class="page-header">
-                        <div class="page-title-wrap">
-                            <div class="page-title">Manage Orders</div>
-                            <div class="breadcrumb">
-                                <span class="breadcrumb-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                         fill="none" stroke="currentColor" stroke-width="2"
-                                         stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/>
-                                        <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                                    </svg>
-                                </span>
-                                <span>Home</span>
-                                <span class="breadcrumb-divider">/</span>
-                                <span>Manage Orders</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- STATS -->
-                    <div class="stats-grid" id="desktop-stats-grid">
-                        <!-- Skeleton loading -->
-                        <div class="stat-card skeleton skeleton-stat-card"></div>
-                        <div class="stat-card skeleton skeleton-stat-card"></div>
-                        <div class="stat-card skeleton skeleton-stat-card"></div>
-                        <div class="stat-card skeleton skeleton-stat-card"></div>
-                    </div>
-
-                    <!-- CONTROLS -->
-                    <div class="control-row">
-                        <div class="tabs-wrapper">
-                            <button class="tab-btn active" onclick="switchTab('Today', this)">Today</button>
-                            <button class="tab-btn" onclick="switchTab('Ordered', this)">Pending</button>
-                            <button class="tab-btn" onclick="switchTab('Shipped', this)">Shipped</button>
-                            <button class="tab-btn" onclick="switchTab('All', this)">History</button>
-                        </div>
-
-                        <div class="control-inner">
-                            <div class="search-container">
-                                <i class="fa-solid fa-magnifying-glass"></i>
-                                <input type="text" id="desktop-orderSearch" placeholder="Search customer or ID..." onkeyup="renderUI()">
-                            </div>
-                            <div class="mobile-filter-dropdown desktop-only" id="desktop-mobFilter">
-                                <div class="filter-trigger" onclick="toggleDesktopMobFilter()">
-                                    <span id="desktop-activeFilterLabel">Today</span> 
-                                    <i class="fa-solid fa-chevron-down"></i>
-                                </div>
-                                <div class="mobile-filter-menu">
-                                    <div class="status-item" onclick="switchTab('Today', this, true)">
-                                        <i class="fa-solid fa-calendar-day"></i> Today's Arrivals
-                                    </div>
-                                    <div class="status-item" onclick="switchTab('Ordered', this, true)">
-                                        <i class="fa-solid fa-clock"></i> Pending Orders
-                                    </div>
-                                    <div class="status-item" onclick="switchTab('Shipped', this, true)">
-                                        <i class="fa-solid fa-truck-fast"></i> Shipped Orders
-                                    </div>
-                                    <div class="status-item" onclick="switchTab('All', this, true)">
-                                        <i class="fa-solid fa-database"></i> Full History
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- MAIN VIEW -->
-                    <div id="mainDisplay" class="content-card">
-                        <table class="desktop-only">
-                            <thead><tr><th>Order Info</th><th>Customer</th><th>Total</th><th>Status</th><th>Action</th></tr></thead>
-                            <tbody id="ordersBodyDesktop"></tbody>
-                        </table>
-                        <div id="ordersBodyMobile" class="mobile-only"></div>
-                    </div>
-                </div>
-            </main>
-        </div>
+    <div class="container">
+        <div id="loading-state"><div class="loader-spinner"></div></div>
+        <div id="orders-list"></div>
     </div>
 
-    <!-- ================= MOBILE VIEW ================= -->
-    <div class="page-mobile">
-        <!-- Mobile header: menu left, logo right -->
-        <header class="m-header">
-            <button class="m-menu-btn" id="m-menu-toggle" aria-label="Open menu">
-                <div class="m-menu-lines"><span></span></div>
-            </button>
-
-            <img
-              class="m-logo"
-              src="https://product-ecommerces.netlify.app/vastramaya.png"
-              alt="Vastramaya Logo" />
-        </header>
-
-        <main class="m-main">
-            <div class="mobile-content-inner">
-                <!-- Mobile Page Header -->
-                <div class="mobile-page-header">
-                    <div class="mobile-page-title-wrap">
-                        <div class="mobile-page-title">Manage Orders</div>
-                        <div class="mobile-breadcrumb">
-                            <span class="mobile-breadcrumb-icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                     fill="none" stroke="currentColor" stroke-width="2"
-                                     stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/>
-                                    <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                                </svg>
-                            </span>
-                            <span>Home</span>
-                            <span class="mobile-breadcrumb-divider">/</span>
-                            <span>Manage Orders</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- STATS -->
-                <div class="stats-grid" id="mobile-stats-grid">
-                    <!-- Skeleton loading -->
-                    <div class="stat-card skeleton skeleton-stat-card"></div>
-                    <div class="stat-card skeleton skeleton-stat-card"></div>
-                    <div class="stat-card skeleton skeleton-stat-card"></div>
-                    <div class="stat-card skeleton skeleton-stat-card"></div>
-                </div>
-
-                <!-- CONTROLS -->
-                <div class="control-row">
-                    <div class="control-inner">
-                        <div class="search-container">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                            <input type="text" id="mobile-orderSearch" placeholder="Search customer or ID..." onkeyup="renderUI()">
-                        </div>
-                        <div class="mobile-filter-dropdown" id="mobile-mobFilter">
-                            <div class="filter-trigger" onclick="toggleMobileMobFilter()">
-                                <span id="mobile-activeFilterLabel">Today</span> 
-                                <i class="fa-solid fa-chevron-down"></i>
-                            </div>
-                            <div class="mobile-filter-menu">
-                                <div class="status-item" onclick="switchTab('Today', this, true)">
-                                    <i class="fa-solid fa-calendar-day"></i> Today's Arrivals
-                                </div>
-                                <div class="status-item" onclick="switchTab('Ordered', this, true)">
-                                    <i class="fa-solid fa-clock"></i> Pending Orders
-                                </div>
-                                <div class="status-item" onclick="switchTab('Shipped', this, true)">
-                                    <i class="fa-solid fa-truck-fast"></i> Shipped Orders
-                                </div>
-                                <div class="status-item" onclick="switchTab('All', this, true)">
-                                    <i class="fa-solid fa-database"></i> Full History
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- MAIN VIEW -->
-                <div id="mainDisplayMobile" class="content-card">
-                    <div id="mobile-orders-container">
-                        <!-- Skeleton loading for mobile orders -->
-                        <div class="order-card skeleton skeleton-order-card"></div>
-                        <div class="order-card skeleton skeleton-order-card"></div>
-                        <div class="order-card skeleton skeleton-order-card"></div>
-                    </div>
-                </div>
-            </div>
-        </main>
-
-        <!-- Overlay & drawer -->
-        <div class="m-overlay" id="m-overlay">
-            <div class="m-drawer">
-                <div class="m-drawer-header">
-                    <img
-                      class="m-drawer-logo"
-                      src="https://product-ecommerces.netlify.app/vastramaya.png"
-                      alt="Vastramaya Logo" />
-                    <button class="m-drawer-close" id="m-drawer-close" aria-label="Close menu">
-                        <div class="m-drawer-close-icon"></div>
-                    </button>
-                </div>
-
-                <nav class="m-drawer-nav">
-                    <!-- Dashboard (Active) -->
-                    <div class="m-nav-item active" onclick="window.location.href='index.html'">
-                        <span class="icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <rect width="7" height="7" x="3" y="3" rx="1"/>
-                                <rect width="7" height="7" x="14" y="3" rx="1"/>
-                                <rect width="7" height="7" x="14" y="14" rx="1"/>
-                                <rect width="7" height="7" x="3" y="14" rx="1"/>
-                            </svg>
-                        </span>
-                        <span class="label">Dashboard</span>
-                    </div>
-
-                    <!-- Inventory -->
-                    <div class="m-nav-item" onclick="window.location.href='manage-categories.html'">
-                        <span class="icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M2 7v10"/>
-                                <path d="M6 5v14"/>
-                                <rect width="12" height="18" x="10" y="3" rx="2"/>
-                            </svg>
-                        </span>
-                        <span class="label">Inventory</span>
-                    </div>
-
-                    <!-- Customize Site with dropdown -->
-                    <div class="m-nav-item" id="m-customize-toggle">
-                        <span class="icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M12.034 12.681a.498.498 0 0 1 .647-.647l9 3.5a.5.5 0 0 1-.033.943l-3.444 1.068a1 1 0 0 0-.66.66l-1.067 3.443a.5.5 0 0 1-.943.033z"/>
-                                <path d="M21 11V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6"/>
-                            </svg>
-                        </span>
-                        <span class="label">Customize Site</span>
-                        <span class="chevron">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                 fill="none" stroke="currentColor" stroke-width="2"
-                                 stroke-linecap="round" stroke-linejoin="round"
-                                 class="chevron-icon">
-                                <path d="m9 18 6-6-6-6"/>
-                            </svg>
-                        </span>
-                    </div>
-
-                    <!-- Mobile Customize Site submenu -->
-                    <div class="m-submenu" id="m-customize-submenu">
-                        <a href="/manage-hero.html" class="m-submenu-item">
-                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8h20"/><rect width="20" height="16" x="2" y="4" rx="2"/><path d="M6 16h12"/></svg>
-                            <span>Hero Section</span>
-                        </a>
-                        <a href="/manage-sections.html" class="m-submenu-item">
-                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/><path d="M14 4h7"/><path d="M14 9h7"/><path d="M14 15h7"/><path d="M14 20h7"/></svg>
-                            <span>Sections</span>
-                        </a>
-                        <a href="/manage-hero-popup.html" class="m-submenu-item">
-                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 21h10"/><rect width="20" height="14" x="2" y="3" rx="2"/></svg>
-                            <span>Popup</span>
-                        </a>
-                    </div>
-
-                    <!-- MANAGE ORDERS (Current Page) -->
-                    <div class="m-nav-item" id="m-orders-toggle">
-                        <span class="icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
-                                <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
-                                <path d="M8 14v2.2l1.6 1"/>
-                                <circle cx="8" cy="16" r="6"/>
-                            </svg>
-                        </span>
-                        <span class="label">MANAGE ORDERS</span>
-                        <span class="chevron">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                 fill="none" stroke="currentColor" stroke-width="2"
-                                 stroke-linecap="round" stroke-linejoin="round"
-                                 class="chevron-icon">
-                                <path d="m9 18 6-6-6-6"/>
-                            </svg>
-                        </span>
-                    </div>
-
-                    <!-- Mobile MANAGE ORDERS submenu -->
-                    <div class="m-submenu" id="m-orders-submenu">
-                        <div class="m-submenu-item" onclick="switchTab('Today', this, true)">
-                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M12 6v6l4 2"/>
-                                <path d="M22 12a10 10 0 1 0-11 9.95"/>
-                                <path d="m22 16-5.5 5.5L14 19"/>
-                            </svg>
-                            <span>Today</span>
-                        </div>
-                        <div class="m-submenu-item" onclick="switchTab('Ordered', this, true)">
-                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M8 2v4"/>
-                                <path d="M16 2v4"/>
-                                <rect width="18" height="18" x="3" y="4" rx="2"/>
-                                <path d="M3 10h18"/>
-                                <path d="M8 14h.01"/>
-                                <path d="M12 14h.01"/>
-                                <path d="M16 14h.01"/>
-                                <path d="M8 18h.01"/>
-                                <path d="M12 18h.01"/>
-                                <path d="M16 18h.01"/>
-                            </svg>
-                            <span>This Month</span>
-                        </div>
-                        <div class="m-submenu-item" onclick="switchTab('All', this, true)">
-                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M12 2v2"/>
-                                <path d="M15.726 21.01A2 2 0 0 1 14 22H4a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2"/>
-                                <path d="M18 2v2"/>
-                                <path d="M2 13h2"/>
-                                <path d="M8 8h14"/>
-                                <rect x="8" y="3" width="14" height="14" rx="2"/>
-                            </svg>
-                            <span>All Orders</span>
-                        </div>
-                    </div>
-                </nav>
-
-                <!-- Mobile account sharing -->
-                <div class="m-account-section" id="mobile-profile-section">
-                    <div class="account-card">
-                        <img id="mobile-sidebar-avatar" class="account-avatar"
-                             src="https://bpb-us-w2.wpmucdn.com/wp.wpi.edu/dist/e/505/files/2024/06/unknown-person-icon-3.png"
-                             alt="Profile" />
-                        <div class="account-text">
-                            <div class="account-name" id="mobile-sidebar-name">Loading...</div>
-                            <div class="account-email" id="mobile-sidebar-email">Admin</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Profile Popup -->
-    <div class="profile-popup" id="profile-popup">
-        <div class="popup-header">
-            <img id="popup-avatar" src="" class="account-avatar">
-            <div class="account-text">
-                <span class="account-name" id="popup-name">Loading...</span>
-                <span class="account-email" id="popup-email">Admin</span>
-            </div>
-        </div>
-        <ul class="popup-list">
-            <li>
-                <a href="#">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="popup-icon">
-                        <circle cx="12" cy="8" r="5"/>
-                        <path d="M20 21a8 8 0 0 0-16 0"/>
-                    </svg>
-                    <span>Profile</span>
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="popup-icon">
-                        <path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/>
-                        <circle cx="12" cy="12" r="3"/>
-                    </svg>
-                    <span>Settings</span>
-                </a>
-            </li>
-            <li>
-                <a href="#" onclick="auth.signOut()" class="logout">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="popup-icon logout-icon">
-                        <path d="m16 17 5-5-5-5"/>
-                        <path d="M21 12H9"/>
-                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                    </svg>
-                    <span>Logout</span>
-                </a>
-            </li>
-        </ul>
-    </div>
-
-    <!-- UPDATE MODAL -->
-    <div class="modal-overlay" id="confirmModal">
-        <div class="confirm-box">
-            <h3 style="font-weight:800; margin-bottom:15px;">Update Status?</h3>
-            <div style="display:flex; align-items:center; justify-content:center; gap:12px; margin-bottom:25px;">
-                <div id="flowFrom" style="padding:10px; border-radius:8px; background:#f4f5f7; font-weight:700; font-size:0.8rem;">...</div>
-                <i class="fa-solid fa-arrow-right" style="color:var(--brand-primary); opacity:0.5;"></i>
-                <div id="flowTo" style="padding:10px; border-radius:8px; border:1px solid var(--brand-primary); color:var(--brand-primary); font-weight:700; font-size:0.8rem;">...</div>
-            </div>
-            <button class="btn-confirm" onclick="executeStatusUpdate()">Confirm Change</button>
-            <button onclick="closeConfirmModal()" style="background:none; border:none; color:var(--text-sub); margin-top:15px; font-weight:700; cursor:pointer;">Cancel</button>
-        </div>
-    </div>
-
-    <!-- DRAWER -->
-    <div class="drawer-overlay" id="orderDrawer">
-        <div class="drawer">
-            <div class="drawer-header">
-                <div><h2 id="dOrderId" style="font-weight:800; font-size:1.1rem;">Details</h2><p id="dOrderDate" style="font-size:0.75rem; color:var(--text-sub);"></p></div>
-                <button onclick="closeDrawer()" style="border:none; background:var(--brand-soft); color:var(--brand-primary); width:35px; height:35px; border-radius:50%; font-size:1.2rem; cursor:pointer;">&times;</button>
-            </div>
-            <div class="drawer-body" id="dContent"></div>
-            <div class="drawer-footer" id="dFooter"></div>
-        </div>
-    </div>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 
     <script>
-        // --- FIREBASE CONFIG ---
         const firebaseConfig = {
             apiKey: "AIzaSyCdeonH3VytC21F3X6x0rCVCn2xXrGPoug",
             authDomain: "vastramaya---magic.firebaseapp.com",
@@ -1850,805 +267,97 @@
             appId: "1:543460072082:web:f3d1140e8f81ad338ae44b",
             measurementId: "G-E39VNDCFVE"
         };
-        const ADMIN_EMAIL = "harshavardhanjw@gmail.com";
+
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
-        const storage = firebase.storage();
 
-        // --- APP LOGIC ---
-        let ordersData = [];
-        let currentFilter = 'Today';
-        let updateData = {};
-        let isLoading = true;
+        const orderedSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v6"/><path d="M16.76 3a2 2 0 0 1 1.8 1.1l2.23 4.479a2 2 0 0 1 .21.891V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9.472a2 2 0 0 1 .211-.894L5.45 4.1A2 2 0 0 1 7.24 3z"/><path d="M3.054 9.013h17.893"/></svg>`;
+        const shippedSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg>`;
+        const deliveredSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.801 10A10 10 0 1 1 17 3.335"/><path d="m9 11 3 3L22 4"/></svg>`;
 
-        const config = {
-            'Ordered': { label: 'Pending', icon: 'fa-clock' },
-            'Shipped': { label: 'Shipped', icon: 'fa-truck-fast' },
-            'Delivered': { label: 'Delivered', icon: 'fa-circle-check' },
-            'Cancelled': { label: 'Cancelled', icon: 'fa-circle-xmark' }
-        };
-
-        // Admin access check
         auth.onAuthStateChanged(user => {
-            if (!user || user.email !== ADMIN_EMAIL) {
-                window.location.href = 'index.html';
-                return;
-            }
-            initProfile(user);
-            startApp();
+            if (user) loadUserOrders(user.uid);
+            else window.location.href = "login.html";
         });
 
-        function initProfile(user) {
-            const name = user.displayName || 'Admin';
-            const avatar = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=5127ba&color=fff`;
-            
-            // Desktop
-            document.getElementById('sidebar-name').textContent = name;
-            document.getElementById('sidebar-email').textContent = user.email;
-            document.getElementById('sidebar-avatar').src = avatar;
-            
-            // Mobile
-            document.getElementById('mobile-sidebar-name').textContent = name;
-            document.getElementById('mobile-sidebar-email').textContent = user.email;
-            document.getElementById('mobile-sidebar-avatar').src = avatar;
-            
-            // Popup
-            document.getElementById('popup-name').textContent = name;
-            document.getElementById('popup-email').textContent = user.email;
-            document.getElementById('popup-avatar').src = avatar;
-        }
+        function loadUserOrders(uid) {
+            db.collection('users').doc(uid).collection('orders')
+              .orderBy('createdAt', 'desc')
+              .onSnapshot(snap => {
+                  document.getElementById('loading-state').style.display = 'none';
+                  const list = document.getElementById('orders-list');
+                  list.innerHTML = '';
 
-        function startApp() {
-            db.collection('orders').orderBy('createdAt', 'desc').onSnapshot(snap => {
-                ordersData = [];
-                snap.forEach(doc => ordersData.push({ fireId: doc.id, ...doc.data() }));
-                isLoading = false;
-                renderUI();
-            }, error => {
-                console.error("Error loading orders:", error);
-                isLoading = false;
-                renderUI();
-            });
-        }
+                  snap.forEach(doc => {
+                      const order = doc.data();
+                      const status = order.status || 'Ordered';
+                      const isCod = order.paymentMethod === 'COD';
+                      const dateStr = order.createdAt ? new Date(order.createdAt.seconds * 1000).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Pending';
 
-        function renderUI() {
-            const search = document.getElementById('desktop-orderSearch')?.value.toLowerCase() || 
-                         document.getElementById('mobile-orderSearch')?.value.toLowerCase() || '';
-            const today = new Date().toDateString();
-            
-            // Stats
-            let stats = { 
-                today: 0,      // Orders placed today
-                done: 0,       // Delivered
-                pending: 0,    // Ordered (pending)
-                cancel: 0      // Cancelled
-            };
-            
-            // Today's date at midnight for comparison
-            const todayStart = new Date();
-            todayStart.setHours(0, 0, 0, 0);
-            const todayEnd = new Date();
-            todayEnd.setHours(23, 59, 59, 999);
-            
-            // Filtered orders count
-            let filteredCount = 0;
-            
-            // Process orders for stats and filtering
-            ordersData.forEach(order => {
-                const status = order.status || 'Ordered';
-                const orderDate = order.createdAt ? new Date(order.createdAt.toMillis()) : new Date();
-                
-                // Update stats
-                if (orderDate >= todayStart && orderDate <= todayEnd) {
-                    stats.today++;
-                }
-                if (status === 'Delivered') stats.done++;
-                if (status === 'Ordered') stats.pending++;
-                if (status === 'Cancelled') stats.cancel++;
-            });
-            
-            // Update stat cards
-            updateStatCards(stats);
-            
-            // Render desktop orders
-            renderDesktopOrders(search, todayStart, todayEnd);
-            
-            // Render mobile orders
-            renderMobileOrders(search, todayStart, todayEnd);
-        }
-
-        function updateStatCards(stats) {
-            // Desktop stats
-            const desktopStatsGrid = document.getElementById('desktop-stats-grid');
-            if (desktopStatsGrid) {
-                desktopStatsGrid.innerHTML = `
-                    <div class="stat-card today-card">
-                        <div class="stat-card-inner">
-                            <div class="stat-icon" style="background:#f3f0ff; color:#5127ba;">
-                                <i class="fa-solid fa-calendar-day"></i>
-                            </div>
-                            <div class="stat-info">
-                                <p>Today's Orders</p>
-                                <h3 id="desktop-kpiToday">${stats.today}</h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-card-inner">
-                            <div class="stat-icon" style="background:#ecfdf5; color:#10b981;">
-                                <i class="fa-solid fa-check"></i>
-                            </div>
-                            <div class="stat-info">
-                                <p>Delivered</p>
-                                <h3 id="desktop-kpiDone">${stats.done}</h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-card-inner">
-                            <div class="stat-icon" style="background:#fffbeb; color:#f59e0b;">
-                                <i class="fa-solid fa-clock"></i>
-                            </div>
-                            <div class="stat-info">
-                                <p>Pending</p>
-                                <h3 id="desktop-kpiPending">${stats.pending}</h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-card-inner">
-                            <div class="stat-icon" style="background:#fef2f2; color:#ef4444;">
-                                <i class="fa-solid fa-ban"></i>
-                            </div>
-                            <div class="stat-info">
-                                <p>Cancelled</p>
-                                <h3 id="desktop-kpiCancel">${stats.cancel}</h3>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-            
-            // Mobile stats
-            const mobileStatsGrid = document.getElementById('mobile-stats-grid');
-            if (mobileStatsGrid) {
-                mobileStatsGrid.innerHTML = `
-                    <div class="stat-card today-card">
-                        <div class="stat-card-inner">
-                            <div class="stat-icon" style="background:#f3f0ff; color:#5127ba;">
-                                <i class="fa-solid fa-calendar-day"></i>
-                            </div>
-                            <div class="stat-info">
-                                <p>Today's Orders</p>
-                                <h3 id="mobile-kpiToday">${stats.today}</h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-card-inner">
-                            <div class="stat-icon" style="background:#ecfdf5; color:#10b981;">
-                                <i class="fa-solid fa-check"></i>
-                            </div>
-                            <div class="stat-info">
-                                <p>Delivered</p>
-                                <h3 id="mobile-kpiDone">${stats.done}</h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-card-inner">
-                            <div class="stat-icon" style="background:#fffbeb; color:#f59e0b;">
-                                <i class="fa-solid fa-clock"></i>
-                            </div>
-                            <div class="stat-info">
-                                <p>Pending</p>
-                                <h3 id="mobile-kpiPending">${stats.pending}</h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-card-inner">
-                            <div class="stat-icon" style="background:#fef2f2; color:#ef4444;">
-                                <i class="fa-solid fa-ban"></i>
-                            </div>
-                            <div class="stat-info">
-                                <p>Cancelled</p>
-                                <h3 id="mobile-kpiCancel">${stats.cancel}</h3>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-        }
-
-        function renderDesktopOrders(search, todayStart, todayEnd) {
-            const dBody = document.getElementById('ordersBodyDesktop');
-            if (!dBody) return;
-            
-            if (isLoading) {
-                dBody.innerHTML = `
-                    <tr><td colspan="5" style="text-align: center; padding: 40px;">Loading orders...</td></tr>
-                `;
-                return;
-            }
-            
-            let html = '';
-            let count = 0;
-            
-            ordersData.forEach(order => {
-                const status = order.status || 'Ordered';
-                const orderDate = order.createdAt ? new Date(order.createdAt.toMillis()) : new Date();
-                const isCod = order.paymentMethod === 'COD';
-                
-                // Check if order matches current filter
-                let show = false;
-                if (currentFilter === 'All') {
-                    show = true;
-                } else if (currentFilter === 'Today') {
-                    show = orderDate >= todayStart && orderDate <= todayEnd;
-                } else {
-                    show = status === currentFilter;
-                }
-                
-                // Check if order matches search
-                const matchesSearch = (order.address?.name || "").toLowerCase().includes(search) || 
-                                    (order.orderId || "").toLowerCase().includes(search) ||
-                                    (order.items?.[0]?.name || "").toLowerCase().includes(search);
-                
-                if (show && matchesSearch) {
-                    count++;
-                    const ui = config[status];
-                    const codHtml = isCod ? `<span class="cod-badge"><i class="fa-solid fa-wallet"></i> COD • ₹100 Fee Applied</span>` : '';
-                    
-                    html += `
-                        <tr>
-                            <td>
-                                <div style="display:flex; gap:12px;">
-                                    <img src="${order.items?.[0]?.image || 'https://via.placeholder.com/45x60?text=No+Image'}" 
-                                         style="width:45px;height:60px;border-radius:10px;border:1px solid var(--border-subtle);object-fit:cover;">
-                                    <div>
-                                        <b style="font-weight:800;">${order.items?.[0]?.name || 'No item name'}</b>
-                                        <br><small>#${order.orderId || 'N/A'}</small>
+                      let trackerHtml = '';
+                      if (status !== 'Delivered' && status !== 'Cancelled') {
+                          const atShipped = status === 'Shipped';
+                          const lineFillWidth = atShipped ? '50%' : '0%';
+                          
+                          trackerHtml = `
+                            <div class="tracker-wrapper">
+                                <div class="tracker-line-container">
+                                    <div class="tracker-line-bg"></div>
+                                    <div class="tracker-line-fill" style="width: ${lineFillWidth}"></div>
+                                    
+                                    <div class="step-item active">
+                                        <div class="step-icon-circle ${status === 'Ordered' ? 'pulse-active' : ''}">${orderedSVG}</div>
+                                        <span class="step-label">Ordered</span>
+                                    </div>
+                                    
+                                    <div class="step-item ${atShipped ? 'active' : ''}">
+                                        <div class="step-icon-circle ${status === 'Shipped' ? 'pulse-active' : ''}">${shippedSVG}</div>
+                                        <span class="step-label">Shipped</span>
+                                    </div>
+                                    
+                                    <div class="step-item">
+                                        <div class="step-icon-circle">${deliveredSVG}</div>
+                                        <span class="step-label">Delivered</span>
                                     </div>
                                 </div>
-                            </td>
-                            <td><b style="font-weight:700;">${order.address?.name || 'No name'}</b></td>
-                            <td>
-                                <div style="color:var(--brand-primary); font-weight:900;">₹${order.amount?.toLocaleString() || '0'}</div>
-                                ${codHtml}
-                            </td>
-                            <td>${createStatusDropdown('desktop', order.fireId, status)}</td>
-                            <td><button class="btn-view" onclick="openDrawer('${order.fireId}')">Details</button></td>
-                        </tr>
-                    `;
-                }
-            });
-            
-            if (count === 0) {
-                html = `<tr><td colspan="5" class="empty-state"><i class="fa-solid fa-box-open"></i><h4>No orders found</h4><p>Try different filters or search terms.</p></td></tr>`;
-            }
-            
-            dBody.innerHTML = html;
-            
-            // Re-attach event listeners for status dropdowns
-            attachStatusDropdownListeners('desktop');
-        }
+                            </div>`;
+                      }
 
-        function renderMobileOrders(search, todayStart, todayEnd) {
-            const mobileContainer = document.getElementById('mobile-orders-container');
-            if (!mobileContainer) return;
-            
-            if (isLoading) {
-                mobileContainer.innerHTML = `
-                    <div class="empty-state" style="padding: 40px 20px;">
-                        <i class="fa-solid fa-spinner fa-spin"></i>
-                        <h4>Loading orders...</h4>
-                    </div>
-                `;
-                return;
-            }
-            
-            let html = '';
-            let count = 0;
-            
-            ordersData.forEach(order => {
-                const status = order.status || 'Ordered';
-                const orderDate = order.createdAt ? new Date(order.createdAt.toMillis()) : new Date();
-                const isCod = order.paymentMethod === 'COD';
-                
-                // Check if order matches current filter
-                let show = false;
-                if (currentFilter === 'All') {
-                    show = true;
-                } else if (currentFilter === 'Today') {
-                    show = orderDate >= todayStart && orderDate <= todayEnd;
-                } else {
-                    show = status === currentFilter;
-                }
-                
-                // Check if order matches search
-                const matchesSearch = (order.address?.name || "").toLowerCase().includes(search) || 
-                                    (order.orderId || "").toLowerCase().includes(search) ||
-                                    (order.items?.[0]?.name || "").toLowerCase().includes(search);
-                
-                if (show && matchesSearch) {
-                    count++;
-                    const ui = config[status];
-                    const codHtml = isCod ? `<span class="cod-badge"><i class="fa-solid fa-wallet"></i> COD • ₹100 Fee</span>` : '';
-                    
-                    html += `
-                        <div class="order-card">
-                            <div class="card-body">
-                                <img src="${order.items?.[0]?.image || 'https://via.placeholder.com/60x80?text=No+Image'}" 
-                                     class="card-img">
-                                <div>
-                                    <div style="font-weight:800; font-size:1rem;">${order.items?.[0]?.name || 'No item name'}</div>
-                                    <small>#${order.orderId || 'N/A'} • ${order.address?.name || 'No name'}</small>
+                      let productHtml = '';
+                      (order.items || []).forEach(item => {
+                          productHtml += `
+                            <div class="product-boxed-row">
+                                <img src="${item.image}" class="prod-img">
+                                <div class="prod-meta">
+                                    <h4>${item.name}</h4>
+                                    <p>SIZE: ${item.size || 'UNI'} • QTY: ${item.quantity}</p>
                                 </div>
-                            </div>
-                            <div class="card-actions">
-                                <div>
-                                    <b style="color:var(--brand-primary); font-size:1.1rem;">₹${order.amount?.toLocaleString() || '0'}</b>
-                                    ${codHtml}
-                                </div>
-                                <div style="display:flex;gap:8px;">
-                                    ${createStatusDropdown('mobile', order.fireId, status)}
-                                    <button onclick="openDrawer('${order.fireId}')" style="background:var(--brand-soft);border:none;border-radius:12px;padding:12px;color:var(--brand-primary);">
-                                        <i class="fa-solid fa-arrow-right"></i>
-                                    </button>
-                                </div>
-                            </div>
+                                <div class="prod-price">₹${item.price.toLocaleString()}</div>
+                            </div>`;
+                      });
+
+                      const card = document.createElement('div');
+                      card.className = 'order-card';
+                      card.innerHTML = `
+                        <div class="card-head">
+                            <span class="ref-no">ORD #${order.orderId || doc.id.slice(0,8).toUpperCase()}</span>
+                            <span class="status-badge st-${status.toLowerCase()}">${status}</span>
                         </div>
-                    `;
-                }
-            });
-            
-            if (count === 0) {
-                html = `<div class="empty-state"><i class="fa-solid fa-box-open"></i><h4>No orders found</h4><p>Try different filters or search terms.</p></div>`;
-            }
-            
-            mobileContainer.innerHTML = html;
-            
-            // Re-attach event listeners for status dropdowns
-            attachStatusDropdownListeners('mobile');
-        }
-
-        function createStatusDropdown(context, orderId, currentStatus) {
-            const ui = config[currentStatus];
-            return `
-                <div class="status-dropdown" id="dd-${context}-${orderId}">
-                    <div class="status-trigger" onclick="toggleStatusDropdown('${context}', '${orderId}')">
-                        <span><i class="fa-solid ${ui.icon} st-${currentStatus}"></i> ${ui.label}</span>
-                        <i class="fa-solid fa-chevron-down" style="font-size:0.6rem;"></i>
-                    </div>
-                    <div class="status-menu">
-                        ${Object.keys(config).map(status => `
-                            <div class="status-item" onclick="askUpdate('${orderId}', '${currentStatus}', '${status}')">
-                                <i class="fa-solid ${config[status].icon} st-${status}"></i> ${config[status].label}
+                        <div class="card-body">${productHtml}</div>
+                        ${trackerHtml}
+                        <div class="card-foot">
+                            <span class="foot-date">Acquired on ${dateStr}</span>
+                            <div class="total-group">
+                                <span class="total-lbl">GRAND TOTAL</span>
+                                <div class="total-val">₹${order.amount.toLocaleString()}</div>
+                                ${isCod ? '<span class="cod-tag">+ ₹100 COD Handling Fee</span>' : ''}
                             </div>
-                        `).join('')}
-                    </div>
-                </div>
-            `;
+                        </div>`;
+                      list.appendChild(card);
+                  });
+              });
         }
-
-        function attachStatusDropdownListeners(context) {
-            // Event listeners are attached via onclick in HTML
-        }
-
-        function toggleStatusDropdown(context, orderId) {
-            const dropdownId = `dd-${context}-${orderId}`;
-            const dropdown = document.getElementById(dropdownId);
-            
-            if (!dropdown) return;
-            
-            // Close all other dropdowns
-            document.querySelectorAll('.status-dropdown').forEach(dd => {
-                if (dd.id !== dropdownId) {
-                    dd.classList.remove('open');
-                }
-            });
-            
-            // Toggle current dropdown
-            dropdown.classList.toggle('open');
-        }
-
-        function toggleDesktopMobFilter() {
-            const filter = document.getElementById('desktop-mobFilter');
-            if (filter) {
-                filter.classList.toggle('open');
-                
-                // Close mobile filter if open
-                const mobileFilter = document.getElementById('mobile-mobFilter');
-                if (mobileFilter) {
-                    mobileFilter.classList.remove('open');
-                }
-            }
-        }
-
-        function toggleMobileMobFilter() {
-            const filter = document.getElementById('mobile-mobFilter');
-            if (filter) {
-                filter.classList.toggle('open');
-                
-                // Close desktop filter if open
-                const desktopFilter = document.getElementById('desktop-mobFilter');
-                if (desktopFilter) {
-                    desktopFilter.classList.remove('open');
-                }
-            }
-        }
-
-        function askUpdate(id, oldS, newS) {
-            if (oldS === newS) return;
-            updateData = { id, old: oldS, new: newS };
-            document.getElementById('flowFrom').innerText = config[oldS].label;
-            document.getElementById('flowTo').innerText = config[newS].label;
-            document.getElementById('confirmModal').classList.add('active');
-            
-            // Close all dropdowns
-            document.querySelectorAll('.status-dropdown').forEach(d => d.classList.remove('open'));
-            document.querySelectorAll('.mobile-filter-dropdown').forEach(d => d.classList.remove('open'));
-        }
-
-        async function executeStatusUpdate() {
-            if (!updateData.id) return;
-            
-            const btn = document.querySelector('#confirmModal .btn-confirm');
-            const originalText = btn.textContent;
-            btn.textContent = "Updating...";
-            btn.disabled = true;
-            
-            try {
-                await db.collection('orders').doc(updateData.id).update({ 
-                    status: updateData.new,
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                
-                // Update user's order if not guest
-                const order = ordersData.find(o => o.fireId === updateData.id);
-                if (order && order.userId && order.userId !== 'guest') {
-                    try {
-                        await db.collection('users').doc(order.userId).collection('orders').doc(order.orderId).update({ 
-                            status: updateData.new 
-                        });
-                    } catch (userErr) {
-                        console.log("User order update skipped:", userErr);
-                    }
-                }
-                
-                closeConfirmModal();
-                showToast(`Order status updated to ${config[updateData.new].label}`, 'success');
-            } catch (err) { 
-                console.error("Update error:", err);
-                showToast('Failed to update order status', 'error');
-                btn.textContent = originalText;
-                btn.disabled = false;
-            }
-        }
-
-        function switchTab(tab, btn, isMob = false) {
-            currentFilter = tab;
-            
-            // Update active tab buttons
-            document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
-            if (!isMob && btn) btn.classList.add('active');
-            
-            // Update filter labels
-            document.getElementById('desktop-activeFilterLabel')?.textContent = tab;
-            document.getElementById('mobile-activeFilterLabel')?.textContent = tab;
-            
-            // Close dropdowns
-            document.querySelectorAll('.mobile-filter-dropdown').forEach(d => d.classList.remove('open'));
-            
-            renderUI();
-        }
-
-        function openDrawer(id) {
-            const order = ordersData.find(o => o.fireId === id);
-            if (!order) {
-                showToast('Order not found', 'error');
-                return;
-            }
-            
-            document.getElementById('dOrderId').innerText = `Order #${order.orderId || 'N/A'}`;
-            document.getElementById('dOrderDate').innerText = order.createdAt ? 
-                new Date(order.createdAt.toMillis()).toLocaleString() : 'No date';
-            
-            const isCod = order.paymentMethod === 'COD';
-            
-            // Build items HTML
-            let itemsHtml = '';
-            if (order.items && order.items.length > 0) {
-                itemsHtml = order.items.map(item => `
-                    <div style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--border-subtle);">
-                        <div style="display:flex; gap:12px;">
-                            <img src="${item.image || 'https://via.placeholder.com/45x60'}" 
-                                 style="width:45px;height:60px;border-radius:10px;object-fit:cover;">
-                            <div>
-                                <b style="font-weight:700; font-size:0.85rem;">${item.name || 'No item name'}</b>
-                                <br><small>Size: ${item.size || 'N/A'} • Qty: ${item.quantity || 1}</small>
-                            </div>
-                        </div>
-                        <b style="font-weight:800; font-size:0.9rem;">₹${((item.price || 0) * (item.quantity || 1)).toLocaleString()}</b>
-                    </div>
-                `).join('');
-            } else {
-                itemsHtml = '<div style="text-align: center; padding: 20px; color: #6b7280;">No items found</div>';
-            }
-            
-            document.getElementById('dContent').innerHTML = `
-                <p style="font-size:0.65rem; font-weight:800; color:var(--brand-primary); text-transform:uppercase; margin-bottom:10px;">Address</p>
-                <div style="background:white; border:1px solid var(--border-subtle); border-radius:12px; padding:15px; margin-bottom:20px;">
-                    <h4 style="font-weight:800;">${order.address?.name || 'No name'}</h4>
-                    <p style="font-size:0.85rem; line-height:1.5; opacity:0.8; margin-top:5px;">
-                        ${order.address?.street || ''}, ${order.address?.locality || ''}<br>
-                        ${order.address?.city || ''}, ${order.address?.state || ''} - ${order.address?.zip || ''}<br>
-                        <b>Phone:</b> ${order.address?.phone || 'No phone'}
-                    </p>
-                </div>
-                <p style="font-size:0.65rem; font-weight:800; color:var(--brand-primary); text-transform:uppercase; margin-bottom:10px;">Items (${order.items?.length || 0})</p>
-                <div style="background:white; border:1px solid var(--border-subtle); border-radius:12px; padding:5px 15px; margin-bottom:20px;">
-                    ${itemsHtml}
-                </div>
-                <div style="background:white; border:1px solid var(--border-subtle); border-radius:12px; padding:15px;">
-                    <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:5px;">
-                        <span>Payment Method</span><b>${order.paymentMethod || 'Unknown'}</b>
-                    </div>
-                    ${isCod ? `<div style="display:flex; justify-content:space-between; font-size:0.85rem; color:var(--danger-color);"><span>Handling Fee</span><b>+ ₹100</b></div>` : ''}
-                </div>`;
-            
-            document.getElementById('dFooter').innerHTML = `
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <b>Grand Total</b>
-                    <b style="font-size:1.6rem; color:var(--brand-primary); font-weight:900;">
-                        ₹${order.amount?.toLocaleString() || '0'}
-                    </b>
-                </div>`;
-            
-            document.getElementById('orderDrawer').classList.add('active');
-        }
-
-        function closeConfirmModal() { 
-            document.getElementById('confirmModal').classList.remove('active');
-            updateData = {};
-        }
-        
-        function closeDrawer() { 
-            document.getElementById('orderDrawer').classList.remove('active'); 
-        }
-        
-        function showToast(message, type = 'success') {
-            // Create toast container if it doesn't exist
-            let container = document.getElementById('toast-container');
-            if (!container) {
-                container = document.createElement('div');
-                container.id = 'toast-container';
-                container.style.cssText = `
-                    position: fixed;
-                    bottom: 20px;
-                    right: 20px;
-                    z-index: 9999;
-                    display: flex;
-                    flex-direction: column;
-                    gap: 10px;
-                `;
-                document.body.appendChild(container);
-            }
-            
-            const toast = document.createElement('div');
-            toast.style.cssText = `
-                background: white;
-                padding: 12px 20px;
-                border-radius: 8px;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-                border-left: 4px solid ${type === 'success' ? '#10B981' : '#EF4444'};
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                animation: slideIn 0.3s ease;
-                max-width: 300px;
-            `;
-            
-            toast.innerHTML = `
-                <i class="fa-solid ${type === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation'}" 
-                   style="color: ${type === 'success' ? '#10B981' : '#EF4444'}"></i>
-                <span>${message}</span>
-            `;
-            
-            container.appendChild(toast);
-            
-            // Remove toast after 3 seconds
-            setTimeout(() => {
-                toast.style.animation = 'slideOut 0.3s ease';
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-            
-            // Add CSS for animations
-            if (!document.getElementById('toast-styles')) {
-                const style = document.createElement('style');
-                style.id = 'toast-styles';
-                style.textContent = `
-                    @keyframes slideIn {
-                        from { transform: translateX(100%); opacity: 0; }
-                        to { transform: translateX(0); opacity: 1; }
-                    }
-                    @keyframes slideOut {
-                        from { transform: translateX(0); opacity: 1; }
-                        to { transform: translateX(100%); opacity: 0; }
-                    }
-                `;
-                document.head.appendChild(style);
-            }
-        }
-
-        // --- UI INTERACTIONS ---
-        document.addEventListener('DOMContentLoaded', () => {
-            // Mobile drawer behaviour
-            const mOverlay = document.getElementById('m-overlay');
-            const mMenuToggle = document.getElementById('m-menu-toggle');
-            const mDrawerClose = document.getElementById('m-drawer-close');
-
-            if (mMenuToggle && mOverlay && mDrawerClose) {
-                mMenuToggle.addEventListener('click', () => {
-                    mOverlay.classList.add('open');
-                });
-
-                mDrawerClose.addEventListener('click', () => {
-                    mOverlay.classList.remove('open');
-                });
-
-                mOverlay.addEventListener('click', (e) => {
-                    if (e.target === mOverlay) {
-                        mOverlay.classList.remove('open');
-                    }
-                });
-            }
-
-            // Desktop Customize Site dropdown
-            const dCustomizeToggle = document.getElementById('d-customize-toggle');
-            const dCustomizeSubmenu = document.getElementById('d-customize-submenu');
-
-            if (dCustomizeToggle && dCustomizeSubmenu) {
-                dCustomizeToggle.addEventListener('click', () => {
-                    dCustomizeSubmenu.classList.toggle('open');
-                    dCustomizeToggle.classList.toggle('dropdown-open');
-                });
-            }
-
-            // Desktop MANAGE ORDERS dropdown
-            const dOrdersToggle = document.getElementById('d-orders-toggle');
-            const dOrdersSubmenu = document.getElementById('d-orders-submenu');
-
-            if (dOrdersToggle && dOrdersSubmenu) {
-                dOrdersToggle.addEventListener('click', () => {
-                    dOrdersSubmenu.classList.toggle('open');
-                    dOrdersToggle.classList.toggle('dropdown-open');
-                });
-            }
-
-            // Mobile Customize Site dropdown
-            const mCustomizeToggle = document.getElementById('m-customize-toggle');
-            const mCustomizeSubmenu = document.getElementById('m-customize-submenu');
-
-            if (mCustomizeToggle && mCustomizeSubmenu) {
-                mCustomizeToggle.addEventListener('click', () => {
-                    mCustomizeSubmenu.classList.toggle('open');
-                    mCustomizeToggle.classList.toggle('dropdown-open');
-                });
-            }
-
-            // Mobile MANAGE ORDERS dropdown
-            const mOrdersToggle = document.getElementById('m-orders-toggle');
-            const mOrdersSubmenu = document.getElementById('m-orders-submenu');
-
-            if (mOrdersToggle && mOrdersSubmenu) {
-                mOrdersToggle.addEventListener('click', () => {
-                    mOrdersSubmenu.classList.toggle('open');
-                    mOrdersToggle.classList.toggle('dropdown-open');
-                });
-            }
-
-            // Profile section
-            const profileSection = document.getElementById('profile-section');
-            const mobileProfileSection = document.getElementById('mobile-profile-section');
-            const profilePopup = document.getElementById('profile-popup');
-
-            // Fix profile popup positioning for desktop - show on LEFT side
-            if (profileSection) {
-                profileSection.addEventListener('click', e => {
-                    e.stopPropagation();
-                    
-                    // Position the popup at the bottom left of the account section for desktop
-                    if (window.innerWidth >= 769) {
-                        const rect = profileSection.getBoundingClientRect();
-                        profilePopup.style.left = '30px';
-                        profilePopup.style.right = 'auto';
-                        profilePopup.style.bottom = '100px';
-                        profilePopup.style.top = 'auto';
-                    }
-                    
-                    profilePopup.classList.toggle('active');
-                });
-                
-                document.addEventListener('click', e => {
-                    if (!profileSection.contains(e.target) && !profilePopup.contains(e.target)) {
-                        profilePopup.classList.remove('active');
-                    }
-                });
-            }
-
-            if (mobileProfileSection) {
-                mobileProfileSection.addEventListener('click', e => {
-                    e.stopPropagation();
-                    profilePopup.classList.toggle('active');
-                });
-            }
-
-            // Close dropdowns when clicking outside
-            document.addEventListener('click', function(e) {
-                // Close profile popup when clicking outside
-                if (profilePopup && profilePopup.classList.contains('active')) {
-                    if (!profilePopup.contains(e.target) && 
-                        !profileSection?.contains(e.target) && 
-                        !mobileProfileSection?.contains(e.target)) {
-                        profilePopup.classList.remove('active');
-                    }
-                }
-                
-                // Close status dropdowns when clicking outside
-                if (!e.target.closest('.status-dropdown') && !e.target.closest('.status-trigger')) {
-                    document.querySelectorAll('.status-dropdown').forEach(d => d.classList.remove('open'));
-                }
-                
-                // Close filter dropdowns when clicking outside
-                if (!e.target.closest('.mobile-filter-dropdown') && !e.target.closest('.filter-trigger')) {
-                    document.querySelectorAll('.mobile-filter-dropdown').forEach(d => d.classList.remove('open'));
-                }
-            });
-
-            // Close popups when pressing Escape key
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape') {
-                    document.getElementById('profile-popup')?.classList.remove('active');
-                    document.querySelectorAll('.status-dropdown').forEach(d => d.classList.remove('open'));
-                    document.querySelectorAll('.mobile-filter-dropdown').forEach(d => d.classList.remove('open'));
-                    closeConfirmModal();
-                    closeDrawer();
-                }
-            });
-
-            // Initialize with Today filter
-            switchTab('Today', document.querySelector('.tab-btn.active'));
-        });
-
-        // Handle window resize
-        window.addEventListener('resize', function() {
-            if (window.innerWidth <= 768) {
-                document.body.style.overflowX = 'hidden';
-                document.body.style.maxWidth = '100vw';
-            } else {
-                document.body.style.overflowX = '';
-                document.body.style.maxWidth = '';
-            }
-        });
-
-        // Global click handler for drawer overlay
-        window.onclick = function(e) { 
-            if(e.target.id === 'orderDrawer') closeDrawer(); 
-        };
-
-        // Initialize search input event listeners
-        document.addEventListener('input', function(e) {
-            if (e.target.id === 'desktop-orderSearch' || e.target.id === 'mobile-orderSearch') {
-                // Debounce the search to avoid too many renders
-                clearTimeout(window.searchTimeout);
-                window.searchTimeout = setTimeout(() => {
-                    renderUI();
-                }, 300);
-            }
-        });
     </script>
 </body>
 </html>
