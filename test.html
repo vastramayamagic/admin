@@ -42,6 +42,7 @@
             --skeleton-color: #f0f0f0;
             --skeleton-highlight: #f8f8f8;
             --brand-soft: rgba(81, 39, 186, 0.08);
+            --pulse-color: #5127ba;
         }
 
         * {
@@ -328,9 +329,14 @@
             gap: 14px; 
             margin-bottom: 30px; 
         }
+        @media (min-width: 768px) { 
+            .stats-grid { 
+                grid-template-columns: repeat(3, 1fr); 
+            } 
+        }
         @media (min-width: 1024px) { 
             .stats-grid { 
-                grid-template-columns: repeat(4, 1fr); 
+                grid-template-columns: repeat(5, 1fr); 
                 gap: 24px; 
             } 
         }
@@ -347,24 +353,6 @@
             position: relative;
             overflow: hidden;
         }
-        
-        /* PULSE EFFECT FOR TODAY'S ORDERS */
-        .stat-card.pulse-active {
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0% {
-                box-shadow: 0 0 0 0 rgba(81, 39, 186, 0.4), var(--shadow-premium);
-            }
-            70% {
-                box-shadow: 0 0 0 10px rgba(81, 39, 186, 0), var(--shadow-premium);
-            }
-            100% {
-                box-shadow: 0 0 0 0 rgba(81, 39, 186, 0), var(--shadow-premium);
-            }
-        }
-        
         .stat-icon { 
             width: 44px; 
             height: 44px; 
@@ -375,28 +363,14 @@
             font-size: 1.2rem; 
             flex-shrink: 0; 
             position: relative;
-        }
-        
-        .today-badge {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: var(--success-color);
-            color: white;
-            font-size: 10px;
-            font-weight: 800;
-            padding: 2px 6px;
-            border-radius: 10px;
-            min-width: 20px;
-            text-align: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
             z-index: 2;
         }
-        
         .stat-card h3 { 
             font-size: 1.3rem; 
             font-weight: 800; 
             color: var(--text-color); 
+            position: relative;
+            z-index: 2;
         }
         .stat-card p { 
             font-size: 0.65rem; 
@@ -404,6 +378,52 @@
             color: var(--text-sub); 
             text-transform: uppercase; 
             letter-spacing: 0.5px; 
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Pulse effect for Today's Orders card */
+        .pulse-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pulse-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(81, 39, 186, 0.1) 0%, rgba(103, 61, 230, 0.1) 100%);
+            z-index: 1;
+        }
+
+        .pulse-card::after {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            background: radial-gradient(circle, rgba(81, 39, 186, 0.15) 0%, transparent 70%);
+            z-index: 0;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 0.6;
+                transform: scale(0.95);
+            }
+            50% {
+                opacity: 0.9;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 0.6;
+                transform: scale(0.95);
+            }
         }
 
         /* --- CONTROL ROW --- */
@@ -464,7 +484,7 @@
                 max-width: 400px; 
             } 
         }
-        .search-container input { 
+        .search-input {
             width: 100%; 
             padding: 16px 16px 16px 54px; 
             border-radius: 999px; 
@@ -474,12 +494,13 @@
             font-size: 0.95rem; 
             font-weight: 500; 
             transition: 0.3s; 
+            font-family: 'DM Sans', sans-serif;
         }
-        .search-container input:focus { 
+        .search-input:focus { 
             border-color: var(--brand-primary); 
             background: white; 
         }
-        .search-container i { 
+        .search-icon { 
             position: absolute; 
             left: 22px; 
             top: 50%; 
@@ -499,23 +520,9 @@
 
         /* --- MOBILE DROPDOWN --- */
         .mobile-filter-dropdown { 
-            display: none; 
             position: relative; 
             width: 100%; 
         }
-        @media (max-width: 767px) { 
-            .mobile-filter-dropdown { 
-                display: block; 
-            } 
-            .control-inner { 
-                display: flex; 
-                flex-direction: column; 
-                gap: 12px; 
-                width: 100%; 
-            } 
-        }
-        
-        /* FIXED: Filter trigger styling */
         .filter-trigger { 
             background: white; 
             border: 1px solid var(--border-subtle); 
@@ -525,21 +532,19 @@
             font-weight: 800; 
             display: flex; 
             align-items: center; 
-            justify-content: space-between;
+            justify-content: space-between; 
             cursor: pointer;
             transition: all 0.2s ease;
-            width: 100%;
         }
-        
         .filter-trigger:hover {
-            border-color: var(--brand-primary);
+            background: #f9fafb;
         }
         
         .status-menu, .mobile-filter-menu {
             position: absolute; 
-            bottom: calc(100% + 10px); 
+            top: calc(100% + 10px); 
             left: 0; 
-            width: 180px;
+            width: 100%;
             background: #ffffff; 
             border: 1px solid var(--border-subtle);
             border-radius: 16px; 
@@ -547,18 +552,18 @@
             display: none; 
             z-index: 1000; 
             padding: 6px;
+            max-height: 300px;
+            overflow-y: auto;
         }
-        
-        .mobile-filter-menu { 
-            top: calc(100% + 10px); 
-            bottom: auto; 
-            width: 100%; 
-        }
-        
         .status-dropdown.open .status-menu, 
         .mobile-filter-dropdown.open .mobile-filter-menu { 
-            display: block !important; 
-            animation: slideUp 0.2s ease; 
+            display: block; 
+            animation: slideDown 0.2s ease; 
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .status-item { 
@@ -585,7 +590,6 @@
             border-radius: 20px; 
             box-shadow: var(--shadow-premium); 
             overflow: visible; 
-            width: 100%;
         }
         
         @media (min-width: 768px) {
@@ -613,123 +617,45 @@
             }
         }
 
-        /* FIXED: Mobile order cards styling */
         @media (max-width: 767px) {
             .content-card { 
-                background: transparent !important; 
-                border: none !important; 
-                box-shadow: none !important; 
-                overflow: visible !important; 
-                padding: 0 !important;
+                background: transparent; 
+                border: none; 
+                box-shadow: none; 
+                overflow: visible; 
+                width: 100%;
             }
-            
             .desktop-only { 
                 display: none; 
             }
-            
-            .mobile-order-card { 
+            .order-card { 
                 background: #ffffff; 
                 border: 1px solid var(--border-subtle); 
-                border-radius: 16px; 
-                padding: 16px; 
-                margin-bottom: 12px; 
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06); 
+                border-radius: 24px; 
+                padding: 18px; 
+                margin-bottom: 15px; 
+                box-shadow: var(--shadow-premium); 
                 width: 100%;
             }
-            
-            .mobile-order-card-header {
-                display: flex;
-                align-items: flex-start;
-                gap: 12px;
-                margin-bottom: 12px;
+            .card-body { 
+                display: flex; 
+                gap: 15px; 
+                margin-bottom: 15px; 
             }
-            
-            .mobile-order-img {
-                width: 60px;
-                height: 80px;
-                border-radius: 10px;
-                object-fit: cover;
-                border: 1px solid var(--border-subtle);
+            .card-img { 
+                width: 60px; 
+                height: 80px; 
+                border-radius: 12px; 
+                object-fit: cover; 
+                border: 1px solid var(--border-subtle); 
                 flex-shrink: 0;
             }
-            
-            .mobile-order-info {
-                flex: 1;
-                min-width: 0;
-            }
-            
-            .mobile-order-name {
-                font-weight: 800;
-                font-size: 15px;
-                color: var(--text-color);
-                margin-bottom: 4px;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
-            
-            .mobile-order-id {
-                font-size: 12px;
-                color: #6b7280;
-                margin-bottom: 4px;
-            }
-            
-            .mobile-order-customer {
-                font-size: 13px;
-                font-weight: 600;
-                color: var(--text-color);
-            }
-            
-            .mobile-order-actions {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding-top: 12px;
-                border-top: 1px solid var(--border-subtle);
-                margin-top: 12px;
-            }
-            
-            .mobile-order-price {
-                font-weight: 800;
-                font-size: 16px;
-                color: var(--brand-primary);
-            }
-            
-            .mobile-order-status {
-                display: flex;
-                align-items: center;
-                gap: 8px;
-            }
-            
-            .mobile-status-trigger {
-                padding: 8px 12px;
-                border-radius: 8px;
-                border: 1px solid var(--border-subtle);
-                background: var(--page-bg);
-                cursor: pointer;
-                display: flex;
-                align-items: center;
-                gap: 6px;
-                font-size: 12px;
-                font-weight: 700;
-                min-width: 120px;
-            }
-            
-            .mobile-status-menu {
-                position: absolute;
-                background: #ffffff;
-                border: 1px solid var(--border-subtle);
-                border-radius: 12px;
-                box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-                z-index: 100;
-                padding: 6px;
-                display: none;
-                width: 180px;
-                margin-top: 5px;
-            }
-            
-            .mobile-status-menu.open {
-                display: block !important;
+            .card-actions { 
+                display: flex; 
+                justify-content: space-between; 
+                align-items: center; 
+                border-top: 1px solid var(--border-subtle); 
+                padding-top: 15px; 
             }
         }
 
@@ -742,6 +668,7 @@
             font-weight: 800; 
             cursor: pointer; 
             font-size: 0.8rem; 
+            transition: all 0.2s ease;
         }
         .btn-view:hover { 
             background: var(--brand-primary); 
@@ -763,6 +690,10 @@
             justify-content: space-between; 
             font-size: 0.8rem; 
             font-weight: 700; 
+            transition: all 0.2s ease;
+        }
+        .status-trigger:hover {
+            background: #f9fafb;
         }
 
         .st-Ordered { 
@@ -779,24 +710,16 @@
         }
 
         .empty-state { 
-            padding: 60px 20px; 
+            padding: 100px 20px; 
             text-align: center; 
-            color: #6b7280;
             width: 100%;
         }
-        
         .empty-state i { 
-            font-size: 3rem; 
+            font-size: 3.5rem; 
             color: var(--text-sub); 
-            opacity: 0.3; 
-            margin-bottom: 15px; 
+            opacity: 0.2; 
+            margin-bottom: 20px; 
             display: block; 
-        }
-        
-        .empty-state h4 {
-            font-weight: 700;
-            margin-bottom: 8px;
-            color: var(--text-color);
         }
         
         /* --- DRAWER --- */
@@ -878,11 +801,40 @@
             font-weight: 700; 
             width: 100%; 
             cursor: pointer; 
+            transition: all 0.2s ease;
+        }
+        .btn-confirm:hover {
+            background: #471ea7;
         }
         
-        @keyframes slideUp { 
-            from { opacity: 0; transform: translateY(10px); } 
-            to { opacity: 1; transform: translateY(0); } 
+        /* Loading Skeleton */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #f8f8f8 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s infinite;
+            border-radius: 4px;
+        }
+        
+        .skeleton-text {
+            height: 20px;
+            width: 100%;
+        }
+        
+        .skeleton-card {
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid #e5e7eb;
+            padding: 16px;
+            margin-bottom: 15px;
+        }
+        
+        @keyframes skeleton-loading {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
         }
 
         /* ============= MOBILE LAYOUT ============= */
@@ -1155,7 +1107,6 @@
             padding: 16px;
             width: 100%;
             overflow-x: hidden;
-            max-width: 100%;
         }
 
         /* Mobile page header */
@@ -1245,12 +1196,6 @@
                 padding: 16px;
                 max-width: 100%;
                 overflow-x: hidden;
-            }
-            
-            /* Fix for filter dropdown */
-            .mobile-filter-menu {
-                position: absolute !important;
-                z-index: 1000 !important;
             }
         }
 
@@ -1381,34 +1326,44 @@
             text-overflow: ellipsis;
         }
         
-        /* FIXED: Status colors for mobile */
-        .status-indicator {
-            display: inline-flex;
+        /* Toast */
+        #toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 10000;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            padding: 1rem 1.5rem;
+            background: white;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-premium);
+            animation: slideUp 0.3s ease;
+            display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 1rem;
+            border-left: 4px solid var(--brand-primary);
+            min-width: 300px;
+            pointer-events: auto;
+            max-width: 90vw;
         }
-        
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            display: inline-block;
+
+        .toast.success {
+            border-left-color: var(--success-color);
         }
-        
-        .status-dot.ordered {
-            background-color: var(--warning-color);
+
+        .toast.error {
+            border-left-color: var(--danger-color);
         }
-        
-        .status-dot.shipped {
-            background-color: var(--brand-primary);
-        }
-        
-        .status-dot.delivered {
-            background-color: var(--success-color);
-        }
-        
-        .status-dot.cancelled {
-            background-color: var(--danger-color);
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
@@ -1534,7 +1489,18 @@
                                         <path d="M12 18h.01"/>
                                         <path d="M16 18h.01"/>
                                     </svg>
-                                    <span>This Month</span>
+                                    <span>Pending</span>
+                                </div>
+                                <div class="d-submenu-item" onclick="switchTab('Shipped', this, false)">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 2v2"/>
+                                        <path d="M15.726 21.01A2 2 0 0 1 14 22H4a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2"/>
+                                        <path d="M18 2v2"/>
+                                        <path d="M2 13h2"/>
+                                        <path d="M8 8h14"/>
+                                        <rect x="8" y="3" width="14" height="14" rx="2"/>
+                                    </svg>
+                                    <span>Shipped</span>
                                 </div>
                                 <div class="d-submenu-item" onclick="switchTab('All', this, false)">
                                     <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1545,7 +1511,7 @@
                                         <path d="M8 8h14"/>
                                         <rect x="8" y="3" width="14" height="14" rx="2"/>
                                     </svg>
-                                    <span>All Orders</span>
+                                    <span>History</span>
                                 </div>
                             </div>
                         </div>
@@ -1590,16 +1556,51 @@
 
                     <!-- STATS -->
                     <div class="stats-grid">
-                        <div class="stat-card pulse-active" id="today-card">
+                        <div class="stat-card pulse-card" id="today-orders-card">
+                            <div class="stat-icon" style="background:#f3f0ff; color:#5127ba;">
+                                <i class="fa-solid fa-calendar-day"></i>
+                            </div>
+                            <div class="stat-info">
+                                <p>Today's Orders</p>
+                                <h3 id="kpiToday">0</h3>
+                            </div>
+                        </div>
+                        <div class="stat-card">
                             <div class="stat-icon" style="background:#f3f0ff; color:#5127ba;">
                                 <i class="fa-solid fa-bolt"></i>
-                                <span class="today-badge" id="today-count">0</span>
                             </div>
-                            <div class="stat-info"><p>Live</p><h3 id="kpiLive">0</h3></div>
+                            <div class="stat-info">
+                                <p>Live</p>
+                                <h3 id="kpiLive">0</h3>
+                            </div>
                         </div>
-                        <div class="stat-card"><div class="stat-icon" style="background:#ecfdf5; color:#10b981;"><i class="fa-solid fa-check"></i></div><div class="stat-info"><p>Done</p><h3 id="kpiDone">0</h3></div></div>
-                        <div class="stat-card"><div class="stat-icon" style="background:#fffbeb; color:#f59e0b;"><i class="fa-solid fa-clock"></i></div><div class="stat-info"><p>Pending</p><h3 id="kpiPending">0</h3></div></div>
-                        <div class="stat-card"><div class="stat-icon" style="background:#fef2f2; color:#ef4444;"><i class="fa-solid fa-ban"></i></div><div class="stat-info"><p>Cancel</p><h3 id="kpiCancel">0</h3></div></div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background:#ecfdf5; color:#10b981;">
+                                <i class="fa-solid fa-check"></i>
+                            </div>
+                            <div class="stat-info">
+                                <p>Done</p>
+                                <h3 id="kpiDone">0</h3>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background:#fffbeb; color:#f59e0b;">
+                                <i class="fa-solid fa-clock"></i>
+                            </div>
+                            <div class="stat-info">
+                                <p>Pending</p>
+                                <h3 id="kpiPending">0</h3>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background:#fef2f2; color:#ef4444;">
+                                <i class="fa-solid fa-ban"></i>
+                            </div>
+                            <div class="stat-info">
+                                <p>Cancel</p>
+                                <h3 id="kpiCancel">0</h3>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- CONTROLS -->
@@ -1613,25 +1614,44 @@
 
                         <div class="control-inner">
                             <div class="search-container">
-                                <i class="fa-solid fa-magnifying-glass"></i>
-                                <input type="text" id="orderSearch" placeholder="Search customer or ID..." onkeyup="renderUI()">
+                                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                                <input type="text" class="search-input" id="orderSearch" placeholder="Search customer or ID...">
                             </div>
-                            <div class="mobile-filter-dropdown" id="mobFilter">
-                                <div class="filter-trigger" onclick="toggleMobFilter()"><span id="activeFilterLabel">Today</span> <i class="fa-solid fa-chevron-down"></i></div>
-                                <div class="mobile-filter-menu">
-                                    <div class="status-item" onclick="switchTab('Today', this, true)"><i class="fa-solid fa-calendar-day"></i> Today's Arrivals</div>
-                                    <div class="status-item" onclick="switchTab('Ordered', this, true)"><i class="fa-solid fa-clock"></i> Pending Orders</div>
-                                    <div class="status-item" onclick="switchTab('Shipped', this, true)"><i class="fa-solid fa-truck-fast"></i> Shipped Orders</div>
-                                    <div class="status-item" onclick="switchTab('All', this, true)"><i class="fa-solid fa-database"></i> Full History</div>
+                            <div class="mobile-filter-dropdown" id="desktop-mobFilter">
+                                <div class="filter-trigger" onclick="toggleMobFilter('desktop')">
+                                    <span id="desktop-activeFilterLabel">Today</span> 
+                                    <i class="fa-solid fa-chevron-down"></i>
+                                </div>
+                                <div class="mobile-filter-menu" id="desktop-filter-menu">
+                                    <div class="status-item" onclick="switchTab('Today', this, true)">
+                                        <i class="fa-solid fa-calendar-day"></i> Today's Arrivals
+                                    </div>
+                                    <div class="status-item" onclick="switchTab('Ordered', this, true)">
+                                        <i class="fa-solid fa-clock"></i> Pending Orders
+                                    </div>
+                                    <div class="status-item" onclick="switchTab('Shipped', this, true)">
+                                        <i class="fa-solid fa-truck-fast"></i> Shipped Orders
+                                    </div>
+                                    <div class="status-item" onclick="switchTab('All', this, true)">
+                                        <i class="fa-solid fa-database"></i> Full History
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- MAIN VIEW -->
-                    <div id="mainDisplay" class="content-card">
+                    <div class="content-card">
                         <table class="desktop-only">
-                            <thead><tr><th>Order Info</th><th>Customer</th><th>Total</th><th>Status</th><th>Action</th></tr></thead>
+                            <thead>
+                                <tr>
+                                    <th>Order Info</th>
+                                    <th>Customer</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
                             <tbody id="ordersBodyDesktop"></tbody>
                         </table>
                         <div id="ordersBodyMobile" class="mobile-only"></div>
@@ -1679,40 +1699,86 @@
 
                 <!-- STATS -->
                 <div class="stats-grid">
-                    <div class="stat-card pulse-active" id="mobile-today-card">
+                    <div class="stat-card pulse-card" id="mobile-today-orders-card">
+                        <div class="stat-icon" style="background:#f3f0ff; color:#5127ba;">
+                            <i class="fa-solid fa-calendar-day"></i>
+                        </div>
+                        <div class="stat-info">
+                            <p>Today's Orders</p>
+                            <h3 id="mobile-kpiToday">0</h3>
+                        </div>
+                    </div>
+                    <div class="stat-card">
                         <div class="stat-icon" style="background:#f3f0ff; color:#5127ba;">
                             <i class="fa-solid fa-bolt"></i>
-                            <span class="today-badge" id="mobile-today-count">0</span>
                         </div>
-                        <div class="stat-info"><p>Live</p><h3 id="mobile-kpiLive">0</h3></div>
+                        <div class="stat-info">
+                            <p>Live</p>
+                            <h3 id="mobile-kpiLive">0</h3>
+                        </div>
                     </div>
-                    <div class="stat-card"><div class="stat-icon" style="background:#ecfdf5; color:#10b981;"><i class="fa-solid fa-check"></i></div><div class="stat-info"><p>Done</p><h3 id="mobile-kpiDone">0</h3></div></div>
-                    <div class="stat-card"><div class="stat-icon" style="background:#fffbeb; color:#f59e0b;"><i class="fa-solid fa-clock"></i></div><div class="stat-info"><p>Pending</p><h3 id="mobile-kpiPending">0</h3></div></div>
-                    <div class="stat-card"><div class="stat-icon" style="background:#fef2f2; color:#ef4444;"><i class="fa-solid fa-ban"></i></div><div class="stat-info"><p>Cancel</p><h3 id="mobile-kpiCancel">0</h3></div></div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background:#ecfdf5; color:#10b981;">
+                            <i class="fa-solid fa-check"></i>
+                        </div>
+                        <div class="stat-info">
+                            <p>Done</p>
+                            <h3 id="mobile-kpiDone">0</h3>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background:#fffbeb; color:#f59e0b;">
+                            <i class="fa-solid fa-clock"></i>
+                        </div>
+                        <div class="stat-info">
+                            <p>Pending</p>
+                            <h3 id="mobile-kpiPending">0</h3>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background:#fef2f2; color:#ef4444;">
+                            <i class="fa-solid fa-ban"></i>
+                        </div>
+                        <div class="stat-info">
+                            <p>Cancel</p>
+                            <h3 id="mobile-kpiCancel">0</h3>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- CONTROLS -->
                 <div class="control-row">
                     <div class="control-inner">
                         <div class="search-container">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                            <input type="text" id="mobile-orderSearch" placeholder="Search customer or ID..." onkeyup="renderUI()">
+                            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                            <input type="text" class="search-input" id="mobile-orderSearch" placeholder="Search customer or ID...">
                         </div>
                         <div class="mobile-filter-dropdown" id="mobile-mobFilter">
-                            <div class="filter-trigger" onclick="toggleMobileFilter()"><span id="mobile-activeFilterLabel">Today</span> <i class="fa-solid fa-chevron-down"></i></div>
-                            <div class="mobile-filter-menu">
-                                <div class="status-item" onclick="switchTab('Today', this, true)"><i class="fa-solid fa-calendar-day"></i> Today's Arrivals</div>
-                                <div class="status-item" onclick="switchTab('Ordered', this, true)"><i class="fa-solid fa-clock"></i> Pending Orders</div>
-                                <div class="status-item" onclick="switchTab('Shipped', this, true)"><i class="fa-solid fa-truck-fast"></i> Shipped Orders</div>
-                                <div class="status-item" onclick="switchTab('All', this, true)"><i class="fa-solid fa-database"></i> Full History</div>
+                            <div class="filter-trigger" onclick="toggleMobFilter('mobile')">
+                                <span id="mobile-activeFilterLabel">Today</span> 
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </div>
+                            <div class="mobile-filter-menu" id="mobile-filter-menu">
+                                <div class="status-item" onclick="switchTab('Today', this, true)">
+                                    <i class="fa-solid fa-calendar-day"></i> Today's Arrivals
+                                </div>
+                                <div class="status-item" onclick="switchTab('Ordered', this, true)">
+                                    <i class="fa-solid fa-clock"></i> Pending Orders
+                                </div>
+                                <div class="status-item" onclick="switchTab('Shipped', this, true)">
+                                    <i class="fa-solid fa-truck-fast"></i> Shipped Orders
+                                </div>
+                                <div class="status-item" onclick="switchTab('All', this, true)">
+                                    <i class="fa-solid fa-database"></i> Full History
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- FIXED: Mobile orders container -->
-                <div id="mobileOrdersContainer" style="width: 100%;">
-                    <!-- Mobile orders will be rendered here -->
+                <!-- MAIN VIEW -->
+                <div class="content-card">
+                    <div id="mobile-orders-container"></div>
                 </div>
             </div>
         </main>
@@ -1839,7 +1905,18 @@
                                 <path d="M12 18h.01"/>
                                 <path d="M16 18h.01"/>
                             </svg>
-                            <span>This Month</span>
+                            <span>Pending</span>
+                        </div>
+                        <div class="m-submenu-item" onclick="switchTab('Shipped', this, true)">
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2v2"/>
+                                <path d="M15.726 21.01A2 2 0 0 1 14 22H4a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2"/>
+                                <path d="M18 2v2"/>
+                                <path d="M2 13h2"/>
+                                <path d="M8 8h14"/>
+                                <rect x="8" y="3" width="14" height="14" rx="2"/>
+                            </svg>
+                            <span>Shipped</span>
                         </div>
                         <div class="m-submenu-item" onclick="switchTab('All', this, true)">
                             <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1850,7 +1927,7 @@
                                 <path d="M8 8h14"/>
                                 <rect x="8" y="3" width="14" height="14" rx="2"/>
                             </svg>
-                            <span>All Orders</span>
+                            <span>History</span>
                         </div>
                     </div>
                 </nav>
@@ -1930,13 +2007,19 @@
     <div class="drawer-overlay" id="orderDrawer">
         <div class="drawer">
             <div class="drawer-header">
-                <div><h2 id="dOrderId" style="font-weight:800; font-size:1.1rem;">Details</h2><p id="dOrderDate" style="font-size:0.75rem; color:var(--text-sub);"></p></div>
+                <div>
+                    <h2 id="dOrderId" style="font-weight:800; font-size:1.1rem;">Details</h2>
+                    <p id="dOrderDate" style="font-size:0.75rem; color:var(--text-sub);"></p>
+                </div>
                 <button onclick="closeDrawer()" style="border:none; background:var(--brand-soft); color:var(--brand-primary); width:35px; height:35px; border-radius:50%; font-size:1.2rem; cursor:pointer;">&times;</button>
             </div>
             <div class="drawer-body" id="dContent"></div>
             <div class="drawer-footer" id="dFooter"></div>
         </div>
     </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
 
     <script>
         // --- FIREBASE CONFIG ---
@@ -1953,28 +2036,29 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
-        const storage = firebase.storage();
 
-        // --- APP LOGIC ---
+        // --- APP STATE ---
         let ordersData = [];
         let currentFilter = 'Today';
         let updateData = {};
+        let isLoading = true;
+        let unsubscribeOrders = null;
 
         const config = {
-            'Ordered': { label: 'Pending', icon: 'fa-clock', class: 'ordered' },
-            'Shipped': { label: 'Shipped', icon: 'fa-truck-fast', class: 'shipped' },
-            'Delivered': { label: 'Delivered', icon: 'fa-circle-check', class: 'delivered' },
-            'Cancelled': { label: 'Cancelled', icon: 'fa-circle-xmark', class: 'cancelled' }
+            'Ordered': { label: 'Pending', icon: 'fa-clock', color: 'var(--warning-color)' },
+            'Shipped': { label: 'Shipped', icon: 'fa-truck-fast', color: 'var(--brand-primary)' },
+            'Delivered': { label: 'Delivered', icon: 'fa-circle-check', color: 'var(--success-color)' },
+            'Cancelled': { label: 'Cancelled', icon: 'fa-circle-xmark', color: 'var(--danger-color)' }
         };
 
-        // Admin access check
+        // --- ADMIN ACCESS CHECK ---
         auth.onAuthStateChanged(user => {
             if (!user || user.email !== ADMIN_EMAIL) {
                 window.location.href = 'index.html';
                 return;
             }
             initProfile(user);
-            startApp();
+            initializeApp();
         });
 
         function initProfile(user) {
@@ -1997,298 +2081,646 @@
             document.getElementById('popup-avatar').src = avatar;
         }
 
-        function startApp() {
-            db.collection('orders').orderBy('createdAt', 'desc').onSnapshot(snap => {
-                ordersData = [];
-                snap.forEach(doc => {
-                    const data = doc.data();
-                    ordersData.push({ 
-                        fireId: doc.id, 
-                        ...data,
-                        // Ensure we have all required fields
-                        items: data.items || [],
-                        address: data.address || { name: 'Unknown' },
-                        orderId: data.orderId || 'N/A',
-                        amount: data.amount || 0,
-                        paymentMethod: data.paymentMethod || 'Unknown',
-                        status: data.status || 'Ordered',
-                        createdAt: data.createdAt || new Date()
-                    });
+        // --- INITIALIZE APP ---
+        function initializeApp() {
+            setupEventListeners();
+            loadOrders();
+        }
+
+        function setupEventListeners() {
+            // Search input events
+            const desktopSearch = document.getElementById('orderSearch');
+            const mobileSearch = document.getElementById('mobile-orderSearch');
+            
+            if (desktopSearch) {
+                desktopSearch.addEventListener('input', debounce(handleSearch, 300));
+            }
+            
+            if (mobileSearch) {
+                mobileSearch.addEventListener('input', debounce(handleSearch, 300));
+            }
+            
+            // Mobile drawer
+            const mMenuToggle = document.getElementById('m-menu-toggle');
+            const mDrawerClose = document.getElementById('m-drawer-close');
+            const mOverlay = document.getElementById('m-overlay');
+            
+            if (mMenuToggle && mOverlay) {
+                mMenuToggle.addEventListener('click', () => {
+                    mOverlay.classList.add('open');
                 });
-                renderUI();
+            }
+            
+            if (mDrawerClose && mOverlay) {
+                mDrawerClose.addEventListener('click', () => {
+                    mOverlay.classList.remove('open');
+                });
+            }
+            
+            if (mOverlay) {
+                mOverlay.addEventListener('click', (e) => {
+                    if (e.target === mOverlay) {
+                        mOverlay.classList.remove('open');
+                    }
+                });
+            }
+            
+            // Dropdown toggles
+            setupDropdownToggles();
+            
+            // Profile popup
+            const profileSection = document.getElementById('profile-section');
+            const mobileProfileSection = document.getElementById('mobile-profile-section');
+            const profilePopup = document.getElementById('profile-popup');
+            
+            if (profileSection) {
+                profileSection.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    positionProfilePopup(profileSection, profilePopup);
+                    profilePopup.classList.toggle('active');
+                });
+            }
+            
+            if (mobileProfileSection) {
+                mobileProfileSection.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    positionProfilePopup(mobileProfileSection, profilePopup);
+                    profilePopup.classList.toggle('active');
+                });
+            }
+            
+            // Close popups on outside click
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.profile-popup') && 
+                    !e.target.closest('#profile-section') && 
+                    !e.target.closest('#mobile-profile-section')) {
+                    profilePopup.classList.remove('active');
+                }
+                
+                // Close dropdowns on outside click
+                if (!e.target.closest('.mobile-filter-dropdown') && 
+                    !e.target.closest('.status-dropdown')) {
+                    closeAllDropdowns();
+                }
+            });
+            
+            // Escape key to close modals
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    document.getElementById('profile-popup').classList.remove('active');
+                    document.getElementById('confirmModal').classList.remove('active');
+                    document.getElementById('orderDrawer').classList.remove('active');
+                    closeAllDropdowns();
+                }
             });
         }
 
-        function renderUI() {
-            const dBody = document.getElementById('ordersBodyDesktop');
-            const mobileContainer = document.getElementById('mobileOrdersContainer');
-            const search = document.getElementById('orderSearch')?.value.toLowerCase() || 
-                         document.getElementById('mobile-orderSearch')?.value.toLowerCase() || '';
-            const today = new Date().toDateString();
+        function setupDropdownToggles() {
+            // Desktop dropdowns
+            const dCustomizeToggle = document.getElementById('d-customize-toggle');
+            const dCustomizeSubmenu = document.getElementById('d-customize-submenu');
+            const dOrdersToggle = document.getElementById('d-orders-toggle');
+            const dOrdersSubmenu = document.getElementById('d-orders-submenu');
             
-            if (dBody) dBody.innerHTML = ''; 
-            if (mobileContainer) mobileContainer.innerHTML = '';
-            
-            let stats = { live: 0, done: 0, pending: 0, cancel: 0, today: 0 };
-            let count = 0;
-
-            ordersData.forEach(order => {
-                const s = order.status || 'Ordered';
-                const ts = order.createdAt ? new Date(order.createdAt.toMillis()) : new Date();
-                const isCod = order.paymentMethod === 'COD';
-
-                // Update stats
-                if (s === 'Ordered' || s === 'Shipped') stats.live++;
-                if (s === 'Ordered') stats.pending++;
-                if (s === 'Delivered') stats.done++;
-                if (s === 'Cancelled') stats.cancel++;
-                if (ts.toDateString() === today) stats.today++;
-
-                let show = (currentFilter === 'All' || 
-                          (currentFilter === 'Today' && ts.toDateString() === today) || 
-                          (s === currentFilter));
-                let matches = (order.address?.name || "").toLowerCase().includes(search) || 
-                            (order.orderId || "").toLowerCase().includes(search);
-
-                if (show && matches) {
-                    count++;
-                    const ui = config[s];
-                    const codHtml = isCod ? `<span class="cod-badge"><i class="fa-solid fa-wallet"></i> COD • ₹100 Fee Applied</span>` : '';
-                    
-                    const dd = (ctx) => `
-                        <div class="status-dropdown" id="dd-${ctx}-${order.fireId}">
-                            <div class="status-trigger" onclick="toggleDD('${ctx}-${order.fireId}')">
-                                <span><i class="fa-solid ${ui.icon} st-${s}"></i> ${ui.label}</span>
-                                <i class="fa-solid fa-chevron-down" style="font-size:0.6rem;"></i>
-                            </div>
-                            <div class="status-menu">
-                                ${Object.keys(config).map(k => `
-                                    <div class="status-item" onclick="askUpdate('${order.fireId}', '${s}', '${k}')">
-                                        <i class="fa-solid ${config[k].icon} st-${k}"></i> ${config[k].label}
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>`;
-
-                    // Desktop row
-                    if (dBody) {
-                        dBody.innerHTML += `<tr>
-                            <td>
-                                <div style="display:flex; gap:12px;">
-                                    <img src="${order.items[0]?.image || 'https://via.placeholder.com/45x60?text=No+Image'}" 
-                                         style="width:45px;height:60px;border-radius:10px;border:1px solid var(--border-subtle);object-fit:cover;">
-                                    <div>
-                                        <b style="font-weight:800;">${order.items[0]?.name || 'No item name'}</b>
-                                        <br><small>#${order.orderId}</small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td><b style="font-weight:700;">${order.address?.name || 'No name'}</b></td>
-                            <td>
-                                <div style="color:var(--brand-primary); font-weight:900;">₹${order.amount?.toLocaleString() || '0'}</div>
-                                ${codHtml}
-                            </td>
-                            <td>${dd('d')}</td>
-                            <td><button class="btn-view" onclick="openDrawer('${order.fireId}')">Details</button></td>
-                        </tr>`;
-                    }
-
-                    // FIXED: Mobile card
-                    if (mobileContainer && window.innerWidth <= 768) {
-                        const mobileStatusMenuId = `mobile-status-menu-${order.fireId}`;
-                        const mobileStatusTriggerId = `mobile-status-trigger-${order.fireId}`;
-                        
-                        mobileContainer.innerHTML += `
-                            <div class="mobile-order-card">
-                                <div class="mobile-order-card-header">
-                                    <img src="${order.items[0]?.image || 'https://via.placeholder.com/60x80?text=No+Image'}" class="mobile-order-img">
-                                    <div class="mobile-order-info">
-                                        <div class="mobile-order-name">${order.items[0]?.name || 'No item name'}</div>
-                                        <div class="mobile-order-id">#${order.orderId}</div>
-                                        <div class="mobile-order-customer">${order.address?.name || 'No name'}</div>
-                                    </div>
-                                </div>
-                                <div class="mobile-order-actions">
-                                    <div class="mobile-order-price">₹${order.amount?.toLocaleString() || '0'}</div>
-                                    <div class="mobile-order-status">
-                                        <div class="status-dropdown">
-                                            <div class="mobile-status-trigger" id="${mobileStatusTriggerId}" onclick="toggleMobileStatusMenu('${order.fireId}')">
-                                                <span class="status-indicator">
-                                                    <span class="status-dot ${ui.class}"></span>
-                                                    ${ui.label}
-                                                </span>
-                                                <i class="fa-solid fa-chevron-down" style="font-size:0.6rem;"></i>
-                                            </div>
-                                            <div class="mobile-status-menu" id="${mobileStatusMenuId}">
-                                                ${Object.keys(config).map(k => `
-                                                    <div class="status-item" onclick="askUpdate('${order.fireId}', '${s}', '${k}'); closeMobileStatusMenu('${order.fireId}')">
-                                                        <i class="fa-solid ${config[k].icon} st-${k}"></i> ${config[k].label}
-                                                    </div>
-                                                `).join('')}
-                                            </div>
-                                        </div>
-                                        <button onclick="openDrawer('${order.fireId}')" style="background:var(--brand-soft);border:none;border-radius:12px;padding:12px;color:var(--brand-primary);">
-                                            <i class="fa-solid fa-arrow-right"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                ${isCod ? `<div style="margin-top:8px;">${codHtml}</div>` : ''}
-                            </div>`;
-                    }
-                }
-            });
-
-            if(count === 0) {
-                const empty = `<div class="empty-state"><i class="fa-solid fa-box-open"></i><h4>No orders found</h4><p>Try different filters.</p></div>`;
-                if (mobileContainer) mobileContainer.innerHTML = empty;
-                if (dBody) dBody.innerHTML = `<tr><td colspan="5">${empty}</td></tr>`;
+            if (dCustomizeToggle && dCustomizeSubmenu) {
+                dCustomizeToggle.addEventListener('click', () => {
+                    dCustomizeSubmenu.classList.toggle('open');
+                    dCustomizeToggle.classList.toggle('dropdown-open');
+                });
             }
+            
+            if (dOrdersToggle && dOrdersSubmenu) {
+                dOrdersToggle.addEventListener('click', () => {
+                    dOrdersSubmenu.classList.toggle('open');
+                    dOrdersToggle.classList.toggle('dropdown-open');
+                });
+            }
+            
+            // Mobile dropdowns
+            const mCustomizeToggle = document.getElementById('m-customize-toggle');
+            const mCustomizeSubmenu = document.getElementById('m-customize-submenu');
+            const mOrdersToggle = document.getElementById('m-orders-toggle');
+            const mOrdersSubmenu = document.getElementById('m-orders-submenu');
+            
+            if (mCustomizeToggle && mCustomizeSubmenu) {
+                mCustomizeToggle.addEventListener('click', () => {
+                    mCustomizeSubmenu.classList.toggle('open');
+                    mCustomizeToggle.classList.toggle('dropdown-open');
+                });
+            }
+            
+            if (mOrdersToggle && mOrdersSubmenu) {
+                mOrdersToggle.addEventListener('click', () => {
+                    mOrdersSubmenu.classList.toggle('open');
+                    mOrdersToggle.classList.toggle('dropdown-open');
+                });
+            }
+        }
 
-            // Update stats
-            ['Live','Done','Pending','Cancel'].forEach(k => {
-                const desktopEl = document.getElementById(`kpi${k}`);
-                const mobileEl = document.getElementById(`mobile-kpi${k}`);
-                const value = stats[k.toLowerCase()].toLocaleString();
-                if (desktopEl) desktopEl.innerText = value;
-                if (mobileEl) mobileEl.innerText = value;
+        function closeAllDropdowns() {
+            document.querySelectorAll('.mobile-filter-dropdown.open, .status-dropdown.open').forEach(el => {
+                el.classList.remove('open');
             });
+        }
+
+        function positionProfilePopup(trigger, popup) {
+            const rect = trigger.getBoundingClientRect();
             
-            // Update today's count
-            const todayCount = stats.today.toLocaleString();
-            document.getElementById('today-count').textContent = todayCount;
-            document.getElementById('mobile-today-count').textContent = todayCount;
-            
-            // Add/remove pulse effect based on today's orders
-            const todayCard = document.getElementById('today-card');
-            const mobileTodayCard = document.getElementById('mobile-today-card');
-            
-            if (stats.today > 0) {
-                if (todayCard) todayCard.classList.add('pulse-active');
-                if (mobileTodayCard) mobileTodayCard.classList.add('pulse-active');
+            if (window.innerWidth >= 769) {
+                // Desktop - position on left side
+                popup.style.left = '30px';
+                popup.style.right = 'auto';
+                popup.style.bottom = '100px';
+                popup.style.top = 'auto';
             } else {
-                if (todayCard) todayCard.classList.remove('pulse-active');
-                if (mobileTodayCard) mobileTodayCard.classList.remove('pulse-active');
+                // Mobile - center horizontally
+                popup.style.left = '50%';
+                popup.style.right = 'auto';
+                popup.style.transform = 'translateX(-50%)';
+                popup.style.bottom = '100px';
+                popup.style.top = 'auto';
             }
         }
 
-        function toggleDD(id) {
-            const el = document.getElementById(`dd-${id}`);
-            if (!el) return;
+        // --- LOAD ORDERS ---
+        function loadOrders() {
+            showLoading();
             
-            const open = el.classList.contains('open');
-            document.querySelectorAll('.status-dropdown').forEach(d => d.classList.remove('open'));
-            if (!open) {
-                el.classList.add('open');
+            // Unsubscribe previous listener if exists
+            if (unsubscribeOrders) {
+                unsubscribeOrders();
             }
+            
+            unsubscribeOrders = db.collection('orders')
+                .orderBy('createdAt', 'desc')
+                .onSnapshot(
+                    (snap) => {
+                        ordersData = [];
+                        snap.forEach(doc => {
+                            const data = doc.data();
+                            ordersData.push({ 
+                                fireId: doc.id, 
+                                ...data,
+                                createdAt: data.createdAt || new Date()
+                            });
+                        });
+                        isLoading = false;
+                        renderUI();
+                    },
+                    (error) => {
+                        console.error('Error loading orders:', error);
+                        showToast('Error loading orders', 'error');
+                        isLoading = false;
+                        renderUI();
+                    }
+                );
         }
 
-        // FIXED: Mobile filter dropdown
-        function toggleMobFilter() { 
-            const filter = document.getElementById('mobFilter');
-            if (filter) {
-                const isOpen = filter.classList.contains('open');
-                // Close all other dropdowns
-                document.querySelectorAll('.mobile-filter-dropdown').forEach(d => d.classList.remove('open'));
-                document.querySelectorAll('.status-dropdown').forEach(d => d.classList.remove('open'));
-                document.querySelectorAll('.mobile-status-menu').forEach(m => m.classList.remove('open'));
+        // --- RENDER UI ---
+        function renderUI() {
+            const searchTerm = getSearchTerm();
+            const filteredOrders = filterOrders(ordersData, searchTerm);
+            updateStats(filteredOrders);
+            renderOrdersTable(filteredOrders);
+            renderMobileOrders(filteredOrders);
+            
+            // Update filter labels
+            updateFilterLabels();
+        }
+
+        function getSearchTerm() {
+            const desktopSearch = document.getElementById('orderSearch');
+            const mobileSearch = document.getElementById('mobile-orderSearch');
+            
+            if (desktopSearch && desktopSearch.value) {
+                return desktopSearch.value.toLowerCase().trim();
+            }
+            
+            if (mobileSearch && mobileSearch.value) {
+                return mobileSearch.value.toLowerCase().trim();
+            }
+            
+            return '';
+        }
+
+        function filterOrders(orders, searchTerm) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            return orders.filter(order => {
+                // Apply filter
+                let passesFilter = false;
                 
-                // Toggle this one
-                if (!isOpen) {
-                    filter.classList.add('open');
+                switch (currentFilter) {
+                    case 'Today':
+                        const orderDate = order.createdAt.toDate ? 
+                            order.createdAt.toDate() : new Date(order.createdAt);
+                        const orderDay = new Date(orderDate);
+                        orderDay.setHours(0, 0, 0, 0);
+                        passesFilter = orderDay.getTime() === today.getTime();
+                        break;
+                    case 'All':
+                        passesFilter = true;
+                        break;
+                    default:
+                        passesFilter = order.status === currentFilter;
+                        break;
                 }
-            }
-        }
-        
-        function toggleMobileFilter() { 
-            const filter = document.getElementById('mobile-mobFilter');
-            if (filter) {
-                const isOpen = filter.classList.contains('open');
-                // Close all other dropdowns
-                document.querySelectorAll('.mobile-filter-dropdown').forEach(d => d.classList.remove('open'));
-                document.querySelectorAll('.status-dropdown').forEach(d => d.classList.remove('open'));
-                document.querySelectorAll('.mobile-status-menu').forEach(m => m.classList.remove('open'));
                 
-                // Toggle this one
-                if (!isOpen) {
-                    filter.classList.add('open');
+                // Apply search
+                if (passesFilter && searchTerm) {
+                    const matchesName = order.address?.name?.toLowerCase().includes(searchTerm) || false;
+                    const matchesId = order.orderId?.toLowerCase().includes(searchTerm) || false;
+                    const matchesEmail = order.address?.email?.toLowerCase().includes(searchTerm) || false;
+                    passesFilter = matchesName || matchesId || matchesEmail;
                 }
-            }
+                
+                return passesFilter;
+            });
         }
-        
-        // Mobile status menu functions
-        function toggleMobileStatusMenu(orderId) {
-            const menu = document.getElementById(`mobile-status-menu-${orderId}`);
-            if (!menu) return;
+
+        function updateStats(orders) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
             
-            const isOpen = menu.classList.contains('open');
-            // Close all other menus
-            document.querySelectorAll('.mobile-status-menu').forEach(m => m.classList.remove('open'));
-            document.querySelectorAll('.mobile-filter-dropdown').forEach(d => d.classList.remove('open'));
-            document.querySelectorAll('.status-dropdown').forEach(d => d.classList.remove('open'));
+            let stats = {
+                today: 0,
+                live: 0,
+                done: 0,
+                pending: 0,
+                cancel: 0
+            };
             
-            // Toggle this menu
-            if (!isOpen) {
-                menu.classList.add('open');
-            }
+            orders.forEach(order => {
+                const orderDate = order.createdAt.toDate ? 
+                    order.createdAt.toDate() : new Date(order.createdAt);
+                const orderDay = new Date(orderDate);
+                orderDay.setHours(0, 0, 0, 0);
+                
+                if (orderDay.getTime() === today.getTime()) {
+                    stats.today++;
+                }
+                
+                const status = order.status || 'Ordered';
+                
+                if (status === 'Ordered' || status === 'Shipped') {
+                    stats.live++;
+                }
+                
+                if (status === 'Ordered') {
+                    stats.pending++;
+                } else if (status === 'Delivered') {
+                    stats.done++;
+                } else if (status === 'Cancelled') {
+                    stats.cancel++;
+                }
+            });
+            
+            // Update desktop stats
+            document.getElementById('kpiToday')?.textContent = stats.today.toLocaleString();
+            document.getElementById('kpiLive')?.textContent = stats.live.toLocaleString();
+            document.getElementById('kpiDone')?.textContent = stats.done.toLocaleString();
+            document.getElementById('kpiPending')?.textContent = stats.pending.toLocaleString();
+            document.getElementById('kpiCancel')?.textContent = stats.cancel.toLocaleString();
+            
+            // Update mobile stats
+            document.getElementById('mobile-kpiToday')?.textContent = stats.today.toLocaleString();
+            document.getElementById('mobile-kpiLive')?.textContent = stats.live.toLocaleString();
+            document.getElementById('mobile-kpiDone')?.textContent = stats.done.toLocaleString();
+            document.getElementById('mobile-kpiPending')?.textContent = stats.pending.toLocaleString();
+            document.getElementById('mobile-kpiCancel')?.textContent = stats.cancel.toLocaleString();
+            
+            // Update pulse effect for today's orders
+            updatePulseEffect(stats.today);
         }
-        
-        function closeMobileStatusMenu(orderId) {
-            const menu = document.getElementById(`mobile-status-menu-${orderId}`);
-            if (menu) {
-                menu.classList.remove('open');
+
+        function updatePulseEffect(todayCount) {
+            const desktopCard = document.getElementById('today-orders-card');
+            const mobileCard = document.getElementById('mobile-today-orders-card');
+            
+            // Add or remove pulse class based on today's orders
+            if (todayCount > 0) {
+                desktopCard?.classList.add('pulse-card');
+                mobileCard?.classList.add('pulse-card');
+            } else {
+                desktopCard?.classList.remove('pulse-card');
+                mobileCard?.classList.remove('pulse-card');
             }
         }
 
-        function askUpdate(id, oldS, newS) {
-            if (oldS === newS) return;
-            updateData = { id, old: oldS, new: newS };
-            document.getElementById('flowFrom').innerText = config[oldS].label;
-            document.getElementById('flowTo').innerText = config[newS].label;
-            document.getElementById('confirmModal').classList.add('active');
+        function renderOrdersTable(orders) {
+            const tableBody = document.getElementById('ordersBodyDesktop');
+            if (!tableBody) return;
+            
+            if (isLoading) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 40px;">
+                            <div class="skeleton skeleton-text" style="width: 80%; margin: 0 auto;"></div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            if (orders.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="empty-state">
+                            <i class="fa-solid fa-box-open"></i>
+                            <h4>No orders found</h4>
+                            <p>Try different filters or search terms.</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tableBody.innerHTML = orders.map(order => {
+                const ui = config[order.status] || config['Ordered'];
+                const isCod = order.paymentMethod === 'COD';
+                const codHtml = isCod ? 
+                    `<span class="cod-badge"><i class="fa-solid fa-wallet"></i> COD • ₹100 Fee Applied</span>` : '';
+                
+                return `
+                    <tr>
+                        <td>
+                            <div style="display: flex; gap: 12px; align-items: center;">
+                                <img src="${order.items?.[0]?.image || 'https://via.placeholder.com/45x60?text=No+Image'}" 
+                                     style="width: 45px; height: 60px; border-radius: 10px; border: 1px solid var(--border-subtle); object-fit: cover;">
+                                <div>
+                                    <b style="font-weight: 800; display: block; margin-bottom: 4px;">${order.items?.[0]?.name || 'No item name'}</b>
+                                    <small style="color: var(--text-sub);">#${order.orderId || 'N/A'}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <b style="font-weight: 700;">${order.address?.name || 'No name'}</b>
+                            <br>
+                            <small style="color: var(--text-sub);">${order.address?.phone || 'No phone'}</small>
+                        </td>
+                        <td>
+                            <div style="color: var(--brand-primary); font-weight: 900;">₹${order.amount?.toLocaleString() || '0'}</div>
+                            ${codHtml}
+                        </td>
+                        <td>
+                            ${renderStatusDropdown(order, 'desktop')}
+                        </td>
+                        <td>
+                            <button class="btn-view" onclick="openDrawer('${order.fireId}')">Details</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+            
+            attachStatusDropdownEvents('desktop');
+        }
+
+        function renderMobileOrders(orders) {
+            const mobileContainer = document.getElementById('mobile-orders-container');
+            if (!mobileContainer) return;
+            
+            if (isLoading) {
+                mobileContainer.innerHTML = `
+                    <div class="skeleton-card">
+                        <div class="skeleton skeleton-text" style="width: 70%; margin-bottom: 10px;"></div>
+                        <div class="skeleton skeleton-text" style="width: 50%;"></div>
+                    </div>
+                    <div class="skeleton-card">
+                        <div class="skeleton skeleton-text" style="width: 70%; margin-bottom: 10px;"></div>
+                        <div class="skeleton skeleton-text" style="width: 50%;"></div>
+                    </div>
+                `;
+                return;
+            }
+            
+            if (orders.length === 0) {
+                mobileContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fa-solid fa-box-open"></i>
+                        <h4>No orders found</h4>
+                        <p>Try different filters or search terms.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            mobileContainer.innerHTML = orders.map(order => {
+                const ui = config[order.status] || config['Ordered'];
+                const isCod = order.paymentMethod === 'COD';
+                const codHtml = isCod ? 
+                    `<span class="cod-badge"><i class="fa-solid fa-wallet"></i> COD • ₹100 Fee Applied</span>` : '';
+                
+                return `
+                    <div class="order-card">
+                        <div class="card-body">
+                            <img src="${order.items?.[0]?.image || 'https://via.placeholder.com/60x80?text=No+Image'}" 
+                                 class="card-img" 
+                                 alt="${order.items?.[0]?.name || 'Product'}">
+                            <div style="flex: 1;">
+                                <div style="font-weight: 800; font-size: 1rem; margin-bottom: 4px;">
+                                    ${order.items?.[0]?.name || 'No item name'}
+                                </div>
+                                <small style="color: var(--text-sub); display: block; margin-bottom: 4px;">
+                                    #${order.orderId || 'N/A'} • ${order.address?.name || 'No name'}
+                                </small>
+                                <small style="color: var(--text-sub);">
+                                    ${order.address?.phone || 'No phone'}
+                                </small>
+                            </div>
+                        </div>
+                        <div class="card-actions">
+                            <div>
+                                <b style="color: var(--brand-primary); font-size: 1.1rem;">₹${order.amount?.toLocaleString() || '0'}</b>
+                                ${codHtml}
+                            </div>
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                ${renderStatusDropdown(order, 'mobile')}
+                                <button onclick="openDrawer('${order.fireId}')" 
+                                        style="background: var(--brand-soft); border: none; border-radius: 12px; padding: 12px; color: var(--brand-primary); cursor: pointer;">
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            attachStatusDropdownEvents('mobile');
+        }
+
+        function renderStatusDropdown(order, context) {
+            const ui = config[order.status] || config['Ordered'];
+            
+            return `
+                <div class="status-dropdown" id="dd-${context}-${order.fireId}">
+                    <div class="status-trigger" onclick="toggleStatusDropdown('${context}-${order.fireId}')">
+                        <span>
+                            <i class="fa-solid ${ui.icon} st-${order.status}" style="margin-right: 6px;"></i>
+                            ${ui.label}
+                        </span>
+                        <i class="fa-solid fa-chevron-down" style="font-size: 0.6rem;"></i>
+                    </div>
+                    <div class="status-menu">
+                        ${Object.keys(config).map(status => `
+                            <div class="status-item" onclick="askUpdate('${order.fireId}', '${order.status}', '${status}')">
+                                <i class="fa-solid ${config[status].icon} st-${status}"></i>
+                                ${config[status].label}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function attachStatusDropdownEvents(context) {
+            // Events are attached via onclick in the HTML
+        }
+
+        // --- UI INTERACTIONS ---
+        function toggleStatusDropdown(id) {
+            const dropdown = document.getElementById(`dd-${id}`);
+            if (!dropdown) return;
+            
+            // Close all other dropdowns
+            document.querySelectorAll('.status-dropdown.open').forEach(el => {
+                if (el !== dropdown) {
+                    el.classList.remove('open');
+                }
+            });
+            
+            dropdown.classList.toggle('open');
+        }
+
+        function toggleMobFilter(context) {
+            const filter = document.getElementById(`${context}-mobFilter`);
+            if (!filter) return;
+            
+            // Close all other dropdowns
+            document.querySelectorAll('.mobile-filter-dropdown.open').forEach(el => {
+                if (el !== filter) {
+                    el.classList.remove('open');
+                }
+            });
+            
+            filter.classList.toggle('open');
+        }
+
+        function updateFilterLabels() {
+            const filterLabels = {
+                'Today': 'Today',
+                'Ordered': 'Pending',
+                'Shipped': 'Shipped',
+                'All': 'History'
+            };
+            
+            const label = filterLabels[currentFilter] || 'Today';
+            
+            // Update desktop label
+            const desktopLabel = document.getElementById('desktop-activeFilterLabel');
+            if (desktopLabel) {
+                desktopLabel.textContent = label;
+            }
+            
+            // Update mobile label
+            const mobileLabel = document.getElementById('mobile-activeFilterLabel');
+            if (mobileLabel) {
+                mobileLabel.textContent = label;
+            }
+            
+            // Update active tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                if (btn.textContent === label || 
+                    (label === 'Pending' && btn.textContent === 'Pending') ||
+                    (label === 'History' && btn.textContent === 'History')) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        function switchTab(tab, btn, isMobile) {
+            currentFilter = tab;
+            
+            if (!isMobile && btn) {
+                // Update active tab button
+                document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
+                btn.classList.add('active');
+            }
+            
+            // Close dropdowns
+            closeAllDropdowns();
+            
+            // Render UI
+            renderUI();
+        }
+
+        function handleSearch() {
+            renderUI();
+        }
+
+        function askUpdate(id, oldStatus, newStatus) {
+            if (oldStatus === newStatus) return;
+            
+            updateData = { id, oldStatus, newStatus };
+            
+            document.getElementById('flowFrom').textContent = config[oldStatus]?.label || oldStatus;
+            document.getElementById('flowTo').textContent = config[newStatus]?.label || newStatus;
             
             // Close all dropdowns
-            document.querySelectorAll('.status-dropdown').forEach(d => d.classList.remove('open'));
-            document.querySelectorAll('.mobile-filter-dropdown').forEach(d => d.classList.remove('open'));
-            document.querySelectorAll('.mobile-status-menu').forEach(m => m.classList.remove('open'));
+            closeAllDropdowns();
+            
+            // Show confirmation modal
+            document.getElementById('confirmModal').classList.add('active');
         }
 
         async function executeStatusUpdate() {
+            if (!updateData.id) return;
+            
             try {
-                await db.collection('orders').doc(updateData.id).update({ status: updateData.new });
+                await db.collection('orders').doc(updateData.id).update({
+                    status: updateData.newStatus,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                // Update user's order if not guest
                 const order = ordersData.find(o => o.fireId === updateData.id);
                 if (order && order.userId && order.userId !== 'guest') {
-                    await db.collection('users').doc(order.userId).collection('orders').doc(order.orderId).update({ status: updateData.new });
+                    try {
+                        await db.collection('users').doc(order.userId)
+                            .collection('orders').doc(order.orderId)
+                            .update({ status: updateData.newStatus });
+                    } catch (userError) {
+                        console.log('User order update skipped:', userError);
+                    }
                 }
+                
+                showToast(`Order status updated to ${config[updateData.newStatus]?.label || updateData.newStatus}`, 'success');
                 closeConfirmModal();
-            } catch (err) { 
-                alert('Error updating status: ' + err.message); 
+                
+            } catch (error) {
+                console.error('Error updating order status:', error);
+                showToast('Failed to update order status', 'error');
             }
         }
 
-        function switchTab(tab, btn, isMob = false) {
-            currentFilter = tab;
-            document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
-            if (!isMob && btn) btn.classList.add('active');
-            
-            const activeFilterLabel = document.getElementById('activeFilterLabel');
-            const mobileActiveFilterLabel = document.getElementById('mobile-activeFilterLabel');
-            
-            if (activeFilterLabel) activeFilterLabel.innerText = tab;
-            if (mobileActiveFilterLabel) mobileActiveFilterLabel.innerText = tab;
-            
-            // Close dropdowns
-            document.querySelectorAll('.mobile-filter-dropdown').forEach(d => d.classList.remove('open'));
-            
-            renderUI();
+        function closeConfirmModal() {
+            document.getElementById('confirmModal').classList.remove('active');
+            updateData = {};
         }
 
         function openDrawer(id) {
             const order = ordersData.find(o => o.fireId === id);
             if (!order) return;
             
-            document.getElementById('dOrderId').innerText = `Order #${order.orderId}`;
-            document.getElementById('dOrderDate').innerText = order.createdAt ? 
-                new Date(order.createdAt.toMillis()).toLocaleString() : 'No date';
+            document.getElementById('dOrderId').textContent = `Order #${order.orderId || 'N/A'}`;
+            
+            const orderDate = order.createdAt.toDate ? 
+                order.createdAt.toDate() : new Date(order.createdAt);
+            document.getElementById('dOrderDate').textContent = orderDate.toLocaleString();
             
             const isCod = order.paymentMethod === 'COD';
             
@@ -2299,19 +2731,20 @@
                     <p style="font-size:0.85rem; line-height:1.5; opacity:0.8; margin-top:5px;">
                         ${order.address?.street || ''}, ${order.address?.locality || ''}<br>
                         ${order.address?.city || ''}, ${order.address?.state || ''} - ${order.address?.zip || ''}<br>
-                        <b>Phone:</b> ${order.address?.phone || 'No phone'}
+                        <b>Phone:</b> ${order.address?.phone || 'No phone'}<br>
+                        ${order.address?.email ? `<b>Email:</b> ${order.address.email}` : ''}
                     </p>
                 </div>
-                <p style="font-size:0.65rem; font-weight:800; color:var(--brand-primary); text-transform:uppercase; margin-bottom:10px;">Items</p>
+                <p style="font-size:0.65rem; font-weight:800; color:var(--brand-primary); text-transform:uppercase; margin-bottom:10px;">Items (${order.items?.length || 0})</p>
                 <div style="background:white; border:1px solid var(--border-subtle); border-radius:12px; padding:5px 15px; margin-bottom:20px;">
                     ${(order.items || []).map(item => `
-                        <div style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--border-subtle);">
-                            <div style="display:flex; gap:12px;">
-                                <img src="${item.image || 'https://via.placeholder.com/45x60'}" 
+                        <div style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--border-subtle); align-items:center;">
+                            <div style="display:flex; gap:12px; align-items:center;">
+                                <img src="${item.image || 'https://via.placeholder.com/45x60?text=No+Image'}" 
                                      style="width:45px;height:60px;border-radius:10px;object-fit:cover;">
                                 <div>
                                     <b style="font-weight:700; font-size:0.85rem;">${item.name || 'No name'}</b><br>
-                                    <small>${item.size || ''} • Qty: ${item.quantity || 1}</small>
+                                    <small>${item.size || 'One Size'} • Qty: ${item.quantity || 1}</small>
                                 </div>
                             </div>
                             <b style="font-weight:800; font-size:0.9rem;">₹${((item.price || 0) * (item.quantity || 1)).toLocaleString()}</b>
@@ -2320,10 +2753,23 @@
                 </div>
                 <div style="background:white; border:1px solid var(--border-subtle); border-radius:12px; padding:15px;">
                     <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:5px;">
-                        <span>Payment</span><b>${order.paymentMethod || 'Unknown'}</b>
+                        <span>Payment Method</span>
+                        <b>${order.paymentMethod || 'Unknown'}</b>
                     </div>
-                    ${isCod ? `<div style="display:flex; justify-content:space-between; font-size:0.85rem; color:var(--danger-color);"><span>Handling Fee</span><b>+ ₹100</b></div>` : ''}
-                </div>`;
+                    ${isCod ? `
+                        <div style="display:flex; justify-content:space-between; font-size:0.85rem; color:var(--danger-color); margin-bottom:5px;">
+                            <span>Handling Fee</span>
+                            <b>+ ₹100</b>
+                        </div>
+                    ` : ''}
+                    <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:5px;">
+                        <span>Order Status</span>
+                        <b style="color: ${config[order.status]?.color || 'var(--text-color)'}">
+                            ${config[order.status]?.label || order.status || 'Unknown'}
+                        </b>
+                    </div>
+                </div>
+            `;
             
             document.getElementById('dFooter').innerHTML = `
                 <div style="display:flex; justify-content:space-between; align-items:center;">
@@ -2331,178 +2777,77 @@
                     <b style="font-size:1.6rem; color:var(--brand-primary); font-weight:900;">
                         ₹${order.amount?.toLocaleString() || '0'}
                     </b>
-                </div>`;
+                </div>
+            `;
             
             document.getElementById('orderDrawer').classList.add('active');
         }
 
-        function closeConfirmModal() { 
-            document.getElementById('confirmModal').classList.remove('active'); 
+        function closeDrawer() {
+            document.getElementById('orderDrawer').classList.remove('active');
         }
-        
-        function closeDrawer() { 
-            document.getElementById('orderDrawer').classList.remove('active'); 
+
+        // --- UTILITY FUNCTIONS ---
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
         }
-        
-        // --- UI INTERACTIONS ---
-        document.addEventListener('DOMContentLoaded', () => {
-            // Mobile drawer behaviour
-            const mOverlay = document.getElementById('m-overlay');
-            const mMenuToggle = document.getElementById('m-menu-toggle');
-            const mDrawerClose = document.getElementById('m-drawer-close');
 
-            if (mMenuToggle && mOverlay && mDrawerClose) {
-                mMenuToggle.addEventListener('click', () => {
-                    mOverlay.classList.add('open');
-                });
+        function showLoading() {
+            // Loading states are handled in render functions
+        }
 
-                mDrawerClose.addEventListener('click', () => {
-                    mOverlay.classList.remove('open');
-                });
-
-                mOverlay.addEventListener('click', (e) => {
-                    if (e.target === mOverlay) {
-                        mOverlay.classList.remove('open');
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+            
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    ${type === 'success' ? 
+                        '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>' : 
+                        '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>'}
+                </svg>
+                <span>${message}</span>
+            `;
+            
+            container.appendChild(toast);
+            
+            // Auto-remove after 3 seconds
+            setTimeout(() => {
+                toast.style.animation = 'slideUp 0.3s ease reverse';
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.parentNode.removeChild(toast);
                     }
-                });
-            }
+                }, 300);
+            }, 3000);
+        }
 
-            // Desktop Customize Site dropdown
-            const dCustomizeToggle = document.getElementById('d-customize-toggle');
-            const dCustomizeSubmenu = document.getElementById('d-customize-submenu');
-
-            if (dCustomizeToggle && dCustomizeSubmenu) {
-                dCustomizeToggle.addEventListener('click', () => {
-                    dCustomizeSubmenu.classList.toggle('open');
-                    dCustomizeToggle.classList.toggle('dropdown-open');
-                });
-            }
-
-            // Desktop MANAGE ORDERS dropdown
-            const dOrdersToggle = document.getElementById('d-orders-toggle');
-            const dOrdersSubmenu = document.getElementById('d-orders-submenu');
-
-            if (dOrdersToggle && dOrdersSubmenu) {
-                dOrdersToggle.addEventListener('click', () => {
-                    dOrdersSubmenu.classList.toggle('open');
-                    dOrdersToggle.classList.toggle('dropdown-open');
-                });
-            }
-
-            // Mobile Customize Site dropdown
-            const mCustomizeToggle = document.getElementById('m-customize-toggle');
-            const mCustomizeSubmenu = document.getElementById('m-customize-submenu');
-
-            if (mCustomizeToggle && mCustomizeSubmenu) {
-                mCustomizeToggle.addEventListener('click', () => {
-                    mCustomizeSubmenu.classList.toggle('open');
-                    mCustomizeToggle.classList.toggle('dropdown-open');
-                });
-            }
-
-            // Mobile MANAGE ORDERS dropdown
-            const mOrdersToggle = document.getElementById('m-orders-toggle');
-            const mOrdersSubmenu = document.getElementById('m-orders-submenu');
-
-            if (mOrdersToggle && mOrdersSubmenu) {
-                mOrdersToggle.addEventListener('click', () => {
-                    mOrdersSubmenu.classList.toggle('open');
-                    mOrdersToggle.classList.toggle('dropdown-open');
-                });
-            }
-
-            // Profile section
-            const profileSection = document.getElementById('profile-section');
-            const mobileProfileSection = document.getElementById('mobile-profile-section');
-            const profilePopup = document.getElementById('profile-popup');
-
-            // Fix profile popup positioning for desktop - show on LEFT side
-            if (profileSection) {
-                profileSection.addEventListener('click', e => {
-                    e.stopPropagation();
-                    
-                    // Position the popup at the bottom left of the account section for desktop
-                    if (window.innerWidth >= 769) {
-                        const rect = profileSection.getBoundingClientRect();
-                        profilePopup.style.left = '30px';
-                        profilePopup.style.right = 'auto';
-                        profilePopup.style.bottom = '100px';
-                        profilePopup.style.top = 'auto';
-                    }
-                    
-                    profilePopup.classList.toggle('active');
-                });
-                
-                document.addEventListener('click', e => {
-                    if (!profileSection.contains(e.target) && !profilePopup.contains(e.target)) {
-                        profilePopup.classList.remove('active');
-                    }
-                });
-            }
-
-            if (mobileProfileSection) {
-                mobileProfileSection.addEventListener('click', e => {
-                    e.stopPropagation();
-                    profilePopup.classList.toggle('active');
-                });
-            }
-
-            // Close dropdowns when clicking outside
-            document.addEventListener('click', function(e) {
-                // Close profile popup when clicking outside
-                const profilePopup = document.getElementById('profile-popup');
-                const profileSection = document.getElementById('profile-section');
-                const mobileProfileSection = document.getElementById('mobile-profile-section');
-                
-                if (profilePopup && profilePopup.classList.contains('active')) {
-                    if (!profilePopup.contains(e.target) && 
-                        !profileSection?.contains(e.target) && 
-                        !mobileProfileSection?.contains(e.target)) {
-                        profilePopup.classList.remove('active');
-                    }
-                }
-                
-                // Close dropdowns when clicking outside
-                if (!e.target.closest('.status-dropdown') && 
-                    !e.target.closest('.mobile-filter-dropdown') &&
-                    !e.target.closest('.mobile-status-trigger') &&
-                    !e.target.closest('.mobile-status-menu')) {
-                    document.querySelectorAll('.status-dropdown').forEach(d => d.classList.remove('open'));
-                    document.querySelectorAll('.mobile-filter-dropdown').forEach(d => d.classList.remove('open'));
-                    document.querySelectorAll('.mobile-status-menu').forEach(m => m.classList.remove('open'));
-                }
-            });
-
-            // Close popups when pressing Escape key
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape') {
-                    document.getElementById('profile-popup')?.classList.remove('active');
-                    document.querySelectorAll('.status-dropdown').forEach(d => d.classList.remove('open'));
-                    document.querySelectorAll('.mobile-filter-dropdown').forEach(d => d.classList.remove('open'));
-                    document.querySelectorAll('.mobile-status-menu').forEach(m => m.classList.remove('open'));
-                    closeConfirmModal();
-                    closeDrawer();
-                }
-            });
+        // --- WINDOW EVENT HANDLERS ---
+        window.addEventListener('resize', () => {
+            // Close dropdowns on resize
+            closeAllDropdowns();
         });
 
-        // Handle window resize
-        window.addEventListener('resize', function() {
-            if (window.innerWidth <= 768) {
-                document.body.style.overflowX = 'hidden';
-                document.body.style.maxWidth = '100vw';
-            } else {
-                document.body.style.overflowX = '';
-                document.body.style.maxWidth = '';
+        window.onclick = function(e) {
+            if (e.target.id === 'orderDrawer') {
+                closeDrawer();
             }
-            // Re-render on resize to switch between desktop/mobile views
-            setTimeout(() => renderUI(), 100);
-        });
-
-        // Global click handler
-        window.onclick = function(e) { 
-            if(e.target.id === 'orderDrawer') closeDrawer(); 
         };
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            // Additional initialization if needed
+        });
     </script>
 </body>
 </html>
