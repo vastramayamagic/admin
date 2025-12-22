@@ -51,7 +51,10 @@
             overflow-x: hidden;
             width: 100%;
         }
-
+a {
+    text-decoration: none;
+    color: inherit;
+}
         /* ============= DESKTOP LAYOUT ============= */
         .page-desktop {
             min-height: 100vh;
@@ -1326,7 +1329,7 @@
                             </div>
 
                             <!-- Inventory -->
-                            <div class="d-nav-item" onclick="window.location.href='manage-products.html'">
+                            <div class="d-nav-item" onclick="window.location.href='manage-categories.html'">
                                 <span class="icon">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                                          fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1337,7 +1340,19 @@
                                 </span>
                                 <span class="label">Inventory</span>
                             </div>
-
+                            
+                            <!-- Manage Coupons -->
+                            <a href="/manage-coupons.html" class="d-nav-item">
+                                <span class="icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tags-icon lucide-tags">
+                                        <path d="M13.172 2a2 2 0 0 1 1.414.586l6.71 6.71a2.4 2.4 0 0 1 0 3.408l-4.592 4.592a2.4 2.4 0 0 1-3.408 0l-6.71-6.71A2 2 0 0 1 6 9.172V3a1 1 0 0 1 1-1z"/>
+                                        <path d="M2 7v6.172a2 2 0 0 0 .586 1.414l6.71 6.71a2.4 2.4 0 0 0 3.191.193"/>
+                                        <circle cx="10.5" cy="6.5" r=".5" fill="currentColor"/>
+                                    </svg>
+                                </span>
+                                <span class="label">Manage Coupons</span>
+                            </a>
+                            
                             <!-- Customize Site -->
                             <div class="d-nav-item d-nav-item--active" id="d-customize-toggle">
                                 <span class="icon">
@@ -1359,84 +1374,25 @@
                             </div>
 
                             <!-- Desktop Customize Site submenu -->
-                            <div class="d-submenu open" id="d-customize-submenu">
-    <a href="/manage-hero.html" class="d-submenu-item">
+<div class="d-submenu open" id="d-customize-submenu">
+    <a href="/manage-hero.html" class="d-submenu-item ">
         <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8h20"/><rect width="20" height="16" x="2" y="4" rx="2"/><path d="M6 16h12"/></svg>
         <span>Hero Section</span>
     </a>
-
-    <a href="/manage-sections.html" class="d-submenu-item">
+    <a href="/manage-sections.html" class="d-submenu-item ">
         <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/><path d="M14 4h7"/><path d="M14 9h7"/><path d="M14 15h7"/><path d="M14 20h7"/></svg>
         <span>Sections</span>
     </a>
-
     <a href="/manage-hero-popup.html" class="d-submenu-item active">
         <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 21h10"/><rect width="20" height="14" x="2" y="3" rx="2"/></svg>
         <span>Popup</span>
     </a>
-                            </div>
+</div>
 
-                            <!-- MANAGE ORDERS (Missing Menu) -->
-                            <div class="d-nav-item" id="d-orders-toggle">
-                                <span class="icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                         fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
-                                        <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
-                                        <path d="M8 14v2.2l1.6 1"/>
-                                        <circle cx="8" cy="16" r="6"/>
-                                    </svg>
-                                </span>
-                                <span class="label">MANAGE ORDERS</span>
-                                <span class="chevron">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                         fill="none" stroke="currentColor" stroke-width="2"
-                                         stroke-linecap="round" stroke-linejoin="round"
-                                         class="chevron-icon">
-                                        <path d="m9 18 6-6-6-6"/>
-                                    </svg>
-                                </span>
-                            </div>
 
-                            <!-- Desktop MANAGE ORDERS submenu -->
-                            <div class="d-submenu" id="d-orders-submenu">
-                                <div class="d-submenu-item">
-                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M12 6v6l4 2"/>
-                                        <path d="M22 12a10 10 0 1 0-11 9.95"/>
-                                        <path d="m22 16-5.5 5.5L14 19"/>
-                                    </svg>
-                                    <span>Today</span>
-                                </div>
-                                <div class="d-submenu-item">
-                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M8 2v4"/>
-                                        <path d="M16 2v4"/>
-                                        <rect width="18" height="18" x="3" y="4" rx="2"/>
-                                        <path d="M3 10h18"/>
-                                        <path d="M8 14h.01"/>
-                                        <path d="M12 14h.01"/>
-                                        <path d="M16 14h.01"/>
-                                        <path d="M8 18h.01"/>
-                                        <path d="M12 18h.01"/>
-                                        <path d="M16 18h.01"/>
-                                    </svg>
-                                    <span>This Month</span>
-                                </div>
-                                <div class="d-submenu-item">
-                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M12 2v2"/>
-                                        <path d="M15.726 21.01A2 2 0 0 1 14 22H4a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2"/>
-                                        <path d="M18 2v2"/>
-                                        <path d="M2 13h2"/>
-                                        <path d="M8 8h14"/>
-                                        <rect x="8" y="3" width="14" height="14" rx="2"/>
-                                    </svg>
-                                    <span>All Orders</span>
-                                </div>
-                            </div>
                         </div>
                     </nav>
+
 
                     <!-- Desktop Account section -->
                     <div class="d-account-section" id="profile-section">
@@ -1792,7 +1748,7 @@
                     </div>
 
                     <!-- Inventory -->
-                    <div class="m-nav-item" onclick="window.location.href='manage-products.html'; closeMobileMenu()">
+                    <div class="m-nav-item" onclick="window.location.href='manage-categories.html'">
                         <span class="icon">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                                  fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1804,7 +1760,19 @@
                         <span class="label">Inventory</span>
                     </div>
 
-                    <!-- Customize Site -->
+                            <!-- Manage Coupons -->
+                            <a href="/manage-coupons.html" class="m-nav-item">
+                                <span class="icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tags-icon lucide-tags">
+                                        <path d="M13.172 2a2 2 0 0 1 1.414.586l6.71 6.71a2.4 2.4 0 0 1 0 3.408l-4.592 4.592a2.4 2.4 0 0 1-3.408 0l-6.71-6.71A2 2 0 0 1 6 9.172V3a1 1 0 0 1 1-1z"/>
+                                        <path d="M2 7v6.172a2 2 0 0 0 .586 1.414l6.71 6.71a2.4 2.4 0 0 0 3.191.193"/>
+                                        <circle cx="10.5" cy="6.5" r=".5" fill="currentColor"/>
+                                    </svg>
+                                </span>
+                                <span class="label">Manage Coupons</span>
+                            </a>
+                            
+                    <!-- Customize Site with dropdown -->
                     <div class="m-nav-item active" id="m-customize-toggle">
                         <span class="icon">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
@@ -1825,82 +1793,23 @@
                     </div>
 
                     <!-- Mobile Customize Site submenu -->
-                    <div class="m-submenu open" id="m-customize-submenu">
-    <a href="/manage-hero.html" class="m-submenu-item">
+<div class="m-submenu open" id="m-customize-submenu">
+    <a href="/manage-hero.html" class="m-submenu-item ">
         <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8h20"/><rect width="20" height="16" x="2" y="4" rx="2"/><path d="M6 16h12"/></svg>
         <span>Hero Section</span>
     </a>
 
-    <a href="/manage-sections.html" class="m-submenu-item">
+    <a href="/manage-sections.html" class="m-submenu-item active">
         <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/><path d="M14 4h7"/><path d="M14 9h7"/><path d="M14 15h7"/><path d="M14 20h7"/></svg>
         <span>Sections</span>
     </a>
-
     <a href="/manage-hero-popup.html" class="m-submenu-item active">
         <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 21h10"/><rect width="20" height="14" x="2" y="3" rx="2"/></svg>
         <span>Popup</span>
     </a>
-                    </div>
+</div>
 
-                    <!-- MANAGE ORDERS (Missing in mobile) -->
-                    <div class="m-nav-item" id="m-orders-toggle">
-                        <span class="icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
-                                <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
-                                <path d="M8 14v2.2l1.6 1"/>
-                                <circle cx="8" cy="16" r="6"/>
-                            </svg>
-                        </span>
-                        <span class="label">MANAGE ORDERS</span>
-                        <span class="chevron">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                 fill="none" stroke="currentColor" stroke-width="2"
-                                 stroke-linecap="round" stroke-linejoin="round"
-                                 class="chevron-icon">
-                                <path d="m9 18 6-6-6-6"/>
-                            </svg>
-                        </span>
-                    </div>
 
-                    <!-- Mobile MANAGE ORDERS submenu -->
-                    <div class="m-submenu" id="m-orders-submenu">
-                        <div class="m-submenu-item">
-                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M12 6v6l4 2"/>
-                                <path d="M22 12a10 10 0 1 0-11 9.95"/>
-                                <path d="m22 16-5.5 5.5L14 19"/>
-                            </svg>
-                            <span>Today</span>
-                        </div>
-                        <div class="m-submenu-item">
-                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M8 2v4"/>
-                                <path d="M16 2v4"/>
-                                <rect width="18" height="18" x="3" y="4" rx="2"/>
-                                <path d="M3 10h18"/>
-                                <path d="M8 14h.01"/>
-                                <path d="M12 14h.01"/>
-                                <path d="M16 14h.01"/>
-                                <path d="M8 18h.01"/>
-                                <path d="M12 18h.01"/>
-                                <path d="M16 18h.01"/>
-                            </svg>
-                            <span>This Month</span>
-                        </div>
-                        <div class="m-submenu-item">
-                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M12 2v2"/>
-                                <path d="M15.726 21.01A2 2 0 0 1 14 22H4a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2"/>
-                                <path d="M18 2v2"/>
-                                <path d="M2 13h2"/>
-                                <path d="M8 8h14"/>
-                                <rect x="8" y="3" width="14" height="14" rx="2"/>
-                            </svg>
-                            <span>All Orders</span>
-                        </div>
-                    </div>
                 </nav>
 
                 <!-- Mobile account section - FIXED: At bottom of drawer -->
