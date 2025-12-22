@@ -25,7 +25,6 @@
             --brand-gradient: linear-gradient(135deg, #5127ba 0%, #673de6 100%);
             --danger-color: #ef4444;
             --success-color: #10B981;
-            --warning-color: #F59E0B;
             --switch-on: #5127ba;
             --switch-off: #9CA3AF;
             --shadow-premium: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
@@ -192,16 +191,11 @@
             background: var(--active-bg);
         }
 
-        .d-submenu-item .submenu-icon {
-            width: 18px;
-            height: 18px;
-            stroke: #6b7280;
-        }
         .d-submenu a,
-.m-submenu a {
-    text-decoration: none !important;
-    color: inherit !important;
-}
+        .m-submenu a {
+            text-decoration: none !important;
+            color: inherit !important;
+        }
 
         /* Desktop account section */
         .d-account-section {
@@ -347,9 +341,6 @@
         .card-header {
             padding: 24px 20px;
             border-bottom: 1px solid #e5e7eb;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
         }
 
         .search-input-wrap {
@@ -363,7 +354,6 @@
             gap: 8px;
             transition: border-color 0.15s ease;
             width: 100%;
-            max-width: 400px;
         }
 
         .search-input-wrap:focus-within {
@@ -394,7 +384,6 @@
             overflow: visible !important;
         }
 
-        /* Force table to have proper stacking context */
         .coupon-table {
             width: 100%;
             border-collapse: collapse;
@@ -410,7 +399,6 @@
         .coupon-table td {
             padding: 12px 20px;
             vertical-align: middle;
-            text-align: left;
         }
 
         .coupon-table thead th {
@@ -425,19 +413,13 @@
 
         /* Status column */
         .th-status {
-            width: 100px;
-            text-align: center;
+            width: 120px;
+            text-align: left;
         }
 
         .td-status {
-            width: 100px;
-            text-align: center;
-        }
-
-        /* Discount column */
-        .td-discount {
-            font-weight: 700;
-            color: var(--brand-primary);
+            width: 120px;
+            text-align: left;
         }
 
         .coupon-table tbody tr {
@@ -449,53 +431,47 @@
         }
 
         .coupon-code {
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
             font-weight: 600;
             font-size: 14px;
             line-height: 24px;
             color: rgb(29, 30, 32);
-            white-space: nowrap;
-            font-family: 'Courier New', monospace;
-            background: #f3f4f6;
-            padding: 4px 8px;
-            border-radius: 4px;
+            padding: 6px 12px;
+            background: #f9f5ff;
+            border: 1px solid #e9d7fe;
+            border-radius: 6px;
             display: inline-block;
         }
 
-        .coupon-details {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .coupon-type {
-            font-size: 12px;
-            color: #6b7280;
-            font-weight: 500;
-        }
-
-        .coupon-expiry {
-            font-size: 12px;
-            color: #9ca3af;
-        }
-
-        .coupon-usage {
-            font-size: 13px;
+        .coupon-details,
+        .coupon-usage,
+        .coupon-expiry,
+        .coupon-actions {
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 24px;
             color: rgb(59, 61, 74);
         }
 
+        .coupon-discount {
+            font-weight: 600;
+            font-size: 16px;
+            color: var(--brand-primary);
+        }
+
         .usage-bar {
-            height: 4px;
+            width: 100%;
+            height: 6px;
             background: #e5e7eb;
-            border-radius: 2px;
-            margin-top: 4px;
+            border-radius: 3px;
             overflow: hidden;
+            margin-top: 4px;
         }
 
         .usage-fill {
             height: 100%;
             background: var(--brand-primary);
-            border-radius: 2px;
-            transition: width 0.3s ease;
+            border-radius: 3px;
         }
 
         .action-buttons {
@@ -647,7 +623,7 @@
         .status-toggle {
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             width: 100%;
         }
 
@@ -697,33 +673,6 @@
             transform: translateX(20px);
         }
 
-        /* Status badges */
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            padding: 4px 8px;
-            border-radius: 999px;
-            font-size: 12px;
-            font-weight: 600;
-            white-space: nowrap;
-        }
-
-        .status-active {
-            background: #DCFCE7;
-            color: #16A34A;
-        }
-
-        .status-inactive {
-            background: #FEF2F2;
-            color: #DC2626;
-        }
-
-        .status-expired {
-            background: #FEF3C7;
-            color: #D97706;
-        }
-
         /* ============= SKELETON LOADING ============= */
         .skeleton-loading {
             pointer-events: none;
@@ -760,12 +709,6 @@
             padding: 12px 20px;
         }
 
-        .skeleton-code {
-            height: 24px;
-            width: 100px;
-            border-radius: 4px;
-        }
-
         .skeleton-text {
             height: 20px;
             width: 120px;
@@ -776,11 +719,16 @@
             width: 80px;
         }
 
+        .skeleton-text-code {
+            height: 24px;
+            width: 100px;
+            border-radius: 6px;
+        }
+
         .skeleton-toggle {
             width: 44px;
             height: 24px;
             border-radius: 24px;
-            margin: 0 auto;
         }
 
         .skeleton-button {
@@ -805,7 +753,7 @@
             align-items: center;
             gap: 12px;
             width: 100%;
-            height: 120px;
+            height: 88px;
         }
 
         .skeleton-mobile-content {
@@ -1264,7 +1212,7 @@
             border: 1px solid #e5e7eb;
             padding: 16px;
             display: flex;
-            flex-direction: column;
+            align-items: center;
             gap: 12px;
             transition: all 0.2s ease;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
@@ -1278,76 +1226,43 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
 
-        .coupon-card-header {
+        .coupon-card-content {
+            flex: 1;
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
+            flex-direction: column;
+            gap: 6px;
+            min-width: 0;
         }
 
         .coupon-card-code {
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
             font-weight: 700;
-            font-size: 18px;
+            font-size: 16px;
             line-height: 24px;
-            color: rgb(29, 30, 32);
-            font-family: 'Courier New', monospace;
-            background: #f3f4f6;
-            padding: 6px 12px;
-            border-radius: 8px;
-            flex: 1;
-        }
-
-        .coupon-card-status {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            padding: 4px 8px;
-            border-radius: 999px;
-            font-size: 12px;
-            font-weight: 600;
+            color: var(--brand-primary);
             white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px;
         }
 
         .coupon-card-details {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .coupon-card-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .coupon-card-label {
-            font-size: 13px;
-            color: #6b7280;
             font-weight: 500;
-        }
-
-        .coupon-card-value {
-            font-weight: 600;
             font-size: 14px;
-            color: rgb(29, 30, 32);
+            line-height: 18px;
+            color: #6b7280;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .coupon-card-discount {
-            font-weight: 700;
-            color: var(--brand-primary);
-        }
-
-        .coupon-card-usage {
-            font-size: 13px;
-            color: rgb(59, 61, 74);
-        }
-
+        /* Mobile card actions */
         .coupon-card-actions {
             display: flex;
             align-items: center;
-            justify-content: space-between;
             gap: 12px;
-            margin-top: 8px;
+            margin-left: auto;
+            flex-shrink: 0;
         }
 
         .mobile-status-toggle {
@@ -1539,7 +1454,7 @@
             margin: 0 auto 20px auto;
         }
 
-        /* --- MODAL STYLES --- */
+        /* MODAL STYLES */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -1558,7 +1473,7 @@
         .modal-content {
             background: white;
             width: 100%;
-            max-width: 500px;
+            max-width: 480px;
             border-radius: var(--radius-lg);
             box-shadow: var(--shadow-premium);
             display: flex;
@@ -1651,30 +1566,6 @@
             outline: none;
         }
 
-        .form-select {
-            width: 100%;
-            padding: 0.875rem 1rem;
-            border: 1px solid #e5e7eb;
-            border-radius: var(--radius-md);
-            background: white;
-            transition: all 0.15s ease;
-            font-family: "DM Sans", Roboto, sans-serif;
-            font-size: 0.95rem;
-            cursor: pointer;
-        }
-
-        .form-select:focus {
-            border-color: var(--brand-primary);
-            box-shadow: 0 0 0 3px rgba(81, 39, 186, 0.1);
-            outline: none;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-
         /* Updated button styles */
         .btn {
             display: inline-flex;
@@ -1756,6 +1647,61 @@
             transform: translateY(-1px);
         }
 
+        /* Select dropdown */
+        .custom-select {
+            position: relative;
+            width: 100%;
+        }
+
+        .select-header {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: var(--radius-md);
+            background: white;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.95rem;
+        }
+
+        .select-options {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: var(--radius-md);
+            margin-top: 4px;
+            box-shadow: var(--shadow-premium);
+            z-index: 1000;
+            display: none;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .select-options.open {
+            display: block;
+        }
+
+        .select-option {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+
+        .select-option:hover {
+            background: #f9fafb;
+        }
+
+        .select-option.selected {
+            background: #f3f4f6;
+            font-weight: 600;
+            color: var(--brand-primary);
+        }
+
         /* Toast */
         #toast-container {
             position: fixed;
@@ -1820,7 +1766,7 @@
             transform: translateY(0);
         }
 
-        /* Desktop positioning - FIXED: Show on LEFT side */
+        /* Desktop positioning */
         @media (min-width: 769px) {
             .profile-popup {
                 left: 30px !important;
@@ -1984,7 +1930,7 @@
             .page-mobile { display: none; }
             
             /* Fix desktop popup z-index */
-            .coupon-table td:last-child {
+            .coupon-actions {
                 position: relative;
             }
             
@@ -2075,24 +2021,20 @@
                             </div>
 
                             <!-- Desktop Customize Site submenu -->
-<div class="d-submenu" id="d-customize-submenu">
-
-    <a href="/manage-hero.html" class="d-submenu-item">
-        <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8h20"/><rect width="20" height="16" x="2" y="4" rx="2"/><path d="M6 16h12"/></svg>
-        <span>Hero Section</span>
-    </a>
-
-    <a href="/manage-sections.html" class="d-submenu-item">
-        <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/><path d="M14 4h7"/><path d="M14 9h7"/><path d="M14 15h7"/><path d="M14 20h7"/></svg>
-        <span>Sections</span>
-    </a>
-
-    <a href="/manage-hero-popup.html" class="d-submenu-item">
-        <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 21h10"/><rect width="20" height="14" x="2" y="3" rx="2"/></svg>
-        <span>Popup</span>
-    </a>
-
-</div>
+                            <div class="d-submenu" id="d-customize-submenu">
+                                <a href="/manage-hero.html" class="d-submenu-item">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8h20"/><rect width="20" height="16" x="2" y="4" rx="2"/><path d="M6 16h12"/></svg>
+                                    <span>Hero Section</span>
+                                </a>
+                                <a href="/manage-sections.html" class="d-submenu-item">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/><path d="M14 4h7"/><path d="M14 9h7"/><path d="M14 15h7"/><path d="M14 20h7"/></svg>
+                                    <span>Sections</span>
+                                </a>
+                                <a href="/manage-hero-popup.html" class="d-submenu-item">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 21h10"/><rect width="20" height="14" x="2" y="3" rx="2"/></svg>
+                                    <span>Popup</span>
+                                </a>
+                            </div>
 
                             <!-- MANAGE ORDERS -->
                             <div class="d-nav-item" id="d-orders-toggle">
@@ -2213,7 +2155,7 @@
                                     <circle cx="11" cy="11" r="7"></circle>
                                     <line x1="16.65" y1="16.65" x2="21" y2="21"></line>
                                 </svg>
-                                <input type="text" id="search-input" placeholder="Search coupons by code..." />
+                                <input type="text" id="search-input" placeholder="Search coupons..." />
                             </div>
                         </div>
 
@@ -2221,9 +2163,11 @@
                             <table class="coupon-table">
                                 <thead>
                                     <tr>
-                                        <th>Coupon Details</th>
-                                        <th>Discount</th>
+                                        <th>Coupon Code</th>
+                                        <th>Discount Type</th>
+                                        <th>Discount Value</th>
                                         <th>Usage / Limit</th>
+                                        <th>Expiry Date</th>
                                         <th class="th-status">Status</th>
                                         <th>Actions</th>
                                     </tr>
@@ -2232,14 +2176,19 @@
                                     <!-- Skeleton loading for desktop -->
                                     <tr class="desktop-skeleton-row">
                                         <td>
-                                            <div class="skeleton skeleton-code"></div>
-                                            <div class="skeleton skeleton-text-small" style="margin-top: 8px; width: 150px;"></div>
+                                            <div class="skeleton skeleton-text-code"></div>
                                         </td>
                                         <td>
                                             <div class="skeleton skeleton-text"></div>
                                         </td>
                                         <td>
+                                            <div class="skeleton skeleton-text-small"></div>
+                                        </td>
+                                        <td>
                                             <div class="skeleton skeleton-text"></div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-text-small"></div>
                                         </td>
                                         <td>
                                             <div class="skeleton skeleton-toggle"></div>
@@ -2253,35 +2202,19 @@
                                     </tr>
                                     <tr class="desktop-skeleton-row">
                                         <td>
-                                            <div class="skeleton skeleton-code"></div>
-                                            <div class="skeleton skeleton-text-small" style="margin-top: 8px; width: 150px;"></div>
+                                            <div class="skeleton skeleton-text-code"></div>
                                         </td>
                                         <td>
                                             <div class="skeleton skeleton-text"></div>
                                         </td>
                                         <td>
-                                            <div class="skeleton skeleton-text"></div>
-                                        </td>
-                                        <td>
-                                            <div class="skeleton skeleton-toggle"></div>
-                                        </td>
-                                        <td>
-                                            <div class="action-buttons">
-                                                <div class="skeleton skeleton-button"></div>
-                                                <div class="skeleton skeleton-kebab"></div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr class="desktop-skeleton-row">
-                                        <td>
-                                            <div class="skeleton skeleton-code"></div>
-                                            <div class="skeleton skeleton-text-small" style="margin-top: 8px; width: 150px;"></div>
+                                            <div class="skeleton skeleton-text-small"></div>
                                         </td>
                                         <td>
                                             <div class="skeleton skeleton-text"></div>
                                         </td>
                                         <td>
-                                            <div class="skeleton skeleton-text"></div>
+                                            <div class="skeleton skeleton-text-small"></div>
                                         </td>
                                         <td>
                                             <div class="skeleton skeleton-toggle"></div>
@@ -2347,7 +2280,7 @@
                                     <circle cx="11" cy="11" r="7"></circle>
                                     <line x1="16.65" y1="16.65" x2="21" y2="21"></line>
                                 </svg>
-                                <input type="text" id="mobile-search-input" placeholder="Search coupons by code..." />
+                                <input type="text" id="mobile-search-input" placeholder="Search coupons..." />
                             </div>
                         </div>
                         <button class="mobile-add-btn" onclick="openAddModal()">
@@ -2367,9 +2300,8 @@
                     <!-- Skeleton loading for mobile -->
                     <div class="mobile-skeleton-card">
                         <div class="skeleton-mobile-content">
-                            <div class="skeleton skeleton-mobile-title" style="width: 120px;"></div>
-                            <div class="skeleton skeleton-mobile-subtitle" style="width: 180px;"></div>
-                            <div class="skeleton skeleton-mobile-subtitle" style="width: 150px;"></div>
+                            <div class="skeleton skeleton-mobile-title"></div>
+                            <div class="skeleton skeleton-mobile-subtitle"></div>
                         </div>
                         <div class="coupon-card-actions">
                             <div class="skeleton skeleton-mobile-toggle"></div>
@@ -2378,20 +2310,8 @@
                     </div>
                     <div class="mobile-skeleton-card">
                         <div class="skeleton-mobile-content">
-                            <div class="skeleton skeleton-mobile-title" style="width: 120px;"></div>
-                            <div class="skeleton skeleton-mobile-subtitle" style="width: 180px;"></div>
-                            <div class="skeleton skeleton-mobile-subtitle" style="width: 150px;"></div>
-                        </div>
-                        <div class="coupon-card-actions">
-                            <div class="skeleton skeleton-mobile-toggle"></div>
-                            <div class="skeleton skeleton-mobile-menu"></div>
-                        </div>
-                    </div>
-                    <div class="mobile-skeleton-card">
-                        <div class="skeleton-mobile-content">
-                            <div class="skeleton skeleton-mobile-title" style="width: 120px;"></div>
-                            <div class="skeleton skeleton-mobile-subtitle" style="width: 180px;"></div>
-                            <div class="skeleton skeleton-mobile-subtitle" style="width: 150px;"></div>
+                            <div class="skeleton skeleton-mobile-title"></div>
+                            <div class="skeleton skeleton-mobile-subtitle"></div>
                         </div>
                         <div class="coupon-card-actions">
                             <div class="skeleton skeleton-mobile-toggle"></div>
@@ -2476,25 +2396,20 @@
                     </div>
 
                     <!-- Mobile Customize Site submenu -->
-<div class="m-submenu" id="m-customize-submenu">
-
-    <a href="/manage-hero.html" class="m-submenu-item">
-        <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8h20"/><rect width="20" height="16" x="2" y="4" rx="2"/><path d="M6 16h12"/></svg>
-        <span>Hero Section</span>
-    </a>
-
-    <a href="/manage-sections.html" class="m-submenu-item">
-        <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/><path d="M14 4h7"/><path d="M14 9h7"/><path d="M14 15h7"/><path d="M14 20h7"/></svg>
-        <span>Sections</span>
-    </a>
-
-    <a href="/manage-hero-popup.html" class="m-submenu-item">
-        <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 21h10"/><rect width="20" height="14" x="2" y="3" rx="2"/></svg>
-        <span>Popup</span>
-    </a>
-
-</div>
-
+                    <div class="m-submenu" id="m-customize-submenu">
+                        <a href="/manage-hero.html" class="m-submenu-item">
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8h20"/><rect width="20" height="16" x="2" y="4" rx="2"/><path d="M6 16h12"/></svg>
+                            <span>Hero Section</span>
+                        </a>
+                        <a href="/manage-sections.html" class="m-submenu-item">
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/><path d="M14 4h7"/><path d="M14 9h7"/><path d="M14 15h7"/><path d="M14 20h7"/></svg>
+                            <span>Sections</span>
+                        </a>
+                        <a href="/manage-hero-popup.html" class="m-submenu-item">
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 21h10"/><rect width="20" height="14" x="2" y="3" rx="2"/></svg>
+                            <span>Popup</span>
+                        </a>
+                    </div>
 
                     <!-- MANAGE ORDERS with dropdown -->
                     <div class="m-nav-item" id="m-orders-toggle">
@@ -2662,55 +2577,49 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label class="form-label">Coupon Code</label>
-                        <input type="text" class="form-input" id="coupon-code-input" required placeholder="e.g. SAVE20" oninput="this.value = this.value.toUpperCase()">
+                        <input type="text" class="form-input" id="coupon-code-input" required placeholder="e.g. SUMMER25" oninput="this.value = this.value.toUpperCase()">
                     </div>
                     
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">Discount Type</label>
-                            <select class="form-select" id="discount-type-select" required>
-                                <option value="percentage">Percentage (%)</option>
-                                <option value="fixed">Fixed Amount (₹)</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" id="discount-value-label">Discount Value (%)</label>
-                            <input type="number" class="form-input" id="discount-value-input" required placeholder="e.g. 20" min="1" max="100">
+                    <div class="form-group">
+                        <label class="form-label">Discount Type</label>
+                        <div class="custom-select">
+                            <div class="select-header" id="type-select-header" onclick="toggleSelect('type-select')">
+                                <span id="type-label">Percentage (%)</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="m6 9 6 6 6-6"/>
+                                </svg>
+                            </div>
+                            <div class="select-options" id="type-select">
+                                <div class="select-option" onclick="selectOption('type-select', 'Percentage (%)')">Percentage (%)</div>
+                                <div class="select-option" onclick="selectOption('type-select', 'Flat Amount (₹)')">Flat Amount (₹)</div>
+                            </div>
                         </div>
                     </div>
-                    
-                    <div class="form-row">
+
+                    <div class="form-group">
+                        <label class="form-label">Discount Value</label>
+                        <input type="number" class="form-input" id="coupon-value-input" required placeholder="e.g. 25 for 25% or ₹500">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
                         <div class="form-group">
                             <label class="form-label">Total Usage Limit</label>
-                            <input type="number" class="form-input" id="total-limit-input" required placeholder="e.g. 100" min="1">
+                            <input type="number" class="form-input" id="coupon-limit-input" required placeholder="e.g. 100">
                         </div>
                         <div class="form-group">
                             <label class="form-label">Per User Limit</label>
-                            <input type="number" class="form-input" id="user-limit-input" required placeholder="e.g. 1" min="1">
+                            <input type="number" class="form-input" id="coupon-user-limit-input" value="1" placeholder="e.g. 1">
                         </div>
                     </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Minimum Order Amount (₹)</label>
-                        <input type="number" class="form-input" id="min-order-input" placeholder="e.g. 500" min="0">
-                    </div>
-                    
+
                     <div class="form-group">
                         <label class="form-label">Expiry Date</label>
-                        <input type="date" class="form-input" id="expiry-date-input">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Status</label>
-                        <select class="form-select" id="status-select" required>
-                            <option value="active">Active</option>
-                            <option value="inactive">Inactive</option>
-                        </select>
+                        <input type="date" class="form-input" id="coupon-expiry-input">
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-                    <button type="submit" class="btn btn-primary" id="modal-submit-btn">Save Coupon</button>
+                    <button type="submit" class="btn btn-primary" id="modal-submit-btn">Create Coupon</button>
                 </div>
             </form>
         </div>
@@ -2732,13 +2641,12 @@
                 <p style="color: #6b7280; margin-bottom: 1rem; font-size: 0.95rem;">Are you sure you want to delete coupon <strong id="del-coupon-code" style="color: rgb(29, 30, 32);"></strong>? This action cannot be undone.</p>
                 <div class="form-group">
                     <label class="form-label">Type coupon code to confirm</label>
-                    <input type="text" class="form-input" id="confirm-del-input" placeholder="Coupon Code">
+                    <input type="text" class="form-input" id="confirm-del-input" placeholder="Coupon Code" oninput="this.value = this.value.toUpperCase()">
                 </div>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" onclick="closeDeleteModal()">Cancel</button>
-                    <button class="btn btn-danger" id="confirm-del-btn" disabled>Delete</button>
-                </div>
+                <button class="btn btn-danger" id="confirm-del-btn" disabled>Delete</button>
             </div>
         </div>
     </div>
@@ -2748,6 +2656,8 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+    <script src='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css'></script>
 
     <script>
         // --- UI INTERACTIONS ---
@@ -2827,7 +2737,9 @@
                 profileSection.addEventListener('click', e => {
                     e.stopPropagation();
                     
+                    // Position the popup at the bottom left of the account section for desktop
                     if (window.innerWidth >= 769) {
+                        const rect = profileSection.getBoundingClientRect();
                         profilePopup.style.left = '30px';
                         profilePopup.style.right = 'auto';
                         profilePopup.style.bottom = '100px';
@@ -2869,62 +2781,56 @@
                 });
             }
 
-            // Discount type change handler
-            const discountTypeSelect = document.getElementById('discount-type-select');
-            const discountValueLabel = document.getElementById('discount-value-label');
-            
-            if (discountTypeSelect) {
-                discountTypeSelect.addEventListener('change', function() {
-                    if (this.value === 'percentage') {
-                        discountValueLabel.textContent = 'Discount Value (%)';
-                        document.getElementById('discount-value-input').max = 100;
-                        document.getElementById('discount-value-input').placeholder = 'e.g. 20';
-                    } else {
-                        discountValueLabel.textContent = 'Discount Amount (₹)';
-                        document.getElementById('discount-value-input').max = 999999;
-                        document.getElementById('discount-value-input').placeholder = 'e.g. 200';
-                    }
-                });
-            }
-
-            // Close popups when clicking outside
-            document.addEventListener('click', function(e) {
-                // Close profile popup when clicking outside
-                const profilePopup = document.getElementById('profile-popup');
-                const profileSection = document.getElementById('profile-section');
-                const mobileProfileSection = document.getElementById('mobile-profile-section');
-                
-                if (profilePopup && profilePopup.classList.contains('active')) {
-                    if (!profilePopup.contains(e.target) && 
-                        !profileSection?.contains(e.target) && 
-                        !mobileProfileSection?.contains(e.target)) {
-                        profilePopup.classList.remove('active');
-                    }
-                }
-                
-                // Close desktop popups when clicking outside
-                document.querySelectorAll('.desktop-popup').forEach(popup => {
-                    if (popup.classList.contains('open') && 
-                        !popup.contains(e.target) && 
-                        !e.target.closest('.kebab')) {
-                        popup.classList.remove('open');
-                    }
-                });
-            });
-
-            // Close popups when pressing Escape key
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape') {
-                    document.getElementById('profile-popup')?.classList.remove('active');
-                    document.querySelectorAll('.desktop-popup').forEach(popup => {
-                        popup.classList.remove('open');
+            // Close select dropdowns when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.custom-select')) {
+                    document.querySelectorAll('.select-options').forEach(select => {
+                        select.classList.remove('open');
                     });
-                    closeAdvancedMenu();
-                    closeModal();
-                    closeDeleteModal();
                 }
             });
+
+            // Prevent horizontal scrolling on mobile
+            if (window.innerWidth <= 768) {
+                document.body.style.overflowX = 'hidden';
+                document.body.style.maxWidth = '100vw';
+            }
         });
+
+        function toggleSelect(selectId) {
+            const select = document.getElementById(selectId);
+            const isOpen = select.classList.contains('open');
+            
+            // Close all other selects
+            document.querySelectorAll('.select-options').forEach(s => {
+                if (s.id !== selectId) {
+                    s.classList.remove('open');
+                }
+            });
+            
+            // Toggle current select
+            select.classList.toggle('open');
+        }
+
+        function selectOption(selectId, value) {
+            const select = document.getElementById(selectId);
+            const headerId = selectId.replace('select', 'select-header');
+            const labelId = selectId.replace('-select', '-label');
+            
+            // Update label
+            document.getElementById(labelId).textContent = value;
+            
+            // Remove selected class from all options
+            select.querySelectorAll('.select-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked option
+            event.target.classList.add('selected');
+            
+            // Close select
+            select.classList.remove('open');
+        }
 
         // Handle window resize
         window.addEventListener('resize', function() {
@@ -2935,12 +2841,6 @@
                 document.body.style.overflowX = '';
                 document.body.style.maxWidth = '';
             }
-            
-            // Close popups on resize
-            document.getElementById('profile-popup')?.classList.remove('active');
-            document.querySelectorAll('.desktop-popup').forEach(popup => {
-                popup.classList.remove('open');
-            });
         });
 
         // --- FIREBASE CONFIG ---
@@ -2963,10 +2863,9 @@
         let editingId = null;
         let deletingId = null;
         let deletingCode = null;
-        let currentMenuCouponId = null;
         let isLoading = true;
 
-        // Firestore path: Coupon -> Coupon -> List
+        // Firestore reference for coupons
         const couponRef = db.collection('Coupon').doc('Coupon').collection('List');
 
         auth.onAuthStateChanged(user => {
@@ -3000,15 +2899,19 @@
 
         async function loadCoupons() {
             try {
+                // Show skeleton loading initially
                 isLoading = true;
                 
-                const couponSnap = await couponRef.orderBy('createdAt', 'desc').get();
-                allCoupons = couponSnap.docs.map(doc => { 
+                const snapshot = await couponRef.orderBy('createdAt', 'desc').get();
+                allCoupons = snapshot.docs.map(doc => { 
                     const data = doc.data();
                     return { 
                         id: doc.id, 
                         ...data,
-                        active: data.active !== undefined ? data.active : true
+                        active: data.active !== undefined ? data.active : true,
+                        used: data.used || 0,
+                        limit: data.limit || 100,
+                        userLimit: data.userLimit || 1
                     };
                 });
                 
@@ -3036,7 +2939,7 @@
             if(list.length === 0) {
                 desktopTable.innerHTML = `
                     <tr>
-                        <td colspan="5" class="empty-state">
+                        <td colspan="7" class="empty-state">
                             <h3>No Coupons Found</h3>
                             <p>Create a new coupon to get started.</p>
                         </td>
@@ -3047,38 +2950,36 @@
             
             // Desktop table rows
             desktopTable.innerHTML = list.map(coupon => {
-                const usagePercentage = coupon.limit > 0 ? Math.min(100, ((coupon.used || 0) / coupon.limit) * 100) : 0;
-                const isExpired = coupon.expiry && new Date(coupon.expiry) < new Date();
-                const statusClass = isExpired ? 'status-expired' : (coupon.active ? 'status-active' : 'status-inactive');
-                const statusText = isExpired ? 'Expired' : (coupon.active ? 'Active' : 'Inactive');
+                const usagePercentage = coupon.limit > 0 ? Math.min(100, (coupon.used / coupon.limit) * 100) : 0;
+                const discountText = coupon.type === 'Percentage (%)' ? `${coupon.value}%` : `₹${coupon.value}`;
+                const expiryText = coupon.expiry ? new Date(coupon.expiry).toLocaleDateString() : 'No expiry';
                 
                 return `
                 <tr>
                     <td>
-                        <div class="coupon-details">
-                            <span class="coupon-code">${coupon.code}</span>
-                            <span class="coupon-type">${coupon.type || 'Percentage Discount'}</span>
-                            <span class="coupon-expiry">${coupon.expiry ? `Expires: ${formatDate(coupon.expiry)}` : 'No expiry'}</span>
-                        </div>
+                        <div class="coupon-code">${coupon.code}</div>
                     </td>
-                    <td class="td-discount">
-                        ${coupon.type && coupon.type.includes('Percentage') || !coupon.type ? `${coupon.value}%` : `₹${coupon.value}`}
-                    </td>
-                    <td>
-                        <div class="coupon-usage">
-                            ${coupon.used || 0} / ${coupon.limit || '∞'} used
-                            ${coupon.userLimit ? `<br><small>${coupon.userLimit} per user</small>` : ''}
-                        </div>
+                    <td class="coupon-details">${coupon.type}</td>
+                    <td class="coupon-discount">${discountText}</td>
+                    <td class="coupon-usage">
+                        <div>${coupon.used} / ${coupon.limit} uses</div>
                         <div class="usage-bar">
                             <div class="usage-fill" style="width: ${usagePercentage}%"></div>
                         </div>
+                        <div style="font-size: 12px; color: #6b7280; margin-top: 2px;">${coupon.userLimit} per user</div>
                     </td>
+                    <td class="coupon-expiry">${expiryText}</td>
                     <td class="td-status">
-                        <span class="status-badge ${statusClass}">${statusText}</span>
+                        <div class="status-toggle">
+                            <label class="toggle-switch">
+                                <input type="checkbox" ${coupon.active ? 'checked' : ''} 
+                                       onchange="toggleCouponStatus('${coupon.id}', this.checked)">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
                     </td>
-                    <td>
+                    <td class="coupon-actions">
                         <div class="action-buttons">
-                            <button class="btn-secondary" onclick="openEditModal('${coupon.id}')">Edit</button>
                             <div class="popup-container">
                                 <div class="kebab" data-coupon-id="${coupon.id}">
                                     <span class="kebab-dots"></span>
@@ -3107,41 +3008,25 @@
                         </div>
                     </td>
                 </tr>
-                `;
-            }).join('');
+            `}).join('');
             
             // Mobile cards
             mobileCards.innerHTML = list.map(coupon => {
-                const isExpired = coupon.expiry && new Date(coupon.expiry) < new Date();
-                const statusClass = isExpired ? 'status-expired' : (coupon.active ? 'status-active' : 'status-inactive');
-                const statusText = isExpired ? 'Expired' : (coupon.active ? 'Active' : 'Inactive');
+                const discountText = coupon.type === 'Percentage (%)' ? `${coupon.value}%` : `₹${coupon.value}`;
+                const expiryText = coupon.expiry ? new Date(coupon.expiry).toLocaleDateString() : 'No expiry';
                 
                 return `
                 <div class="coupon-card-mobile">
-                    <div class="coupon-card-header">
+                    <div class="coupon-card-content">
                         <div class="coupon-card-code">${coupon.code}</div>
-                        <span class="coupon-card-status ${statusClass}">${statusText}</span>
-                    </div>
-                    <div class="coupon-card-details">
-                        <div class="coupon-card-row">
-                            <span class="coupon-card-label">Discount:</span>
-                            <span class="coupon-card-value coupon-card-discount">
-                                ${coupon.type && coupon.type.includes('Percentage') || !coupon.type ? `${coupon.value}%` : `₹${coupon.value}`}
-                            </span>
-                        </div>
-                        <div class="coupon-card-row">
-                            <span class="coupon-card-label">Usage:</span>
-                            <span class="coupon-card-value">${coupon.used || 0} / ${coupon.limit || '∞'}</span>
-                        </div>
-                        <div class="coupon-card-row">
-                            <span class="coupon-card-label">Expires:</span>
-                            <span class="coupon-card-value">${coupon.expiry ? formatDate(coupon.expiry) : 'Never'}</span>
+                        <div class="coupon-card-details">
+                            ${discountText} • ${coupon.used}/${coupon.limit} uses • Exp: ${expiryText}
                         </div>
                     </div>
                     <div class="coupon-card-actions">
                         <div class="mobile-status-toggle">
                             <label class="toggle-switch">
-                                <input type="checkbox" ${coupon.active && !isExpired ? 'checked' : ''} 
+                                <input type="checkbox" ${coupon.active ? 'checked' : ''} 
                                        onchange="toggleCouponStatus('${coupon.id}', this.checked)">
                                 <span class="toggle-slider"></span>
                             </label>
@@ -3151,10 +3036,9 @@
                         </button>
                     </div>
                 </div>
-                `;
-            }).join('');
+            `}).join('');
             
-            // FIXED: Desktop popup positioning
+            // Desktop popup positioning
             document.querySelectorAll('.kebab').forEach(kebab => {
                 kebab.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -3215,14 +3099,14 @@
                 btn.addEventListener('click', (e) => {
                     e.stopPropagation();
                     e.preventDefault();
-                    currentMenuCouponId = btn.getAttribute('data-coupon-id');
-                    const coupon = allCoupons.find(c => c.id === currentMenuCouponId);
+                    const couponId = btn.getAttribute('data-coupon-id');
+                    const coupon = allCoupons.find(c => c.id === couponId);
                     
                     if (!coupon) return;
                     
                     // Set up the mobile menu buttons
                     document.getElementById('mobile-edit-btn').onclick = () => {
-                        openEditModal(currentMenuCouponId);
+                        openEditModal(couponId);
                         closeAdvancedMenu();
                     };
                     
@@ -3236,14 +3120,28 @@
             });
         }
 
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            return date.toLocaleDateString('en-US', { 
-                year: 'numeric', 
-                month: 'short', 
-                day: 'numeric' 
-            });
+        function openAdvancedMenu() {
+            document.getElementById('advanced-menu').classList.add('open');
+            document.getElementById('advanced-menu-overlay').classList.add('open');
         }
+
+        function closeAdvancedMenu() {
+            document.getElementById('advanced-menu').classList.remove('open');
+            document.getElementById('advanced-menu-overlay').classList.remove('open');
+        }
+
+        // Search functionality
+        document.getElementById('search-input').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const filtered = allCoupons.filter(c => c.code.toLowerCase().includes(term));
+            renderCoupons(filtered);
+        });
+
+        document.getElementById('mobile-search-input').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const filtered = allCoupons.filter(c => c.code.toLowerCase().includes(term));
+            renderCoupons(filtered);
+        });
 
         // Toggle coupon status
         async function toggleCouponStatus(id, active) {
@@ -3275,41 +3173,20 @@
             }
         }
 
-        function openAdvancedMenu() {
-            document.getElementById('advanced-menu').classList.add('open');
-            document.getElementById('advanced-menu-overlay').classList.add('open');
-        }
-
-        function closeAdvancedMenu() {
-            document.getElementById('advanced-menu').classList.remove('open');
-            document.getElementById('advanced-menu-overlay').classList.remove('open');
-        }
-
-        // Search functionality
-        document.getElementById('search-input').addEventListener('input', (e) => {
-            const term = e.target.value.toLowerCase();
-            const filtered = allCoupons.filter(c => c.code.toLowerCase().includes(term));
-            renderCoupons(filtered);
-        });
-
-        document.getElementById('mobile-search-input').addEventListener('input', (e) => {
-            const term = e.target.value.toLowerCase();
-            const filtered = allCoupons.filter(c => c.code.toLowerCase().includes(term));
-            renderCoupons(filtered);
-        });
-
         // --- ADD/EDIT LOGIC ---
         function openAddModal() {
             editingId = null;
             
             document.getElementById('modal-title').textContent = "Create Coupon";
-            document.getElementById('modal-submit-btn').textContent = "Save Coupon";
+            document.getElementById('modal-submit-btn').textContent = "Create Coupon";
             document.getElementById('coupon-form').reset();
-            document.getElementById('discount-type-select').value = 'percentage';
-            document.getElementById('discount-value-label').textContent = 'Discount Value (%)';
-            document.getElementById('discount-value-input').max = 100;
-            document.getElementById('discount-value-input').placeholder = 'e.g. 20';
-            document.getElementById('status-select').value = 'active';
+            document.getElementById('type-label').textContent = "Percentage (%)";
+            
+            // Reset select options
+            document.querySelectorAll('.select-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            document.querySelectorAll('.select-options')[0].querySelector('.select-option').classList.add('selected');
             
             document.getElementById('coupon-modal').style.display = 'flex';
         }
@@ -3322,25 +3199,19 @@
             document.getElementById('modal-title').textContent = "Edit Coupon";
             document.getElementById('modal-submit-btn').textContent = "Update Coupon";
             document.getElementById('coupon-code-input').value = coupon.code;
+            document.getElementById('coupon-value-input').value = coupon.value;
+            document.getElementById('coupon-limit-input').value = coupon.limit;
+            document.getElementById('coupon-user-limit-input').value = coupon.userLimit;
+            document.getElementById('coupon-expiry-input').value = coupon.expiry || '';
+            document.getElementById('type-label').textContent = coupon.type;
             
-            // Determine discount type
-            const isPercentage = !coupon.type || coupon.type.includes('Percentage');
-            document.getElementById('discount-type-select').value = isPercentage ? 'percentage' : 'fixed';
-            document.getElementById('discount-value-input').value = coupon.value;
-            
-            if (isPercentage) {
-                document.getElementById('discount-value-label').textContent = 'Discount Value (%)';
-                document.getElementById('discount-value-input').max = 100;
-            } else {
-                document.getElementById('discount-value-label').textContent = 'Discount Amount (₹)';
-                document.getElementById('discount-value-input').max = 999999;
-            }
-            
-            document.getElementById('total-limit-input').value = coupon.limit || '';
-            document.getElementById('user-limit-input').value = coupon.userLimit || 1;
-            document.getElementById('min-order-input').value = coupon.minOrder || '';
-            document.getElementById('expiry-date-input').value = coupon.expiry || '';
-            document.getElementById('status-select').value = coupon.active ? 'active' : 'inactive';
+            // Update select options
+            document.querySelectorAll('.select-option').forEach(option => {
+                option.classList.remove('selected');
+                if (option.textContent === coupon.type) {
+                    option.classList.add('selected');
+                }
+            });
             
             document.getElementById('coupon-modal').style.display = 'flex';
             
@@ -3356,32 +3227,27 @@
         document.getElementById('coupon-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const code = document.getElementById('coupon-code-input').value.trim().toUpperCase();
-            if(!code) {
-                showToast('Coupon code is required', 'error');
+            const type = document.getElementById('type-label').textContent;
+            const value = parseFloat(document.getElementById('coupon-value-input').value);
+            const limit = parseInt(document.getElementById('coupon-limit-input').value);
+            const userLimit = parseInt(document.getElementById('coupon-user-limit-input').value);
+            const expiry = document.getElementById('coupon-expiry-input').value;
+            
+            if(!code || !type || isNaN(value) || isNaN(limit) || isNaN(userLimit)) {
+                showToast('Please fill all required fields', 'error');
                 return;
             }
-
-            const discountType = document.getElementById('discount-type-select').value;
-            const value = parseFloat(document.getElementById('discount-value-input').value);
-            if(isNaN(value) || value <= 0) {
-                showToast('Discount value is invalid', 'error');
-                return;
-            }
-
-            if(discountType === 'percentage' && value > 100) {
-                showToast('Percentage discount cannot exceed 100%', 'error');
-                return;
-            }
-
-            const limit = parseInt(document.getElementById('total-limit-input').value) || 0;
-            const userLimit = parseInt(document.getElementById('user-limit-input').value) || 1;
-            const minOrder = parseFloat(document.getElementById('min-order-input').value) || 0;
-            const expiry = document.getElementById('expiry-date-input').value || null;
-            const active = document.getElementById('status-select').value === 'active';
 
             // Check if coupon code already exists (for new coupons)
             if (!editingId) {
-                const exists = allCoupons.some(c => c.code === code);
+                const exists = allCoupons.some(c => c.code.toLowerCase() === code.toLowerCase());
+                if(exists) {
+                    showToast('Coupon code already exists', 'error');
+                    return;
+                }
+            } else {
+                // For editing, check if code exists for other coupons
+                const exists = allCoupons.some(c => c.id !== editingId && c.code.toLowerCase() === code.toLowerCase());
                 if(exists) {
                     showToast('Coupon code already exists', 'error');
                     return;
@@ -3390,18 +3256,18 @@
 
             const btn = document.getElementById('modal-submit-btn');
             btn.disabled = true; 
-            btn.textContent = editingId ? "Updating..." : "Saving...";
+            btn.textContent = editingId ? "Updating..." : "Creating...";
 
             try {
                 const data = {
                     code,
-                    type: discountType === 'percentage' ? 'Percentage Discount' : 'Fixed Amount Discount',
+                    type,
                     value,
-                    limit: limit > 0 ? limit : null,
+                    limit,
                     userLimit,
-                    minOrder: minOrder > 0 ? minOrder : null,
-                    expiry,
-                    active,
+                    expiry: expiry || null,
+                    active: true,
+                    used: editingId ? allCoupons.find(c => c.id === editingId)?.used || 0 : 0,
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
 
@@ -3410,7 +3276,6 @@
                     showToast('Coupon updated successfully', 'success');
                 } else {
                     data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-                    data.used = 0;
                     await couponRef.add(data);
                     showToast('Coupon created successfully', 'success');
                 }
@@ -3421,7 +3286,7 @@
                 console.error(e);
                 showToast('Operation failed', 'error');
                 btn.disabled = false; 
-                btn.textContent = editingId ? "Update Coupon" : "Save Coupon";
+                btn.textContent = editingId ? "Update Coupon" : "Create Coupon";
             }
         });
 
@@ -3480,6 +3345,44 @@
             container.appendChild(el);
             setTimeout(() => el.remove(), 3000);
         }
+
+        // Close popups when clicking outside
+        document.addEventListener('click', function(e) {
+            // Close profile popup when clicking outside
+            const profilePopup = document.getElementById('profile-popup');
+            const profileSection = document.getElementById('profile-section');
+            const mobileProfileSection = document.getElementById('mobile-profile-section');
+            
+            if (profilePopup && profilePopup.classList.contains('active')) {
+                if (!profilePopup.contains(e.target) && 
+                    !profileSection?.contains(e.target) && 
+                    !mobileProfileSection?.contains(e.target)) {
+                    profilePopup.classList.remove('active');
+                }
+            }
+            
+            // Close desktop popups when clicking outside
+            document.querySelectorAll('.desktop-popup').forEach(popup => {
+                if (popup.classList.contains('open') && 
+                    !popup.contains(e.target) && 
+                    !e.target.closest('.kebab')) {
+                    popup.classList.remove('open');
+                }
+            });
+        });
+
+        // Close popups when pressing Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.getElementById('profile-popup')?.classList.remove('active');
+                document.querySelectorAll('.desktop-popup').forEach(popup => {
+                    popup.classList.remove('open');
+                });
+                closeAdvancedMenu();
+                closeModal();
+                closeDeleteModal();
+            }
+        });
     </script>
 </body>
 </html>
