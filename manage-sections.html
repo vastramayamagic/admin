@@ -61,10 +61,13 @@
         * {
             -webkit-tap-highlight-color: transparent;
         }
-
+a {
+    text-decoration: none;
+    color: inherit;
+}
         /* ============= DESKTOP LAYOUT ============= */
         .page-desktop {
-            min-height: 100vh;
+            height: 100vh;
             display: flex;
             flex-direction: column;
             width: 100%;
@@ -80,6 +83,7 @@
             display: flex;
             align-items: center;
             padding-left: 40px;
+            flex-shrink: 0;
         }
 
         .d-topbar-logo {
@@ -93,6 +97,7 @@
             flex: 1;
             display: flex;
             width: 100%;
+            overflow: hidden;
         }
 
         /* Desktop sidebar */
@@ -102,6 +107,7 @@
             border-right: 1px solid var(--border-subtle);
             display: flex;
             flex-direction: column;
+            overflow-y: auto;
         }
 
         .d-sidebar-inner {
@@ -135,6 +141,7 @@
             color: var(--text-color);
             line-height: 20px;
             transition: background 0.15s ease;
+            text-decoration: none;
         }
 
         .d-nav-item .label {
@@ -193,6 +200,8 @@
             gap: 12px;
             font-size: 15px;
             font-weight: 500;
+            color: var(--text-color);
+            text-decoration: none;
         }
         .d-submenu-item:hover {
             background: var(--hover-bg);
@@ -206,7 +215,14 @@
             height: 18px;
             stroke: #6b7280;
         }
-
+/* Change icon color when desktop submenu item is active */
+.d-submenu-item.active .submenu-icon {
+    stroke: var(--icon-active);
+}
+/* Change icon color when mobile submenu item is active */
+.m-submenu-item.active .submenu-icon {
+    stroke: var(--icon-active);
+}
         /* Desktop account section */
         .d-account-section {
             margin-top: auto;
@@ -254,12 +270,13 @@
         }
 
         /* Desktop content */
-        .d-content {
-            flex: 1;
-            background: var(--page-bg);
-            overflow-y: auto;
-            width: 100%;
-        }
+.d-content {
+    flex: 1;
+    background: var(--page-bg);
+    overflow-y: auto; /* ENSURE THIS IS HERE */
+    width: 100%;
+    height: 100%;    /* ADD THIS LINE */
+}
 
         /* ============= BODY CONTENT ============= */
         .content-inner {
@@ -923,6 +940,9 @@
             justify-content: space-between;
             padding: 0 16px;
             width: 100%;
+                position: fixed;
+    top: 0;
+    z-index: 100;
         }
 
         /* Mobile menu button */
@@ -986,6 +1006,7 @@
             width: 100%;
             overflow-x: hidden;
             position: relative;
+            margin-top: 72px; 
         }
 
         /* Mobile Card */
@@ -1021,6 +1042,7 @@
             pointer-events: none;
             transition: opacity 0.25s ease-out;
             z-index: 40;
+            z-index: 1000;
         }
 
         .m-overlay.open {
@@ -1173,6 +1195,7 @@
             gap: 12px;
             font-size: 15px;
             font-weight: 500;
+            color: var(--text-color);
         }
         .m-submenu-item:hover {
             background: var(--hover-bg);
@@ -1318,7 +1341,7 @@
                             </div>
 
                             <!-- Inventory -->
-                            <div class="d-nav-item" onclick="window.location.href='manage-products.html'">
+                            <div class="d-nav-item" onclick="window.location.href='manage-categories.html'">
                                 <span class="icon">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                                          fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1329,8 +1352,20 @@
                                 </span>
                                 <span class="label">Inventory</span>
                             </div>
-
-                            <!-- Customize Site (Active) -->
+                            
+                            <!-- Manage Coupons -->
+                            <a href="/manage-coupons.html" class="d-nav-item">
+                                <span class="icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tags-icon lucide-tags">
+                                        <path d="M13.172 2a2 2 0 0 1 1.414.586l6.71 6.71a2.4 2.4 0 0 1 0 3.408l-4.592 4.592a2.4 2.4 0 0 1-3.408 0l-6.71-6.71A2 2 0 0 1 6 9.172V3a1 1 0 0 1 1-1z"/>
+                                        <path d="M2 7v6.172a2 2 0 0 0 .586 1.414l6.71 6.71a2.4 2.4 0 0 0 3.191.193"/>
+                                        <circle cx="10.5" cy="6.5" r=".5" fill="currentColor"/>
+                                    </svg>
+                                </span>
+                                <span class="label">Manage Coupons</span>
+                            </a>
+                            
+                            <!-- Customize Site -->
                             <div class="d-nav-item d-nav-item--active" id="d-customize-toggle">
                                 <span class="icon">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
@@ -1351,97 +1386,22 @@
                             </div>
 
                             <!-- Desktop Customize Site submenu -->
-                            <div class="d-submenu open" id="d-customize-submenu">
-                                <div class="d-submenu-item" onclick="window.location.href='hero-section.html'">
-                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
-                                        <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
-                                        <path d="M4 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/>
-                                        <path d="M9.5 12.5 11 14"/>
-                                        <path d="M14 10l-3.5 4"/>
-                                        <path d="m5 15 4.5-4"/>
-                                    </svg>
-                                    <span>Theme & Layout</span>
-                                </div>
-                                <div class="d-submenu-item active">
-                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <rect width="18" height="18" x="3" y="3" rx="2"/>
-                                        <path d="M3 9h18"/>
-                                        <path d="M9 21V9"/>
-                                    </svg>
-                                    <span>Sections Manager</span>
-                                </div>
-                                <div class="d-submenu-item" onclick="window.location.href='popup-manager.html'">
-                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <circle cx="18" cy="5" r="3"/>
-                                        <circle cx="6" cy="12" r="3"/>
-                                        <circle cx="18" cy="19" r="3"/>
-                                        <line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/>
-                                        <line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/>
-                                    </svg>
-                                    <span>Popup Manager</span>
-                                </div>
-                            </div>
+<div class="d-submenu open" id="d-customize-submenu">
+    <a href="/manage-hero.html" class="d-submenu-item ">
+        <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8h20"/><rect width="20" height="16" x="2" y="4" rx="2"/><path d="M6 16h12"/></svg>
+        <span>Hero Section</span>
+    </a>
+    <a href="/manage-sections.html" class="d-submenu-item active">
+        <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/><path d="M14 4h7"/><path d="M14 9h7"/><path d="M14 15h7"/><path d="M14 20h7"/></svg>
+        <span>Sections</span>
+    </a>
+    <a href="/manage-hero-popup.html" class="d-submenu-item">
+        <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 21h10"/><rect width="20" height="14" x="2" y="3" rx="2"/></svg>
+        <span>Popup</span>
+    </a>
+</div>
 
-                            <!-- MANAGE ORDERS -->
-                            <div class="d-nav-item" id="d-orders-toggle">
-                                <span class="icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                         fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
-                                        <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
-                                        <path d="M8 14v2.2l1.6 1"/>
-                                        <circle cx="8" cy="16" r="6"/>
-                                    </svg>
-                                </span>
-                                <span class="label">MANAGE ORDERS</span>
-                                <span class="chevron">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                         fill="none" stroke="currentColor" stroke-width="2"
-                                         stroke-linecap="round" stroke-linejoin="round"
-                                         class="chevron-icon">
-                                        <path d="m9 18 6-6-6-6"/>
-                                    </svg>
-                                </span>
-                            </div>
 
-                            <!-- Desktop MANAGE ORDERS submenu -->
-                            <div class="d-submenu" id="d-orders-submenu">
-                                <div class="d-submenu-item">
-                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M12 6v6l4 2"/>
-                                        <path d="M22 12a10 10 0 1 0-11 9.95"/>
-                                        <path d="m22 16-5.5 5.5L14 19"/>
-                                    </svg>
-                                    <span>Today</span>
-                                </div>
-                                <div class="d-submenu-item">
-                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M8 2v4"/>
-                                        <path d="M16 2v4"/>
-                                        <rect width="18" height="18" x="3" y="4" rx="2"/>
-                                        <path d="M3 10h18"/>
-                                        <path d="M8 14h.01"/>
-                                        <path d="M12 14h.01"/>
-                                        <path d="M16 14h.01"/>
-                                        <path d="M8 18h.01"/>
-                                        <path d="M12 18h.01"/>
-                                        <path d="M16 18h.01"/>
-                                    </svg>
-                                    <span>This Month</span>
-                                </div>
-                                <div class="d-submenu-item">
-                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M12 2v2"/>
-                                        <path d="M15.726 21.01A2 2 0 0 1 14 22H4a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2"/>
-                                        <path d="M18 2v2"/>
-                                        <path d="M2 13h2"/>
-                                        <path d="M8 8h14"/>
-                                        <rect x="8" y="3" width="14" height="14" rx="2"/>
-                                    </svg>
-                                    <span>All Orders</span>
-                                </div>
-                            </div>
                         </div>
                     </nav>
 
@@ -1620,7 +1580,7 @@
                     </div>
 
                     <!-- Inventory -->
-                    <div class="m-nav-item" onclick="window.location.href='manage-products.html'">
+                    <div class="m-nav-item" onclick="window.location.href='manage-categories.html'">
                         <span class="icon">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                                  fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1632,6 +1592,18 @@
                         <span class="label">Inventory</span>
                     </div>
 
+                            <!-- Manage Coupons -->
+                            <a href="/manage-coupons.html" class="m-nav-item">
+                                <span class="icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tags-icon lucide-tags">
+                                        <path d="M13.172 2a2 2 0 0 1 1.414.586l6.71 6.71a2.4 2.4 0 0 1 0 3.408l-4.592 4.592a2.4 2.4 0 0 1-3.408 0l-6.71-6.71A2 2 0 0 1 6 9.172V3a1 1 0 0 1 1-1z"/>
+                                        <path d="M2 7v6.172a2 2 0 0 0 .586 1.414l6.71 6.71a2.4 2.4 0 0 0 3.191.193"/>
+                                        <circle cx="10.5" cy="6.5" r=".5" fill="currentColor"/>
+                                    </svg>
+                                </span>
+                                <span class="label">Manage Coupons</span>
+                            </a>
+                            
                     <!-- Customize Site with dropdown -->
                     <div class="m-nav-item active" id="m-customize-toggle">
                         <span class="icon">
@@ -1653,98 +1625,25 @@
                     </div>
 
                     <!-- Mobile Customize Site submenu -->
-                    <div class="m-submenu open" id="m-customize-submenu">
-                        <div class="m-submenu-item" onclick="window.location.href='hero-section.html'">
-                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
-                                <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
-                                <path d="M4 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/>
-                                <path d="M9.5 12.5 11 14"/>
-                                <path d="M14 10l-3.5 4"/>
-                                <path d="m5 15 4.5-4"/>
-                            </svg>
-                            <span>Theme & Layout</span>
-                        </div>
-                        <div class="m-submenu-item active">
-                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <rect width="18" height="18" x="3" y="3" rx="2"/>
-                                <path d="M3 9h18"/>
-                                <path d="M9 21V9"/>
-                            </svg>
-                            <span>Sections Manager</span>
-                        </div>
-                        <div class="m-submenu-item" onclick="window.location.href='popup-manager.html'">
-                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="18" cy="5" r="3"/>
-                                <circle cx="6" cy="12" r="3"/>
-                                <circle cx="18" cy="19" r="3"/>
-                                <line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/>
-                                <line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/>
-                            </svg>
-                            <span>Popup Manager</span>
-                        </div>
-                    </div>
+<div class="m-submenu open" id="m-customize-submenu">
+    <a href="/manage-hero.html" class="m-submenu-item ">
+        <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8h20"/><rect width="20" height="16" x="2" y="4" rx="2"/><path d="M6 16h12"/></svg>
+        <span>Hero Section</span>
+    </a>
 
-                    <!-- MANAGE ORDERS with dropdown -->
-                    <div class="m-nav-item" id="m-orders-toggle">
-                        <span class="icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
-                                <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
-                                <path d="M8 14v2.2l1.6 1"/>
-                                <circle cx="8" cy="16" r="6"/>
-                            </svg>
-                        </span>
-                        <span class="label">MANAGE ORDERS</span>
-                        <span class="chevron">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                 fill="none" stroke="currentColor" stroke-width="2"
-                                 stroke-linecap="round" stroke-linejoin="round"
-                                 class="chevron-icon">
-                                <path d="m9 18 6-6-6-6"/>
-                            </svg>
-                        </span>
-                    </div>
+    <a href="/manage-sections.html" class="m-submenu-item active">
+        <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/><path d="M14 4h7"/><path d="M14 9h7"/><path d="M14 15h7"/><path d="M14 20h7"/></svg>
+        <span>Sections</span>
+    </a>
+    <a href="/manage-hero-popup.html" class="m-submenu-item">
+        <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 21h10"/><rect width="20" height="14" x="2" y="3" rx="2"/></svg>
+        <span>Popup</span>
+    </a>
+</div>
 
-                    <!-- Mobile MANAGE ORDERS submenu -->
-                    <div class="m-submenu" id="m-orders-submenu">
-                        <div class="m-submenu-item">
-                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M12 6v6l4 2"/>
-                                <path d="M22 12a10 10 0 1 0-11 9.95"/>
-                                <path d="m22 16-5.5 5.5L14 19"/>
-                            </svg>
-                            <span>Today</span>
-                        </div>
-                        <div class="m-submenu-item">
-                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M8 2v4"/>
-                                <path d="M16 2v4"/>
-                                <rect width="18" height="18" x="3" y="4" rx="2"/>
-                                <path d="M3 10h18"/>
-                                <path d="M8 14h.01"/>
-                                <path d="M12 14h.01"/>
-                                <path d="M16 14h.01"/>
-                                <path d="M8 18h.01"/>
-                                <path d="M12 18h.01"/>
-                                <path d="M16 18h.01"/>
-                            </svg>
-                            <span>This Month</span>
-                        </div>
-                        <div class="m-submenu-item">
-                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M12 2v2"/>
-                                <path d="M15.726 21.01A2 2 0 0 1 14 22H4a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2"/>
-                                <path d="M18 2v2"/>
-                                <path d="M2 13h2"/>
-                                <path d="M8 8h14"/>
-                                <rect x="8" y="3" width="14" height="14" rx="2"/>
-                            </svg>
-                            <span>All Orders</span>
-                        </div>
-                    </div>
+
                 </nav>
+
 
                 <!-- Mobile account sharing -->
                 <div class="m-account-section" id="mobile-profile-section">
