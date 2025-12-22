@@ -3,335 +3,3600 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Admin Coupons - ShopSphere</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
-    
+    <title>Manage Coupons - Vastramaya</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #4F46E5;
-            --primary-hover: #4338CA;
+            --header-height-desktop: 70px;
+            --sidebar-width: 260px;
+            --row-height: 48px;
+            --sidebar-bg: #ffffff;
+            --header-bg: #ffffff;
+            --page-bg: #f4f5f7;
+            --text-color: rgb(24, 24, 26);
+            --icon-color: #6b7280;
+            --icon-active: #5127ba;
+            --active-bg: #f3f4f6;
+            --hover-bg: #f3f4f6;
+            --border-subtle: #e5e7eb;
+            --brand-primary: #5127ba;
+            --brand-gradient: linear-gradient(135deg, #5127ba 0%, #673de6 100%);
+            --danger-color: #ef4444;
+            --success-color: #10B981;
+            --warning-color: #F59E0B;
+            --switch-on: #5127ba;
+            --switch-off: #9CA3AF;
+            --shadow-premium: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --skeleton-color: #f0f0f0;
+            --skeleton-highlight: #f8f8f8;
         }
-        ::-webkit-scrollbar { display: none; }
-        body { font-family: 'Inter', sans-serif; background-color: #F3F4F6; color: #1F2937; }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: var(--page-bg);
+            font-family: "DM Sans", Roboto, sans-serif;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 20px;
+            color: var(--text-color);
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        /* ============= DESKTOP LAYOUT ============= */
+        .page-desktop {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        /* Desktop header */
+        .d-topbar {
+            height: var(--header-height-desktop);
+            background: var(--header-bg);
+            border-bottom: 1px solid var(--border-subtle);
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            padding-left: 40px;
+        }
+
+        .d-topbar-logo {
+            height: 52px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        /* Desktop main area */
+        .d-app {
+            flex: 1;
+            display: flex;
+            width: 100%;
+        }
+
+        /* Desktop sidebar */
+        .d-sidebar {
+            width: var(--sidebar-width);
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border-subtle);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .d-sidebar-inner {
+            padding: 32px 16px 16px 12px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        /* Desktop nav */
+        .d-nav {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .d-nav-group + .d-nav-group {
+            margin-top: 6px;
+        }
+
+        .d-nav-item {
+            display: flex;
+            align-items: center;
+            height: var(--row-height);
+            padding: 0 20px 0 12px;
+            margin: 2px 0;
+            border-radius: 8px;
+            gap: 12px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 14px;
+            color: var(--text-color);
+            line-height: 20px;
+            transition: background 0.15s ease;
+        }
+
+        .d-nav-item .label {
+            flex: 1;
+        }
+
+        .d-nav-item .icon svg {
+            width: 22px;
+            height: 22px;
+            stroke: var(--icon-color);
+        }
+
+        .chevron-icon {
+            width: 18px;
+            height: 18px;
+            stroke: var(--icon-color);
+            transition: transform 0.2s ease;
+        }
+
+        .dropdown-open .chevron-icon {
+            transform: rotate(90deg);
+        }
+
+        /* Desktop active */
+        .d-nav-item--active {
+            background: var(--active-bg);
+        }
+        .d-nav-item--active .icon svg {
+            stroke: var(--icon-active);
+        }
+
+        /* Desktop hover */
+        .d-nav-item:hover {
+            background: var(--hover-bg);
+        }
+
+        /* Desktop submenus */
+        .d-submenu {
+            display: none;
+            margin-left: 28px;
+            padding-left: 16px;
+            border-left: 1px solid var(--border-subtle);
+            margin-top: 4px;
+        }
+        .d-submenu.open {
+            display: block;
+        }
+        .d-submenu-item {
+            height: 44px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            border-radius: 8px;
+            margin: 2px 0;
+            cursor: pointer;
+            gap: 12px;
+            font-size: 15px;
+            font-weight: 500;
+        }
+        .d-submenu-item:hover {
+            background: var(--hover-bg);
+        }
+        .d-submenu-item.active {
+            background: var(--active-bg);
+        }
+
+        .d-submenu a,
+.m-submenu a {
+    text-decoration: none !important;
+    color: inherit !important;
+}
+
+        /* Desktop account section */
+        .d-account-section {
+            margin-top: auto;
+            padding: 16px;
+            border-top: 1px solid var(--border-subtle);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .account-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .account-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .account-text {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .account-name {
+            font-size: 14px;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 150px;
+        }
+
+        .account-email {
+            font-size: 12px;
+            color: #6b7280;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 150px;
+        }
+
+        /* Desktop content */
+        .d-content {
+            flex: 1;
+            background: var(--page-bg);
+            overflow-y: auto;
+            width: 100%;
+        }
+
+        /* ============= BODY CONTENT ============= */
+        .content-inner {
+            max-width: 1110px;
+            margin: 0 auto;
+            padding: 24px 24px 40px;
+            width: 100%;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            width: 100%;
+        }
+
+        .page-title-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 0;
+        }
+
+        .page-title {
+            font-weight: 700;
+            font-size: 20px;
+            line-height: 32px;
+            color: rgb(29, 30, 32);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            line-height: 20px;
+            color: #6b7280;
+            flex-wrap: wrap;
+        }
+
+        .breadcrumb-icon svg {
+            width: 16px;
+            height: 16px;
+            stroke: #9ca3af;
+        }
+
+        .breadcrumb-divider {
+            color: #d1d5db;
+        }
+
+        .primary-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            line-height: 20px;
+            color: #ffffff;
+            background: var(--brand-primary);
+            transition: background 0.15s ease;
+            white-space: nowrap;
+        }
+        .primary-btn svg {
+            width: 18px;
+            height: 18px;
+            stroke: #ffffff;
+        }
+        .primary-btn:hover {
+            background: #471ea7;
+        }
+
+        /* Card - FIXED: Increased search bar padding */
+        .card {
+            background: #ffffff;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .card-header {
+            padding: 24px 20px; /* Increased from 16px to 24px */
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .search-input-wrap {
+            background: #f9fafb;
+            border-radius: 999px;
+            border: 1px solid #e5e7eb;
+            padding: 12px 16px; /* Increased from 0 16px */
+            height: 48px; /* Increased from 40px */
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: border-color 0.15s ease;
+            width: 100%;
+        }
+
+        .search-input-wrap:focus-within {
+            border-color: #673de6;
+        }
+
+        .search-icon {
+            width: 16px;
+            height: 16px;
+            stroke: #9ca3af;
+        }
+
+        .search-input-wrap input {
+            border: none;
+            background: transparent;
+            outline: none;
+            flex: 1;
+            font-family: "DM Sans", Roboto, sans-serif;
+            font-size: 14px;
+            width: 100%;
+        }
+
+        /* Table area - IMPORTANT: Fixed for popup positioning */
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            position: relative;
+            /* Ensure popups are not clipped */
+            overflow: visible !important;
+        }
+
+        /* Force table to have proper stacking context */
+        .coupons-table {
+            width: 100%;
+            border-collapse: collapse;
+            position: relative;
+            z-index: 1;
+        }
+
+        .coupons-table thead tr {
+            height: 48px;
+        }
+
+        .coupons-table th,
+        .coupons-table td {
+            padding: 12px 20px;
+            vertical-align: middle;
+        }
+
+        .coupons-table thead th {
+            font-weight: 700;
+            font-size: 14px;
+            line-height: 24px;
+            color: rgb(29, 30, 32);
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+            white-space: nowrap;
+        }
+
+        /* Status column - left aligned */
+        .th-status {
+            width: 100px;
+            text-align: left;
+        }
+
+        .td-status {
+            width: 100px;
+            text-align: left;
+        }
+
+        .coupons-table tbody tr {
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .coupons-table tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        .coupon-code {
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            font-size: 14px;
+            line-height: 24px;
+            color: var(--brand-primary);
+            background: #f2efff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 1px solid #e2d9ff;
+        }
+
+        .coupon-name {
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 24px;
+            color: rgb(29, 30, 32);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px;
+        }
+
+        .coupon-value {
+            font-weight: 600;
+            font-size: 14px;
+            line-height: 24px;
+        }
         
-        .bg-brand { background-color: var(--primary-color); }
-        .text-brand { color: var(--primary-color); }
-        .border-brand { border-color: var(--primary-color); }
+        .coupon-percentage {
+            color: var(--brand-primary);
+        }
+        
+        .coupon-flat {
+            color: var(--success-color);
+        }
+
+        .coupon-usage,
+        .coupon-expiry,
+        .coupon-actions {
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 24px;
+            color: rgb(59, 61, 74);
+        }
+        
+        .coupon-expiry.expired {
+            color: var(--danger-color);
+        }
+        
+        .coupon-expiry.upcoming {
+            color: var(--warning-color);
+        }
+
+        .action-buttons {
+            display: inline-flex;
+            gap: 8px;
+            align-items: center;
+            position: relative;
+        }
+
+        .btn-secondary {
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            background: #ffffff;
+            font-size: 13px;
+            line-height: 20px;
+            color: #673de6;
+            cursor: pointer;
+            transition: background 0.15s ease;
+            white-space: nowrap;
+        }
+        .btn-secondary:hover {
+            background: #f2efff;
+        }
+
+        .kebab {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            flex-shrink: 0;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            transition: all 0.2s ease;
+        }
+        
+        .kebab:hover {
+            background: #f9fafb;
+            border-color: #d1d5db;
+        }
+        
+        .kebab-dots {
+            width: 4px;
+            height: 4px;
+            border-radius: 999px;
+            background: #6b7280;
+            position: relative;
+        }
+        
+        .kebab-dots::before,
+        .kebab-dots::after {
+            content: '';
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 999px;
+            background: #6b7280;
+            left: 0;
+        }
+        
+        .kebab-dots::before {
+            top: -6px;
+        }
+        
+        .kebab-dots::after {
+            bottom: -6px;
+        }
+
+        /* FIXED: Desktop popup - positioned relative to viewport */
+        .popup-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .desktop-popup {
+            position: fixed; /* Changed from absolute to fixed */
+            background: #ffffff;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            min-width: 180px;
+            z-index: 10002;
+            display: none;
+            overflow: hidden;
+            margin-top: 8px;
+            animation: fadeInUp 0.2s ease-out;
+        }
+
+        .desktop-popup.open {
+            display: block;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(-5px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .desktop-popup-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            width: 100%;
+            border: none;
+            background: none;
+            text-align: left;
+            cursor: pointer;
+            font-size: 14px;
+            line-height: 20px;
+            color: rgb(29, 30, 32);
+            transition: background 0.15s ease;
+            white-space: nowrap;
+            border-bottom: 1px solid #f9fafb;
+        }
+
+        .desktop-popup-item:last-child {
+            border-bottom: none;
+        }
+
+        .desktop-popup-item:hover {
+            background: #f9fafb;
+        }
+
+        .desktop-popup-item svg {
+            width: 18px;
+            height: 18px;
+            stroke: #6b7280;
+        }
+
+        .desktop-popup-item.delete-item {
+            color: var(--danger-color);
+        }
+
+        .desktop-popup-item.delete-item svg {
+            stroke: var(--danger-color);
+        }
+
+        /* Status toggle switch - FIXED: Left aligned under Status heading */
+        .status-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            width: 100%;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--switch-off);
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: var(--brand-primary);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(20px);
+        }
+
+        /* Coupon type badges */
+        .coupon-type-badge {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .type-percentage {
+            background: #f2efff;
+            color: var(--brand-primary);
+        }
+        
+        .type-flat {
+            background: #d1fae5;
+            color: var(--success-color);
+        }
+
+        /* ============= SKELETON LOADING ============= */
+        .skeleton-loading {
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .skeleton {
+            background: linear-gradient(
+                90deg,
+                var(--skeleton-color) 25%,
+                var(--skeleton-highlight) 50%,
+                var(--skeleton-color) 75%
+            );
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s infinite;
+            border-radius: 4px;
+        }
+
+        @keyframes skeleton-loading {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
+        /* Desktop skeleton */
+        .desktop-skeleton-row {
+            height: 72px;
+        }
+
+        .desktop-skeleton-row td {
+            padding: 12px 20px;
+        }
+
+        .skeleton-text {
+            height: 20px;
+            width: 120px;
+        }
+
+        .skeleton-text-small {
+            height: 16px;
+            width: 80px;
+        }
+
+        .skeleton-toggle {
+            width: 44px;
+            height: 24px;
+            border-radius: 24px;
+        }
+
+        .skeleton-button {
+            width: 80px;
+            height: 32px;
+            border-radius: 8px;
+        }
+
+        .skeleton-kebab {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+        }
+
+        /* Mobile skeleton */
+        .mobile-skeleton-card {
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid #e5e7eb;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            height: 88px;
+        }
+
+        .skeleton-mobile-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .skeleton-mobile-title {
+            height: 24px;
+            width: 150px;
+            border-radius: 4px;
+        }
+
+        .skeleton-mobile-subtitle {
+            height: 18px;
+            width: 100px;
+            border-radius: 4px;
+        }
+
+        .skeleton-mobile-toggle {
+            width: 44px;
+            height: 24px;
+            border-radius: 24px;
+            margin-right: 12px;
+        }
+
+        .skeleton-mobile-menu {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+        }
+
+        /* ============= MOBILE LAYOUT ============= */
+        .page-mobile {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            display: none;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* Mobile header */
+        .m-header {
+            height: 72px;
+            background: var(--header-bg);
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            width: 100%;
+        }
+
+        /* FIXED: Mobile menu button with border and styling like advanced-menu-close */
+        .m-menu-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+            background: #f9fafb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .m-menu-btn:hover {
+            background: #f3f4f6;
+        }
+
+        .m-menu-lines {
+            width: 18px;
+            height: 14px;
+            position: relative;
+        }
+        .m-menu-lines::before,
+        .m-menu-lines::after,
+        .m-menu-lines span {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 2px;
+            border-radius: 999px;
+            background: #111827;
+        }
+        .m-menu-lines::before {
+            top: 0;
+        }
+        .m-menu-lines span {
+            top: 6px;
+        }
+        .m-menu-lines::after {
+            bottom: 0;
+        }
+
+        .m-logo {
+            height: 48px;
+            width: auto;
+            object-fit: contain;
+            max-width: 200px;
+        }
+
+        /* Mobile main bg */
+        .m-main {
+            flex: 1;
+            background: var(--page-bg);
+            padding-bottom: 20px;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* Overlay & drawer */
+        .m-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.45);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease-out;
+            z-index: 40;
+        }
+
+        .m-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .m-drawer {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 320px;
+            max-width: 90vw;
+            height: 100%;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            transform: translateX(-100%);
+            transition: transform 0.25s ease-out;
+            overflow-y: auto;
+        }
+
+        .m-overlay.open .m-drawer {
+            transform: translateX(0);
+        }
+
+        /* Drawer header */
+        .m-drawer-header {
+            height: 72px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+        }
+
+        .m-drawer-logo {
+            height: 48px;
+            width: auto;
+            object-fit: contain;
+            max-width: 200px;
+        }
+
+        /* FIXED: Mobile drawer close button with border and styling like advanced-menu-close */
+        .m-drawer-close {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+            background: #f9fafb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+        
+        .m-drawer-close:hover {
+            background: #f3f4f6;
+        }
+        
+        .m-drawer-close-icon {
+            width: 14px;
+            height: 14px;
+            position: relative;
+        }
+        .m-drawer-close-icon::before,
+        .m-drawer-close-icon::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            margin: auto;
+            width: 14px;
+            height: 2px;
+            border-radius: 999px;
+            background: #111827;
+        }
+        .m-drawer-close-icon::before {
+            transform: rotate(45deg);
+        }
+        .m-drawer-close-icon::after {
+            transform: rotate(-45deg);
+        }
+
+        /* Drawer nav */
+        .m-drawer-nav {
+            padding: 32px 8px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .m-nav-item {
+            display: flex;
+            align-items: center;
+            height: 52px;
+            padding: 0 16px;
+            margin: 2px 0;
+            border-radius: 8px;
+            gap: 12px;
+            cursor: pointer;
+            color: var(--text-color);
+            transition: background 0.15s ease;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .m-nav-item .label {
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .m-nav-item .icon svg {
+            width: 22px;
+            height: 22px;
+            stroke: var(--icon-color);
+        }
+
+        /* active mobile */
+        .m-nav-item.active {
+            background: var(--active-bg);
+        }
+        .m-nav-item.active .icon svg {
+            stroke: var(--icon-active);
+        }
+
+        /* Mobile submenu */
+        .m-submenu {
+            display: none;
+            margin-left: 28px;
+            padding-left: 16px;
+            border-left: 1px solid var(--border-subtle);
+            margin-top: 4px;
+        }
+        .m-submenu.open {
+            display: block;
+        }
+        .m-submenu-item {
+            height: 48px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            border-radius: 8px;
+            margin: 2px 0;
+            cursor: pointer;
+            gap: 12px;
+            font-size: 15px;
+            font-weight: 500;
+        }
+        .m-submenu-item:hover {
+            background: var(--hover-bg);
+        }
+        .m-submenu-item.active {
+            background: var(--active-bg);
+        }
+
+        .m-submenu-item .submenu-icon {
+            width: 18px;
+            height: 18px;
+            stroke: #6b7280;
+        }
+
+        /* Drawer footer account */
+        .m-account-section {
+            margin-top: auto;
+            padding: 16px;
+            border-top: 1px solid var(--border-subtle);
+            cursor: pointer;
+            position: relative;
+        }
+
+        /* Mobile content layout */
+        .mobile-content-inner {
+            padding: 16px;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* Mobile page header */
+        .mobile-page-header {
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .mobile-page-title-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+            width: 100%;
+        }
+
+        .mobile-page-title {
+            font-weight: 700;
+            font-size: 22px;
+            line-height: 32px;
+            color: rgb(29, 30, 32);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .mobile-breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            line-height: 20px;
+            color: #6b7280;
+            flex-wrap: wrap;
+        }
+
+        .mobile-breadcrumb-icon svg {
+            width: 16px;
+            height: 16px;
+            stroke: #9ca3af;
+        }
+
+        .mobile-breadcrumb-divider {
+            color: #d1d5db;
+        }
+
+        /* Mobile search and add button row */
+        .mobile-controls-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 100%;
+            overflow: hidden;
+        }
+
+        .mobile-search-wrap {
+            flex: 1;
+            position: relative;
+            min-width: 0;
+        }
+
+        .mobile-search-input-wrap {
+            background: #ffffff;
+            border-radius: 12px;
+            border: 2px solid #e5e7eb;
+            padding: 0 16px 0 44px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            width: 100%;
+        }
+
+        .mobile-search-input-wrap:focus-within {
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 3px rgba(81, 39, 186, 0.1);
+        }
+
+        .mobile-search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            stroke: #6b7280;
+            z-index: 2;
+        }
+
+        .mobile-search-input-wrap input {
+            border: none;
+            background: transparent;
+            outline: none;
+            flex: 1;
+            font-size: 16px;
+            color: #111827;
+            font-weight: 500;
+            width: 100%;
+            min-width: 0;
+        }
+
+        .mobile-search-input-wrap input::placeholder {
+            color: #9ca3af;
+            font-weight: 400;
+        }
+
+        .mobile-add-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 15px;
+            line-height: 20px;
+            color: #ffffff;
+            background: linear-gradient(135deg, #5127ba 0%, #673de6 100%);
+            white-space: nowrap;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(81, 39, 186, 0.2);
+            flex-shrink: 0;
+            max-width: 120px;
+        }
+
+        .mobile-add-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(81, 39, 186, 0.25);
+        }
+
+        .mobile-add-btn svg {
+            width: 20px;
+            height: 20px;
+            stroke: #ffffff;
+        }
+
+        /* Mobile coupon cards - UPDATED LAYOUT */
+        .mobile-coupon-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            width: 100%;
+        }
+
+        .coupon-card-mobile {
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid #e5e7eb;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            max-width: 100%;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .coupon-card-mobile:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .coupon-card-code {
+            background: #f2efff;
+            border: 1px solid #e2d9ff;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            color: var(--brand-primary);
+            min-width: 80px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .coupon-card-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            min-width: 0;
+        }
+
+        .coupon-card-name {
+            font-weight: 700;
+            font-size: 16px;
+            line-height: 24px;
+            color: rgb(29, 30, 32);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px;
+        }
+
+        .coupon-card-details {
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 18px;
+            color: #6b7280;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Mobile card actions - UPDATED: toggle moved to left of 3 dots */
+        .coupon-card-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+
+        .mobile-status-toggle {
+            display: flex;
+            align-items: center;
+            margin: 0;
+        }
+
+        .coupon-card-menu-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        .coupon-card-menu-btn:hover {
+            background: #f9fafb;
+            border-color: #d1d5db;
+        }
+
+        .coupon-card-menu-dots {
+            width: 4px;
+            height: 4px;
+            border-radius: 999px;
+            background: #6b7280;
+            box-shadow: 0 -6px 0 0 #6b7280, 0 6px 0 0 #6b7280;
+        }
+
+        /* Advanced Menu (Bottom Sheet) */
+        .advanced-menu {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border-radius: 24px 24px 0 0;
+            padding: 24px 0;
+            transform: translateY(100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 2000;
+            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.15);
+            max-height: 80vh;
+            overflow-y: auto;
+            width: 100%;
+        }
+
+        .advanced-menu.open {
+            transform: translateY(0);
+        }
+
+        .advanced-menu-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 1999;
+        }
+
+        .advanced-menu-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .advanced-menu-header {
+            padding: 0 24px 20px 24px;
+            border-bottom: 1px solid #f3f4f6;
+            margin-bottom: 16px;
+            position: relative;
+        }
+
+        .advanced-menu-title {
+            font-weight: 700;
+            font-size: 20px;
+            line-height: 28px;
+            color: rgb(29, 30, 32);
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .advanced-menu-items {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .advanced-menu-item {
+            padding: 18px 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: none;
+            border: none;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+            font-size: 16px;
+            line-height: 24px;
+            color: rgb(29, 30, 32);
+            transition: background 0.15s ease;
+            border-bottom: 1px solid #f9fafb;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .advanced-menu-item:last-child {
+            border-bottom: none;
+            color: var(--danger-color);
+        }
+
+        .advanced-menu-item:last-child svg {
+            stroke: var(--danger-color);
+        }
+
+        .advanced-menu-item:hover {
+            background: #f9fafb;
+        }
+
+        .advanced-menu-item svg {
+            width: 22px;
+            height: 22px;
+            stroke: #6b7280;
+            flex-shrink: 0;
+        }
+
+        .advanced-menu-close {
+            position: absolute;
+            top: 0;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+            background: #f9fafb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .advanced-menu-close:hover {
+            background: #f3f4f6;
+        }
+
+        .advanced-menu-close-icon {
+            width: 16px;
+            height: 16px;
+            position: relative;
+        }
+
+        .advanced-menu-close-icon::before,
+        .advanced-menu-close-icon::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            margin: auto;
+            width: 16px;
+            height: 2px;
+            border-radius: 999px;
+            background: #111827;
+        }
+
+        .advanced-menu-close-icon::before {
+            transform: rotate(45deg);
+        }
+
+        .advanced-menu-close-icon::after {
+            transform: rotate(-45deg);
+        }
+
+        .menu-handle {
+            width: 40px;
+            height: 4px;
+            border-radius: 999px;
+            background: #e5e7eb;
+            margin: 0 auto 20px auto;
+        }
+
+        /* --- UPDATED MODAL STYLES --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 480px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-premium);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
 
         @keyframes modalPop {
-            from { opacity: 0; transform: scale(0.95) translateY(10px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
         }
-        .animate-pop { animation: modalPop 0.25s ease-out forwards; }
 
-        .switch { position: relative; display: inline-block; width: 34px; height: 18px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #D1D5DB; transition: .3s; border-radius: 20px; }
-        .slider:before { position: absolute; content: ""; height: 12px; width: 12px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
-        input:checked + .slider { background-color: var(--primary-color); }
-        input:checked + .slider:before { transform: translateX(16px); }
+        .modal-header {
+            padding: 1.5rem 1.5rem 1rem;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            background: #fff;
+            position: relative;
+        }
 
-        #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 3000; }
-        .toast { padding: 1rem 1.5rem; border-radius: 0.5rem; color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-top: 10px; animation: slideIn 0.3s; }
-        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
-        
-        .custom-select-list { display: none; }
-        .custom-select-list.show { display: block; animation: modalPop 0.2s ease; }
+        .modal-body {
+            padding: 1.5rem;
+            background: #F8FAFC;
+        }
+
+        .modal-footer {
+            padding: 1rem 1.5rem 1.5rem;
+            background: white;
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+        }
+
+        .modal-title {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: rgb(29, 30, 32);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .btn-icon {
+            background: #f3f4f6;
+            border: none;
+            cursor: pointer;
+            color: #6b7280;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            width: 100%;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: rgb(29, 30, 32);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: var(--radius-md);
+            background: white;
+            transition: all 0.15s ease;
+            font-family: "DM Sans", Roboto, sans-serif;
+            font-size: 0.95rem;
+        }
+
+        .form-input:focus {
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 3px rgba(81, 39, 186, 0.1);
+            outline: none;
+        }
+
+        /* Select dropdown */
+        .select-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .select-button {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: var(--radius-md);
+            background: white;
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-family: "DM Sans", Roboto, sans-serif;
+            font-size: 0.95rem;
+            transition: all 0.15s ease;
+        }
+
+        .select-button:focus {
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 3px rgba(81, 39, 186, 0.1);
+            outline: none;
+        }
+
+        .select-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: var(--radius-md);
+            margin-top: 4px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            display: none;
+        }
+
+        .select-dropdown.show {
+            display: block;
+        }
+
+        .select-option {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+
+        .select-option:hover {
+            background: #f3f4f6;
+        }
+
+        .select-option.selected {
+            background: #f2efff;
+            color: var(--brand-primary);
+        }
+
+        /* Grid for form */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        /* Updated button styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.875rem 1.5rem;
+            font-weight: 600;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            border: none;
+            font-size: 0.95rem;
+            white-space: nowrap;
+            min-width: 100px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #5127ba 0%, #673de6 100%);
+            color: white;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #471ea7 0%, #5127ba 100%);
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(81, 39, 186, 0.25);
+        }
+
+        .btn-primary:hover::before {
+            opacity: 1;
+        }
+
+        .btn-primary:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-primary:disabled::before {
+            display: none;
+        }
+
+        .btn-secondary {
+            background: white;
+            border: 1px solid #e5e7eb;
+            color: var(--text-color);
+        }
+
+        .btn-secondary:hover {
+            background: #F8FAFC;
+            border-color: #CBD5E1;
+            transform: translateY(-1px);
+        }
+
+        .btn-danger {
+            background: #FEF2F2;
+            color: var(--danger-color);
+            border: 1px solid #FECACA;
+        }
+
+        .btn-danger:hover {
+            background: #FEE2E2;
+            transform: translateY(-1px);
+        }
+
+        /* Toast */
+        #toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 3000;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            padding: 1rem 1.5rem;
+            background: white;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-premium);
+            animation: slideUp 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-left: 4px solid var(--brand-primary);
+            min-width: 300px;
+            pointer-events: auto;
+            max-width: 90vw;
+        }
+
+        .toast.success {
+            border-left-color: var(--success-color);
+        }
+
+        .toast.error {
+            border-left-color: var(--danger-color);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ============= FIXED PROFILE POPUP ============= */
+        .profile-popup {
+            position: fixed;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 1px solid #e5e7eb;
+            padding: 0;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(10px);
+            transition: all 0.2s ease;
+            width: 280px;
+            max-width: 90vw;
+            overflow: hidden;
+        }
+
+        .profile-popup.active {
+            opacity: 1;
+            pointer-events: all;
+            transform: translateY(0);
+        }
+
+        /* Desktop positioning - FIXED: Show on LEFT side */
+        @media (min-width: 769px) {
+            .profile-popup {
+                left: 30px !important;
+                right: auto !important;
+                bottom: 100px !important;
+                top: auto !important;
+            }
+        }
+
+        /* Mobile positioning */
+        @media (max-width: 768px) {
+            .profile-popup {
+                left: 50% !important;
+                right: auto !important;
+                bottom: 100px !important;
+                top: auto !important;
+                transform: translateX(-50%) translateY(10px);
+            }
+            
+            .profile-popup.active {
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        .popup-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            background: #f9fafb;
+        }
+
+        .popup-list {
+            list-style: none;
+            padding: 0.5rem;
+        }
+
+        .popup-list li {
+            margin: 0;
+            padding: 0;
+        }
+
+        .popup-list a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--text-color);
+            transition: background 0.15s ease;
+            cursor: pointer;
+            font-size: 14px;
+            white-space: nowrap;
+            width: 100%;
+            background: none;
+            border: none;
+            text-align: left;
+        }
+
+        .popup-list a:hover {
+            background: #f3f4f6;
+        }
+
+        .popup-list a i {
+            font-size: 1.2rem;
+            color: #6b7280;
+            min-width: 20px;
+        }
+
+        .popup-list a.logout {
+            color: var(--danger-color);
+        }
+
+        .popup-list a.logout i {
+            color: var(--danger-color);
+        }
+
+        .popup-icon {
+            width: 18px;
+            height: 18px;
+            stroke: #6b7280;
+            flex-shrink: 0;
+        }
+
+        .logout-icon {
+            stroke: var(--danger-color) !important;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 1rem;
+            color: #6b7280;
+            grid-column: 1/-1;
+            width: 100%;
+        }
+
+        /* Responsive switch */
+        @media (max-width: 768px) {
+            .page-desktop { display: none; }
+            .page-mobile  { display: flex; }
+            
+            .card {
+                display: none;
+            }
+            
+            .content-inner {
+                padding: 0;
+            }
+            
+            .page-header {
+                display: none;
+            }
+
+            .modal-overlay {
+                align-items: flex-end;
+                padding: 0;
+            }
+            
+            .modal-content {
+                width: 100%;
+                border-radius: 24px 24px 0 0;
+                animation: slideUpModal 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+                max-height: 90vh;
+                overflow-y: auto;
+                max-width: 100%;
+            }
+            
+            @keyframes slideUpModal {
+                from { transform: translateY(100%); }
+                to { transform: translateY(0); }
+            }
+            
+            /* Prevent horizontal scrolling */
+            body, html {
+                overflow-x: hidden;
+                position: relative;
+                width: 100%;
+            }
+            
+            .mobile-content-inner {
+                padding: 16px;
+                max-width: 100%;
+                overflow-x: hidden;
+            }
+            
+            .mobile-controls-row {
+                padding-right: 4px;
+            }
+            
+            .mobile-add-btn {
+                padding: 12px 14px;
+                font-size: 14px;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .page-desktop { display: flex; }
+            .page-mobile { display: none; }
+            
+            /* Fix desktop popup z-index */
+            .coupon-actions {
+                position: relative;
+            }
+            
+            .desktop-popup {
+                z-index: 10002;
+            }
+        }
+
+        /* Text truncation fixes */
+        .text-truncate {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
     </style>
 </head>
-<body class="py-6 px-4">
-    <div id="toast-container"></div>
+<body>
+    <!-- ================= DESKTOP VIEW ================= -->
+    <div class="page-desktop">
+        <header class="d-topbar">
+            <img class="d-topbar-logo"
+                 src="https://product-ecommerces.netlify.app/vastramaya.png"
+                 alt="Vastramaya Logo" />
+        </header>
 
-    <div class="max-w-6xl mx-auto">
-        <!-- HEADER -->
-        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
-            <div>
-                <p class="text-[11px] font-black text-brand uppercase tracking-[0.25em] mb-1">Store Management</p>
-                <h1 class="text-4xl font-black text-gray-900 tracking-tight">Coupons</h1>
-            </div>
-            <button onclick="openModal()" class="bg-brand hover:bg-indigo-700 text-white px-6 py-4 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-all w-full md:w-auto">
-                <i data-lucide="plus" class="w-5 h-5"></i> Create New Coupon
-            </button>
-        </div>
+        <div class="d-app">
+            <aside class="d-sidebar">
+                <div class="d-sidebar-inner">
+                    <nav class="d-nav">
+                        <div class="d-nav-group">
+                            <!-- Dashboard -->
+                            <div class="d-nav-item" onclick="window.location.href='index.html'">
+                                <span class="icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="7" height="7" x="3" y="3" rx="1"/>
+                                        <rect width="7" height="7" x="14" y="3" rx="1"/>
+                                        <rect width="7" height="7" x="14" y="14" rx="1"/>
+                                        <rect width="7" height="7" x="3" y="14" rx="1"/>
+                                    </svg>
+                                </span>
+                                <span class="label">Dashboard</span>
+                            </div>
 
-        <!-- FILTERS -->
-        <div class="flex flex-row items-center gap-2 mb-8">
-            <div class="relative flex-grow">
-                <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4"></i>
-                <input type="text" id="search-bar" onkeyup="handleSearch()" placeholder="Search by code..." class="w-full bg-white border border-gray-200 rounded-xl py-3 pl-12 pr-4 text-sm font-medium focus:ring-2 focus:ring-indigo-500 outline-none">
-            </div>
-        </div>
+                            <!-- Inventory -->
+                            <div class="d-nav-item" onclick="window.location.href='manage-categories.html'">
+                                <span class="icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M2 7v10"/>
+                                        <path d="M6 5v14"/>
+                                        <rect width="12" height="18" x="10" y="3" rx="2"/>
+                                    </svg>
+                                </span>
+                                <span class="label">Inventory</span>
+                            </div>
 
-        <!-- TABLE -->
-        <div class="hidden md:block">
-            <table class="w-full border-separate border-spacing-y-3">
-                <thead>
-                    <tr class="text-left text-[10px] font-black uppercase tracking-widest text-gray-400">
-                        <th class="pb-2 pl-6">Coupon Details</th>
-                        <th class="pb-2">Discount</th>
-                        <th class="pb-2">Usage / Limit</th>
-                        <th class="pb-2">Status</th>
-                        <th class="pb-2 pr-6 text-right">Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="coupon-table-body">
-                    <tr><td colspan="5" class="text-center py-10 text-gray-400">Loading coupons...</td></tr>
-                </tbody>
-            </table>
-        </div>
+                            <!-- Manage Coupons (Active) -->
+                            <div class="d-nav-item d-nav-item--active">
+                                <span class="icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tags-icon lucide-tags">
+                                        <path d="M13.172 2a2 2 0 0 1 1.414.586l6.71 6.71a2.4 2.4 0 0 1 0 3.408l-4.592 4.592a2.4 2.4 0 0 1-3.408 0l-6.71-6.71A2 2 0 0 1 6 9.172V3a1 1 0 0 1 1-1z"/>
+                                        <path d="M2 7v6.172a2 2 0 0 0 .586 1.414l6.71 6.71a2.4 2.4 0 0 0 3.191.193"/>
+                                        <circle cx="10.5" cy="6.5" r=".5" fill="currentColor"/>
+                                    </svg>
+                                </span>
+                                <span class="label">Manage Coupons</span>
+                            </div>
 
-        <!-- MOBILE LIST -->
-        <div id="mobile-coupon-list" class="grid grid-cols-1 gap-4 md:hidden"></div>
-    </div>
+                            <!-- Customize Site -->
+                            <div class="d-nav-item" id="d-customize-toggle">
+                                <span class="icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12.034 12.681a.498.498 0 0 1 .647-.647l9 3.5a.5.5 0 0 1-.033.943l-3.444 1.068a1 1 0 0 0-.66.66l-1.067 3.443a.5.5 0 0 1-.943.033z"/>
+                                        <path d="M21 11V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6"/>
+                                    </svg>
+                                </span>
+                                <span class="label">Customize Site</span>
+                                <span class="chevron">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2"
+                                         stroke-linecap="round" stroke-linejoin="round"
+                                         class="chevron-icon">
+                                        <path d="m9 18 6-6-6-6"/>
+                                    </svg>
+                                </span>
+                            </div>
 
-    <!-- MODAL -->
-    <div id="form-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-        <div class="bg-white w-full max-w-lg rounded-[2rem] p-8 shadow-2xl animate-pop relative max-h-[90vh] overflow-y-auto">
-            <button onclick="closeModal()" class="absolute top-6 right-6 p-2 text-gray-400 hover:text-gray-600">
-                <i data-lucide="x" class="w-6 h-6"></i>
-            </button>
-            
-            <h2 id="form-title" class="text-2xl font-black mb-8 text-gray-900">Create Coupon</h2>
-            
-            <div class="space-y-5">
-                <div>
-                    <label class="text-[10px] font-bold text-gray-400 uppercase ml-1 mb-2 block">Coupon Code</label>
-                    <input type="text" id="input-code" oninput="this.value = this.value.toUpperCase()" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-4 font-mono font-bold text-lg outline-none focus:border-indigo-500">
-                </div>
-                
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="relative">
-                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1 mb-2 block">Type</label>
-                        <button onclick="toggleDropdown('type-drop')" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-4 text-left font-bold flex justify-between items-center">
-                            <span id="type-label">Percentage (%)</span>
-                            <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400"></i>
-                        </button>
-                        <div id="type-drop" class="custom-select-list absolute w-full mt-2 bg-white border border-gray-100 rounded-xl shadow-2xl z-[110] py-1">
-                            <div onclick="setDropValue('type-label', 'Percentage (%)', 'type-drop')" class="px-5 py-3 hover:bg-indigo-50 font-bold cursor-pointer">Percentage (%)</div>
-                            <div onclick="setDropValue('type-label', 'Flat Amount (₹)', 'type-drop')" class="px-5 py-3 hover:bg-indigo-50 font-bold cursor-pointer">Flat Amount (₹)</div>
+                            <!-- Desktop Customize Site submenu -->
+<div class="d-submenu" id="d-customize-submenu">
+
+    <a href="/manage-hero.html" class="d-submenu-item">
+        <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8h20"/><rect width="20" height="16" x="2" y="4" rx="2"/><path d="M6 16h12"/></svg>
+        <span>Hero Section</span>
+    </a>
+
+    <a href="/manage-sections.html" class="d-submenu-item">
+        <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/><path d="M14 4h7"/><path d="M14 9h7"/><path d="M14 15h7"/><path d="M14 20h7"/></svg>
+        <span>Sections</span>
+    </a>
+
+    <a href="/manage-hero-popup.html" class="d-submenu-item">
+        <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 21h10"/><rect width="20" height="14" x="2" y="3" rx="2"/></svg>
+        <span>Popup</span>
+    </a>
+
+</div>
+
+                            <!-- MANAGE ORDERS -->
+                            <div class="d-nav-item" id="d-orders-toggle">
+                                <span class="icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
+                                        <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
+                                        <path d="M8 14v2.2l1.6 1"/>
+                                        <circle cx="8" cy="16" r="6"/>
+                                    </svg>
+                                </span>
+                                <span class="label">MANAGE ORDERS</span>
+                                <span class="chevron">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2"
+                                         stroke-linecap="round" stroke-linejoin="round"
+                                         class="chevron-icon">
+                                        <path d="m9 18 6-6-6-6"/>
+                                    </svg>
+                                </span>
+                            </div>
+
+                            <!-- Desktop MANAGE ORDERS submenu -->
+                            <div class="d-submenu" id="d-orders-submenu">
+                                <div class="d-submenu-item">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 6v6l4 2"/>
+                                        <path d="M22 12a10 10 0 1 0-11 9.95"/>
+                                        <path d="m22 16-5.5 5.5L14 19"/>
+                                    </svg>
+                                    <span>Today</span>
+                                </div>
+                                <div class="d-submenu-item">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M8 2v4"/>
+                                        <path d="M16 2v4"/>
+                                        <rect width="18" height="18" x="3" y="4" rx="2"/>
+                                        <path d="M3 10h18"/>
+                                        <path d="M8 14h.01"/>
+                                        <path d="M12 14h.01"/>
+                                        <path d="M16 14h.01"/>
+                                        <path d="M8 18h.01"/>
+                                        <path d="M12 18h.01"/>
+                                        <path d="M16 18h.01"/>
+                                    </svg>
+                                    <span>This Month</span>
+                                </div>
+                                <div class="d-submenu-item">
+                                    <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 2v2"/>
+                                        <path d="M15.726 21.01A2 2 0 0 1 14 22H4a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2"/>
+                                        <path d="M18 2v2"/>
+                                        <path d="M2 13h2"/>
+                                        <path d="M8 8h14"/>
+                                        <rect x="8" y="3" width="14" height="14" rx="2"/>
+                                    </svg>
+                                    <span>All Orders</span>
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
+
+                    <!-- Desktop Account section -->
+                    <div class="d-account-section" id="profile-section">
+                        <div class="account-card">
+                            <img id="sidebar-avatar" class="account-avatar"
+                                 src="https://bpb-us-w2.wpmucdn.com/wp.wpi.edu/dist/e/505/files/2024/06/unknown-person-icon-3.png"
+                                 alt="Profile" />
+                            <div class="account-text">
+                                <div class="account-name" id="sidebar-name">Loading...</div>
+                                <div class="account-email" id="sidebar-email">Admin</div>
+                            </div>
                         </div>
                     </div>
-                    <div>
-                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1 mb-2 block">Value</label>
-                        <input type="number" id="input-value" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-4 font-bold text-lg outline-none focus:border-indigo-500">
+                </div>
+            </aside>
+
+            <main class="d-content">
+                <div class="content-inner">
+                    <!-- PAGE HEADER -->
+                    <div class="page-header">
+                        <div class="page-title-wrap">
+                            <div class="page-title">Manage Coupons</div>
+                            <div class="breadcrumb">
+                                <span class="breadcrumb-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2"
+                                         stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/>
+                                        <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                                    </svg>
+                                </span>
+                                <span>Home</span>
+                                <span class="breadcrumb-divider">/</span>
+                                <span>Manage Coupons</span>
+                            </div>
+                        </div>
+
+                        <button class="primary-btn" onclick="openAddModal()">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M5 12h14"/>
+                                <path d="M12 5v14"/>
+                            </svg>
+                            <span>Create Coupon</span>
+                        </button>
+                    </div>
+
+                    <!-- CARD -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="search-input-wrap">
+                                <svg class="search-icon" xmlns="http://www.w3.org/2000/svg"
+                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="7"></circle>
+                                    <line x1="16.65" y1="16.65" x2="21" y2="21"></line>
+                                </svg>
+                                <input type="text" id="search-input" placeholder="Search coupons by code..." />
+                            </div>
+                        </div>
+
+                        <div class="table-wrapper">
+                            <table class="coupons-table">
+                                <thead>
+                                    <tr>
+                                        <th>Coupon Code</th>
+                                        <th>Discount</th>
+                                        <th>Usage / Limit</th>
+                                        <th>Expiry Date</th>
+                                        <th class="th-status">Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="desktop-coupons-table">
+                                    <!-- Skeleton loading for desktop -->
+                                    <tr class="desktop-skeleton-row">
+                                        <td>
+                                            <div class="skeleton skeleton-text"></div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-text"></div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-text-small"></div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-text-small"></div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-toggle"></div>
+                                        </td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <div class="skeleton skeleton-button"></div>
+                                                <div class="skeleton skeleton-kebab"></div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="desktop-skeleton-row">
+                                        <td>
+                                            <div class="skeleton skeleton-text"></div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-text"></div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-text-small"></div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-text-small"></div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-toggle"></div>
+                                        </td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <div class="skeleton skeleton-button"></div>
+                                                <div class="skeleton skeleton-kebab"></div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="desktop-skeleton-row">
+                                        <td>
+                                            <div class="skeleton skeleton-text"></div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-text"></div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-text-small"></div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-text-small"></div>
+                                        </td>
+                                        <td>
+                                            <div class="skeleton skeleton-toggle"></div>
+                                        </td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <div class="skeleton skeleton-button"></div>
+                                                <div class="skeleton skeleton-kebab"></div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- ================= MOBILE VIEW ================= -->
+    <div class="page-mobile">
+        <!-- Mobile header: menu left, logo right -->
+        <header class="m-header">
+            <button class="m-menu-btn" id="m-menu-toggle" aria-label="Open menu">
+                <div class="m-menu-lines"><span></span></div>
+            </button>
+
+            <img
+              class="m-logo"
+              src="https://product-ecommerces.netlify.app/vastramaya.png"
+              alt="Vastramaya Logo" />
+        </header>
+
+        <main class="m-main">
+            <div class="mobile-content-inner">
+                <!-- Mobile Page Header -->
+                <div class="mobile-page-header">
+                    <div class="mobile-page-title-wrap">
+                        <div class="mobile-page-title">Manage Coupons</div>
+                        <div class="mobile-breadcrumb">
+                            <span class="mobile-breadcrumb-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2"
+                                     stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/>
+                                    <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                                </svg>
+                            </span>
+                            <span>Home</span>
+                            <span class="mobile-breadcrumb-divider">/</span>
+                            <span>Manage Coupons</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Mobile Search and Add Button Row -->
+                    <div class="mobile-controls-row">
+                        <div class="mobile-search-wrap">
+                            <div class="mobile-search-input-wrap">
+                                <svg class="mobile-search-icon" xmlns="http://www.w3.org/2000/svg"
+                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="7"></circle>
+                                    <line x1="16.65" y1="16.65" x2="21" y2="21"></line>
+                                </svg>
+                                <input type="text" id="mobile-search-input" placeholder="Search coupons..." />
+                            </div>
+                        </div>
+                        <button class="mobile-add-btn" onclick="openAddModal()">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M5 12h14"/>
+                                <path d="M12 5v14"/>
+                            </svg>
+                            <span>Add</span>
+                        </button>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1 mb-2 block">Total Limit</label>
-                        <input type="number" id="input-limit" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-4 font-bold outline-none focus:border-indigo-500">
+                <!-- Mobile Coupon Cards -->
+                <div class="mobile-coupon-cards" id="mobile-coupon-cards">
+                    <!-- Skeleton loading for mobile -->
+                    <div class="mobile-skeleton-card">
+                        <div class="skeleton-mobile-content">
+                            <div class="skeleton skeleton-mobile-title"></div>
+                            <div class="skeleton skeleton-mobile-subtitle"></div>
+                        </div>
+                        <div class="coupon-card-actions">
+                            <div class="skeleton skeleton-mobile-toggle"></div>
+                            <div class="skeleton skeleton-mobile-menu"></div>
+                        </div>
                     </div>
-                    <div>
-                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1 mb-2 block">User Limit</label>
-                        <input type="number" id="input-user-limit" value="1" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-4 font-bold outline-none focus:border-indigo-500">
+                    <div class="mobile-skeleton-card">
+                        <div class="skeleton-mobile-content">
+                            <div class="skeleton skeleton-mobile-title"></div>
+                            <div class="skeleton skeleton-mobile-subtitle"></div>
+                        </div>
+                        <div class="coupon-card-actions">
+                            <div class="skeleton skeleton-mobile-toggle"></div>
+                            <div class="skeleton skeleton-mobile-menu"></div>
+                        </div>
+                    </div>
+                    <div class="mobile-skeleton-card">
+                        <div class="skeleton-mobile-content">
+                            <div class="skeleton skeleton-mobile-title"></div>
+                            <div class="skeleton skeleton-mobile-subtitle"></div>
+                        </div>
+                        <div class="coupon-card-actions">
+                            <div class="skeleton skeleton-mobile-toggle"></div>
+                            <div class="skeleton skeleton-mobile-menu"></div>
+                        </div>
                     </div>
                 </div>
+            </div>
+        </main>
 
-                <div>
-                    <label class="text-[10px] font-bold text-gray-400 uppercase ml-1 mb-2 block">Expiry Date</label>
-                    <input type="date" id="input-expiry" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-4 font-bold outline-none focus:border-indigo-500">
+        <!-- Overlay & drawer -->
+        <div class="m-overlay" id="m-overlay">
+            <div class="m-drawer">
+                <div class="m-drawer-header">
+                    <img
+                      class="m-drawer-logo"
+                      src="https://product-ecommerces.netlify.app/vastramaya.png"
+                      alt="Vastramaya Logo" />
+                    <button class="m-drawer-close" id="m-drawer-close" aria-label="Close menu">
+                        <div class="m-drawer-close-icon"></div>
+                    </button>
                 </div>
 
-                <button id="save-btn" onclick="saveCouponData()" class="w-full bg-brand hover:bg-indigo-700 text-white py-5 rounded-2xl font-bold shadow-xl mt-6 active:scale-95 transition-all">Save Coupon</button>
+                <nav class="m-drawer-nav">
+                    <!-- Dashboard -->
+                    <div class="m-nav-item" onclick="window.location.href='index.html'">
+                        <span class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect width="7" height="7" x="3" y="3" rx="1"/>
+                                <rect width="7" height="7" x="14" y="3" rx="1"/>
+                                <rect width="7" height="7" x="14" y="14" rx="1"/>
+                                <rect width="7" height="7" x="3" y="14" rx="1"/>
+                            </svg>
+                        </span>
+                        <span class="label">Dashboard</span>
+                    </div>
+
+                    <!-- Inventory -->
+                    <div class="m-nav-item" onclick="window.location.href='manage-categories.html'">
+                        <span class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M2 7v10"/>
+                                <path d="M6 5v14"/>
+                                <rect width="12" height="18" x="10" y="3" rx="2"/>
+                            </svg>
+                        </span>
+                        <span class="label">Inventory</span>
+                    </div>
+
+                    <!-- Manage Coupons (Active) -->
+                    <div class="m-nav-item active">
+                        <span class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tags-icon lucide-tags">
+                                <path d="M13.172 2a2 2 0 0 1 1.414.586l6.71 6.71a2.4 2.4 0 0 1 0 3.408l-4.592 4.592a2.4 2.4 0 0 1-3.408 0l-6.71-6.71A2 2 0 0 1 6 9.172V3a1 1 0 0 1 1-1z"/>
+                                <path d="M2 7v6.172a2 2 0 0 0 .586 1.414l6.71 6.71a2.4 2.4 0 0 0 3.191.193"/>
+                                <circle cx="10.5" cy="6.5" r=".5" fill="currentColor"/>
+                            </svg>
+                        </span>
+                        <span class="label">Manage Coupons</span>
+                    </div>
+
+                    <!-- Customize Site with dropdown -->
+                    <div class="m-nav-item" id="m-customize-toggle">
+                        <span class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12.034 12.681a.498.498 0 0 1 .647-.647l9 3.5a.5.5 0 0 1-.033.943l-3.444 1.068a1 1 0 0 0-.66.66l-1.067 3.443a.5.5 0 0 1-.943.033z"/>
+                                <path d="M21 11V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6"/>
+                            </svg>
+                        </span>
+                        <span class="label">Customize Site</span>
+                        <span class="chevron">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round"
+                                 class="chevron-icon">
+                                <path d="m9 18 6-6-6-6"/>
+                            </svg>
+                        </span>
+                    </div>
+
+                    <!-- Mobile Customize Site submenu -->
+<div class="m-submenu" id="m-customize-submenu">
+
+    <a href="/manage-hero.html" class="m-submenu-item">
+        <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8h20"/><rect width="20" height="16" x="2" y="4" rx="2"/><path d="M6 16h12"/></svg>
+        <span>Hero Section</span>
+    </a>
+
+    <a href="/manage-sections.html" class="m-submenu-item">
+        <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/><path d="M14 4h7"/><path d="M14 9h7"/><path d="M14 15h7"/><path d="M14 20h7"/></svg>
+        <span>Sections</span>
+    </a>
+
+    <a href="/manage-hero-popup.html" class="m-submenu-item">
+        <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 21h10"/><rect width="20" height="14" x="2" y="3" rx="2"/></svg>
+        <span>Popup</span>
+    </a>
+
+</div>
+
+
+                    <!-- MANAGE ORDERS with dropdown -->
+                    <div class="m-nav-item" id="m-orders-toggle">
+                        <span class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M16 22h2a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v2.85"/>
+                                <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
+                                <path d="M8 14v2.2l1.6 1"/>
+                                <circle cx="8" cy="16" r="6"/>
+                            </svg>
+                        </span>
+                        <span class="label">MANAGE ORDERS</span>
+                        <span class="chevron">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round"
+                                 class="chevron-icon">
+                                <path d="m9 18 6-6-6-6"/>
+                            </svg>
+                        </span>
+                    </div>
+
+                    <!-- Mobile MANAGE ORDERS submenu -->
+                    <div class="m-submenu" id="m-orders-submenu">
+                        <div class="m-submenu-item">
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 6v6l4 2"/>
+                                <path d="M22 12a10 10 0 1 0-11 9.95"/>
+                                <path d="m22 16-5.5 5.5L14 19"/>
+                            </svg>
+                            <span>Today</span>
+                        </div>
+                        <div class="m-submenu-item">
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M8 2v4"/>
+                                <path d="M16 2v4"/>
+                                <rect width="18" height="18" x="3" y="4" rx="2"/>
+                                <path d="M3 10h18"/>
+                                <path d="M8 14h.01"/>
+                                <path d="M12 14h.01"/>
+                                <path d="M16 14h.01"/>
+                                <path d="M8 18h.01"/>
+                                <path d="M12 18h.01"/>
+                                <path d="M16 18h.01"/>
+                            </svg>
+                            <span>This Month</span>
+                        </div>
+                        <div class="m-submenu-item">
+                            <svg class="submenu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2v2"/>
+                                <path d="M15.726 21.01A2 2 0 0 1 14 22H4a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2"/>
+                                <path d="M18 2v2"/>
+                                <path d="M2 13h2"/>
+                                <path d="M8 8h14"/>
+                                <rect x="8" y="3" width="14" height="14" rx="2"/>
+                            </svg>
+                            <span>All Orders</span>
+                        </div>
+                    </div>
+                </nav>
+
+                <!-- Mobile account sharing -->
+                <div class="m-account-section" id="mobile-profile-section">
+                    <div class="account-card">
+                        <img id="mobile-sidebar-avatar" class="account-avatar"
+                             src="https://bpb-us-w2.wpmucdn.com/wp.wpi.edu/dist/e/505/files/2024/06/unknown-person-icon-3.png"
+                             alt="Profile" />
+                        <div class="account-text">
+                            <div class="account-name" id="mobile-sidebar-name">Loading...</div>
+                            <div class="account-email" id="mobile-sidebar-email">Admin</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Advanced Menu (Bottom Sheet) -->
+        <div class="advanced-menu-overlay" id="advanced-menu-overlay"></div>
+        <div class="advanced-menu" id="advanced-menu">
+            <div class="menu-handle"></div>
+            <div class="advanced-menu-header">
+                <div class="advanced-menu-title">Coupon Actions</div>
+                <button class="advanced-menu-close" id="advanced-menu-close">
+                    <div class="advanced-menu-close-icon"></div>
+                </button>
+            </div>
+            <div class="advanced-menu-items">
+                <button class="advanced-menu-item" id="mobile-edit-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M13 21h8"/>
+                        <path d="m15 5 4 4"/>
+                        <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
+                    </svg>
+                    <span>Edit</span>
+                </button>
+                <button class="advanced-menu-item" id="mobile-delete-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M10 11v6"/>
+                        <path d="M14 11v6"/>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+                        <path d="M3 6h18"/>
+                        <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                    </svg>
+                    <span>Delete Coupon</span>
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- FIREBASE SDKS -->
+    <!-- Profile Popup with updated SVG icons -->
+    <div class="profile-popup" id="profile-popup">
+        <div class="popup-header">
+            <img id="popup-avatar" src="" class="account-avatar">
+            <div class="account-text">
+                <span class="account-name" id="popup-name">Loading...</span>
+                <span class="account-email" id="popup-email">Admin</span>
+            </div>
+        </div>
+        <ul class="popup-list">
+            <li>
+                <a href="#">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="popup-icon">
+                        <circle cx="12" cy="8" r="5"/>
+                        <path d="M20 21a8 8 0 0 0-16 0"/>
+                    </svg>
+                    <span>Profile</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="popup-icon">
+                        <path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/>
+                        <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                    <span>Settings</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" onclick="auth.signOut()" class="logout">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="popup-icon logout-icon">
+                        <path d="m16 17 5-5-5-5"/>
+                        <path d="M21 12H9"/>
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                    </svg>
+                    <span>Logout</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- ADD/EDIT MODAL -->
+    <div class="modal-overlay" id="coupon-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="modal-title">Create Coupon</div>
+                <button class="btn-icon" onclick="closeModal()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 6 6 18"/>
+                        <path d="m6 6 12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <form id="coupon-form">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label">Coupon Code *</label>
+                        <input type="text" class="form-input" id="coupon-code-input" required 
+                               placeholder="e.g. SUMMER25" maxlength="20"
+                               oninput="this.value = this.value.toUpperCase()">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Discount Type *</label>
+                        <div class="select-wrapper">
+                            <button type="button" class="select-button" id="type-select-button" onclick="toggleDropdown('type-dropdown')">
+                                <span id="type-selected-label">Percentage (%)</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="m6 9 6 6 6-6"/>
+                                </svg>
+                            </button>
+                            <div class="select-dropdown" id="type-dropdown">
+                                <div class="select-option selected" onclick="selectOption('type', 'percentage', 'Percentage (%)')">Percentage (%)</div>
+                                <div class="select-option" onclick="selectOption('type', 'flat', 'Flat Amount (₹)')">Flat Amount (₹)</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" id="value-label">Discount Value (%) *</label>
+                        <input type="number" class="form-input" id="coupon-value-input" required 
+                               placeholder="e.g. 25" min="1" max="100">
+                    </div>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Total Usage Limit</label>
+                            <input type="number" class="form-input" id="coupon-limit-input" 
+                                   placeholder="e.g. 100" min="1" value="100">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Per User Limit</label>
+                            <input type="number" class="form-input" id="coupon-user-limit-input" 
+                                   placeholder="e.g. 1" min="1" value="1">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Expiry Date</label>
+                        <input type="date" class="form-input" id="coupon-expiry-input">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="modal-submit-btn">Create Coupon</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- DELETE MODAL -->
+    <div class="modal-overlay" id="delete-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" style="color: var(--danger-color);">Delete Coupon</div>
+                <button class="btn-icon" onclick="closeDeleteModal()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 6 6 18"/>
+                        <path d="m6 6 12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p style="color: #6b7280; margin-bottom: 1rem; font-size: 0.95rem;">Are you sure you want to delete coupon <strong id="del-coupon-code" style="color: rgb(29, 30, 32);"></strong>? This action cannot be undone.</p>
+                <div class="form-group">
+                    <label class="form-label">Type coupon code to confirm</label>
+                    <input type="text" class="form-input" id="confirm-del-input" placeholder="Coupon Code" oninput="this.value = this.value.toUpperCase()">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeDeleteModal()">Cancel</button>
+                <button class="btn btn-danger" id="confirm-del-btn" disabled>Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-container"></div>
+
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+    <script src='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css'></script>
 
     <script>
+        // --- UI INTERACTIONS ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Mobile drawer behaviour
+            const mOverlay = document.getElementById('m-overlay');
+            const mMenuToggle = document.getElementById('m-menu-toggle');
+            const mDrawerClose = document.getElementById('m-drawer-close');
+
+            if (mMenuToggle && mOverlay && mDrawerClose) {
+                mMenuToggle.addEventListener('click', () => {
+                    mOverlay.classList.add('open');
+                });
+
+                mDrawerClose.addEventListener('click', () => {
+                    mOverlay.classList.remove('open');
+                });
+
+                mOverlay.addEventListener('click', (e) => {
+                    if (e.target === mOverlay) {
+                        mOverlay.classList.remove('open');
+                    }
+                });
+            }
+
+            // Desktop Customize Site dropdown
+            const dCustomizeToggle = document.getElementById('d-customize-toggle');
+            const dCustomizeSubmenu = document.getElementById('d-customize-submenu');
+
+            if (dCustomizeToggle && dCustomizeSubmenu) {
+                dCustomizeToggle.addEventListener('click', () => {
+                    dCustomizeSubmenu.classList.toggle('open');
+                    dCustomizeToggle.classList.toggle('dropdown-open');
+                });
+            }
+
+            // Desktop MANAGE ORDERS dropdown
+            const dOrdersToggle = document.getElementById('d-orders-toggle');
+            const dOrdersSubmenu = document.getElementById('d-orders-submenu');
+
+            if (dOrdersToggle && dOrdersSubmenu) {
+                dOrdersToggle.addEventListener('click', () => {
+                    dOrdersSubmenu.classList.toggle('open');
+                    dOrdersToggle.classList.toggle('dropdown-open');
+                });
+            }
+
+            // Mobile Customize Site dropdown
+            const mCustomizeToggle = document.getElementById('m-customize-toggle');
+            const mCustomizeSubmenu = document.getElementById('m-customize-submenu');
+
+            if (mCustomizeToggle && mCustomizeSubmenu) {
+                mCustomizeToggle.addEventListener('click', () => {
+                    mCustomizeSubmenu.classList.toggle('open');
+                    mCustomizeToggle.classList.toggle('dropdown-open');
+                });
+            }
+
+            // Mobile MANAGE ORDERS dropdown
+            const mOrdersToggle = document.getElementById('m-orders-toggle');
+            const mOrdersSubmenu = document.getElementById('m-orders-submenu');
+
+            if (mOrdersToggle && mOrdersSubmenu) {
+                mOrdersToggle.addEventListener('click', () => {
+                    mOrdersSubmenu.classList.toggle('open');
+                    mOrdersToggle.classList.toggle('dropdown-open');
+                });
+            }
+
+            // Profile section
+            const profileSection = document.getElementById('profile-section');
+            const mobileProfileSection = document.getElementById('mobile-profile-section');
+            const profilePopup = document.getElementById('profile-popup');
+
+            // Fix profile popup positioning for desktop - show on LEFT side
+            if (profileSection) {
+                profileSection.addEventListener('click', e => {
+                    e.stopPropagation();
+                    
+                    // Position the popup at the bottom left of the account section for desktop
+                    if (window.innerWidth >= 769) {
+                        const rect = profileSection.getBoundingClientRect();
+                        profilePopup.style.left = '30px';
+                        profilePopup.style.right = 'auto';
+                        profilePopup.style.bottom = '100px';
+                        profilePopup.style.top = 'auto';
+                    }
+                    
+                    profilePopup.classList.toggle('active');
+                });
+                
+                document.addEventListener('click', e => {
+                    if (!profileSection.contains(e.target) && !profilePopup.contains(e.target)) {
+                        profilePopup.classList.remove('active');
+                    }
+                });
+            }
+
+            if (mobileProfileSection) {
+                mobileProfileSection.addEventListener('click', e => {
+                    e.stopPropagation();
+                    profilePopup.classList.toggle('active');
+                });
+            }
+
+            // Advanced Menu functionality
+            const advancedMenu = document.getElementById('advanced-menu');
+            const advancedMenuOverlay = document.getElementById('advanced-menu-overlay');
+            const advancedMenuClose = document.getElementById('advanced-menu-close');
+
+            // Close advanced menu
+            if (advancedMenuClose && advancedMenuOverlay) {
+                advancedMenuClose.addEventListener('click', () => {
+                    advancedMenu.classList.remove('open');
+                    advancedMenuOverlay.classList.remove('open');
+                });
+
+                advancedMenuOverlay.addEventListener('click', () => {
+                    advancedMenu.classList.remove('open');
+                    advancedMenuOverlay.classList.remove('open');
+                });
+            }
+
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.select-wrapper')) {
+                    document.querySelectorAll('.select-dropdown').forEach(dropdown => {
+                        dropdown.classList.remove('show');
+                    });
+                }
+            });
+
+            // Prevent horizontal scrolling on mobile
+            if (window.innerWidth <= 768) {
+                document.body.style.overflowX = 'hidden';
+                document.body.style.maxWidth = '100vw';
+            }
+
+            // Close popups when clicking outside
+            document.addEventListener('click', function(e) {
+                // Close profile popup when clicking outside
+                const profilePopup = document.getElementById('profile-popup');
+                const profileSection = document.getElementById('profile-section');
+                const mobileProfileSection = document.getElementById('mobile-profile-section');
+                
+                if (profilePopup && profilePopup.classList.contains('active')) {
+                    if (!profilePopup.contains(e.target) && 
+                        !profileSection?.contains(e.target) && 
+                        !mobileProfileSection?.contains(e.target)) {
+                        profilePopup.classList.remove('active');
+                    }
+                }
+                
+                // Close desktop popups when clicking outside
+                document.querySelectorAll('.desktop-popup').forEach(popup => {
+                    if (popup.classList.contains('open') && 
+                        !popup.contains(e.target) && 
+                        !e.target.closest('.kebab')) {
+                        popup.classList.remove('open');
+                    }
+                });
+            });
+
+            // Close popups when pressing Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    document.getElementById('profile-popup')?.classList.remove('active');
+                    document.querySelectorAll('.desktop-popup').forEach(popup => {
+                        popup.classList.remove('open');
+                    });
+                    closeAdvancedMenu();
+                    document.querySelectorAll('.select-dropdown').forEach(dropdown => {
+                        dropdown.classList.remove('show');
+                    });
+                }
+            });
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth <= 768) {
+                document.body.style.overflowX = 'hidden';
+                document.body.style.maxWidth = '100vw';
+            } else {
+                document.body.style.overflowX = '';
+                document.body.style.maxWidth = '';
+            }
+            
+            // Close popups on resize
+            document.getElementById('profile-popup')?.classList.remove('active');
+            document.querySelectorAll('.desktop-popup').forEach(popup => {
+                popup.classList.remove('open');
+            });
+            document.querySelectorAll('.select-dropdown').forEach(dropdown => {
+                dropdown.classList.remove('show');
+            });
+        });
+
+        // Dropdown functions
+        function toggleDropdown(id) {
+            const dropdown = document.getElementById(id);
+            dropdown.classList.toggle('show');
+        }
+
+        function selectOption(type, value, label) {
+            const dropdown = document.getElementById(`${type}-dropdown`);
+            const button = document.getElementById(`${type}-select-button`);
+            const labelSpan = document.getElementById(`${type}-selected-label`);
+            
+            // Update all options
+            dropdown.querySelectorAll('.select-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Select the clicked option
+            event.target.classList.add('selected');
+            
+            // Update button text
+            labelSpan.textContent = label;
+            
+            // Update value label for discount type
+            if (type === 'type') {
+                const valueLabel = document.getElementById('value-label');
+                if (value === 'percentage') {
+                    valueLabel.textContent = 'Discount Value (%) *';
+                    document.getElementById('coupon-value-input').setAttribute('max', '100');
+                    document.getElementById('coupon-value-input').placeholder = 'e.g. 25';
+                } else {
+                    valueLabel.textContent = 'Discount Amount (₹) *';
+                    document.getElementById('coupon-value-input').removeAttribute('max');
+                    document.getElementById('coupon-value-input').placeholder = 'e.g. 500';
+                }
+            }
+            
+            // Close dropdown
+            dropdown.classList.remove('show');
+        }
+
+        // --- FIREBASE CONFIG ---
         const firebaseConfig = {
             apiKey: "AIzaSyCdeonH3VytC21F3X6x0rCVCn2xXrGPoug",
             authDomain: "vastramaya---magic.firebaseapp.com",
             projectId: "vastramaya---magic",
             storageBucket: "vastramaya---magic.firebasestorage.app",
             messagingSenderId: "543460072082",
-            appId: "1:543460072082:web:f3d1140e8f81ad338ae44b"
+            appId: "1:543460072082:web:f3d1140e8f81ad338ae44b",
+            measurementId: "G-E39VNDCFVE"
         };
-        
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        const auth = firebase.auth();
         const ADMIN_EMAIL = "harshavardhanjw@gmail.com";
-        
-        // Path requested: Coupon (coll) -> Coupon (doc) -> List (sub-coll)
-        const couponRef = db.collection('Coupon').doc('Coupon').collection('List');
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const storage = firebase.storage();
 
+        // --- APP LOGIC ---
         let allCoupons = [];
         let editingId = null;
-        let searchQuery = "";
+        let deletingId = null;
+        let deletingCode = null;
+        let currentMenuCouponId = null;
+        let isLoading = true;
 
-        // Admin Security Check
+        // Firestore structure: Coupon -> Coupon -> List
+        const couponRef = db.collection('Coupon').doc('Coupon').collection('List');
+
         auth.onAuthStateChanged(user => {
             if (!user || user.email !== ADMIN_EMAIL) {
-                alert("Access Denied: Admin only.");
                 window.location.href = 'index.html';
-            } else {
-                fetchCoupons();
-            }
-        });
-
-        async function fetchCoupons() {
-            couponRef.onSnapshot(snapshot => {
-                allCoupons = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                renderUI();
-            });
-        }
-
-        function renderUI() {
-            const desktopBody = document.getElementById('coupon-table-body');
-            const mobileList = document.getElementById('mobile-coupon-list');
-            
-            const filtered = allCoupons.filter(c => c.code.toLowerCase().includes(searchQuery.toLowerCase()));
-
-            if (filtered.length === 0) {
-                desktopBody.innerHTML = `<tr><td colspan="5" class="text-center py-10 text-gray-400 font-medium">No coupons found.</td></tr>`;
-                mobileList.innerHTML = `<p class="text-center py-10 text-gray-400">No coupons found.</p>`;
                 return;
             }
+            initProfile(user);
+            loadCoupons();
+        });
 
-            desktopBody.innerHTML = filtered.map(c => `
-                <tr class="bg-white border border-gray-100 rounded-2xl shadow-sm">
-                    <td class="py-5 pl-6 rounded-l-2xl">
-                        <div class="font-bold text-gray-900">${c.code}</div>
-                        <div class="text-[9px] text-gray-400 font-bold uppercase">Exp: ${c.expiry || 'No Expiry'}</div>
+        function initProfile(user) {
+            const name = user.displayName || 'Admin';
+            const avatar = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=5127ba&color=fff`;
+            
+            // Desktop
+            document.getElementById('sidebar-name').textContent = name;
+            document.getElementById('sidebar-email').textContent = user.email;
+            document.getElementById('sidebar-avatar').src = avatar;
+            
+            // Mobile
+            document.getElementById('mobile-sidebar-name').textContent = name;
+            document.getElementById('mobile-sidebar-email').textContent = user.email;
+            document.getElementById('mobile-sidebar-avatar').src = avatar;
+            
+            // Popup
+            document.getElementById('popup-name').textContent = name;
+            document.getElementById('popup-email').textContent = user.email;
+            document.getElementById('popup-avatar').src = avatar;
+        }
+
+        async function loadCoupons() {
+            try {
+                // Show skeleton loading initially
+                isLoading = true;
+                
+                const couponSnap = await couponRef.orderBy('createdAt', 'desc').get();
+                allCoupons = couponSnap.docs.map(doc => { 
+                    const data = doc.data();
+                    return { 
+                        id: doc.id, 
+                        ...data,
+                        active: data.active !== undefined ? data.active : true,
+                        used: data.used || 0,
+                        limit: data.limit || 100,
+                        userLimit: data.userLimit || 1
+                    };
+                });
+                
+                isLoading = false;
+                renderCoupons(allCoupons);
+            } catch (e) {
+                console.error(e);
+                isLoading = false;
+                showToast('Error loading coupons', 'error');
+                renderCoupons([]);
+            }
+        }
+
+        function renderCoupons(list) {
+            // Desktop table
+            const desktopTable = document.getElementById('desktop-coupons-table');
+            // Mobile cards
+            const mobileCards = document.getElementById('mobile-coupon-cards');
+            
+            // Show loading skeleton
+            if (isLoading) {
+                // Skeleton is already shown in HTML
+                return;
+            }
+            
+            if(list.length === 0) {
+                desktopTable.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="empty-state">
+                            <h3>No Coupons Found</h3>
+                            <p>Create a new coupon to get started.</p>
+                        </td>
+                    </tr>`;
+                mobileCards.innerHTML = `<div class="empty-state"><h3>No Coupons Found</h3><p>Create a new coupon to get started.</p></div>`;
+                return;
+            }
+            
+            // Desktop table rows
+            desktopTable.innerHTML = list.map(coupon => {
+                const isPercentage = coupon.type && coupon.type.includes('%');
+                const expiryDate = coupon.expiry ? new Date(coupon.expiry) : null;
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                
+                let expiryClass = '';
+                let expiryText = 'No expiry';
+                
+                if (expiryDate) {
+                    expiryDate.setHours(0, 0, 0, 0);
+                    if (expiryDate < today) {
+                        expiryClass = 'expired';
+                        expiryText = 'Expired';
+                    } else if (expiryDate.getTime() === today.getTime()) {
+                        expiryClass = 'upcoming';
+                        expiryText = 'Today';
+                    } else {
+                        expiryText = new Date(coupon.expiry).toLocaleDateString('en-IN', {
+                            day: 'numeric',
+                            month: 'short',
+                            year: 'numeric'
+                        });
+                    }
+                }
+                
+                return `
+                <tr>
+                    <td>
+                        <div class="coupon-code">${coupon.code}</div>
                     </td>
-                    <td class="py-5 font-bold text-brand">${c.type.includes('%') ? c.value + '%' : '₹' + c.value}</td>
-                    <td class="py-5">
-                        <div class="text-[10px] font-bold text-gray-600">Usage: ${c.used || 0} / ${c.limit}</div>
-                        <div class="text-[9px] text-indigo-400 font-bold">User Limit: ${c.userLimit}</div>
+                    <td>
+                        <div class="coupon-value ${isPercentage ? 'coupon-percentage' : 'coupon-flat'}">
+                            ${isPercentage ? `${coupon.value}%` : `₹${coupon.value}`}
+                        </div>
+                        <div class="coupon-type-badge ${isPercentage ? 'type-percentage' : 'type-flat'}">
+                            ${isPercentage ? 'Percentage' : 'Flat'}
+                        </div>
                     </td>
-                    <td class="py-5">
-                        <label class="switch"><input type="checkbox" onchange="toggleStatus('${c.id}', ${c.active})" ${c.active ? 'checked' : ''}><span class="slider"></span></label>
+                    <td class="coupon-usage">
+                        <div>Used: ${coupon.used || 0}</div>
+                        <div>Limit: ${coupon.limit || 100}</div>
+                        <div style="font-size: 12px; color: #6b7280;">Per user: ${coupon.userLimit || 1}</div>
                     </td>
-                    <td class="py-5 pr-6 text-right rounded-r-2xl">
-                        <div class="flex items-center justify-end gap-2">
-                            <button onclick="editCoupon('${c.id}')" class="px-4 py-2 border border-brand text-brand hover:bg-indigo-50 rounded-lg text-xs font-bold transition-all">Edit</button>
-                            <button onclick="deleteCoupon('${c.id}')" class="p-2 bg-red-50 text-red-500 rounded-lg hover:bg-red-100 transition-colors">
-                                <i data-lucide="trash-2" class="w-4 h-4"></i>
-                            </button>
+                    <td class="coupon-expiry ${expiryClass}">${expiryText}</td>
+                    <td class="td-status">
+                        <div class="status-toggle">
+                            <label class="toggle-switch">
+                                <input type="checkbox" ${coupon.active ? 'checked' : ''} 
+                                       onchange="toggleCouponStatus('${coupon.id}', this.checked)">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </td>
+                    <td class="coupon-actions">
+                        <div class="action-buttons">
+                            <div class="popup-container">
+                                <div class="kebab" data-coupon-id="${coupon.id}">
+                                    <span class="kebab-dots"></span>
+                                </div>
+                                <div class="desktop-popup" id="desktop-popup-${coupon.id}">
+                                    <button class="desktop-popup-item" onclick="openEditModal('${coupon.id}')">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M13 21h8"/>
+                                            <path d="m15 5 4 4"/>
+                                            <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
+                                        </svg>
+                                        <span>Edit</span>
+                                    </button>
+                                    <button class="desktop-popup-item delete-item" onclick="openDeleteModal('${coupon.id}', '${coupon.code}')">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M10 11v6"/>
+                                            <path d="M14 11v6"/>
+                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+                                            <path d="M3 6h18"/>
+                                            <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                        </svg>
+                                        <span>Delete</span>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </td>
                 </tr>
-            `).join('');
-
-            mobileList.innerHTML = filtered.map(c => `
-                <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm space-y-4">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <div class="text-lg font-black text-gray-900 tracking-tight">${c.code}</div>
-                            <div class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Expires: ${c.expiry || 'N/A'}</div>
+            `}).join('');
+            
+            // Mobile cards
+            mobileCards.innerHTML = list.map(coupon => {
+                const isPercentage = coupon.type && coupon.type.includes('%');
+                const expiryDate = coupon.expiry ? new Date(coupon.expiry) : null;
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                
+                let expiryText = 'No expiry';
+                
+                if (expiryDate) {
+                    expiryDate.setHours(0, 0, 0, 0);
+                    if (expiryDate < today) {
+                        expiryText = 'Expired';
+                    } else if (expiryDate.getTime() === today.getTime()) {
+                        expiryText = 'Today';
+                    } else {
+                        expiryText = new Date(coupon.expiry).toLocaleDateString('en-IN', {
+                            day: 'numeric',
+                            month: 'short'
+                        });
+                    }
+                }
+                
+                return `
+                <div class="coupon-card-mobile" onclick="handleMobileCardClick(event, '${coupon.id}')">
+                    <div class="coupon-card-code">${coupon.code}</div>
+                    <div class="coupon-card-content">
+                        <div class="coupon-card-name">
+                            ${isPercentage ? `${coupon.value}% Off` : `₹${coupon.value} Off`}
+                            <span class="coupon-type-badge ${isPercentage ? 'type-percentage' : 'type-flat'}" style="font-size: 10px; padding: 2px 6px; margin-left: 8px;">
+                                ${isPercentage ? '%' : '₹'}
+                            </span>
                         </div>
-                        <label class="switch"><input type="checkbox" onchange="toggleStatus('${c.id}', ${c.active})" ${c.active ? 'checked' : ''}><span class="slider"></span></label>
+                        <div class="coupon-card-details">
+                            Used: ${coupon.used || 0}/${coupon.limit || 100} • Exp: ${expiryText}
+                        </div>
                     </div>
-                    <div class="flex justify-between items-center text-sm">
-                        <span class="font-bold text-brand">${c.type.includes('%') ? c.value + '%' : '₹' + c.value}</span>
-                        <span class="text-gray-400 text-xs font-bold">Limit: ${c.limit}</span>
-                    </div>
-                    <div class="flex gap-2">
-                        <button onclick="editCoupon('${c.id}')" class="flex-grow py-3 border border-brand text-brand font-bold rounded-xl text-xs">Edit</button>
-                        <button onclick="deleteCoupon('${c.id}')" class="px-4 py-3 bg-red-50 text-red-500 rounded-xl"><i data-lucide="trash-2" class="w-5 h-5"></i></button>
+                    <div class="coupon-card-actions">
+                        <div class="mobile-status-toggle">
+                            <label class="toggle-switch">
+                                <input type="checkbox" ${coupon.active ? 'checked' : ''} 
+                                       onchange="toggleCouponStatus('${coupon.id}', this.checked)">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <button class="coupon-card-menu-btn" data-coupon-id="${coupon.id}">
+                            <span class="coupon-card-menu-dots"></span>
+                        </button>
                     </div>
                 </div>
-            `).join('');
-            lucide.createIcons();
-        }
-
-        async function saveCouponData() {
-            const btn = document.getElementById('save-btn');
-            const data = {
-                code: document.getElementById('input-code').value.toUpperCase(),
-                type: document.getElementById('type-label').innerText,
-                value: parseFloat(document.getElementById('input-value').value),
-                limit: parseInt(document.getElementById('input-limit').value) || 100,
-                userLimit: parseInt(document.getElementById('input-user-limit').value) || 1,
-                expiry: document.getElementById('input-expiry').value,
-                active: true,
-                used: 0
-            };
-
-            if (!data.code || isNaN(data.value)) return showToast("Code and Value are required", "error");
-
-            btn.disabled = true;
-            btn.innerText = "Saving...";
-
-            try {
-                if (editingId) {
-                    await couponRef.doc(editingId).update(data);
-                    showToast("Coupon updated successfully!");
-                } else {
-                    await couponRef.add(data);
-                    showToast("Coupon created successfully!");
+            `}).join('');
+            
+            // FIXED: Desktop popup positioning - now using fixed positioning
+            document.querySelectorAll('.kebab').forEach(kebab => {
+                kebab.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    
+                    const couponId = kebab.getAttribute('data-coupon-id');
+                    const popup = document.getElementById(`desktop-popup-${couponId}`);
+                    
+                    // Close all other popups
+                    document.querySelectorAll('.desktop-popup').forEach(p => {
+                        if (p !== popup) {
+                            p.classList.remove('open');
+                        }
+                    });
+                    
+                    // Toggle current popup
+                    popup.classList.toggle('open');
+                    
+                    if (popup.classList.contains('open')) {
+                        // Get the position of the kebab button
+                        const rect = kebab.getBoundingClientRect();
+                        
+                        // Position the popup relative to the viewport
+                        popup.style.position = 'fixed';
+                        popup.style.top = `${rect.bottom + window.scrollY + 5}px`;
+                        popup.style.right = `${window.innerWidth - rect.right}px`;
+                        
+                        // Ensure popup stays within viewport
+                        const popupRect = popup.getBoundingClientRect();
+                        if (popupRect.bottom > window.innerHeight) {
+                            popup.style.top = `${rect.top + window.scrollY - popupRect.height - 5}px`;
+                        }
+                        if (popupRect.right > window.innerWidth) {
+                            popup.style.right = '10px';
+                        }
+                    }
+                });
+            });
+            
+            // Close popups when clicking elsewhere
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.popup-container') && !e.target.closest('.desktop-popup')) {
+                    document.querySelectorAll('.desktop-popup').forEach(popup => {
+                        popup.classList.remove('open');
+                    });
                 }
-                closeModal();
-            } catch (e) {
-                showToast("Error saving coupon", "error");
-            } finally {
-                btn.disabled = false;
-                btn.innerText = "Save Coupon";
+            });
+            
+            // Prevent desktop popups from closing when clicking inside
+            document.querySelectorAll('.desktop-popup').forEach(popup => {
+                popup.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                });
+            });
+            
+            // Attach event listeners for mobile menu buttons
+            document.querySelectorAll('.coupon-card-menu-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    currentMenuCouponId = btn.getAttribute('data-coupon-id');
+                    const coupon = allCoupons.find(c => c.id === currentMenuCouponId);
+                    
+                    if (!coupon) return;
+                    
+                    // Set up the mobile menu buttons
+                    document.getElementById('mobile-edit-btn').onclick = () => {
+                        openEditModal(currentMenuCouponId);
+                        closeAdvancedMenu();
+                    };
+                    
+                    document.getElementById('mobile-delete-btn').onclick = () => {
+                        openDeleteModal(coupon.id, coupon.code);
+                        closeAdvancedMenu();
+                    };
+                    
+                    openAdvancedMenu();
+                });
+            });
+            
+            // Prevent toggle clicks from triggering card redirect
+            document.querySelectorAll('.coupon-card-actions .toggle-switch input').forEach(toggle => {
+                toggle.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                });
+            });
+        }
+
+        // Handle mobile card click
+        function handleMobileCardClick(event, couponId) {
+            // Only handle if the click wasn't on the actions area (toggle or menu button)
+            if (!event.target.closest('.coupon-card-actions') && 
+                !event.target.classList.contains('toggle-switch') &&
+                !event.target.classList.contains('toggle-slider') &&
+                event.target.type !== 'checkbox') {
+                // You can add functionality here if needed
+                // For example, show coupon details
             }
         }
 
-        async function toggleStatus(id, currentStatus) {
+        // Toggle coupon status
+        async function toggleCouponStatus(id, active) {
             try {
-                await couponRef.doc(id).update({ active: !currentStatus });
-                showToast("Status updated");
-            } catch (e) { showToast("Error updating status", "error"); }
-        }
-
-        async function deleteCoupon(id) {
-            if (confirm("Delete this coupon permanently?")) {
-                await couponRef.doc(id).delete();
-                showToast("Coupon deleted", "success");
+                await couponRef.doc(id).update({
+                    active: active,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                // Update local state
+                const coupon = allCoupons.find(c => c.id === id);
+                if (coupon) {
+                    coupon.active = active;
+                }
+                
+                // Re-render to update UI
+                renderCoupons(allCoupons.filter(c => allCoupons.includes(c)));
+                
+                showToast(`Coupon ${active ? 'activated' : 'deactivated'} successfully`, 'success');
+                
+                // Close any open desktop popups
+                document.querySelectorAll('.desktop-popup').forEach(popup => {
+                    popup.classList.remove('open');
+                });
+                
+            } catch (e) {
+                console.error(e);
+                showToast('Failed to update coupon status', 'error');
             }
         }
 
-        function editCoupon(id) {
-            const c = allCoupons.find(i => i.id === id);
-            editingId = id;
-            document.getElementById('form-title').innerText = "Edit Coupon";
-            document.getElementById('input-code').value = c.code;
-            document.getElementById('input-value').value = c.value;
-            document.getElementById('input-limit').value = c.limit;
-            document.getElementById('input-user-limit').value = c.userLimit;
-            document.getElementById('input-expiry').value = c.expiry || '';
-            document.getElementById('type-label').innerText = c.type;
-            document.getElementById('form-modal').classList.remove('hidden');
+        function openAdvancedMenu() {
+            document.getElementById('advanced-menu').classList.add('open');
+            document.getElementById('advanced-menu-overlay').classList.add('open');
         }
 
-        function openModal() {
+        function closeAdvancedMenu() {
+            document.getElementById('advanced-menu').classList.remove('open');
+            document.getElementById('advanced-menu-overlay').classList.remove('open');
+        }
+
+        // Search functionality
+        document.getElementById('search-input').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const filtered = allCoupons.filter(c => 
+                c.code.toLowerCase().includes(term) || 
+                (c.type && c.type.toLowerCase().includes(term))
+            );
+            renderCoupons(filtered);
+        });
+
+        document.getElementById('mobile-search-input').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const filtered = allCoupons.filter(c => 
+                c.code.toLowerCase().includes(term) || 
+                (c.type && c.type.toLowerCase().includes(term))
+            );
+            renderCoupons(filtered);
+        });
+
+        // --- ADD/EDIT LOGIC ---
+        function openAddModal() {
             editingId = null;
-            document.getElementById('form-title').innerText = "Create Coupon";
-            ['input-code', 'input-value', 'input-limit', 'input-user-limit', 'input-expiry'].forEach(id => document.getElementById(id).value = '');
-            document.getElementById('input-user-limit').value = 1;
-            document.getElementById('form-modal').classList.remove('hidden');
+            
+            document.getElementById('modal-title').textContent = "Create Coupon";
+            document.getElementById('modal-submit-btn').textContent = "Create Coupon";
+            document.getElementById('coupon-form').reset();
+            
+            // Reset select dropdowns
+            document.getElementById('type-selected-label').textContent = "Percentage (%)";
+            document.querySelectorAll('.select-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            document.querySelector('#type-dropdown .select-option:first-child').classList.add('selected');
+            
+            // Reset value label
+            document.getElementById('value-label').textContent = 'Discount Value (%) *';
+            document.getElementById('coupon-value-input').setAttribute('max', '100');
+            document.getElementById('coupon-value-input').placeholder = 'e.g. 25';
+            
+            // Set default values
+            document.getElementById('coupon-limit-input').value = '100';
+            document.getElementById('coupon-user-limit-input').value = '1';
+            
+            document.getElementById('coupon-modal').style.display = 'flex';
         }
 
-        function closeModal() { document.getElementById('form-modal').classList.add('hidden'); }
-        function handleSearch() { searchQuery = document.getElementById('search-bar').value; renderUI(); }
-        function toggleDropdown(id) { document.getElementById(id).classList.toggle('show'); }
-        function setDropValue(lId, v, dId) { document.getElementById(lId).innerText = v; toggleDropdown(dId); }
-
-        function showToast(msg, type = 'success') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = `toast ${type === 'success' ? 'bg-green-500' : 'bg-red-500'}`;
-            toast.innerText = msg;
-            container.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
-        }
-
-        // Close dropdowns on outside click
-        window.onclick = (e) => {
-            if (!e.target.closest('.relative') && !e.target.closest('button')) {
-                document.querySelectorAll('.custom-select-list').forEach(d => d.classList.remove('show'));
+        function openEditModal(id) {
+            const coupon = allCoupons.find(c => c.id === id);
+            if(!coupon) return;
+            editingId = id;
+            
+            document.getElementById('modal-title').textContent = "Edit Coupon";
+            document.getElementById('modal-submit-btn').textContent = "Update Coupon";
+            document.getElementById('coupon-code-input').value = coupon.code;
+            document.getElementById('coupon-value-input').value = coupon.value;
+            document.getElementById('coupon-limit-input').value = coupon.limit || 100;
+            document.getElementById('coupon-user-limit-input').value = coupon.userLimit || 1;
+            document.getElementById('coupon-expiry-input').value = coupon.expiry || '';
+            
+            // Set discount type
+            const isPercentage = coupon.type && coupon.type.includes('%');
+            if (isPercentage) {
+                document.getElementById('type-selected-label').textContent = "Percentage (%)";
+                document.getElementById('value-label').textContent = 'Discount Value (%) *';
+                document.getElementById('coupon-value-input').setAttribute('max', '100');
+                document.getElementById('coupon-value-input').placeholder = 'e.g. 25';
+                document.querySelectorAll('#type-dropdown .select-option').forEach(option => {
+                    option.classList.remove('selected');
+                    if (option.textContent === 'Percentage (%)') {
+                        option.classList.add('selected');
+                    }
+                });
+            } else {
+                document.getElementById('type-selected-label').textContent = "Flat Amount (₹)";
+                document.getElementById('value-label').textContent = 'Discount Amount (₹) *';
+                document.getElementById('coupon-value-input').removeAttribute('max');
+                document.getElementById('coupon-value-input').placeholder = 'e.g. 500';
+                document.querySelectorAll('#type-dropdown .select-option').forEach(option => {
+                    option.classList.remove('selected');
+                    if (option.textContent === 'Flat Amount (₹)') {
+                        option.classList.add('selected');
+                    }
+                });
             }
+            
+            document.getElementById('coupon-modal').style.display = 'flex';
+            
+            // Clean up menus
+            document.querySelectorAll('.desktop-popup').forEach(d => d.classList.remove('open'));
+            closeAdvancedMenu();
+        }
+
+        function closeModal() {
+            document.getElementById('coupon-modal').style.display = 'none';
+        }
+
+        document.getElementById('coupon-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const code = document.getElementById('coupon-code-input').value.trim().toUpperCase();
+            const type = document.getElementById('type-selected-label').textContent;
+            const value = parseFloat(document.getElementById('coupon-value-input').value);
+            const limit = parseInt(document.getElementById('coupon-limit-input').value) || 100;
+            const userLimit = parseInt(document.getElementById('coupon-user-limit-input').value) || 1;
+            const expiry = document.getElementById('coupon-expiry-input').value || null;
+            
+            if(!code) {
+                showToast('Coupon code is required', 'error');
+                return;
+            }
+            
+            if(isNaN(value) || value <= 0) {
+                showToast('Valid discount value is required', 'error');
+                return;
+            }
+            
+            if(type === 'Percentage (%)' && value > 100) {
+                showToast('Percentage discount cannot exceed 100%', 'error');
+                return;
+            }
+            
+            // Check if code already exists (for new coupons)
+            if (!editingId) {
+                const exists = allCoupons.some(c => c.code === code);
+                if(exists) {
+                    showToast('Coupon code already exists', 'error');
+                    return;
+                }
+            }
+
+            const btn = document.getElementById('modal-submit-btn');
+            btn.disabled = true; 
+            btn.textContent = editingId ? "Updating..." : "Creating...";
+
+            try {
+                const data = {
+                    code,
+                    type,
+                    value,
+                    limit,
+                    userLimit,
+                    expiry,
+                    active: true,
+                    used: editingId ? (allCoupons.find(c => c.id === editingId)?.used || 0) : 0,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                if(editingId) {
+                    await couponRef.doc(editingId).update(data);
+                    showToast('Coupon updated successfully', 'success');
+                } else {
+                    data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                    await couponRef.add(data);
+                    showToast('Coupon created successfully', 'success');
+                }
+                
+                closeModal();
+                loadCoupons();
+            } catch(e) {
+                console.error(e);
+                showToast('Operation failed', 'error');
+                btn.disabled = false; 
+                btn.textContent = editingId ? "Update Coupon" : "Create Coupon";
+            }
+        });
+
+        // --- DELETE LOGIC ---
+        function openDeleteModal(id, code) {
+            deletingId = id;
+            deletingCode = code;
+            document.getElementById('del-coupon-code').textContent = code;
+            document.getElementById('confirm-del-input').value = '';
+            document.getElementById('confirm-del-btn').disabled = true;
+            document.getElementById('delete-modal').style.display = 'flex';
+            
+            // Clean up menus
+            document.querySelectorAll('.desktop-popup').forEach(d => d.classList.remove('open'));
+            closeAdvancedMenu();
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('delete-modal').style.display = 'none';
+        }
+
+        document.getElementById('confirm-del-input').addEventListener('input', (e) => {
+            document.getElementById('confirm-del-btn').disabled = e.target.value.toUpperCase() !== deletingCode;
+        });
+
+        document.getElementById('confirm-del-btn').addEventListener('click', async () => {
+            if(!deletingId) return;
+            
+            const btn = document.getElementById('confirm-del-btn');
+            btn.disabled = true;
+            btn.textContent = "Deleting...";
+            
+            try {
+                await couponRef.doc(deletingId).delete();
+                showToast('Coupon deleted successfully', 'success');
+                closeDeleteModal();
+                loadCoupons();
+            } catch(e) {
+                showToast('Delete failed', 'error');
+                btn.disabled = false;
+                btn.textContent = "Delete";
+            }
+        });
+
+        function showToast(msg, type='success') {
+            const container = document.getElementById('toast-container');
+            const el = document.createElement('div');
+            el.className = `toast ${type}`;
+            el.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    ${type === 'success' ? 
+                        '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>' : 
+                        '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>'}
+                </svg>
+                <span>${msg}</span>`;
+            container.appendChild(el);
+            setTimeout(() => el.remove(), 3000);
         }
     </script>
 </body>
