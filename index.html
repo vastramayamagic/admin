@@ -312,7 +312,7 @@
                 sessionStorage.setItem('adminEmail', user.email);
                 sessionStorage.setItem('adminName', user.displayName || "Admin");
                 setTimeout(() => {
-                    window.location.href = 'manage-category.html';
+                    window.location.href = 'admin-dashboard.html';
                 }, 1000);
             } else {
                 await firebase.auth().signOut();
@@ -331,7 +331,7 @@
 
         firebase.auth().onAuthStateChanged((user) => {
             if (user && user.email === ADMIN_EMAIL) {
-                window.location.href = 'manage-category.html';
+                window.location.href = 'admin-dashboard.html';
             }
         });
 
