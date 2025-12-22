@@ -192,6 +192,11 @@
             background: var(--active-bg);
         }
 
+        .d-submenu-item .submenu-icon {
+            width: 18px;
+            height: 18px;
+            stroke: #6b7280;
+        }
         .d-submenu a,
 .m-submenu a {
     text-decoration: none !important;
@@ -330,7 +335,7 @@
             background: #471ea7;
         }
 
-        /* Card - FIXED: Increased search bar padding */
+        /* Card */
         .card {
             background: #ffffff;
             border-radius: 12px;
@@ -340,21 +345,25 @@
         }
 
         .card-header {
-            padding: 24px 20px; /* Increased from 16px to 24px */
+            padding: 24px 20px;
             border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
         .search-input-wrap {
             background: #f9fafb;
             border-radius: 999px;
             border: 1px solid #e5e7eb;
-            padding: 12px 16px; /* Increased from 0 16px */
-            height: 48px; /* Increased from 40px */
+            padding: 12px 16px;
+            height: 48px;
             display: flex;
             align-items: center;
             gap: 8px;
             transition: border-color 0.15s ease;
             width: 100%;
+            max-width: 400px;
         }
 
         .search-input-wrap:focus-within {
@@ -377,34 +386,34 @@
             width: 100%;
         }
 
-        /* Table area - IMPORTANT: Fixed for popup positioning */
+        /* Table area */
         .table-wrapper {
             width: 100%;
             overflow-x: auto;
             position: relative;
-            /* Ensure popups are not clipped */
             overflow: visible !important;
         }
 
         /* Force table to have proper stacking context */
-        .coupons-table {
+        .coupon-table {
             width: 100%;
             border-collapse: collapse;
             position: relative;
             z-index: 1;
         }
 
-        .coupons-table thead tr {
+        .coupon-table thead tr {
             height: 48px;
         }
 
-        .coupons-table th,
-        .coupons-table td {
+        .coupon-table th,
+        .coupon-table td {
             padding: 12px 20px;
             vertical-align: middle;
+            text-align: left;
         }
 
-        .coupons-table thead th {
+        .coupon-table thead th {
             font-weight: 700;
             font-size: 14px;
             line-height: 24px;
@@ -414,77 +423,79 @@
             white-space: nowrap;
         }
 
-        /* Status column - left aligned */
+        /* Status column */
         .th-status {
             width: 100px;
-            text-align: left;
+            text-align: center;
         }
 
         .td-status {
             width: 100px;
-            text-align: left;
+            text-align: center;
         }
 
-        .coupons-table tbody tr {
+        /* Discount column */
+        .td-discount {
+            font-weight: 700;
+            color: var(--brand-primary);
+        }
+
+        .coupon-table tbody tr {
             border-bottom: 1px solid #f3f4f6;
         }
 
-        .coupons-table tbody tr:last-child {
+        .coupon-table tbody tr:last-child {
             border-bottom: none;
         }
 
         .coupon-code {
-            font-family: 'Courier New', monospace;
             font-weight: 600;
-            font-size: 14px;
-            line-height: 24px;
-            color: var(--brand-primary);
-            background: #f2efff;
-            padding: 4px 8px;
-            border-radius: 4px;
-            border: 1px solid #e2d9ff;
-        }
-
-        .coupon-name {
-            font-weight: 400;
             font-size: 14px;
             line-height: 24px;
             color: rgb(29, 30, 32);
             white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 200px;
+            font-family: 'Courier New', monospace;
+            background: #f3f4f6;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
         }
 
-        .coupon-value {
-            font-weight: 600;
-            font-size: 14px;
-            line-height: 24px;
-        }
-        
-        .coupon-percentage {
-            color: var(--brand-primary);
-        }
-        
-        .coupon-flat {
-            color: var(--success-color);
+        .coupon-details {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
         }
 
-        .coupon-usage,
-        .coupon-expiry,
-        .coupon-actions {
-            font-weight: 400;
-            font-size: 14px;
-            line-height: 24px;
+        .coupon-type {
+            font-size: 12px;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .coupon-expiry {
+            font-size: 12px;
+            color: #9ca3af;
+        }
+
+        .coupon-usage {
+            font-size: 13px;
             color: rgb(59, 61, 74);
         }
-        
-        .coupon-expiry.expired {
-            color: var(--danger-color);
+
+        .usage-bar {
+            height: 4px;
+            background: #e5e7eb;
+            border-radius: 2px;
+            margin-top: 4px;
+            overflow: hidden;
         }
-        
-        .coupon-expiry.upcoming {
-            color: var(--warning-color);
+
+        .usage-fill {
+            height: 100%;
+            background: var(--brand-primary);
+            border-radius: 2px;
+            transition: width 0.3s ease;
         }
 
         .action-buttons {
@@ -557,14 +568,14 @@
             bottom: -6px;
         }
 
-        /* FIXED: Desktop popup - positioned relative to viewport */
+        /* Desktop popup */
         .popup-container {
             position: relative;
             display: inline-block;
         }
 
         .desktop-popup {
-            position: fixed; /* Changed from absolute to fixed */
+            position: fixed;
             background: #ffffff;
             border-radius: 12px;
             border: 1px solid #e5e7eb;
@@ -632,11 +643,11 @@
             stroke: var(--danger-color);
         }
 
-        /* Status toggle switch - FIXED: Left aligned under Status heading */
+        /* Status toggle switch */
         .status-toggle {
             display: flex;
             align-items: center;
-            justify-content: flex-start;
+            justify-content: center;
             width: 100%;
         }
 
@@ -686,25 +697,31 @@
             transform: translateX(20px);
         }
 
-        /* Coupon type badges */
-        .coupon-type-badge {
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 600;
+        /* Status badges */
+        .status-badge {
             display: inline-flex;
             align-items: center;
             gap: 4px;
+            padding: 4px 8px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
         }
-        
-        .type-percentage {
-            background: #f2efff;
-            color: var(--brand-primary);
+
+        .status-active {
+            background: #DCFCE7;
+            color: #16A34A;
         }
-        
-        .type-flat {
-            background: #d1fae5;
-            color: var(--success-color);
+
+        .status-inactive {
+            background: #FEF2F2;
+            color: #DC2626;
+        }
+
+        .status-expired {
+            background: #FEF3C7;
+            color: #D97706;
         }
 
         /* ============= SKELETON LOADING ============= */
@@ -743,6 +760,12 @@
             padding: 12px 20px;
         }
 
+        .skeleton-code {
+            height: 24px;
+            width: 100px;
+            border-radius: 4px;
+        }
+
         .skeleton-text {
             height: 20px;
             width: 120px;
@@ -757,6 +780,7 @@
             width: 44px;
             height: 24px;
             border-radius: 24px;
+            margin: 0 auto;
         }
 
         .skeleton-button {
@@ -781,7 +805,7 @@
             align-items: center;
             gap: 12px;
             width: 100%;
-            height: 88px;
+            height: 120px;
         }
 
         .skeleton-mobile-content {
@@ -838,7 +862,7 @@
             width: 100%;
         }
 
-        /* FIXED: Mobile menu button with border and styling like advanced-menu-close */
+        /* Mobile menu button */
         .m-menu-btn {
             width: 40px;
             height: 40px;
@@ -951,7 +975,7 @@
             max-width: 200px;
         }
 
-        /* FIXED: Mobile drawer close button with border and styling like advanced-menu-close */
+        /* Mobile drawer close button */
         .m-drawer-close {
             width: 40px;
             height: 40px;
@@ -1226,7 +1250,7 @@
             stroke: #ffffff;
         }
 
-        /* Mobile coupon cards - UPDATED LAYOUT */
+        /* Mobile coupon cards */
         .mobile-coupon-cards {
             display: flex;
             flex-direction: column;
@@ -1240,14 +1264,13 @@
             border: 1px solid #e5e7eb;
             padding: 16px;
             display: flex;
-            align-items: center;
+            flex-direction: column;
             gap: 12px;
             transition: all 0.2s ease;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
             width: 100%;
             max-width: 100%;
             position: relative;
-            cursor: pointer;
         }
 
         .coupon-card-mobile:hover {
@@ -1255,55 +1278,76 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
 
-        .coupon-card-code {
-            background: #f2efff;
-            border: 1px solid #e2d9ff;
-            border-radius: 8px;
-            padding: 8px 12px;
-            font-family: 'Courier New', monospace;
-            font-weight: 600;
-            color: var(--brand-primary);
-            min-width: 80px;
-            text-align: center;
-            flex-shrink: 0;
-        }
-
-        .coupon-card-content {
-            flex: 1;
+        .coupon-card-header {
             display: flex;
-            flex-direction: column;
-            gap: 6px;
-            min-width: 0;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
         }
 
-        .coupon-card-name {
+        .coupon-card-code {
             font-weight: 700;
-            font-size: 16px;
+            font-size: 18px;
             line-height: 24px;
             color: rgb(29, 30, 32);
+            font-family: 'Courier New', monospace;
+            background: #f3f4f6;
+            padding: 6px 12px;
+            border-radius: 8px;
+            flex: 1;
+        }
+
+        .coupon-card-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
             white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 200px;
         }
 
         .coupon-card-details {
-            font-weight: 500;
-            font-size: 14px;
-            line-height: 18px;
-            color: #6b7280;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
 
-        /* Mobile card actions - UPDATED: toggle moved to left of 3 dots */
+        .coupon-card-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .coupon-card-label {
+            font-size: 13px;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .coupon-card-value {
+            font-weight: 600;
+            font-size: 14px;
+            color: rgb(29, 30, 32);
+        }
+
+        .coupon-card-discount {
+            font-weight: 700;
+            color: var(--brand-primary);
+        }
+
+        .coupon-card-usage {
+            font-size: 13px;
+            color: rgb(59, 61, 74);
+        }
+
         .coupon-card-actions {
             display: flex;
             align-items: center;
+            justify-content: space-between;
             gap: 12px;
-            margin-left: auto;
-            flex-shrink: 0;
+            margin-top: 8px;
         }
 
         .mobile-status-toggle {
@@ -1495,7 +1539,7 @@
             margin: 0 auto 20px auto;
         }
 
-        /* --- UPDATED MODAL STYLES --- */
+        /* --- MODAL STYLES --- */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -1514,7 +1558,7 @@
         .modal-content {
             background: white;
             width: 100%;
-            max-width: 480px;
+            max-width: 500px;
             border-radius: var(--radius-lg);
             box-shadow: var(--shadow-premium);
             display: flex;
@@ -1607,69 +1651,25 @@
             outline: none;
         }
 
-        /* Select dropdown */
-        .select-wrapper {
-            position: relative;
-            width: 100%;
-        }
-
-        .select-button {
+        .form-select {
             width: 100%;
             padding: 0.875rem 1rem;
             border: 1px solid #e5e7eb;
             border-radius: var(--radius-md);
             background: white;
-            text-align: left;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
+            transition: all 0.15s ease;
             font-family: "DM Sans", Roboto, sans-serif;
             font-size: 0.95rem;
-            transition: all 0.15s ease;
+            cursor: pointer;
         }
 
-        .select-button:focus {
+        .form-select:focus {
             border-color: var(--brand-primary);
             box-shadow: 0 0 0 3px rgba(81, 39, 186, 0.1);
             outline: none;
         }
 
-        .select-dropdown {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: var(--radius-md);
-            margin-top: 4px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            z-index: 100;
-            display: none;
-        }
-
-        .select-dropdown.show {
-            display: block;
-        }
-
-        .select-option {
-            padding: 0.75rem 1rem;
-            cursor: pointer;
-            transition: background 0.15s ease;
-        }
-
-        .select-option:hover {
-            background: #f3f4f6;
-        }
-
-        .select-option.selected {
-            background: #f2efff;
-            color: var(--brand-primary);
-        }
-
-        /* Grid for form */
-        .form-grid {
+        .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 1rem;
@@ -1796,7 +1796,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* ============= FIXED PROFILE POPUP ============= */
+        /* FIXED PROFILE POPUP */
         .profile-popup {
             position: fixed;
             background-color: #ffffff;
@@ -1984,7 +1984,7 @@
             .page-mobile { display: none; }
             
             /* Fix desktop popup z-index */
-            .coupon-actions {
+            .coupon-table td:last-child {
                 position: relative;
             }
             
@@ -2218,13 +2218,12 @@
                         </div>
 
                         <div class="table-wrapper">
-                            <table class="coupons-table">
+                            <table class="coupon-table">
                                 <thead>
                                     <tr>
-                                        <th>Coupon Code</th>
+                                        <th>Coupon Details</th>
                                         <th>Discount</th>
                                         <th>Usage / Limit</th>
-                                        <th>Expiry Date</th>
                                         <th class="th-status">Status</th>
                                         <th>Actions</th>
                                     </tr>
@@ -2233,16 +2232,14 @@
                                     <!-- Skeleton loading for desktop -->
                                     <tr class="desktop-skeleton-row">
                                         <td>
-                                            <div class="skeleton skeleton-text"></div>
+                                            <div class="skeleton skeleton-code"></div>
+                                            <div class="skeleton skeleton-text-small" style="margin-top: 8px; width: 150px;"></div>
                                         </td>
                                         <td>
                                             <div class="skeleton skeleton-text"></div>
                                         </td>
                                         <td>
-                                            <div class="skeleton skeleton-text-small"></div>
-                                        </td>
-                                        <td>
-                                            <div class="skeleton skeleton-text-small"></div>
+                                            <div class="skeleton skeleton-text"></div>
                                         </td>
                                         <td>
                                             <div class="skeleton skeleton-toggle"></div>
@@ -2256,16 +2253,14 @@
                                     </tr>
                                     <tr class="desktop-skeleton-row">
                                         <td>
-                                            <div class="skeleton skeleton-text"></div>
+                                            <div class="skeleton skeleton-code"></div>
+                                            <div class="skeleton skeleton-text-small" style="margin-top: 8px; width: 150px;"></div>
                                         </td>
                                         <td>
                                             <div class="skeleton skeleton-text"></div>
                                         </td>
                                         <td>
-                                            <div class="skeleton skeleton-text-small"></div>
-                                        </td>
-                                        <td>
-                                            <div class="skeleton skeleton-text-small"></div>
+                                            <div class="skeleton skeleton-text"></div>
                                         </td>
                                         <td>
                                             <div class="skeleton skeleton-toggle"></div>
@@ -2279,16 +2274,14 @@
                                     </tr>
                                     <tr class="desktop-skeleton-row">
                                         <td>
-                                            <div class="skeleton skeleton-text"></div>
+                                            <div class="skeleton skeleton-code"></div>
+                                            <div class="skeleton skeleton-text-small" style="margin-top: 8px; width: 150px;"></div>
                                         </td>
                                         <td>
                                             <div class="skeleton skeleton-text"></div>
                                         </td>
                                         <td>
-                                            <div class="skeleton skeleton-text-small"></div>
-                                        </td>
-                                        <td>
-                                            <div class="skeleton skeleton-text-small"></div>
+                                            <div class="skeleton skeleton-text"></div>
                                         </td>
                                         <td>
                                             <div class="skeleton skeleton-toggle"></div>
@@ -2354,7 +2347,7 @@
                                     <circle cx="11" cy="11" r="7"></circle>
                                     <line x1="16.65" y1="16.65" x2="21" y2="21"></line>
                                 </svg>
-                                <input type="text" id="mobile-search-input" placeholder="Search coupons..." />
+                                <input type="text" id="mobile-search-input" placeholder="Search coupons by code..." />
                             </div>
                         </div>
                         <button class="mobile-add-btn" onclick="openAddModal()">
@@ -2374,8 +2367,9 @@
                     <!-- Skeleton loading for mobile -->
                     <div class="mobile-skeleton-card">
                         <div class="skeleton-mobile-content">
-                            <div class="skeleton skeleton-mobile-title"></div>
-                            <div class="skeleton skeleton-mobile-subtitle"></div>
+                            <div class="skeleton skeleton-mobile-title" style="width: 120px;"></div>
+                            <div class="skeleton skeleton-mobile-subtitle" style="width: 180px;"></div>
+                            <div class="skeleton skeleton-mobile-subtitle" style="width: 150px;"></div>
                         </div>
                         <div class="coupon-card-actions">
                             <div class="skeleton skeleton-mobile-toggle"></div>
@@ -2384,8 +2378,9 @@
                     </div>
                     <div class="mobile-skeleton-card">
                         <div class="skeleton-mobile-content">
-                            <div class="skeleton skeleton-mobile-title"></div>
-                            <div class="skeleton skeleton-mobile-subtitle"></div>
+                            <div class="skeleton skeleton-mobile-title" style="width: 120px;"></div>
+                            <div class="skeleton skeleton-mobile-subtitle" style="width: 180px;"></div>
+                            <div class="skeleton skeleton-mobile-subtitle" style="width: 150px;"></div>
                         </div>
                         <div class="coupon-card-actions">
                             <div class="skeleton skeleton-mobile-toggle"></div>
@@ -2394,8 +2389,9 @@
                     </div>
                     <div class="mobile-skeleton-card">
                         <div class="skeleton-mobile-content">
-                            <div class="skeleton skeleton-mobile-title"></div>
-                            <div class="skeleton skeleton-mobile-subtitle"></div>
+                            <div class="skeleton skeleton-mobile-title" style="width: 120px;"></div>
+                            <div class="skeleton skeleton-mobile-subtitle" style="width: 180px;"></div>
+                            <div class="skeleton skeleton-mobile-subtitle" style="width: 150px;"></div>
                         </div>
                         <div class="coupon-card-actions">
                             <div class="skeleton skeleton-mobile-toggle"></div>
@@ -2609,7 +2605,7 @@
         </div>
     </div>
 
-    <!-- Profile Popup with updated SVG icons -->
+    <!-- Profile Popup -->
     <div class="profile-popup" id="profile-popup">
         <div class="popup-header">
             <img id="popup-avatar" src="" class="account-avatar">
@@ -2665,55 +2661,56 @@
             <form id="coupon-form">
                 <div class="modal-body">
                     <div class="form-group">
-                        <label class="form-label">Coupon Code *</label>
-                        <input type="text" class="form-input" id="coupon-code-input" required 
-                               placeholder="e.g. SUMMER25" maxlength="20"
-                               oninput="this.value = this.value.toUpperCase()">
+                        <label class="form-label">Coupon Code</label>
+                        <input type="text" class="form-input" id="coupon-code-input" required placeholder="e.g. SAVE20" oninput="this.value = this.value.toUpperCase()">
                     </div>
                     
-                    <div class="form-group">
-                        <label class="form-label">Discount Type *</label>
-                        <div class="select-wrapper">
-                            <button type="button" class="select-button" id="type-select-button" onclick="toggleDropdown('type-dropdown')">
-                                <span id="type-selected-label">Percentage (%)</span>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="m6 9 6 6 6-6"/>
-                                </svg>
-                            </button>
-                            <div class="select-dropdown" id="type-dropdown">
-                                <div class="select-option selected" onclick="selectOption('type', 'percentage', 'Percentage (%)')">Percentage (%)</div>
-                                <div class="select-option" onclick="selectOption('type', 'flat', 'Flat Amount (₹)')">Flat Amount (₹)</div>
-                            </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Discount Type</label>
+                            <select class="form-select" id="discount-type-select" required>
+                                <option value="percentage">Percentage (%)</option>
+                                <option value="fixed">Fixed Amount (₹)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" id="discount-value-label">Discount Value (%)</label>
+                            <input type="number" class="form-input" id="discount-value-input" required placeholder="e.g. 20" min="1" max="100">
                         </div>
                     </div>
                     
-                    <div class="form-group">
-                        <label class="form-label" id="value-label">Discount Value (%) *</label>
-                        <input type="number" class="form-input" id="coupon-value-input" required 
-                               placeholder="e.g. 25" min="1" max="100">
-                    </div>
-                    
-                    <div class="form-grid">
+                    <div class="form-row">
                         <div class="form-group">
                             <label class="form-label">Total Usage Limit</label>
-                            <input type="number" class="form-input" id="coupon-limit-input" 
-                                   placeholder="e.g. 100" min="1" value="100">
+                            <input type="number" class="form-input" id="total-limit-input" required placeholder="e.g. 100" min="1">
                         </div>
                         <div class="form-group">
                             <label class="form-label">Per User Limit</label>
-                            <input type="number" class="form-input" id="coupon-user-limit-input" 
-                                   placeholder="e.g. 1" min="1" value="1">
+                            <input type="number" class="form-input" id="user-limit-input" required placeholder="e.g. 1" min="1">
                         </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Minimum Order Amount (₹)</label>
+                        <input type="number" class="form-input" id="min-order-input" placeholder="e.g. 500" min="0">
                     </div>
                     
                     <div class="form-group">
                         <label class="form-label">Expiry Date</label>
-                        <input type="date" class="form-input" id="coupon-expiry-input">
+                        <input type="date" class="form-input" id="expiry-date-input">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Status</label>
+                        <select class="form-select" id="status-select" required>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-                    <button type="submit" class="btn btn-primary" id="modal-submit-btn">Create Coupon</button>
+                    <button type="submit" class="btn btn-primary" id="modal-submit-btn">Save Coupon</button>
                 </div>
             </form>
         </div>
@@ -2735,12 +2732,13 @@
                 <p style="color: #6b7280; margin-bottom: 1rem; font-size: 0.95rem;">Are you sure you want to delete coupon <strong id="del-coupon-code" style="color: rgb(29, 30, 32);"></strong>? This action cannot be undone.</p>
                 <div class="form-group">
                     <label class="form-label">Type coupon code to confirm</label>
-                    <input type="text" class="form-input" id="confirm-del-input" placeholder="Coupon Code" oninput="this.value = this.value.toUpperCase()">
+                    <input type="text" class="form-input" id="confirm-del-input" placeholder="Coupon Code">
                 </div>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" onclick="closeDeleteModal()">Cancel</button>
-                <button class="btn btn-danger" id="confirm-del-btn" disabled>Delete</button>
+                    <button class="btn btn-danger" id="confirm-del-btn" disabled>Delete</button>
+                </div>
             </div>
         </div>
     </div>
@@ -2750,8 +2748,6 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
-    <script src='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css'></script>
 
     <script>
         // --- UI INTERACTIONS ---
@@ -2831,9 +2827,7 @@
                 profileSection.addEventListener('click', e => {
                     e.stopPropagation();
                     
-                    // Position the popup at the bottom left of the account section for desktop
                     if (window.innerWidth >= 769) {
-                        const rect = profileSection.getBoundingClientRect();
                         profilePopup.style.left = '30px';
                         profilePopup.style.right = 'auto';
                         profilePopup.style.bottom = '100px';
@@ -2875,19 +2869,22 @@
                 });
             }
 
-            // Close dropdowns when clicking outside
-            document.addEventListener('click', (e) => {
-                if (!e.target.closest('.select-wrapper')) {
-                    document.querySelectorAll('.select-dropdown').forEach(dropdown => {
-                        dropdown.classList.remove('show');
-                    });
-                }
-            });
-
-            // Prevent horizontal scrolling on mobile
-            if (window.innerWidth <= 768) {
-                document.body.style.overflowX = 'hidden';
-                document.body.style.maxWidth = '100vw';
+            // Discount type change handler
+            const discountTypeSelect = document.getElementById('discount-type-select');
+            const discountValueLabel = document.getElementById('discount-value-label');
+            
+            if (discountTypeSelect) {
+                discountTypeSelect.addEventListener('change', function() {
+                    if (this.value === 'percentage') {
+                        discountValueLabel.textContent = 'Discount Value (%)';
+                        document.getElementById('discount-value-input').max = 100;
+                        document.getElementById('discount-value-input').placeholder = 'e.g. 20';
+                    } else {
+                        discountValueLabel.textContent = 'Discount Amount (₹)';
+                        document.getElementById('discount-value-input').max = 999999;
+                        document.getElementById('discount-value-input').placeholder = 'e.g. 200';
+                    }
+                });
             }
 
             // Close popups when clicking outside
@@ -2923,9 +2920,8 @@
                         popup.classList.remove('open');
                     });
                     closeAdvancedMenu();
-                    document.querySelectorAll('.select-dropdown').forEach(dropdown => {
-                        dropdown.classList.remove('show');
-                    });
+                    closeModal();
+                    closeDeleteModal();
                 }
             });
         });
@@ -2945,50 +2941,7 @@
             document.querySelectorAll('.desktop-popup').forEach(popup => {
                 popup.classList.remove('open');
             });
-            document.querySelectorAll('.select-dropdown').forEach(dropdown => {
-                dropdown.classList.remove('show');
-            });
         });
-
-        // Dropdown functions
-        function toggleDropdown(id) {
-            const dropdown = document.getElementById(id);
-            dropdown.classList.toggle('show');
-        }
-
-        function selectOption(type, value, label) {
-            const dropdown = document.getElementById(`${type}-dropdown`);
-            const button = document.getElementById(`${type}-select-button`);
-            const labelSpan = document.getElementById(`${type}-selected-label`);
-            
-            // Update all options
-            dropdown.querySelectorAll('.select-option').forEach(option => {
-                option.classList.remove('selected');
-            });
-            
-            // Select the clicked option
-            event.target.classList.add('selected');
-            
-            // Update button text
-            labelSpan.textContent = label;
-            
-            // Update value label for discount type
-            if (type === 'type') {
-                const valueLabel = document.getElementById('value-label');
-                if (value === 'percentage') {
-                    valueLabel.textContent = 'Discount Value (%) *';
-                    document.getElementById('coupon-value-input').setAttribute('max', '100');
-                    document.getElementById('coupon-value-input').placeholder = 'e.g. 25';
-                } else {
-                    valueLabel.textContent = 'Discount Amount (₹) *';
-                    document.getElementById('coupon-value-input').removeAttribute('max');
-                    document.getElementById('coupon-value-input').placeholder = 'e.g. 500';
-                }
-            }
-            
-            // Close dropdown
-            dropdown.classList.remove('show');
-        }
 
         // --- FIREBASE CONFIG ---
         const firebaseConfig = {
@@ -3004,7 +2957,6 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
-        const storage = firebase.storage();
 
         // --- APP LOGIC ---
         let allCoupons = [];
@@ -3014,7 +2966,7 @@
         let currentMenuCouponId = null;
         let isLoading = true;
 
-        // Firestore structure: Coupon -> Coupon -> List
+        // Firestore path: Coupon -> Coupon -> List
         const couponRef = db.collection('Coupon').doc('Coupon').collection('List');
 
         auth.onAuthStateChanged(user => {
@@ -3048,7 +3000,6 @@
 
         async function loadCoupons() {
             try {
-                // Show skeleton loading initially
                 isLoading = true;
                 
                 const couponSnap = await couponRef.orderBy('createdAt', 'desc').get();
@@ -3057,10 +3008,7 @@
                     return { 
                         id: doc.id, 
                         ...data,
-                        active: data.active !== undefined ? data.active : true,
-                        used: data.used || 0,
-                        limit: data.limit || 100,
-                        userLimit: data.userLimit || 1
+                        active: data.active !== undefined ? data.active : true
                     };
                 });
                 
@@ -3082,14 +3030,13 @@
             
             // Show loading skeleton
             if (isLoading) {
-                // Skeleton is already shown in HTML
                 return;
             }
             
             if(list.length === 0) {
                 desktopTable.innerHTML = `
                     <tr>
-                        <td colspan="6" class="empty-state">
+                        <td colspan="5" class="empty-state">
                             <h3>No Coupons Found</h3>
                             <p>Create a new coupon to get started.</p>
                         </td>
@@ -3100,61 +3047,38 @@
             
             // Desktop table rows
             desktopTable.innerHTML = list.map(coupon => {
-                const isPercentage = coupon.type && coupon.type.includes('%');
-                const expiryDate = coupon.expiry ? new Date(coupon.expiry) : null;
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
-                
-                let expiryClass = '';
-                let expiryText = 'No expiry';
-                
-                if (expiryDate) {
-                    expiryDate.setHours(0, 0, 0, 0);
-                    if (expiryDate < today) {
-                        expiryClass = 'expired';
-                        expiryText = 'Expired';
-                    } else if (expiryDate.getTime() === today.getTime()) {
-                        expiryClass = 'upcoming';
-                        expiryText = 'Today';
-                    } else {
-                        expiryText = new Date(coupon.expiry).toLocaleDateString('en-IN', {
-                            day: 'numeric',
-                            month: 'short',
-                            year: 'numeric'
-                        });
-                    }
-                }
+                const usagePercentage = coupon.limit > 0 ? Math.min(100, ((coupon.used || 0) / coupon.limit) * 100) : 0;
+                const isExpired = coupon.expiry && new Date(coupon.expiry) < new Date();
+                const statusClass = isExpired ? 'status-expired' : (coupon.active ? 'status-active' : 'status-inactive');
+                const statusText = isExpired ? 'Expired' : (coupon.active ? 'Active' : 'Inactive');
                 
                 return `
                 <tr>
                     <td>
-                        <div class="coupon-code">${coupon.code}</div>
+                        <div class="coupon-details">
+                            <span class="coupon-code">${coupon.code}</span>
+                            <span class="coupon-type">${coupon.type || 'Percentage Discount'}</span>
+                            <span class="coupon-expiry">${coupon.expiry ? `Expires: ${formatDate(coupon.expiry)}` : 'No expiry'}</span>
+                        </div>
+                    </td>
+                    <td class="td-discount">
+                        ${coupon.type && coupon.type.includes('Percentage') || !coupon.type ? `${coupon.value}%` : `₹${coupon.value}`}
                     </td>
                     <td>
-                        <div class="coupon-value ${isPercentage ? 'coupon-percentage' : 'coupon-flat'}">
-                            ${isPercentage ? `${coupon.value}%` : `₹${coupon.value}`}
+                        <div class="coupon-usage">
+                            ${coupon.used || 0} / ${coupon.limit || '∞'} used
+                            ${coupon.userLimit ? `<br><small>${coupon.userLimit} per user</small>` : ''}
                         </div>
-                        <div class="coupon-type-badge ${isPercentage ? 'type-percentage' : 'type-flat'}">
-                            ${isPercentage ? 'Percentage' : 'Flat'}
+                        <div class="usage-bar">
+                            <div class="usage-fill" style="width: ${usagePercentage}%"></div>
                         </div>
                     </td>
-                    <td class="coupon-usage">
-                        <div>Used: ${coupon.used || 0}</div>
-                        <div>Limit: ${coupon.limit || 100}</div>
-                        <div style="font-size: 12px; color: #6b7280;">Per user: ${coupon.userLimit || 1}</div>
-                    </td>
-                    <td class="coupon-expiry ${expiryClass}">${expiryText}</td>
                     <td class="td-status">
-                        <div class="status-toggle">
-                            <label class="toggle-switch">
-                                <input type="checkbox" ${coupon.active ? 'checked' : ''} 
-                                       onchange="toggleCouponStatus('${coupon.id}', this.checked)">
-                                <span class="toggle-slider"></span>
-                            </label>
-                        </div>
+                        <span class="status-badge ${statusClass}">${statusText}</span>
                     </td>
-                    <td class="coupon-actions">
+                    <td>
                         <div class="action-buttons">
+                            <button class="btn-secondary" onclick="openEditModal('${coupon.id}')">Edit</button>
                             <div class="popup-container">
                                 <div class="kebab" data-coupon-id="${coupon.id}">
                                     <span class="kebab-dots"></span>
@@ -3183,49 +3107,41 @@
                         </div>
                     </td>
                 </tr>
-            `}).join('');
+                `;
+            }).join('');
             
             // Mobile cards
             mobileCards.innerHTML = list.map(coupon => {
-                const isPercentage = coupon.type && coupon.type.includes('%');
-                const expiryDate = coupon.expiry ? new Date(coupon.expiry) : null;
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
-                
-                let expiryText = 'No expiry';
-                
-                if (expiryDate) {
-                    expiryDate.setHours(0, 0, 0, 0);
-                    if (expiryDate < today) {
-                        expiryText = 'Expired';
-                    } else if (expiryDate.getTime() === today.getTime()) {
-                        expiryText = 'Today';
-                    } else {
-                        expiryText = new Date(coupon.expiry).toLocaleDateString('en-IN', {
-                            day: 'numeric',
-                            month: 'short'
-                        });
-                    }
-                }
+                const isExpired = coupon.expiry && new Date(coupon.expiry) < new Date();
+                const statusClass = isExpired ? 'status-expired' : (coupon.active ? 'status-active' : 'status-inactive');
+                const statusText = isExpired ? 'Expired' : (coupon.active ? 'Active' : 'Inactive');
                 
                 return `
-                <div class="coupon-card-mobile" onclick="handleMobileCardClick(event, '${coupon.id}')">
-                    <div class="coupon-card-code">${coupon.code}</div>
-                    <div class="coupon-card-content">
-                        <div class="coupon-card-name">
-                            ${isPercentage ? `${coupon.value}% Off` : `₹${coupon.value} Off`}
-                            <span class="coupon-type-badge ${isPercentage ? 'type-percentage' : 'type-flat'}" style="font-size: 10px; padding: 2px 6px; margin-left: 8px;">
-                                ${isPercentage ? '%' : '₹'}
+                <div class="coupon-card-mobile">
+                    <div class="coupon-card-header">
+                        <div class="coupon-card-code">${coupon.code}</div>
+                        <span class="coupon-card-status ${statusClass}">${statusText}</span>
+                    </div>
+                    <div class="coupon-card-details">
+                        <div class="coupon-card-row">
+                            <span class="coupon-card-label">Discount:</span>
+                            <span class="coupon-card-value coupon-card-discount">
+                                ${coupon.type && coupon.type.includes('Percentage') || !coupon.type ? `${coupon.value}%` : `₹${coupon.value}`}
                             </span>
                         </div>
-                        <div class="coupon-card-details">
-                            Used: ${coupon.used || 0}/${coupon.limit || 100} • Exp: ${expiryText}
+                        <div class="coupon-card-row">
+                            <span class="coupon-card-label">Usage:</span>
+                            <span class="coupon-card-value">${coupon.used || 0} / ${coupon.limit || '∞'}</span>
+                        </div>
+                        <div class="coupon-card-row">
+                            <span class="coupon-card-label">Expires:</span>
+                            <span class="coupon-card-value">${coupon.expiry ? formatDate(coupon.expiry) : 'Never'}</span>
                         </div>
                     </div>
                     <div class="coupon-card-actions">
                         <div class="mobile-status-toggle">
                             <label class="toggle-switch">
-                                <input type="checkbox" ${coupon.active ? 'checked' : ''} 
+                                <input type="checkbox" ${coupon.active && !isExpired ? 'checked' : ''} 
                                        onchange="toggleCouponStatus('${coupon.id}', this.checked)">
                                 <span class="toggle-slider"></span>
                             </label>
@@ -3235,9 +3151,10 @@
                         </button>
                     </div>
                 </div>
-            `}).join('');
+                `;
+            }).join('');
             
-            // FIXED: Desktop popup positioning - now using fixed positioning
+            // FIXED: Desktop popup positioning
             document.querySelectorAll('.kebab').forEach(kebab => {
                 kebab.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -3317,25 +3234,15 @@
                     openAdvancedMenu();
                 });
             });
-            
-            // Prevent toggle clicks from triggering card redirect
-            document.querySelectorAll('.coupon-card-actions .toggle-switch input').forEach(toggle => {
-                toggle.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                });
-            });
         }
 
-        // Handle mobile card click
-        function handleMobileCardClick(event, couponId) {
-            // Only handle if the click wasn't on the actions area (toggle or menu button)
-            if (!event.target.closest('.coupon-card-actions') && 
-                !event.target.classList.contains('toggle-switch') &&
-                !event.target.classList.contains('toggle-slider') &&
-                event.target.type !== 'checkbox') {
-                // You can add functionality here if needed
-                // For example, show coupon details
-            }
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric' 
+            });
         }
 
         // Toggle coupon status
@@ -3381,19 +3288,13 @@
         // Search functionality
         document.getElementById('search-input').addEventListener('input', (e) => {
             const term = e.target.value.toLowerCase();
-            const filtered = allCoupons.filter(c => 
-                c.code.toLowerCase().includes(term) || 
-                (c.type && c.type.toLowerCase().includes(term))
-            );
+            const filtered = allCoupons.filter(c => c.code.toLowerCase().includes(term));
             renderCoupons(filtered);
         });
 
         document.getElementById('mobile-search-input').addEventListener('input', (e) => {
             const term = e.target.value.toLowerCase();
-            const filtered = allCoupons.filter(c => 
-                c.code.toLowerCase().includes(term) || 
-                (c.type && c.type.toLowerCase().includes(term))
-            );
+            const filtered = allCoupons.filter(c => c.code.toLowerCase().includes(term));
             renderCoupons(filtered);
         });
 
@@ -3402,24 +3303,13 @@
             editingId = null;
             
             document.getElementById('modal-title').textContent = "Create Coupon";
-            document.getElementById('modal-submit-btn').textContent = "Create Coupon";
+            document.getElementById('modal-submit-btn').textContent = "Save Coupon";
             document.getElementById('coupon-form').reset();
-            
-            // Reset select dropdowns
-            document.getElementById('type-selected-label').textContent = "Percentage (%)";
-            document.querySelectorAll('.select-option').forEach(option => {
-                option.classList.remove('selected');
-            });
-            document.querySelector('#type-dropdown .select-option:first-child').classList.add('selected');
-            
-            // Reset value label
-            document.getElementById('value-label').textContent = 'Discount Value (%) *';
-            document.getElementById('coupon-value-input').setAttribute('max', '100');
-            document.getElementById('coupon-value-input').placeholder = 'e.g. 25';
-            
-            // Set default values
-            document.getElementById('coupon-limit-input').value = '100';
-            document.getElementById('coupon-user-limit-input').value = '1';
+            document.getElementById('discount-type-select').value = 'percentage';
+            document.getElementById('discount-value-label').textContent = 'Discount Value (%)';
+            document.getElementById('discount-value-input').max = 100;
+            document.getElementById('discount-value-input').placeholder = 'e.g. 20';
+            document.getElementById('status-select').value = 'active';
             
             document.getElementById('coupon-modal').style.display = 'flex';
         }
@@ -3432,36 +3322,25 @@
             document.getElementById('modal-title').textContent = "Edit Coupon";
             document.getElementById('modal-submit-btn').textContent = "Update Coupon";
             document.getElementById('coupon-code-input').value = coupon.code;
-            document.getElementById('coupon-value-input').value = coupon.value;
-            document.getElementById('coupon-limit-input').value = coupon.limit || 100;
-            document.getElementById('coupon-user-limit-input').value = coupon.userLimit || 1;
-            document.getElementById('coupon-expiry-input').value = coupon.expiry || '';
             
-            // Set discount type
-            const isPercentage = coupon.type && coupon.type.includes('%');
+            // Determine discount type
+            const isPercentage = !coupon.type || coupon.type.includes('Percentage');
+            document.getElementById('discount-type-select').value = isPercentage ? 'percentage' : 'fixed';
+            document.getElementById('discount-value-input').value = coupon.value;
+            
             if (isPercentage) {
-                document.getElementById('type-selected-label').textContent = "Percentage (%)";
-                document.getElementById('value-label').textContent = 'Discount Value (%) *';
-                document.getElementById('coupon-value-input').setAttribute('max', '100');
-                document.getElementById('coupon-value-input').placeholder = 'e.g. 25';
-                document.querySelectorAll('#type-dropdown .select-option').forEach(option => {
-                    option.classList.remove('selected');
-                    if (option.textContent === 'Percentage (%)') {
-                        option.classList.add('selected');
-                    }
-                });
+                document.getElementById('discount-value-label').textContent = 'Discount Value (%)';
+                document.getElementById('discount-value-input').max = 100;
             } else {
-                document.getElementById('type-selected-label').textContent = "Flat Amount (₹)";
-                document.getElementById('value-label').textContent = 'Discount Amount (₹) *';
-                document.getElementById('coupon-value-input').removeAttribute('max');
-                document.getElementById('coupon-value-input').placeholder = 'e.g. 500';
-                document.querySelectorAll('#type-dropdown .select-option').forEach(option => {
-                    option.classList.remove('selected');
-                    if (option.textContent === 'Flat Amount (₹)') {
-                        option.classList.add('selected');
-                    }
-                });
+                document.getElementById('discount-value-label').textContent = 'Discount Amount (₹)';
+                document.getElementById('discount-value-input').max = 999999;
             }
+            
+            document.getElementById('total-limit-input').value = coupon.limit || '';
+            document.getElementById('user-limit-input').value = coupon.userLimit || 1;
+            document.getElementById('min-order-input').value = coupon.minOrder || '';
+            document.getElementById('expiry-date-input').value = coupon.expiry || '';
+            document.getElementById('status-select').value = coupon.active ? 'active' : 'inactive';
             
             document.getElementById('coupon-modal').style.display = 'flex';
             
@@ -3477,28 +3356,30 @@
         document.getElementById('coupon-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const code = document.getElementById('coupon-code-input').value.trim().toUpperCase();
-            const type = document.getElementById('type-selected-label').textContent;
-            const value = parseFloat(document.getElementById('coupon-value-input').value);
-            const limit = parseInt(document.getElementById('coupon-limit-input').value) || 100;
-            const userLimit = parseInt(document.getElementById('coupon-user-limit-input').value) || 1;
-            const expiry = document.getElementById('coupon-expiry-input').value || null;
-            
             if(!code) {
                 showToast('Coupon code is required', 'error');
                 return;
             }
-            
+
+            const discountType = document.getElementById('discount-type-select').value;
+            const value = parseFloat(document.getElementById('discount-value-input').value);
             if(isNaN(value) || value <= 0) {
-                showToast('Valid discount value is required', 'error');
+                showToast('Discount value is invalid', 'error');
                 return;
             }
-            
-            if(type === 'Percentage (%)' && value > 100) {
+
+            if(discountType === 'percentage' && value > 100) {
                 showToast('Percentage discount cannot exceed 100%', 'error');
                 return;
             }
-            
-            // Check if code already exists (for new coupons)
+
+            const limit = parseInt(document.getElementById('total-limit-input').value) || 0;
+            const userLimit = parseInt(document.getElementById('user-limit-input').value) || 1;
+            const minOrder = parseFloat(document.getElementById('min-order-input').value) || 0;
+            const expiry = document.getElementById('expiry-date-input').value || null;
+            const active = document.getElementById('status-select').value === 'active';
+
+            // Check if coupon code already exists (for new coupons)
             if (!editingId) {
                 const exists = allCoupons.some(c => c.code === code);
                 if(exists) {
@@ -3509,18 +3390,18 @@
 
             const btn = document.getElementById('modal-submit-btn');
             btn.disabled = true; 
-            btn.textContent = editingId ? "Updating..." : "Creating...";
+            btn.textContent = editingId ? "Updating..." : "Saving...";
 
             try {
                 const data = {
                     code,
-                    type,
+                    type: discountType === 'percentage' ? 'Percentage Discount' : 'Fixed Amount Discount',
                     value,
-                    limit,
+                    limit: limit > 0 ? limit : null,
                     userLimit,
+                    minOrder: minOrder > 0 ? minOrder : null,
                     expiry,
-                    active: true,
-                    used: editingId ? (allCoupons.find(c => c.id === editingId)?.used || 0) : 0,
+                    active,
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
 
@@ -3529,6 +3410,7 @@
                     showToast('Coupon updated successfully', 'success');
                 } else {
                     data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                    data.used = 0;
                     await couponRef.add(data);
                     showToast('Coupon created successfully', 'success');
                 }
@@ -3539,7 +3421,7 @@
                 console.error(e);
                 showToast('Operation failed', 'error');
                 btn.disabled = false; 
-                btn.textContent = editingId ? "Update Coupon" : "Create Coupon";
+                btn.textContent = editingId ? "Update Coupon" : "Save Coupon";
             }
         });
 
