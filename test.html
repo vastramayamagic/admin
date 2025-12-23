@@ -3787,24 +3787,31 @@ async function saveColorVariant() {
         }
 
 async function uploadFile(file, path) {
-    // 1. Get the secure upload link from your Vercel API
-    const response = await fetch(`/api/get-presigned-url?fileName=${encodeURIComponent(file.name)}&contentType=${file.type}`);
-    if (!response.ok) throw new Error('Failed to get upload URL');
+    // 1. Get the pre-signed URL
+    const resp = await fetch(`/api/get-presigned-url?fileName=${encodeURIComponent(file.name)}&contentType=${file.type}`);
     
-    const { url, publicUrl } = await response.json();
+    if (!resp.ok) {
+        const errorData = await resp.json();
+        throw new Error(errorData.error || 'Failed to get upload URL');
+    }
+    
+    const { url, publicUrl } = await resp.json();
 
-    // 2. Upload the file binary directly to Cloudflare R2
+    // 2. Upload to Cloudflare R2
     const upload = await fetch(url, {
         method: 'PUT',
-        body: file,
+        body: file, // Send the file binary
         headers: {
-            'Content-Type': file.type
+            'Content-Type': file.type // MUST match the contentType sent to the API
         }
     });
 
-    if (!upload.ok) throw new Error('Cloudflare upload failed');
+    if (!upload.ok) {
+        const errorText = await upload.text();
+        console.error("R2 Upload Error Body:", errorText);
+        throw new Error('Cloudflare upload failed');
+    }
 
-    // 3. Return the URL that will be saved to Firestore
     return publicUrl;
 }
 
