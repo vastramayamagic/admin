@@ -2849,7 +2849,6 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
-        const storage = firebase.storage();
 
         let allCategories = [];
         let allFabrics = [];
@@ -3787,12 +3786,34 @@ async function saveColorVariant() {
             }
         }
 
-        async function uploadFile(file, path) {
-            const storageRef = storage.ref();
-            const fileRef = storageRef.child(`${path}/${Date.now()}_${file.name}`);
-            await fileRef.put(file);
-            return await fileRef.getDownloadURL();
+async function uploadFile(file, path) {
+    // 1. Get the pre-signed URL
+    const resp = await fetch(`/api/get-presigned-url?fileName=${encodeURIComponent(file.name)}&contentType=${file.type}`);
+    
+    if (!resp.ok) {
+        const errorData = await resp.json();
+        throw new Error(errorData.error || 'Failed to get upload URL');
+    }
+    
+    const { url, publicUrl } = await resp.json();
+
+    // 2. Upload to Cloudflare R2
+    const upload = await fetch(url, {
+        method: 'PUT',
+        body: file, // Send the file binary
+        headers: {
+            'Content-Type': file.type // MUST match the contentType sent to the API
         }
+    });
+
+    if (!upload.ok) {
+        const errorText = await upload.text();
+        console.error("R2 Upload Error Body:", errorText);
+        throw new Error('Cloudflare upload failed');
+    }
+
+    return publicUrl;
+}
 
         async function saveProduct() {
             const name = document.getElementById('name').value.trim();
