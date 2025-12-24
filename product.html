@@ -3846,20 +3846,22 @@ async function uploadFile(file, path) {
                 const category = allCategories.find(cat => cat.id === categoryId);
                 const categoryName = category ? category.name : '';
                 
-                const productData = {
-                    name,
-                    description: document.getElementById('description').value.trim(),
-                    categoryId,
-                    category,
-                    fabric,
-                    price: parseFloat(price),
-                    oldPrice: parseFloat(oldPrice),
-                    image: coverUrl,
-                    images: [coverUrl],
-                    colorVariants,
-                    reviews: productReviews,
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                };
+const productData = {
+    name,
+    description: document.getElementById('description').value.trim(),
+    categoryId,
+    categoryName,
+    category: categoryName, // ADD THIS: Needed for the Admin Count logic
+    isAvailable: true,      // ADD THIS: Needed for Storefront visibility
+    fabric,
+    price: parseFloat(price),
+    oldPrice: parseFloat(oldPrice),
+    image: coverUrl,
+    images: [coverUrl],
+    colorVariants,
+    reviews: productReviews,
+    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+};
                 
                 if (productId) {
                     // Update existing product
@@ -3918,18 +3920,21 @@ async function uploadFile(file, path) {
         }
 
         // Helper function to update product in category's products subcollection
-        async function updateProductInCategory(productId, categoryId, productData) {
-            try {
-                await db.collection('categories')
-                    .doc(categoryId)
-                    .collection('products')
-                    .doc(productId)
-                    .set(productData, { merge: true });
-            } catch (error) {
-                console.error('Error updating product in category:', error);
-                throw error;
-            }
-        }
+async function updateProductInCategory(productId, categoryId, productData) {
+    try {
+        // Add the visibility flag here too
+        productData.isAvailable = true; 
+        
+        await db.collection('categories')
+            .doc(categoryId)
+            .collection('products')
+            .doc(productId)
+            .set(productData, { merge: true });
+    } catch (error) {
+        console.error('Error updating product in category:', error);
+        throw error;
+    }
+}
 
         // Helper function to remove product from category's products subcollection
         async function removeProductFromCategory(productId, categoryId) {
