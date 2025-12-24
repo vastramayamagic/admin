@@ -2849,6 +2849,7 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
+        const storage = firebase.storage();
 
         let allCategories = [];
         let allFabrics = [];
@@ -3468,75 +3469,78 @@
             element.parentElement.remove();
         }
 
-async function saveColorVariant() {
-    const name = document.getElementById('selected-color-name').value;
-    const hex = document.getElementById('color-hex').value.trim();
-    
-    if (!name) {
-        showToast('Please select or add a color', 'error');
-        return;
-    }
-    
-    if (!hex || !/^#[0-9A-F]{6}$/i.test(hex)) {
-        showToast('Please enter a valid hex color code (e.g., #000000)', 'error');
-        return;
-    }
-    
-    showProgress('Saving variant...', 'Please wait');
-    
-    try {
-        let swatchImage = '';
-        
-        if (tempSwatchFile) {
-            swatchImage = await uploadFile(tempSwatchFile, 'swatches');
-        } else if (editingVariantIndex !== null && colorVariants[editingVariantIndex]) {
-            swatchImage = colorVariants[editingVariantIndex].hex;
+        async function saveColorVariant() {
+            const name = document.getElementById('selected-color-name').value;
+            const hex = document.getElementById('color-hex').value.trim();
+            
+            if (!name) {
+                showToast('Please select or add a color', 'error');
+                return;
+            }
+            
+            if (!hex || !/^#[0-9A-F]{6}$/i.test(hex)) {
+                showToast('Please enter a valid hex color code (e.g., #000000)', 'error');
+                return;
+            }
+            
+            showProgress('Saving variant...', 'Please wait');
+            
+            try {
+                let swatchImage = '';
+                
+                if (tempSwatchFile) {
+                    swatchImage = await uploadFile(tempSwatchFile, 'swatches');
+                } else if (editingVariantIndex !== null && colorVariants[editingVariantIndex]) {
+                    swatchImage = colorVariants[editingVariantIndex].hex;
+                }
+                
+                const sizes = [];
+                document.querySelectorAll('#size-selection .size-option.selected').forEach(option => {
+                    const sizeName = option.getAttribute('data-size');
+                    sizes.push({
+                        name: sizeName,
+                        available: true
+                    });
+                });
+                
+                if (sizes.length === 0) {
+                    hideProgress();
+                    showToast('Please select at least one size', 'error');
+                    return;
+                }
+                
+                const newImages = [];
+                for (const file of tempVariantFiles) {
+                    const url = await uploadFile(file, 'variants');
+                    newImages.push(url);
+                }
+                
+                const allImages = [...existingVariantImages, ...newImages];
+                
+                const variant = {
+                    name,
+                    hex: swatchImage || hex,
+                    colorHex: hex,
+                    sizes,
+                    images: allImages
+                };
+                
+                if (editingVariantIndex !== null) {
+                    colorVariants[editingVariantIndex] = variant;
+                } else {
+                    colorVariants.push(variant);
+                }
+                
+                renderVariants();
+                closeColorModal();
+                showToast('Variant saved successfully', 'success');
+            } catch (error) {
+                console.error('Error saving variant:', error);
+                showToast('Failed to save variant', 'error');
+            } finally {
+                hideProgress();
+            }
         }
-        
-        const sizes = [];
-        document.querySelectorAll('#size-selection .size-option.selected').forEach(option => {
-            const sizeName = option.getAttribute('data-size');
-            sizes.push({
-                name: sizeName,
-                available: true
-            });
-        });
-        
-        // REMOVED SIZE VALIDATION HERE
-        // Sizes can be empty array now
-        
-        const newImages = [];
-        for (const file of tempVariantFiles) {
-            const url = await uploadFile(file, 'variants');
-            newImages.push(url);
-        }
-        
-        const allImages = [...existingVariantImages, ...newImages];
-        
-        const variant = {
-            name,
-            hex: swatchImage || hex,
-            colorHex: hex,
-            sizes, // This can be empty array []
-            images: allImages
-        };
-        
-        if (editingVariantIndex !== null) {
-            colorVariants[editingVariantIndex] = variant;
-        } else {
-            colorVariants.push(variant);
-        }
-        
-        renderVariants();
-        closeColorModal();
-        showToast('Variant saved successfully', 'success');
-    } catch (error) {
-        console.error('Error saving variant:', error);
-        showToast('Failed to save variant', 'error');
-    } finally {
-        hideProgress();
-    }
-}
 
         function renderVariants() {
             const desktopContainer = document.getElementById('variants-list');
@@ -3576,7 +3580,7 @@ async function saveColorVariant() {
                              style="${variant.colorHex ? `background-color: ${variant.colorHex};` : ''}">
                         <div class="variant-details">
                             <div class="variant-name">${variant.name}</div>
-                            <div class="variant-sizes">${variant.sizes.length > 0 ? variant.sizes.length + ' sizes • ' : 'No sizes • '}${variant.images ? variant.images.length : 0} images</div>
+                            <div class="variant-sizes">${variant.sizes.length} sizes • ${variant.images ? variant.images.length : 0} images</div>
                         </div>
                     </div>
                     <div class="variant-actions">
@@ -3609,7 +3613,7 @@ async function saveColorVariant() {
                              style="${variant.colorHex ? `background-color: ${variant.colorHex};` : ''}">
                         <div class="variant-details">
                             <div class="variant-name">${variant.name}</div>
-                            <div class="variant-sizes">${variant.sizes.length > 0 ? variant.sizes.length + ' sizes' : 'No sizes'}</div>
+                            <div class="variant-sizes">${variant.sizes.length} sizes</div>
                         </div>
                     </div>
                     <div class="variant-actions">
@@ -3786,34 +3790,12 @@ async function saveColorVariant() {
             }
         }
 
-async function uploadFile(file, path) {
-    // 1. Get the pre-signed URL
-    const resp = await fetch(`/api/get-presigned-url?fileName=${encodeURIComponent(file.name)}&contentType=${file.type}`);
-    
-    if (!resp.ok) {
-        const errorData = await resp.json();
-        throw new Error(errorData.error || 'Failed to get upload URL');
-    }
-    
-    const { url, publicUrl } = await resp.json();
-
-    // 2. Upload to Cloudflare R2
-    const upload = await fetch(url, {
-        method: 'PUT',
-        body: file, // Send the file binary
-        headers: {
-            'Content-Type': file.type // MUST match the contentType sent to the API
+        async function uploadFile(file, path) {
+            const storageRef = storage.ref();
+            const fileRef = storageRef.child(`${path}/${Date.now()}_${file.name}`);
+            await fileRef.put(file);
+            return await fileRef.getDownloadURL();
         }
-    });
-
-    if (!upload.ok) {
-        const errorText = await upload.text();
-        console.error("R2 Upload Error Body:", errorText);
-        throw new Error('Cloudflare upload failed');
-    }
-
-    return publicUrl;
-}
 
         async function saveProduct() {
             const name = document.getElementById('name').value.trim();
