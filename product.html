@@ -3861,14 +3861,13 @@ async function saveProduct() {
         const category = allCategories.find(cat => cat.id === categoryId);
         const categoryName = category ? category.name : '';
         
-        // 1. Data for the ROOT collection (used for search and admin)
+        // 1. DATA FOR THE ROOT 'products' COLLECTION
         const productData = {
             name,
             description: document.getElementById('description').value.trim(),
             categoryId,
             categoryName,
-            category: categoryName, 
-            isAvailable: true, // Must be true for landing page filter
+            category: categoryName, // Needed for the Category Count logic
             fabric,
             price: parseFloat(price),
             oldPrice: parseFloat(oldPrice),
@@ -3876,43 +3875,44 @@ async function saveProduct() {
             images: [coverUrl],
             colorVariants,
             reviews: productReviews,
+            isAvailable: true,      // REQUIRED for visibility logic
             updatedAt: firebase.firestore.FieldValue.serverTimestamp()
         };
         
-        let finalProductId = productId;
+        let finalId = productId;
 
         if (productId) {
-            // EDITING EXISTING PRODUCT
+            // Update existing product
             const productRef = db.collection('products').doc(productId);
-            const currentProduct = await productRef.get();
-            const currentData = currentProduct.data();
+            const currentDoc = await productRef.get();
+            const currentData = currentDoc.data();
             
             await productRef.update(productData);
             
-            // If category changed, remove from the old category's sub-collection
+            // Handle category change (delete from old sub-collection if changed)
             if (currentData.categoryId && currentData.categoryId !== categoryId) {
                 await removeProductFromCategory(productId, currentData.categoryId);
             }
         } else {
-            // CREATING NEW PRODUCT
+            // Create new product
             const productRef = await db.collection('products').add(productData);
-            finalProductId = productRef.id;
+            finalId = productRef.id;
         }
 
-        // 2. Data for the CATEGORY SUB-COLLECTION (Used for landing page sections)
+        // 2. DATA FOR THE CATEGORY SUB-COLLECTION
+        // This is exactly what the landing page 'Category Sections' look for
         const subCollectionData = {
             name: productData.name,
             price: productData.price,
             oldPrice: productData.oldPrice,
             image: productData.image,
-            productId: finalProductId, // Use the real Firestore ID
-            isAvailable: true          // Essential for index.html filter
+            productId: finalId,
+            isAvailable: true // MUST be present for .filter(p => p.isAvailable !== false)
         };
 
-        // Save to categories/{categoryId}/products/{finalProductId}
-        await updateProductInCategory(finalProductId, categoryId, subCollectionData);
+        await updateProductInCategory(finalId, categoryId, subCollectionData);
         
-        showToast(productId ? 'Product updated!' : 'Product created!', 'success');
+        showToast(productId ? 'Product updated successfully' : 'Product created successfully', 'success');
         
         setTimeout(() => {
             window.location.href = 'manage-products.html';
@@ -3934,9 +3934,7 @@ async function saveProduct() {
         // Helper function to update product in category's products subcollection
 async function updateProductInCategory(productId, categoryId, productData) {
     try {
-        // Add the visibility flag here too
-        productData.isAvailable = true; 
-        
+        // This saves the product specifically inside the category's private list
         await db.collection('categories')
             .doc(categoryId)
             .collection('products')
@@ -3947,7 +3945,6 @@ async function updateProductInCategory(productId, categoryId, productData) {
         throw error;
     }
 }
-
         // Helper function to remove product from category's products subcollection
         async function removeProductFromCategory(productId, categoryId) {
             try {
