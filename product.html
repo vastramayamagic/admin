@@ -3815,109 +3815,97 @@ async function uploadFile(file, path) {
     return publicUrl;
 }
 
-        async function saveProduct() {
-            const name = document.getElementById('name').value.trim();
-            const price = document.getElementById('price').value;
-            const oldPrice = document.getElementById('oldPrice').value;
-            const categoryId = document.getElementById('selected-category').value;
-            const fabric = document.getElementById('selected-fabric').value;
-            
-            if (!name || !price || !oldPrice || !categoryId || !fabric) {
-                showToast('Please fill all required fields', 'error');
-                return;
-            }
-            
-            const coverPreview = document.getElementById('cover-preview');
-            if (!coverPreview.src || coverPreview.src.includes('data:image') && !coverImageFile) {
-                showToast('Please upload a cover image', 'error');
-                return;
-            }
-            
-            showProgress('Saving product...', 'Please wait');
-            
-            try {
-                let coverUrl = coverPreview.src;
-                
-                if (coverImageFile) {
-                    coverUrl = await uploadFile(coverImageFile, 'products');
-                }
-                
-                // Get category name for display
-                const category = allCategories.find(cat => cat.id === categoryId);
-                const categoryName = category ? category.name : '';
-                
-const productData = {
-    name,
-    description: document.getElementById('description').value.trim(),
-    categoryId,
-    categoryName,
-    category: categoryName, // ADD THIS: Needed for the Admin Count logic
-    isAvailable: true,      // ADD THIS: Needed for Storefront visibility
-    fabric,
-    price: parseFloat(price),
-    oldPrice: parseFloat(oldPrice),
-    image: coverUrl,
-    images: [coverUrl],
-    colorVariants,
-    reviews: productReviews,
-    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-};
-                
-                if (productId) {
-                    // Update existing product
-                    const productRef = db.collection('products').doc(productId);
-                    
-                    // Get current product to check for category changes
-                    const currentProduct = await productRef.get();
-                    const currentData = currentProduct.data();
-                    
-                    // Update main product document
-                    await productRef.update(productData);
-                    
-                    // Update product in category's products subcollection
-                    await updateProductInCategory(productId, categoryId, {
-                        name: productData.name,
-                        price: productData.price,
-                        oldPrice: productData.oldPrice,
-                        image: productData.image,
-                        productId: productId
-                    });
-                    
-                    // If category changed, remove from old category
-                    if (currentData.categoryId && currentData.categoryId !== categoryId) {
-                        await removeProductFromCategory(productId, currentData.categoryId);
-                    }
-                    
-                    showToast('Product updated successfully', 'success');
-                } else {
-                    // Create new product
-                    const productRef = await db.collection('products').add(productData);
-                    const newProductId = productRef.id;
-                    
-                    // Add product to category's products subcollection
-                    await updateProductInCategory(newProductId, categoryId, {
-                        name: productData.name,
-                        price: productData.price,
-                        oldPrice: productData.oldPrice,
-                        image: productData.image,
-                        productId: newProductId
-                    });
-                    
-                    productId = newProductId;
-                    showToast('Product created successfully', 'success');
-                }
-                
-                setTimeout(() => {
-                    window.location.href = 'manage-products.html';
-                }, 1500);
-                
-            } catch (error) {
-                console.error('Error saving product:', error);
-                showToast('Failed to save product', 'error');
-            } finally {
-                hideProgress();
-            }
+async function saveProduct() {
+    const name = document.getElementById('name').value.trim();
+    const price = document.getElementById('price').value;
+    const oldPrice = document.getElementById('oldPrice').value;
+    const categoryId = document.getElementById('selected-category').value;
+    const fabric = document.getElementById('selected-fabric').value;
+    
+    if (!name || !price || !oldPrice || !categoryId || !fabric) {
+        showToast('Please fill all required fields', 'error');
+        return;
+    }
+    
+    const coverPreview = document.getElementById('cover-preview');
+    if (!coverPreview.src || (coverPreview.src.includes('data:image') && !coverImageFile)) {
+        showToast('Please upload a cover image', 'error');
+        return;
+    }
+    
+    showProgress('Saving product...', 'Please wait');
+    
+    try {
+        let coverUrl = coverPreview.src;
+        if (coverImageFile) {
+            coverUrl = await uploadFile(coverImageFile, 'products');
         }
+        
+        const category = allCategories.find(cat => cat.id === categoryId);
+        const categoryName = category ? category.name : '';
+        
+        // Root Collection Data
+        const productData = {
+            name,
+            description: document.getElementById('description').value.trim(),
+            categoryId,
+            categoryName,
+            category: categoryName, // Essential for Admin Counts
+            isAvailable: true,      // Essential for Storefront Visibility
+            fabric,
+            price: parseFloat(price),
+            oldPrice: parseFloat(oldPrice),
+            image: coverUrl,
+            images: [coverUrl],
+            colorVariants,
+            reviews: productReviews,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        };
+        
+        // Data specifically for the Category Sub-collection
+        // IMPORTANT: Must include isAvailable: true
+        const subCollectionData = {
+            name: productData.name,
+            price: productData.price,
+            oldPrice: productData.oldPrice,
+            image: productData.image,
+            productId: productId || "", 
+            isAvailable: true  // THIS was missing and causing the hidden category products
+        };
+
+        if (productId) {
+            const productRef = db.collection('products').doc(productId);
+            const currentProduct = await productRef.get();
+            const currentData = currentProduct.data();
+            
+            await productRef.update(productData);
+            
+            subCollectionData.productId = productId;
+            await updateProductInCategory(productId, categoryId, subCollectionData);
+            
+            if (currentData.categoryId && currentData.categoryId !== categoryId) {
+                await removeProductFromCategory(productId, currentData.categoryId);
+            }
+            showToast('Product updated successfully', 'success');
+        } else {
+            const productRef = await db.collection('products').add(productData);
+            const newId = productRef.id;
+            
+            subCollectionData.productId = newId;
+            await updateProductInCategory(newId, categoryId, subCollectionData);
+            
+            showToast('Product created successfully', 'success');
+        }
+        
+        setTimeout(() => { window.location.href = 'manage-products.html'; }, 1500);
+        
+    } catch (error) {
+        console.error('Error saving product:', error);
+        showToast('Failed to save product', 'error');
+    } finally {
+        hideProgress();
+    }
+}
 
         // Helper function to update product in category's products subcollection
 async function updateProductInCategory(productId, categoryId, productData) {
