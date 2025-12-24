@@ -3815,6 +3815,23 @@ async function uploadFile(file, path) {
     return publicUrl;
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 async function saveProduct() {
     const name = document.getElementById('name').value.trim();
     const price = document.getElementById('price').value;
@@ -3844,14 +3861,14 @@ async function saveProduct() {
         const category = allCategories.find(cat => cat.id === categoryId);
         const categoryName = category ? category.name : '';
         
-        // Root Collection Data
+        // 1. Data for the ROOT collection (used for search and admin)
         const productData = {
             name,
             description: document.getElementById('description').value.trim(),
             categoryId,
             categoryName,
-            category: categoryName, // Essential for Admin Counts
-            isAvailable: true,      // Essential for Storefront Visibility
+            category: categoryName, 
+            isAvailable: true, // Must be true for landing page filter
             fabric,
             price: parseFloat(price),
             oldPrice: parseFloat(oldPrice),
@@ -3862,42 +3879,44 @@ async function saveProduct() {
             updatedAt: firebase.firestore.FieldValue.serverTimestamp()
         };
         
-        // Data specifically for the Category Sub-collection
-        // IMPORTANT: Must include isAvailable: true
-        const subCollectionData = {
-            name: productData.name,
-            price: productData.price,
-            oldPrice: productData.oldPrice,
-            image: productData.image,
-            productId: productId || "", 
-            isAvailable: true  // THIS was missing and causing the hidden category products
-        };
+        let finalProductId = productId;
 
         if (productId) {
+            // EDITING EXISTING PRODUCT
             const productRef = db.collection('products').doc(productId);
             const currentProduct = await productRef.get();
             const currentData = currentProduct.data();
             
             await productRef.update(productData);
             
-            subCollectionData.productId = productId;
-            await updateProductInCategory(productId, categoryId, subCollectionData);
-            
+            // If category changed, remove from the old category's sub-collection
             if (currentData.categoryId && currentData.categoryId !== categoryId) {
                 await removeProductFromCategory(productId, currentData.categoryId);
             }
-            showToast('Product updated successfully', 'success');
         } else {
+            // CREATING NEW PRODUCT
             const productRef = await db.collection('products').add(productData);
-            const newId = productRef.id;
-            
-            subCollectionData.productId = newId;
-            await updateProductInCategory(newId, categoryId, subCollectionData);
-            
-            showToast('Product created successfully', 'success');
+            finalProductId = productRef.id;
         }
+
+        // 2. Data for the CATEGORY SUB-COLLECTION (Used for landing page sections)
+        const subCollectionData = {
+            name: productData.name,
+            price: productData.price,
+            oldPrice: productData.oldPrice,
+            image: productData.image,
+            productId: finalProductId, // Use the real Firestore ID
+            isAvailable: true          // Essential for index.html filter
+        };
+
+        // Save to categories/{categoryId}/products/{finalProductId}
+        await updateProductInCategory(finalProductId, categoryId, subCollectionData);
         
-        setTimeout(() => { window.location.href = 'manage-products.html'; }, 1500);
+        showToast(productId ? 'Product updated!' : 'Product created!', 'success');
+        
+        setTimeout(() => {
+            window.location.href = 'manage-products.html';
+        }, 1500);
         
     } catch (error) {
         console.error('Error saving product:', error);
@@ -3906,6 +3925,11 @@ async function saveProduct() {
         hideProgress();
     }
 }
+
+
+
+
+
 
         // Helper function to update product in category's products subcollection
 async function updateProductInCategory(productId, categoryId, productData) {
