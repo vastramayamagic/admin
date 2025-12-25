@@ -2571,19 +2571,67 @@
             renderUI();
         }
 
-        function openDrawer(id) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function openDrawer(id) {
             const order = ordersData.find(o => o.fireId === id);
             if (!order) return;
+            
+            // 1. CALCULATE SUBTOTAL
+            let subtotal = 0;
+            if(order.items && Array.isArray(order.items)){
+                order.items.forEach(item => {
+                    subtotal += (item.price || 0) * (item.quantity || 1);
+                });
+            }
+
+            // 2. GET COUPON DATA
+            const coupon = order.couponData || null; // Access the saved coupon snapshot
+            const discount = coupon ? coupon.savedAmount : 0;
+            const code = coupon ? coupon.code : '';
+
+            // 3. PAYMENT & DATE LOGIC
+            const isCod = order.paymentMethod === 'COD';
+            const shippingFee = isCod ? 100 : 0;
             
             document.getElementById('dOrderId').innerText = `Order #${order.orderId}`;
             const orderDate = order.createdAt ? (order.createdAt.toDate ? order.createdAt.toDate() : new Date(order.createdAt)) : new Date();
             const isToday = orderDate.toDateString() === new Date().toDateString();
             document.getElementById('dOrderDate').innerText = `${orderDate.toLocaleString()} ${isToday ? '• Today' : ''}`;
             
-            const isCod = order.paymentMethod === 'COD';
             const address = order.address || {};
             
-            // Build drawer content
+            // 4. BUILD DRAWER CONTENT
             document.getElementById('dContent').innerHTML = `
                 <p style="font-size:0.65rem; font-weight:800; color:var(--brand-primary); text-transform:uppercase; margin-bottom:10px;">Address</p>
                 <div style="background:white; border:1px solid var(--border-subtle); border-radius:12px; padding:15px; margin-bottom:20px;">
@@ -2594,6 +2642,7 @@
                         <b>Phone:</b> ${address.phone || 'N/A'}
                     </p>
                 </div>
+
                 <p style="font-size:0.65rem; font-weight:800; color:var(--brand-primary); text-transform:uppercase; margin-bottom:10px;">Items</p>
                 <div style="background:white; border:1px solid var(--border-subtle); border-radius:12px; padding:5px 15px; margin-bottom:20px;">
                     ${(order.items || []).map(item => `
@@ -2610,23 +2659,68 @@
                         </div>
                     `).join('')}
                 </div>
+
+                <p style="font-size:0.65rem; font-weight:800; color:var(--brand-primary); text-transform:uppercase; margin-bottom:10px;">Payment Breakdown</p>
                 <div style="background:white; border:1px solid var(--border-subtle); border-radius:12px; padding:15px;">
-                    <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:5px;">
-                        <span>Payment</span><b>${order.paymentMethod || 'N/A'}</b>
+                    
+                    <!-- Subtotal -->
+                    <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:8px;">
+                        <span style="color:#6b7280;">Subtotal</span>
+                        <b>₹${subtotal.toLocaleString()}</b>
                     </div>
-                    ${isCod ? `<div style="display:flex; justify-content:space-between; font-size:0.85rem; color:var(--danger-color); margin-top:5px;">
-                        <span>Handling Fee</span><b>+ ₹100</b>
-                    </div>` : ''}
+
+                    <!-- Coupon Display (Only shows if coupon exists) -->
+                    ${coupon ? `
+                    <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:8px; color:var(--success-color);">
+                        <span><i class="fa-solid fa-tag"></i> Coupon (${code})</span>
+                        <b>- ₹${discount.toLocaleString()}</b>
+                    </div>
+                    ` : ''}
+
+                    <!-- Shipping / COD Fee -->
+                    <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:8px;">
+                        <span style="color:#6b7280;">Shipping & Handling</span>
+                        <b style="${isCod ? 'color:var(--danger-color);' : 'color:var(--success-color);'}">
+                            ${isCod ? '+ ₹100 (COD Fee)' : 'Free'}
+                        </b>
+                    </div>
+
+                    <div style="border-top:1px dashed var(--border-subtle); margin:10px 0;"></div>
+
+                    <!-- Payment Method -->
+                     <div style="display:flex; justify-content:space-between; font-size:0.85rem;">
+                        <span style="color:#6b7280;">Payment Method</span>
+                        <b style="text-transform:uppercase;">${order.paymentMethod || 'N/A'}</b>
+                    </div>
                 </div>`;
             
+            // 5. UPDATE FOOTER WITH FINAL TOTAL
             document.getElementById('dFooter').innerHTML = `
                 <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <b>Grand Total</b>
+                    <b>Total Paid</b>
                     <b style="font-size:1.6rem; color:var(--brand-primary); font-weight:900;">₹${order.amount?.toLocaleString() || '0'}</b>
                 </div>`;
             
             document.getElementById('orderDrawer').classList.add('active');
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         function closeConfirmModal() { 
             document.getElementById('confirmModal').classList.remove('active');
